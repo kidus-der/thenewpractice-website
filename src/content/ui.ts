@@ -13,3 +13,19 @@ export const UI = {
   /** The client's own cue from the home page brief. */
   scrollCue: 'Scroll to discover',
 } as const
+
+/**
+ * FOOTER STRINGS — Task 8. Landmark names and the two decorative glyphs the
+ * footer needs. The confidentiality line is not here: it is the client's own
+ * sentence and the footer reads it from pages/home.ts.
+ */
+export const UI_FOOTER = {
+  /** aria-label on the footer <nav>. */
+  navLabel: 'Footer',
+  /** Visually hidden heading over the sitemap columns. */
+  sitemapHeading: 'Sitemap',
+  /** Precedes the year and the practice name in the legal line. */
+  copyright: '©',
+  /** Decorative separator between marquee repetitions; never read aloud. */
+  marqueeSeparator: '·',
+} as const

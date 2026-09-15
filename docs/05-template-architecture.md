@@ -62,7 +62,17 @@ Full-viewport canopy panel at `--z-overlay`, beneath the texture. Nav items at `
 
 ### Footer
 
-Server component, `data-ground="dark"`. Wordmark marquee (the one permitted); four hairline sitemap columns from `nav.ts`; founder contact block (name, credentials, role, phone, email — from `brand.ts`); location; legal links; the mark alone at the very bottom.
+`src/components/Footer.tsx` with its co-located `Footer.css` (chrome components own their stylesheet; `sections.css` is for template blocks). Server component on canopy, `<footer role="contentinfo" data-ground="dark">`, mounted once in `app/layout.tsx` after `{children}`, so it closes every route. Top to bottom:
+
+| Part | Spec |
+| --- | --- |
+| Marquee | `<Marquee>` (`src/components/Marquee.tsx`), the only client code in the footer and the one permitted marquee on the site. The wordmark at `--t-hero` in `--fg` at `0.06` alpha, three repetitions per set, the set rendered twice, GSAP `xPercent: -50`, `ease: 'none'`, `repeat: -1`, 40s per cycle, paused offscreen through a ScrollTrigger `onToggle`, inside `gsap.matchMedia('(prefers-reduced-motion: no-preference)')`. Under reduced motion `Footer.css` shows one static repetition aligned to the page margin and allowed to run out of frame. The whole band is `aria-hidden`; the duplicate set is `aria-hidden` again and the wordmark exists as real text in the lockup below. |
+| Sitemap | `<nav aria-label="Footer">` with a visually hidden `<h2>`; the four `NAV.footer` groups (*Practice*, *Care*, *Contact*, *Legal*) as `<h3>` eyebrows over `.link` items at `--t-small`. Laid on the 12-column grid: one column below 768, two at 768, four at 1024. Each group carries a top hairline; the vertical hairline between groups sits in the gutter so column text stays on the grid. |
+| Contact | `<address>` at `.p-offset` (column 7, directly beneath the *Contact* column at ≥ 1024): founder name and credentials, role, `tel:` and `mailto:` links, the location as four lines split from `BRAND.locale`. No form. |
+| Legal line | Hairline, then `© <year> The New Practice`, the privacy and terms links (labels from the *Legal* group in `nav.ts`) and, on the right, the client's own sentence *Every enquiry is handled with complete confidentiality.* read from `HOME` (closing section, second paragraph), never re-typed. |
+| Lockup | Centred, after everything: the mark alone at ~40px tall with the brass point, the wordmark in the display face at `--t-small` letterspaced with the ™ as a `<sup>` at `--t-eyebrow` (the one footer use of the trademark), the tagline in the eyebrow register. |
+
+Every string comes from `brand.ts`, `nav.ts`, `UI_FOOTER` in `ui.ts` or `pages/home.ts`. Playwright coverage: `tests/e2e/footer.spec.ts` (landmarks, every link's `href`, `tel:`/`mailto:`, the marquee's `aria-hidden` contract, static under reduced motion, paused offscreen, axe scoped to the landmark).
 
 ### Route curtain
 

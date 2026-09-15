@@ -12,6 +12,7 @@ import { GroundManager } from '@/components/GroundManager'
 import { Preloader } from '@/components/Preloader'
 import { ScrollRail } from '@/components/ScrollRail'
 import { Cursor } from '@/components/Cursor'
+import { Footer } from '@/components/Footer'
 import { SmoothScroll } from '@/motion/SmoothScroll'
 import { MotionProvider } from '@/motion/motion-config'
 import { env, isIndexable } from '@/lib/env'
@@ -136,6 +137,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {/* CHROME SLOT — task 8 mounts <Footer /> here, after the page and
             before the texture. It is a server component with data-ground="dark"
             so the GroundManager selector ('footer[data-ground]') already sees it. */}
+        <Footer />
 
         <Grain />
       </body>

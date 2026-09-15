@@ -1,0 +1,213 @@
+/* ==========================================================================
+   FOOTER — co-located with Footer.tsx, imported once by it.
+   Chrome components own their stylesheet (ledger triage, Tasks 3/5) so
+   concurrent agents never edit sections.css together. Tokens for colour,
+   type, space and motion; literal px only for geometry (rule 4 as amended).
+   Cascades after globals.css and sections.css because the component is
+   imported after them in layout.tsx.
+   ========================================================================== */
+
+.site-footer {
+  padding-block: var(--s-7) var(--s-6);
+}
+@media (min-width: 1024px) {
+  .site-footer {
+    padding-block: var(--s-8) var(--s-7);
+  }
+}
+
+/* — marquee: the wordmark as a ghost, running edge to edge — */
+.marquee {
+  overflow-x: clip;
+  color: var(--fg);
+  opacity: 0.06;
+  user-select: none;
+  pointer-events: none;
+}
+.marquee__track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+}
+.marquee__item {
+  display: inline-block;
+  padding-inline-end: 0.35em;
+}
+.marquee__sep {
+  padding-inline-start: 0.35em;
+}
+/* Reduced motion: a single static repetition, aligned to the page margin,
+   allowed to run out of frame like a cropped plate. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    padding-inline: var(--margin);
+  }
+  .marquee__track {
+    transform: none !important;
+  }
+  .marquee__set--dup,
+  .marquee__item:not(:first-child),
+  .marquee__sep {
+    display: none;
+  }
+}
+
+/* — sitemap: four hairline-separated columns on the 12-column grid — */
+.site-footer__nav {
+  margin-top: var(--s-6);
+}
+.site-footer__groups {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: var(--s-6);
+}
+.site-footer__group {
+  position: relative;
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--rule);
+  padding-top: var(--s-4);
+}
+/* The vertical hairline sits in the gutter, so column text stays on the grid
+   and the contact block below can align under the Contact column. Shown for
+   the second of each pair at 768 and for every column but the first at 1024. */
+.site-footer__group::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--gutter) / -2);
+  width: 1px;
+  background: var(--rule);
+  display: none;
+}
+.site-footer__heading {
+  color: var(--fg-muted);
+  margin-bottom: var(--s-4);
+}
+.site-footer__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+
+@media (min-width: 768px) {
+  .site-footer__group {
+    grid-column: span 6;
+  }
+  .site-footer__group:nth-child(even)::before {
+    display: block;
+  }
+}
+@media (min-width: 1024px) {
+  .site-footer__nav {
+    margin-top: var(--s-7);
+  }
+  .site-footer__group {
+    grid-column: span 3;
+  }
+  .site-footer__group:not(:first-child)::before {
+    display: block;
+  }
+}
+
+/* — colophon: the founder, under the Contact column — */
+.site-footer__colophon {
+  margin-top: var(--s-7);
+}
+.site-footer__contact {
+  font-style: normal;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-1);
+}
+.site-footer__line {
+  margin-top: var(--s-3);
+}
+.site-footer__location {
+  margin-top: var(--s-4);
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 1024px) {
+  .site-footer__colophon {
+    margin-top: var(--s-8);
+  }
+}
+
+/* — legal line — */
+.site-footer__legal {
+  margin-top: var(--s-7);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.site-footer__copyright {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--s-4);
+  row-gap: var(--s-2);
+}
+.site-footer__note {
+  max-width: 46ch;
+}
+@media (min-width: 768px) {
+  .site-footer__legal {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--s-5);
+  }
+}
+@media (min-width: 1024px) {
+  .site-footer__legal {
+    margin-top: var(--s-8);
+  }
+}
+
+/* — lockup: the mark alone at the very bottom, then the name and the line — */
+.site-footer__lockup {
+  margin-top: var(--s-7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--s-4);
+}
+.site-footer__mark {
+  /* the mark's box is 95 × 160; 24px wide stands ~40px tall */
+  width: 24px;
+  stroke-width: 6;
+}
+.site-footer__wordmark {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--t-small);
+  line-height: 1;
+  letter-spacing: 0.26em;
+  text-indent: 0.26em;
+  white-space: nowrap;
+}
+/* The ™ — footer and home hero only (ledger, main-session triage of Task 1). */
+.site-footer__tm {
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0;
+  line-height: 0;
+  vertical-align: super;
+  margin-left: 0.1em;
+}
+@media (min-width: 1024px) {
+  .site-footer__lockup {
+    margin-top: var(--s-8);
+  }
+}
