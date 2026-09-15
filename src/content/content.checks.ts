@@ -15,12 +15,14 @@ import {
   HOME,
   NAV,
   PERSONAL_MESSAGE,
+  PRIVACY,
   PROCESS,
   RESIDENCES,
   SERVICES,
   SERVICES_PAGE,
   TEAM,
   TEAM_PAGE,
+  TERMS,
   allRoutes,
   assessmentSchema,
   assessmentSeriesSchema,
@@ -76,6 +78,7 @@ const MODULES: Record<string, unknown> = {
   fees: FEES,
   contact: CONTACT,
   residences: RESIDENCES,
+  legal: { privacy: PRIVACY, terms: TERMS },
   services: SERVICES,
   'services-page': SERVICES_PAGE,
   team: TEAM,
@@ -127,6 +130,8 @@ function parses(): Check {
     ['fees', pageSchema.safeParse(FEES)],
     ['contact', contactPageSchema.safeParse(CONTACT)],
     ['residences', residencesPageSchema.safeParse(RESIDENCES)],
+    ['privacy', pageSchema.safeParse(PRIVACY)],
+    ['terms', pageSchema.safeParse(TERMS)],
     ['services-page', pageSchema.safeParse(SERVICES_PAGE)],
     ['team-page', pageSchema.safeParse(TEAM_PAGE)],
     ['assessments-page', pageSchema.safeParse(ASSESSMENTS_PAGE)],
@@ -234,6 +239,15 @@ function residencesMarked(): Check {
   return check('every residences string is prefixed PLACEHOLDER', unmarked)
 }
 
+/** The legal stubs, like residences, are ours until counsel writes them. */
+function legalMarked(): Check {
+  const unmarked = walkStrings({ privacy: PRIVACY, terms: TERMS }, 'legal')
+    .filter(({ path }) => !/\.(slug|id)$/.test(path))
+    .filter(({ value }) => !value.startsWith('PLACEHOLDER'))
+    .map(({ path }) => path)
+  return check('every legal string is prefixed PLACEHOLDER', unmarked)
+}
+
 function routesUnique(): Check {
   const routesList = allRoutes()
   const dupes = routesList.filter((r, i) => routesList.indexOf(r) !== i)
@@ -251,6 +265,7 @@ export function contentChecks(): readonly Check[] {
     navResolves(),
     placeholdersConfined(),
     residencesMarked(),
+    legalMarked(),
     routesUnique(),
   ]
 }

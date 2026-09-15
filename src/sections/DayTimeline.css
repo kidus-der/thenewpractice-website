@@ -1,0 +1,72 @@
+/* ==========================================================================
+   DAY TIMELINE — co-located with DayTimeline.tsx, imported once by it.
+   Tokens for colour, type, space and motion; literal px only for geometry
+   (rule 4 as amended). The rule sits in the column's left margin; the
+   markers are the paragraphs, each with a tick that reaches the rule.
+   ========================================================================== */
+
+.day-timeline {
+  position: relative;
+  list-style: none;
+  margin: var(--s-6) 0 0;
+  /* the tick's reach plus a gutter, so the prose keeps a clean left edge */
+  padding: 0 0 0 calc(24px + var(--s-4));
+  max-width: 62ch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+/* the hairline the list's full height (docs/04 §6) */
+.day-timeline__rule {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--rule-strong);
+}
+/* the brass rule over it; GSAP drives scaleY from 0 to 1 with the reading line */
+.day-timeline__fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: top;
+  transform: scaleY(0);
+}
+/* markers rest in stone (AA on bone since the Task 11 triage) and lift to ink */
+.day-timeline__marker {
+  position: relative;
+  color: var(--fg-muted);
+  transition: color var(--d-base) var(--e-out-expo);
+}
+/* the tick: from the rule to the text, on the first line */
+.day-timeline__marker::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * (24px + var(--s-4)));
+  top: 0.75em;
+  width: 24px;
+  height: 1px;
+  background: var(--rule-strong);
+  transition: background-color var(--d-base) var(--e-out-expo);
+}
+.day-timeline__marker[data-passed='true'] {
+  color: var(--fg);
+}
+.day-timeline__marker[data-passed='true']::before {
+  background: var(--accent);
+}
+
+/* reduced motion: the rule drawn, every marker read as ink (docs/04 §7) */
+@media (prefers-reduced-motion: reduce) {
+  .day-timeline__fill {
+    transform: scaleY(1);
+  }
+  .day-timeline__marker {
+    color: var(--fg);
+  }
+  .day-timeline__marker::before {
+    background: var(--accent);
+  }
+}

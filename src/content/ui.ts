@@ -45,3 +45,14 @@ export const UI_INTERIOR = {
   next: 'Next',
   ceibaCaption: 'Ceiba pentandra · Ya’axché',
 } as const
+
+/**
+ * STAGING FLAGS — Task 18. Shown only when the deployment is not the
+ * production site (`isIndexable()` is false), so a reviewer on staging can
+ * tell a PLACEHOLDER page from a finished one at a glance. Never rendered in
+ * production; never client copy.
+ */
+export const UI_STAGING = {
+  /** Eyebrow label over a page whose copy is still a PLACEHOLDER stub. */
+  copyPending: 'Copy pending client review',
+} as const

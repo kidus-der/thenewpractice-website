@@ -12,7 +12,7 @@
  */
 import type { Metadata, MetadataRoute } from 'next'
 
-import { allRoutes, routes } from '@/content'
+import { NOINDEX_ROUTES, allRoutes, routes } from '@/content'
 import { DESCRIPTION_MAX, SEO_DEFAULTS, excerpt, type OpenGraphType } from '@/content/seo'
 import { env, isIndexable } from '@/lib/env'
 
@@ -130,13 +130,23 @@ const priorityFor = (path: string): number => {
   return isStatic ? PRIORITY.page : PRIORITY.item
 }
 
-/** Every route the site serves, for `app/sitemap.ts`. Empty when not indexable. */
-export function sitemapEntries(context: SeoContext, lastModified: Date): MetadataRoute.Sitemap {
+/**
+ * Every route the site serves, for `app/sitemap.ts`, minus the routes kept
+ * out of the index while their copy is a stub (nav.ts `NOINDEX_ROUTES`; each
+ * of those pages also sets `noIndex`). Empty when not indexable.
+ */
+export function sitemapEntries(
+  context: SeoContext,
+  lastModified: Date,
+  excluded: ReadonlySet<string> = NOINDEX_ROUTES
+): MetadataRoute.Sitemap {
   if (!context.indexable) return []
-  return allRoutes().map((path) => ({
-    url: canonicalUrl(context.siteUrl, path),
-    lastModified,
-    changeFrequency: LEGAL_ROUTES.includes(path) ? 'yearly' : 'monthly',
-    priority: priorityFor(path),
-  }))
+  return allRoutes()
+    .filter((path) => !excluded.has(path))
+    .map((path) => ({
+      url: canonicalUrl(context.siteUrl, path),
+      lastModified,
+      changeFrequency: LEGAL_ROUTES.includes(path) ? 'yearly' : 'monthly',
+      priority: priorityFor(path),
+    }))
 }
