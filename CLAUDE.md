@@ -10,16 +10,16 @@ The **production website** for **The New Practice** — a private behavioural he
 
 The build is run as a ledger-driven sequence of agent tasks. The two files that govern what gets built, in what order, and to what standard:
 
-| File | What it is |
-| --- | --- |
+| File                                       | What it is                                                                                                                                         |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `.claude/plans/two-week-templates.plan.md` | The approved plan: requirements, patterns mirrored from the concept site, architecture (§3), files (§4), validation (§5), phases (§6), risks (§8). |
-| `docs/BUILD-LEDGER.md` | The task queue: owner decisions, the rules every agent follows, the status table, and one brief per task. Your task is in here. |
+| `docs/BUILD-LEDGER.md`                     | The task queue: owner decisions, the rules every agent follows, the status table, and one brief per task. Your task is in here.                    |
 
 The concept site at `/Volumes/main-storage-2tb/projects/luxury-spa-website-demo` is the **pattern source**: its tokens, motion primitives, chrome and section grammar were ported into this repo in task 1. Copy its conventions. Do not copy its placeholder prose; every word on this site is now the client's.
 
 ### What is the client's
 
-- **The identity** — name, tagline (*Private treatment without compromise*), the ceiba mark, the canopy/bone/brass palette, the Didone + geometric-sans type direction. From `design/brand/The New Practice - Logo Concept.pdf`. Lives in `src/content/brand.ts`, `src/components/Mark.tsx`, `src/app/globals.css`.
+- **The identity** — name, tagline (_Private treatment without compromise_), the ceiba mark, the canopy/bone/brass palette, the Didone + geometric-sans type direction. From `design/brand/The New Practice - Logo Concept.pdf`. Lives in `src/content/brand.ts`, `src/components/Mark.tsx`, `src/app/globals.css`.
 - **The copy** — every page, service, biography and questionnaire, from `Final Website Instructions_DRAFT Sept 1 2026 .docx.md`, rendered **verbatim** (British spelling included) from typed modules under `src/content/**`. Where the document has no content (residences, legal pages) the module carries structural copy marked `PLACEHOLDER`.
 - **The contact details** — founder, phone, email, location. One source: `src/content/brand.ts`.
 
@@ -29,13 +29,13 @@ The architecture, the templates, the motion, the stock media (licence-free, logg
 
 ### The mark
 
-The ceiba: the Maya world tree. Three branches rise, three roots descend, all six meet at one point — *one client, one team, one purpose*. A single gold point marks the intersection and is **the only accent colour in the entire identity**.
+The ceiba: the Maya world tree. Three branches rise, three roots descend, all six meet at one point — _one client, one team, one purpose_. A single gold point marks the intersection and is **the only accent colour in the entire identity**.
 
-Every stroke in `Mark.tsx` is authored starting at the centre and travelling outward, so a `stroke-dashoffset` draw grows *from* the point. That is deliberate and load-bearing. Never recolour the point, add a second accent, or use the mark without it.
+Every stroke in `Mark.tsx` is authored starting at the centre and travelling outward, so a `stroke-dashoffset` draw grows _from_ the point. That is deliberate and load-bearing. Never recolour the point, add a second accent, or use the mark without it.
 
 ## 2. The bar
 
-The reference is https://kusnachtpractice.com for *substance, tone, and structure*. The reference for *craft and motion* is the award-site tier (Awwwards SOTD / FWA / recent.design). We are aiming above the reference site, not level with it.
+The reference is https://kusnachtpractice.com for _substance, tone, and structure_. The reference for _craft and motion_ is the award-site tier (Awwwards SOTD / FWA / recent.design). We are aiming above the reference site, not level with it.
 
 Three tests every commit must pass:
 
@@ -45,44 +45,44 @@ Three tests every commit must pass:
 
 ## 3. Non-negotiables
 
-| Rule | Why |
-| --- | --- |
-| No bounce, elastic, spring, or overshoot easing anywhere — in GSAP, in Motion, in CSS | Playful easing reads as consumer-tech, not private clinic. Motion's `MotionConfig` forces tweens; `useSpring` is lint-banned. |
-| No pure black (`#000`), no pure white (`#fff`), no neutral greys | The palette is canopy green and bone. "Nothing bright, nothing clinical-white" is the client's own instruction. |
-| Exactly one accent: `--c-brass`. It does **not** flip between grounds | The client's rationale: the gold point is "the only accent color anywhere in the identity" |
-| No shadows; no radius over `2px` | Elevation by overlap and ground value only. See `docs/02` §6–7. |
-| No alpine, Nordic or temperate landscape imagery; no resort clichés | The practice is in the Riviera Maya. See `docs/02-art-direction.md`. |
-| No claim of indigenous endorsement or "ancient wisdom" as a modality | The ceiba is a living religious symbol. Name it, state what it means, stop. |
-| No stock-photo clichés — no faces, no lotus flowers, no hot stones, no spa-menu imagery | This is a medical practice for people in crisis, not a day spa |
-| No emoji, no exclamation marks, no marketing exclamation in copy we write | Tone is clinical, discreet, quietly confident |
-| Every animation respects `prefers-reduced-motion` — GSAP `matchMedia`, Motion `useReducedMotion`, and the CSS safety net | Non-negotiable accessibility floor; see `docs/09-performance-accessibility.md` |
-| **Components never contain user-facing literals; clinical copy is the client's verbatim** | Never invent claims, statistics, credentials or outcomes. Invented structural copy is marked `PLACEHOLDER` in the content module, never in markup. |
-| Nothing a visitor submits is stored | Contract §1. The enquiry action validates, sends through the mail adapter, logs a structured line without personal data, and keeps nothing. |
-| No third-party analytics, chat widgets, cookie banners, or trackers on staging | One tool on the client's own account after approval, and not before |
-| Scroll-driven motion → GSAP. State-driven motion → Motion. Never both on one element. | Two animation systems drift into overlap unless the boundary is written down. See `docs/04` §0 and `docs/07`. |
+| Rule                                                                                                                     | Why                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| No bounce, elastic, spring, or overshoot easing anywhere — in GSAP, in Motion, in CSS                                    | Playful easing reads as consumer-tech, not private clinic. Motion's `MotionConfig` forces tweens; `useSpring` is lint-banned.                      |
+| No pure black (`#000`), no pure white (`#fff`), no neutral greys                                                         | The palette is canopy green and bone. "Nothing bright, nothing clinical-white" is the client's own instruction.                                    |
+| Exactly one accent: `--c-brass`. It does **not** flip between grounds                                                    | The client's rationale: the gold point is "the only accent color anywhere in the identity"                                                         |
+| No shadows; no radius over `2px`                                                                                         | Elevation by overlap and ground value only. See `docs/02` §6–7.                                                                                    |
+| No alpine, Nordic or temperate landscape imagery; no resort clichés                                                      | The practice is in the Riviera Maya. See `docs/02-art-direction.md`.                                                                               |
+| No claim of indigenous endorsement or "ancient wisdom" as a modality                                                     | The ceiba is a living religious symbol. Name it, state what it means, stop.                                                                        |
+| No stock-photo clichés — no faces, no lotus flowers, no hot stones, no spa-menu imagery                                  | This is a medical practice for people in crisis, not a day spa                                                                                     |
+| No emoji, no exclamation marks, no marketing exclamation in copy we write                                                | Tone is clinical, discreet, quietly confident                                                                                                      |
+| Every animation respects `prefers-reduced-motion` — GSAP `matchMedia`, Motion `useReducedMotion`, and the CSS safety net | Non-negotiable accessibility floor; see `docs/09-performance-accessibility.md`                                                                     |
+| **Components never contain user-facing literals; clinical copy is the client's verbatim**                                | Never invent claims, statistics, credentials or outcomes. Invented structural copy is marked `PLACEHOLDER` in the content module, never in markup. |
+| Nothing a visitor submits is stored                                                                                      | Contract §1. The enquiry action validates, sends through the mail adapter, logs a structured line without personal data, and keeps nothing.        |
+| No third-party analytics, chat widgets, cookie banners, or trackers on staging                                           | One tool on the client's own account after approval, and not before                                                                                |
+| Scroll-driven motion → GSAP. State-driven motion → Motion. Never both on one element.                                    | Two animation systems drift into overlap unless the boundary is written down. See `docs/04` §0 and `docs/07`.                                      |
 
 ## 4. Document map — read the one that governs your task
 
-| Doc | Read it before you… |
-| --- | --- |
-| `docs/00-project-brief.md` | anything — this is the context |
-| `docs/01-brand-strategy.md` | name, write, or place anything brand-bearing |
-| `docs/02-art-direction.md` | choose imagery, video, texture, grain, or composition |
-| `docs/03-design-system.md` | write a single line of CSS or set a token |
-| `docs/04-motion-system.md` | write a single line of GSAP, Motion, or a transition |
-| `docs/05-template-architecture.md` | build a template, a route, or a section block |
-| `docs/06-copy-deck.md` | put words on screen or touch `src/content/**` |
-| `docs/07-tech-stack.md` | add a dependency or create a file |
-| `docs/08-asset-pipeline.md` | add an image, video, audio file, or font |
-| `docs/09-performance-accessibility.md` | ship anything |
-| `docs/10-build-plan.md` | decide what to work on next (it points at the ledger) |
-| `docs/11-qa-acceptance.md` | call anything done |
-| `docs/CONTENT-GAPS.md` | (written by task 5) ask the client for anything |
-| `design/ASSETS.md` | (written by task 2b) use or add any media file |
+| Doc                                    | Read it before you…                                   |
+| -------------------------------------- | ----------------------------------------------------- |
+| `docs/00-project-brief.md`             | anything — this is the context                        |
+| `docs/01-brand-strategy.md`            | name, write, or place anything brand-bearing          |
+| `docs/02-art-direction.md`             | choose imagery, video, texture, grain, or composition |
+| `docs/03-design-system.md`             | write a single line of CSS or set a token             |
+| `docs/04-motion-system.md`             | write a single line of GSAP, Motion, or a transition  |
+| `docs/05-template-architecture.md`     | build a template, a route, or a section block         |
+| `docs/06-copy-deck.md`                 | put words on screen or touch `src/content/**`         |
+| `docs/07-tech-stack.md`                | add a dependency or create a file                     |
+| `docs/08-asset-pipeline.md`            | add an image, video, audio file, or font              |
+| `docs/09-performance-accessibility.md` | ship anything                                         |
+| `docs/10-build-plan.md`                | decide what to work on next (it points at the ledger) |
+| `docs/11-qa-acceptance.md`             | call anything done                                    |
+| `docs/CONTENT-GAPS.md`                 | (written by task 5) ask the client for anything       |
+| `design/ASSETS.md`                     | (written by task 2b) use or add any media file        |
 
 ## 5. Working agreements for agents
 
-The ten rules in `docs/BUILD-LEDGER.md` §*Rules every agent follows* are binding. In short:
+The ten rules in `docs/BUILD-LEDGER.md` §_Rules every agent follows_ are binding. In short:
 
 **GateGuard.** Before your first Bash call, state in one line the task you are doing and what that command verifies or produces.
 
@@ -90,7 +90,7 @@ The ten rules in `docs/BUILD-LEDGER.md` §*Rules every agent follows* are bindin
 
 **Use the ECC harness.** The skills that fit the task before writing code; `context7` for library docs rather than memory.
 
-**Tokens or nothing.** Never write a raw hex value, a raw pixel value, or a raw duration outside `globals.css` and `motion/tokens.ts`. If the value you need does not exist as a token, add it to the token file *and* to `docs/03-design-system.md` in the same change.
+**Tokens or nothing.** Never write a raw hex value, a raw pixel value, or a raw duration outside `globals.css` and `motion/tokens.ts`. If the value you need does not exist as a token, add it to the token file _and_ to `docs/03-design-system.md` in the same change.
 
 **Content from the content layer.** Components never contain literals. Clinical copy is the client's text verbatim. Invented structural copy is marked `PLACEHOLDER` in the module.
 
@@ -98,7 +98,7 @@ The ten rules in `docs/BUILD-LEDGER.md` §*Rules every agent follows* are bindin
 
 **Verify before claiming.** `npm run verify`; for UI, the Playwright project for the touched routes with the screenshots at 390 / 768 / 1280 / 1920 read by you. Report evidence. "It should work" is not a status.
 
-**Scope discipline.** Finish your task completely and stop. Do not touch other tasks' files. Note defects elsewhere under *Findings* in your report; do not fix them.
+**Scope discipline.** Finish your task completely and stop. Do not touch other tasks' files. Note defects elsewhere under _Findings_ in your report; do not fix them.
 
 **Immutability and small files.** New objects, never mutation; files under ~400 lines; functions under 50 lines; early returns.
 
@@ -123,21 +123,24 @@ Task 4 adds `test`, `test:coverage`, `e2e`, `e2e:route`, `lighthouse`. Task 6 ad
 
 Every place the shipped code departs from the plan or this doc set is logged here, in the same commit as the departure. Empty at the start of the build.
 
-| Spec | Shipped | Why | Task |
-| --- | --- | --- | --- |
-| Raw hex only in `globals.css` and `motion/tokens.ts` (§5 _Tokens or nothing_) | `src/lib/tokens.ts` also carries `PALETTE`, a TS mirror of the seven core colours, used only as the fallback argument to `readToken()` | The gradient needs a colour value before the stylesheet can be read (server, tests). One mirror beside the reader beats literals in components; GroundManager switches to it in task 7. | 3 |
-| Curtain cover/reveal at `--d-slow` (docs/04 §4) | `curtainVariants` use `--d-glacial` | docs/04 §1 and the task brief both put the curtain at `--d-glacial`; §4 disagreed with its own §1. §4 now reads `--d-glacial`. Task 9 may tune. | 3 |
-| Eyebrow numerals and labels at `--fg-muted` (docs/03 §2); decorative numerals at `--fg-faint` (docs/03 §1); sticky index `--fg-muted → --fg` (docs/04 §6) | The interior blocks set eyebrow numerals, index items and plate captions in `--fg`; the index's quiet state is 0.72 opacity | Stone on bone is 3.8:1 (3.3:1 on sand) and clay on bone 1.6:1 — under the AA floor docs/03 itself sets for text below 24px — and axe holds aria-hidden text to the same floor. Owner / Task 19: darken `--c-stone` or add a light-ground muted token, after which the blocks can return to the spec. | 11 |
-| Section rhythm applied through `main > section` (docs/03 §3, `sections.css`) | `ContentSection` restates the same `padding-block` on its own class | Body sections sit inside the template's body wrapper so one sticky index can float beside all of them; the wrapper breaks the `main >` selector. The values are unchanged. | 11 |
-| Ground aliases flip only through `data-ground` on a section (docs/03 §1) | `[data-surface='light']` in `globals.css` carries the light aliases for the enquiry sheet, a bone panel inside a canopy section | GroundManager models one ground per scroll position; a bone column beside canopy under one section cannot be a ground without the chrome mis-colouring over half the viewport. docs/03 §1 now documents the surface. | 15 |
-| Form labels in `--fg-muted` (docs/03 §5) | On the enquiry sheet labels, legends, option words and the sheet heading are `--fg` | Stone on bone measures 3.8:1, under AA at label size; axe fails it as serious. Quietness comes from size and letterspacing instead. docs/03 §1 records the measurement. | 15 |
-| Enquiry action rejects submissions completed in under 3 s or older than 2 h (Task 15 brief) | Enforced whenever the client stamped `startedAt`; a submission without the stamp (JavaScript off) passes on the honeypot alone and is logged `timing: 'absent'` | The stamp must be taken at render; `/contact` is statically prerendered (docs/09 §1), so a server stamp would be the build time and every no-JS submission would expire. The alternatives — `force-dynamic` on `/contact` or `cacheComponents` project-wide — are the owner's call. | 15 |
-| Discretion band statement at `--t-d1` (docs/04 §6, docs/05 §Reusable blocks) | The residences privacy statement is set at `--t-d2` in a 26ch measure | The statement is the client's own 28-word sentence about discretion from the About page, quoted verbatim rather than invented; at `--t-d1` in the `.p-lead` column it ran to eleven lines. Returns to `--t-d1` if the client supplies a shorter residences statement. | 17 |
-| T5 ground rhythm: amenities table on sand (docs/02 §Ground rhythm) | Carousel on sand, amenities on bone; docs/02 now reads so | The carousel is the block that needs the sand frame around its plates; two sand blocks in a row would merge into one. The task brief set the order. | 17 |
-| Every section opens with the eyebrow lockup — numeral, rule, label (docs/03 §2 _The eyebrow pattern_) | `ContentSection` renders no eyebrow on a section without a title (the letter on `/a-personal-message`, the statement on `/fees`) | The numeral is a label for a heading; with no heading it is `01 ——` above a paragraph, decoration by the restraint test. Titled sections are unchanged; `data-n` still feeds the scroll rail. | 18 |
-| Timeline rule: "each time marker becomes `--accent` as the rule passes it" (docs/04 §6) | `DayTimeline` lights a 24px tick per paragraph and lifts the paragraph `--fg-muted → --fg`; there are no time markers | The client's _A Typical Day_ has no clock times and inventing them is barred (rule 5). The paragraphs are the progression. docs/05 §T2 records it. | 18 |
-| `prevNextFor()` is home plus the primary navigation (docs/05 §T2) | `/a-personal-message` and `/fees` render no rail | Neither is a primary route, so the documented order gives them no neighbours; the enquire band closes them. Adding the footer's _Practice_ group to the reading order is an owner call (ledger, Task 18 open questions). | 18 |
-| Standing grid placements only; no new column spans per template (docs/03 §4) | The T6 list sits at `grid-column: 2 / 12` from 1024px | The rows' numerals must align with the eyebrow numerals and section titles at column 2, and a full-width `.p-wide` list would put the tick in the page margin at 390px; `.p-lead` (2 / 8) is too narrow for a 3:4 hover plate beside the titles. Owner may bless `2 / 12` as a standing `.p-list` placement in docs/03. | 12 |
+| Spec                                                                                                                                                      | Shipped                                                                                                                                                         | Why                                                                                                                                                                                                                                                                                                                     | Task |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| Raw hex only in `globals.css` and `motion/tokens.ts` (§5 _Tokens or nothing_)                                                                             | `src/lib/tokens.ts` also carries `PALETTE`, a TS mirror of the seven core colours, used only as the fallback argument to `readToken()`                          | The gradient needs a colour value before the stylesheet can be read (server, tests). One mirror beside the reader beats literals in components; GroundManager switches to it in task 7.                                                                                                                                 | 3    |
+| Curtain cover/reveal at `--d-slow` (docs/04 §4)                                                                                                           | `curtainVariants` use `--d-glacial`                                                                                                                             | docs/04 §1 and the task brief both put the curtain at `--d-glacial`; §4 disagreed with its own §1. §4 now reads `--d-glacial`. Task 9 may tune.                                                                                                                                                                         | 3    |
+| Eyebrow numerals and labels at `--fg-muted` (docs/03 §2); decorative numerals at `--fg-faint` (docs/03 §1); sticky index `--fg-muted → --fg` (docs/04 §6) | The interior blocks set eyebrow numerals, index items and plate captions in `--fg`; the index's quiet state is 0.72 opacity                                     | Stone on bone is 3.8:1 (3.3:1 on sand) and clay on bone 1.6:1 — under the AA floor docs/03 itself sets for text below 24px — and axe holds aria-hidden text to the same floor. Owner / Task 19: darken `--c-stone` or add a light-ground muted token, after which the blocks can return to the spec.                    | 11   |
+| Section rhythm applied through `main > section` (docs/03 §3, `sections.css`)                                                                              | `ContentSection` restates the same `padding-block` on its own class                                                                                             | Body sections sit inside the template's body wrapper so one sticky index can float beside all of them; the wrapper breaks the `main >` selector. The values are unchanged.                                                                                                                                              | 11   |
+| Ground aliases flip only through `data-ground` on a section (docs/03 §1)                                                                                  | `[data-surface='light']` in `globals.css` carries the light aliases for the enquiry sheet, a bone panel inside a canopy section                                 | GroundManager models one ground per scroll position; a bone column beside canopy under one section cannot be a ground without the chrome mis-colouring over half the viewport. docs/03 §1 now documents the surface.                                                                                                    | 15   |
+| Form labels in `--fg-muted` (docs/03 §5)                                                                                                                  | On the enquiry sheet labels, legends, option words and the sheet heading are `--fg`                                                                             | Stone on bone measures 3.8:1, under AA at label size; axe fails it as serious. Quietness comes from size and letterspacing instead. docs/03 §1 records the measurement.                                                                                                                                                 | 15   |
+| Enquiry action rejects submissions completed in under 3 s or older than 2 h (Task 15 brief)                                                               | Enforced whenever the client stamped `startedAt`; a submission without the stamp (JavaScript off) passes on the honeypot alone and is logged `timing: 'absent'` | The stamp must be taken at render; `/contact` is statically prerendered (docs/09 §1), so a server stamp would be the build time and every no-JS submission would expire. The alternatives — `force-dynamic` on `/contact` or `cacheComponents` project-wide — are the owner's call.                                     | 15   |
+| Discretion band statement at `--t-d1` (docs/04 §6, docs/05 §Reusable blocks)                                                                              | The residences privacy statement is set at `--t-d2` in a 26ch measure                                                                                           | The statement is the client's own 28-word sentence about discretion from the About page, quoted verbatim rather than invented; at `--t-d1` in the `.p-lead` column it ran to eleven lines. Returns to `--t-d1` if the client supplies a shorter residences statement.                                                   | 17   |
+| T5 ground rhythm: amenities table on sand (docs/02 §Ground rhythm)                                                                                        | Carousel on sand, amenities on bone; docs/02 now reads so                                                                                                       | The carousel is the block that needs the sand frame around its plates; two sand blocks in a row would merge into one. The task brief set the order.                                                                                                                                                                     | 17   |
+| Every section opens with the eyebrow lockup — numeral, rule, label (docs/03 §2 _The eyebrow pattern_)                                                     | `ContentSection` renders no eyebrow on a section without a title (the letter on `/a-personal-message`, the statement on `/fees`)                                | The numeral is a label for a heading; with no heading it is `01 ——` above a paragraph, decoration by the restraint test. Titled sections are unchanged; `data-n` still feeds the scroll rail.                                                                                                                           | 18   |
+| Timeline rule: "each time marker becomes `--accent` as the rule passes it" (docs/04 §6)                                                                   | `DayTimeline` lights a 24px tick per paragraph and lifts the paragraph `--fg-muted → --fg`; there are no time markers                                           | The client's _A Typical Day_ has no clock times and inventing them is barred (rule 5). The paragraphs are the progression. docs/05 §T2 records it.                                                                                                                                                                      | 18   |
+| `prevNextFor()` is home plus the primary navigation (docs/05 §T2)                                                                                         | `/a-personal-message` and `/fees` render no rail                                                                                                                | Neither is a primary route, so the documented order gives them no neighbours; the enquire band closes them. Adding the footer's _Practice_ group to the reading order is an owner call (ledger, Task 18 open questions).                                                                                                | 18   |
+| Standing grid placements only; no new column spans per template (docs/03 §4)                                                                              | The T6 list sits at `grid-column: 2 / 12` from 1024px                                                                                                           | The rows' numerals must align with the eyebrow numerals and section titles at column 2, and a full-width `.p-wide` list would put the tick in the page margin at 390px; `.p-lead` (2 / 8) is too narrow for a 3:4 hover plate beside the titles. Owner may bless `2 / 12` as a standing `.p-list` placement in docs/03. | 12   |
+| Treatment titles at `--t-d2` (docs/03 §2 scale table)                                                                                                     | The service title is the `h1` at `--t-d1` on the shared `PageIntro` title page; `--t-d2` is the register of the body's titled `h2`s (definitions, subsections)  | Every template opens on the same title page (docs/05 §Structural principle); a smaller h1 on eleven routes would break the house. The list headings — the client's colon sentences — sit at `--t-d3` as lead-ins.                                                                                                       | 13   |
+| T3 related services on bone (docs/02 §Ground rhythm)                                                                                                      | Related rows on sand, yielding to bone only when they directly follow a list; docs/02 now reads so                                                              | The task brief set related on sand; the one-rule ground assignment in `serviceBlocks()` keeps two sand bands from merging (ledger Task 17).                                                                                                                                                                             | 13   |
+| Title page numeral `00` (docs/05 §T2 `PageIntro`)                                                                                                         | A service's title page carries the service's own numeral `01`–`11`; the body's blocks restart at `01`                                                           | docs/05 §T3 asks for the service numeral on the hero; the chapter number on the title page and the sections within it is how a monograph numbers. The scroll rail therefore shows e.g. `05` on the title page and `01` on the first block.                                                                              | 13   |
 
 ## 7. Definition of done
 
@@ -156,4 +159,4 @@ A template, route or chrome component is done when all of the following are true
 
 ---
 
-*If code and docs disagree, the docs are the specification and the code is the bug — unless the owner has explicitly changed direction, in which case update the doc in the same commit and log it in §6a.*
+_If code and docs disagree, the docs are the specification and the code is the bug — unless the owner has explicitly changed direction, in which case update the doc in the same commit and log it in §6a._

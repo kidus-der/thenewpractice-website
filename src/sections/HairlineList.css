@@ -1,0 +1,32 @@
+/* ==========================================================================
+   HAIRLINE LIST — co-located with HairlineList.tsx, imported once by it.
+   Rows and rules, nothing else. Tokens only; px for geometry per rule 4 as
+   amended. The block that uses it owns the margin above.
+   ========================================================================== */
+
+.hairline-list {
+  width: 100%;
+}
+.hairline-list__heading {
+  max-width: 62ch;
+  margin-bottom: var(--s-4);
+}
+.hairline-list__rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--gutter);
+  border-top: 1px solid var(--rule);
+}
+.hairline-list__rows li {
+  padding-block: var(--s-3);
+  border-bottom: 1px solid var(--rule);
+  text-wrap: pretty;
+}
+@media (min-width: 1024px) {
+  .hairline-list__rows {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

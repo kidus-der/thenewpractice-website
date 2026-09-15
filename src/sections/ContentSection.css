@@ -87,32 +87,9 @@
   max-width: 62%;
 }
 
-/* — hairline list: one column, two from 1024 — */
+/* — hairline list (HairlineList.tsx owns the rows): a sub-section apart — */
 .content-section__list-block {
   margin-top: var(--s-6);
-  width: 100%;
-}
-.content-section__list-heading {
-  max-width: 62ch;
-  margin-bottom: var(--s-4);
-}
-.content-section__list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  column-gap: var(--gutter);
-  border-top: 1px solid var(--rule);
-}
-.content-section__list li {
-  padding-block: var(--s-3);
-  border-bottom: 1px solid var(--rule);
-}
-@media (min-width: 1024px) {
-  .content-section__list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 /* — definitions: term in the Didone, description beneath, hairline between — */

@@ -286,6 +286,9 @@ textarea {
 .p-plate {
   grid-column: 1 / -1;
 }
+.p-list {
+  grid-column: 1 / -1;
+}
 
 @media (min-width: 1024px) {
   .p-lead {
@@ -299,6 +302,11 @@ textarea {
   }
   .p-plate {
     grid-column: 1 / 7;
+  }
+  /* index and hairline lists: numerals on column 2 with the section titles,
+     the margin to the left kept for the brass tick (docs/03 §4, Task 12) */
+  .p-list {
+    grid-column: 2 / 12;
   }
 }
 
