@@ -170,3 +170,36 @@ Run per template (the task's own Playwright project) and again as a whole in tas
 ```
 
 The last line catches the most common real bug in a multi-page GSAP site: triggers leaked across route changes, silently multiplying until scroll stutters.
+
+---
+
+## 5. Search and AI visibility
+
+Contract §1 asks for semantic markup, schema.org, titles and meta, Open Graph, an XML sitemap, robots, `llms.txt`, clean URLs, internal linking, alt text and Core Web Vitals. Task 10 shipped the baseline; every template wires it in. The reference test is not a Lighthouse SEO score but whether a link forwarded at three in the morning unfurls into the lockup with the right page named, and whether a search result reads like the practice speaking.
+
+### What ships
+
+| Piece | File | Notes |
+| --- | --- | --- |
+| Per-route titles and descriptions | `src/content/seo.ts` | `ROUTE_SEO` for the twelve static routes; `serviceSeo()`, `teamSeo()`, `assessmentSeo()` derive collection items from the client's own opening sentences (`excerpt()`, ≤ 155 characters, cut at a sentence boundary). Titles are `<Page> — The New Practice`; home is `The New Practice — Private treatment without compromise`. No ™ anywhere in metadata. |
+| Metadata builder | `src/lib/seo.ts` | `buildMetadata({ title, description, path, ogTitle, type?, image?, noIndex? })` → absolute canonical, Open Graph (`en_GB`, site name, per-page card), Twitter `summary_large_image`, and `robots` from `isIndexable()`. Pure; `SeoContext` is injectable for tests. |
+| Structured data | `src/lib/jsonld.ts`, `src/components/JsonLd.tsx` | `organization()`, `person()`, `webPage()`, `medicalWebPage()`, `breadcrumb()`; `<JsonLd data={…} />` inlines them with `<`, `>`, `&` and the Unicode line separators escaped. |
+| Sitemap | `src/app/sitemap.ts` | From `allRoutes()`; empty unless `SITE_ENV=production`. Home 1.0, static pages 0.8, collection items 0.6, legal 0.3. |
+| Robots | `src/app/robots.ts` | Disallow-all and no sitemap line outside production (Task 6); allow-all plus the sitemap URL in production. |
+| `llms.txt` | `src/app/llms.txt/route.ts` | Static. Title, the tagline, the client's opening statement verbatim, then Pages, Clinical services, Team, Self-assessments and Contact, one link per line with the metadata description. |
+| Open Graph card | `src/lib/og.tsx`, `src/app/opengraph-image.tsx`, `src/app/twitter-image.tsx`, `src/app/og/route.tsx` | The lockup on canopy (mark, wordmark, brass rule, tagline) in Bodoni Moda and Jost fetched from Google Fonts at render time. `/opengraph-image` is the static site default; `/og?title=<page>` adds the page name in bone at the foot and is what `buildMetadata()` points every page at. The file convention receives only route params, never the query string, which is why the per-page card is a route handler. `x-og-fonts: google | fallback` on the response says whether the webfonts loaded. `public/og.png` is retired once Task 11 wires the root metadata. |
+
+### What every template must do
+
+1. Export `generateMetadata` (or `metadata`) returning `buildMetadata({ ...ROUTE_SEO.<key>, path })` for a static route, or `buildMetadata({ ...serviceSeo(service), path: serviceHref(slug) })` for a collection item. Pass `noIndex: true` for anything that should never rank (legal stubs while they are placeholders, form confirmations).
+2. Render `<JsonLd data={[webPage({ title, description, path, breadcrumb }), …]} />` in the page. Service pages use `medicalWebPage({ …, about: service.title })`; profile pages add `person(member)`; the home page adds `organization()`. The breadcrumb mirrors the visible back and prev/next rails (§2 Structure).
+3. Keep one `<h1>`, real `<section aria-labelledby>` landmarks and content-layer alt text (§2). Structured data describes the page; it never substitutes for it.
+4. Link internally with descriptive anchors from the content layer: related services, *Works alongside*, the footer sitemap. No page should be more than two clicks from home.
+
+### The no-claims rule for structured data
+
+Structured data is machine-readable copy and is held to the same rule as the visible copy: nothing the client has not said. Concretely: no `aggregateRating`, `review`, `priceRange` or `openingHours`; no `medicalSpecialty` beyond `Psychiatric` (the one the team page supports); `MedicalWebPage.about` names the service in the client's words and carries no condition list, treatment outcome or success statement; `Person` carries credentials only where the document gives them. `FAQPage` is not used because nothing in the content is a question and its answer. The unit tests in `src/lib/jsonld.test.ts` assert the absence of the rating and outcome fields; keep those assertions when adding a builder.
+
+### Staging and production
+
+`SITE_ENV` is the single switch (`src/lib/env.ts`). Outside `production`: `robots.txt` disallows everything and carries no sitemap line, `sitemap.xml` is an empty urlset, every page's `robots` meta is `noindex, nofollow`, and `metadataBase`, canonicals, Open Graph URLs and `llms.txt` links all use `NEXT_PUBLIC_SITE_URL`, so a staging deploy names only itself. Flipping the two Vercel variables to `production` and the live domain turns everything on together; nothing else changes.
