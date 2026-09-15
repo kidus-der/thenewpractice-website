@@ -12,6 +12,7 @@ import { GroundManager } from '@/components/GroundManager'
 import { Preloader } from '@/components/Preloader'
 import { ScrollRail } from '@/components/ScrollRail'
 import { Cursor } from '@/components/Cursor'
+import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { SmoothScroll } from '@/motion/SmoothScroll'
 import { MotionProvider } from '@/motion/motion-config'
@@ -122,6 +123,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             Header sits at --z-nav and reads --ground / --ground-fg from
             <html>; the overlay sits at --z-overlay, beneath the texture layer
             so the grain stays continuous across it (docs/03 §8). */}
+        <Header />
 
         <ScrollRail />
         <Cursor />

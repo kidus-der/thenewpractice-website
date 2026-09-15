@@ -1,0 +1,171 @@
+/* ==========================================================================
+   NAV OVERLAY — co-located with NavOverlay.tsx, imported once by it.
+   Tokens for colour, type, space and motion; literal px only for geometry
+   (rule 4 as amended). The panel carries data-ground="dark", so the
+   semantic aliases (--fg, --fg-muted, --rule) are already canopy-ground
+   values and .muted / .line-action need nothing extra.
+   ========================================================================== */
+
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  background: var(--bg);
+  color: var(--fg);
+  /* Short landscape viewports: the panel scrolls, the page behind does not. */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Motion animates clip-path (or opacity under reduced motion) from here;
+     nothing else moves. */
+}
+
+/* The header (padding --s-4 top and bottom around an eyebrow line) occupies
+   roughly the first 72px; the composition starts a content group below it. */
+.nav-overlay__inner {
+  position: relative;
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: var(--s-6);
+  align-content: start;
+  padding-block: var(--s-7) var(--s-8);
+}
+@media (min-width: 1024px) {
+  .nav-overlay__inner {
+    padding-block: var(--s-8) var(--s-7);
+    align-content: center;
+  }
+}
+
+/* — primary routes: six masked lines in the Didone — */
+.nav-overlay__primary {
+  grid-column: 1 / -1;
+}
+.nav-overlay__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+/* Each line is its own mask, so an item rises into view rather than fading
+   up from below (docs/04 §3 "lines"). The line-height leaves room for the
+   Didone's descenders inside the clip. */
+.nav-overlay__mask {
+  overflow: hidden;
+}
+.nav-overlay__line {
+  display: block;
+  line-height: 1.12;
+}
+.nav-overlay__item {
+  position: relative;
+  display: inline-block;
+  color: inherit;
+  text-decoration: none;
+  line-height: inherit;
+}
+
+/* The brass tick: the line action's rule, laid beside the word. It runs from
+   the page edge toward the label — --margin wide less a breath — and draws
+   from the edge on hover, focus and for the current route. Colour alone never
+   carries the state: the tick is a shape, and aria-current is on the link. */
+.nav-overlay__tick {
+  position: absolute;
+  left: calc(-1 * var(--margin));
+  top: 0.56em;
+  width: calc(var(--margin) - var(--s-2));
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--d-base) var(--e-out-expo);
+}
+.nav-overlay__item:hover .nav-overlay__tick,
+.nav-overlay__item:focus-visible .nav-overlay__tick,
+.nav-overlay__item[aria-current='page'] .nav-overlay__tick {
+  transform: scaleX(1);
+}
+
+/* — aside: Enquire, the founder's telephone and email, the location — */
+.nav-overlay__aside {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-5);
+}
+.nav-overlay__utility {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+.nav-overlay__contact {
+  font-style: normal;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+.nav-overlay__location {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  margin-top: var(--s-2);
+  /* the label reads at the eyebrow size but as lines of an address, not caps */
+  line-height: 1.5;
+}
+
+@media (min-width: 1024px) {
+  .nav-overlay__primary {
+    grid-column: 1 / 8;
+  }
+  .nav-overlay__aside {
+    grid-column: 9 / 13;
+    align-self: end;
+    padding-bottom: var(--s-2);
+  }
+}
+
+/* — the ceiba in the corner, drawing itself once per open — */
+.nav-overlay__corner {
+  position: absolute;
+  right: var(--margin);
+  bottom: var(--s-6);
+  color: var(--fg);
+}
+.nav-overlay__mark {
+  width: clamp(28px, 3vw, 44px);
+  stroke-width: 4;
+}
+@media (min-width: 1024px) {
+  .nav-overlay__corner {
+    bottom: var(--s-7);
+  }
+}
+
+/* Reduced motion (docs/04 §7): the panel fades, the lines are already in
+   place, the mark is drawn. Motion's reducedMotion="user" and the explicit
+   variants do this; the CSS here is the safety net. */
+@media (prefers-reduced-motion: reduce) {
+  .nav-overlay {
+    clip-path: none !important;
+  }
+  .nav-overlay__line,
+  .nav-overlay__aside {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .nav-overlay__tick {
+    transition: none;
+  }
+}
+
+@media print {
+  .nav-overlay {
+    display: none !important;
+  }
+}

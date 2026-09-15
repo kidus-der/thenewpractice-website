@@ -18,22 +18,31 @@
 import { useLayoutEffect } from 'react'
 import { gsap, ScrollTrigger } from '@/motion/gsap'
 import { measureStops, type SectionStop } from '@/motion/sectionStops'
-
-const GROUND_COLOR: Record<string, string> = {
-  dark: '#14231C',
-  light: '#F1ECE0',
-  mid: '#E3DCCB',
-}
+import { PALETTE, readToken } from '@/lib/tokens'
 
 const SELECTOR = 'main [data-ground], footer[data-ground]'
 
-/** Relative luminance of a hex colour, thresholded for text. */
-function isLight(hex: string): boolean {
-  const n = parseInt(hex.slice(1), 16)
-  const r = (n >> 16) & 255
-  const g = (n >> 8) & 255
-  const b = n & 255
-  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.5
+type GroundKey = 'dark' | 'light' | 'mid'
+type GroundPaint = Readonly<{ bg: string; fg: string }>
+
+const isGroundKey = (value: string | undefined): value is GroundKey =>
+  value === 'dark' || value === 'light' || value === 'mid'
+
+/**
+ * The three grounds and the legible foreground for each, read from the
+ * stylesheet at mount (docs/03 §1 "Chrome ground"). Bone and sand take ink,
+ * canopy takes bone — the same answer the old luminance threshold gave, now
+ * stated rather than computed, so no hex is parsed or spelled here.
+ */
+function readGrounds(): Readonly<Record<GroundKey, GroundPaint>> {
+  const canopy = readToken('--c-canopy', PALETTE.canopy)
+  const bone = readToken('--c-bone', PALETTE.bone)
+  const sand = readToken('--c-sand', PALETTE.sand)
+  return {
+    dark: { bg: canopy, fg: bone },
+    light: { bg: bone, fg: canopy },
+    mid: { bg: sand, fg: canopy },
+  }
 }
 
 export function GroundManager() {
@@ -41,6 +50,7 @@ export function GroundManager() {
     const root = document.documentElement
 
     const ctx = gsap.context(() => {
+      const grounds = readGrounds()
       let stops: SectionStop[] = []
       let painted = ''
 
@@ -54,15 +64,16 @@ export function GroundManager() {
           if (y >= stops[k]!.top - 1) i = k
         }
 
-        const color = GROUND_COLOR[stops[i]!.el.dataset.ground ?? 'dark'] ?? GROUND_COLOR.dark!
+        const key = stops[i]!.el.dataset.ground
+        const ground = grounds[isGroundKey(key) ? key : 'dark']
 
         // Only on change. Writing a custom property on <html> invalidates style
         // for every element that references it — i.e. the whole document — so
         // doing it once per scroll frame is a real cost for no visible effect.
-        if (color === painted) return
-        painted = color
-        root.style.setProperty('--ground', color)
-        root.style.setProperty('--ground-fg', isLight(color) ? '#14231C' : '#F1ECE0')
+        if (ground.bg === painted) return
+        painted = ground.bg
+        root.style.setProperty('--ground', ground.bg)
+        root.style.setProperty('--ground-fg', ground.fg)
       }
 
       const refresh = () => {

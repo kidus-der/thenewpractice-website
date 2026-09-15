@@ -1,0 +1,168 @@
+/* ==========================================================================
+   HEADER — co-located with Header.tsx, imported once by it.
+   Chrome components own their stylesheet (ledger triage, Tasks 3/5). Tokens
+   for colour, type, space and motion; literal px only for geometry (rule 4
+   as amended). Ported from the concept site's .site-header block and
+   extended for a multi-page site: ground-aware at all times, a primary nav
+   from 1024px, a trigger below it, and an open state above the overlay.
+   ========================================================================== */
+
+.site-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: var(--z-nav);
+  padding-block: var(--s-4);
+  /* Outside every section, so the chrome ground is the only colour it can
+     trust. The fallback covers the frames before GroundManager has painted:
+     bone, because the home hero is canopy. */
+  color: var(--ground-fg, var(--c-bone));
+  transition:
+    transform var(--d-base) var(--e-out-expo),
+    background-color var(--d-base) var(--e-out-expo),
+    color var(--d-base) var(--e-out-expo);
+}
+/* A page that opens on bone or sand needs the opposite fallback, or the
+   server-rendered header is invisible until hydration. Once --ground-fg is
+   published the var() resolves and neither fallback is consulted. */
+body:has(main > :is([data-ground='light'], [data-ground='mid']):first-child) .site-header {
+  color: var(--ground-fg, var(--c-canopy));
+}
+
+.site-header[data-hidden='true'] {
+  transform: translateY(-110%);
+}
+
+/* Settled: the ground at 88% with a blur (docs/04 §4). The hairline is a
+   pseudo-element, not a border, so the header's box never changes size. */
+.site-header[data-settled='true'] {
+  background-color: color-mix(in srgb, var(--ground, var(--c-canopy)) 88%, transparent);
+  backdrop-filter: blur(12px);
+}
+.site-header::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity var(--d-base) var(--e-out-expo);
+}
+.site-header[data-settled='true']::after {
+  opacity: 0.14;
+}
+
+/* Open: above the overlay panel, bone on canopy, no fill, no hairline, and
+   never hidden — the trigger must stay where the hand left it. Declared after
+   the hidden and settled rules so it wins the tie. */
+.site-header[data-menu-open='true'] {
+  z-index: calc(var(--z-overlay) + 1);
+  color: var(--c-bone);
+  background-color: transparent;
+  backdrop-filter: none;
+  transform: none;
+}
+.site-header[data-menu-open='true']::after {
+  opacity: 0;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+
+/* — lockup: mark + wordmark, one link — */
+.site-header__lockup {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  color: inherit;
+  text-decoration: none;
+}
+.site-header__ceiba {
+  width: 16px;
+  stroke-width: 8;
+  flex: 0 0 auto;
+}
+.site-header__wordmark {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  letter-spacing: 0.26em;
+  white-space: nowrap;
+}
+
+/* — right: primary nav from 1024px, the trigger below — */
+.site-header__right {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+}
+/* Between 1024 and 1279 the row is at its tightest — six labels, Enquire and
+   the lockup inside 40px margins — so the gaps open one step at 1280. Labels
+   never wrap: a two-line eyebrow in a header is a broken header. */
+.site-header__nav {
+  display: none;
+  align-items: center;
+  gap: var(--s-4);
+}
+.site-header__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+.site-header__links li {
+  /* the body's 1.6 would centre the label lower than Enquire beside it */
+  line-height: 1;
+}
+.site-header__nav .line-action {
+  white-space: nowrap;
+}
+@media (min-width: 1024px) {
+  .site-header__nav {
+    display: flex;
+  }
+  .site-header__trigger {
+    display: none;
+  }
+}
+@media (min-width: 1280px) {
+  .site-header__nav {
+    gap: var(--s-5);
+  }
+  .site-header__links {
+    gap: var(--s-4);
+  }
+}
+
+/* The line action's resting rule is --rule-strong, which resolves from :root
+   out here — ink on the canopy hero. In the header it follows the text colour
+   at the same 30% instead, so it is legible on either ground. */
+.site-header .line-action::before {
+  background: color-mix(in srgb, currentColor 30%, transparent);
+}
+/* The six route links rest without the hairline: six resting rules in a row
+   read as tabs and take the one CTA's distinction from it. The treatment is
+   otherwise the line action — the brass rule wipes in on hover and focus and
+   is already drawn under the current route (docs/03 §5). Enquire and the
+   trigger keep the full treatment. */
+.site-header__links .line-action::before {
+  background: transparent;
+}
+.site-header .line-action[aria-current='page']::after {
+  transform: scaleX(1);
+}
+
+/* — trigger label swap without a width change — */
+.site-header__swap {
+  display: inline-grid;
+}
+.site-header__swap-label {
+  grid-area: 1 / 1;
+}
+.site-header__swap-label[data-active='false'] {
+  visibility: hidden;
+}

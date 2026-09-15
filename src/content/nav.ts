@@ -72,3 +72,32 @@ export const NAV = navSchema.parse({
     },
   ],
 })
+
+/**
+ * HEADER AND MENU STRINGS — Task 7. The trigger's two labels and the
+ * accessible names the chrome navigation needs. They live beside the routes
+ * rather than in ui.ts because they belong to the navigation, not the page.
+ */
+export const UI_NAV = {
+  /** The trigger below 1024px, at rest and while the overlay is open. */
+  menu: 'Menu',
+  close: 'Close',
+  ariaLabels: {
+    /** The desktop <nav> and the overlay's primary <nav>. */
+    primary: 'Primary',
+    /** The overlay dialog itself. */
+    overlay: 'Menu',
+    /** The overlay's founder-contact column. */
+    contact: 'Contact',
+  },
+} as const
+
+/**
+ * Whether a navigation item is the current page. A section route also owns
+ * its children (`/team` is current on `/team/[slug]`); home is only itself.
+ * The header's `aria-current` and the overlay's brass tick both read this.
+ */
+export function isActiveRoute(href: string, pathname: string): boolean {
+  if (href === routes.home) return pathname === href
+  return pathname === href || pathname.startsWith(`${href}/`)
+}
