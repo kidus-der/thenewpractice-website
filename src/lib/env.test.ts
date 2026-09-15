@@ -1,4 +1,3 @@
-// @ts-expect-error -- Vitest is installed by task 4; remove this directive then.
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { env, isIndexable, parseEnv, resetEnvCache } from './env'

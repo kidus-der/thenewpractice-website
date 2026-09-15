@@ -47,3 +47,6 @@ next-env.d.ts
 
 # session locks from the orchestration loop
 .claude/*.lock
+
+# lighthouse ci reports (task 4)
+.lighthouseci/

@@ -14,6 +14,27 @@ Work passes through three gates. Each is stricter than the last, and none of the
 
 Run for every template, route and chrome component. An agent that reports done without having run this has not finished.
 
+### The verification routine
+
+Four commands, in this order. Each one must be green before the next is worth running.
+
+| Step | Command | What it proves |
+| --- | --- | --- |
+| 1 | `npm run verify` | `lint`, `typecheck`, the Vitest suite (`npm run test`), then `next build`. The single gate every commit passes. |
+| 2 | `npm run test:coverage` | The same suite with the V8 coverage report; thresholds of 80% lines / functions / branches / statements on `src/lib`, `src/content`, `src/server`, `src/webgl/ambientEligibility.ts` and `src/motion/tokens.ts`. Components are not counted — the browser covers them. |
+| 3 | `npm run e2e` (or `npm run e2e:route -- <pattern>` for one spec) | Playwright on five projects: `mobile-390`, `tablet-768`, `desktop-1280`, `wide-1920`, `reduced-motion`. Each spec fails on a console error, an uncaught exception or an axe violation at `serious` or above, and writes a full-page PNG to `tests/e2e/__screenshots__/<project>/<name>.png`. |
+| 4 | `npm run build && npm run lighthouse` | Lighthouse CI, mobile emulation, three runs against the production build on port 3211: Performance ≥ 0.9, CLS ≤ 0.1, LCP ≤ 2500 ms. Reports land in `.lighthouseci/`. |
+
+`npm run e2e` starts the dev server on port 3210 (or reuses one already there). Set `E2E_PROD=1` to build and serve the production bundle instead, which is what the deploy checkpoints and the Lighthouse run measure. `npm run e2e:ui` opens the Playwright inspector for a failing spec. `npm run content:check` runs the content-layer checks without Vitest.
+
+### The screenshot review
+
+Screenshots are read, not diffed. After `npm run e2e`, open the four width captures for every touched route — `mobile-390`, `tablet-768`, `desktop-1280`, `wide-1920` — and the `reduced-motion` capture, and check each one against the lists below. Report the paths in the task report; the main session reads them again before committing. A route without a screenshot at all four widths is not done.
+
+What to look for, in order: horizontal scroll or clipped type; a collapsed or stretched image; a headline widow; a section whose ground does not match its spec; anything invisible under reduced motion; and finally the stillness test — does the frame read as a designed page with nothing moving.
+
+Every spec uses the helpers in `tests/e2e/helpers/`: `settleMotion(page)` waits for fonts, the preloader handshake and one painted frame; `expectNoConsoleErrors(page)`; `expectNoAxeViolations(page, { impactAtLeast: 'serious' })`; `screenshotRoute(page, name)`. Import `test` from the helpers, not from `@playwright/test`, so console capture starts before navigation.
+
 ### Structure
 - [ ] Matches its spec in `docs/05` and plan §3.3 — ground sequence, placements, blocks used, eyebrow
 - [ ] Heading level is correct and does not skip; one `<h1>`
@@ -59,9 +80,10 @@ Run for every template, route and chrome component. An agent that reports done w
 - [ ] Touch behaviour specified and implemented (static thumbnails, native scroll-snap), not "the desktop thing but smaller"
 
 ### Tests
-- [ ] Unit tests for every pure function and schema the task introduced; coverage ≥ 80% on `src/lib`, `src/content`, `src/server`
-- [ ] Playwright spec for the touched routes in the matrix
-- [ ] `npm run verify` green
+- [ ] Unit tests for every pure function, hook decision and schema the task introduced, next to the source as `*.test.ts(x)`; `npm run test:coverage` stays at or above 80% on the covered directories
+- [ ] A Playwright spec for every touched route in `tests/e2e/`, running on all five projects: console clean, axe clean at `serious`, screenshot written
+- [ ] The ambient gradient canvas present only where `AMBIENT_GRADIENT_EXPECTED` says so (home spec); any new gated effect gets the same per-project assertion
+- [ ] `npm run verify` green, `npm run e2e` green, and `npm run lighthouse` within budget on the routes the task added to `lighthouserc.json`
 
 ### The stillness test
 - [ ] With motion disabled, the composition reads as a designed page
@@ -85,7 +107,7 @@ On the staging URL after tasks 6, 12, 15, 16 and 21:
 Run on the **staging URL**, on real devices, before the link leaves your hands.
 
 ### Performance
-- [ ] Lighthouse CI budgets pass on `/` and one URL per template
+- [ ] `npm run lighthouse` passes on `/` and one URL per template (`lighthouserc.json` lists them)
 - [ ] 4× CPU throttle full-page scroll — zero long tasks on `/`, `/our-process`, `/clinical-services`
 - [ ] Safari timeline scroll — no jank on the pinned sections
 - [ ] The gradient chunk appears in the network panel only on `/` at desktop, and never on mobile

@@ -1,0 +1,27 @@
+{
+  "//": [
+    "Lighthouse CI budgets from docs/09 §1, mobile emulation (Lighthouse's default form factor).",
+    "Runs against a production build: `npm run build` first, then `npm run lighthouse`.",
+    "Add one URL per template as routes land: /about (T2), /clinical-services (T6),",
+    "/clinical-services/<slug> (T3), /team/<slug> (T4), /residences (T5), /contact (T7)."
+  ],
+  "ci": {
+    "collect": {
+      "startServerCommand": "npm run start -- --port 3211",
+      "startServerReadyPattern": "Ready in",
+      "url": ["http://localhost:3211/"],
+      "numberOfRuns": 3
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": ["error", { "minScore": 0.9 }],
+        "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1 }],
+        "largest-contentful-paint": ["error", { "maxNumericValue": 2500 }]
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci"
+    }
+  }
+}
