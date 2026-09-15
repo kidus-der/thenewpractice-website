@@ -54,9 +54,13 @@ Two further properties are written to `<html>` at runtime by `<GroundManager>`, 
 
 The header, scroll rail, and cursor use these, because they float outside every section and inherit none of the aliases above. Nothing inside a section should use them. The GroundManager's selector is `main [data-ground], footer[data-ground]` — every template section and the footer must carry `data-ground` or the chrome will not recolour over it.
 
+**A light surface inside a dark section** — the enquiry sheet (T7) — carries `data-surface="light"` instead of `data-ground`. `globals.css` declares the same light aliases under that attribute, so the sheet reads as bone without becoming a ground: GroundManager never sees it and the chrome keeps the section's canopy. Use it for a panel; use `data-ground` for a section.
+
 ### Contrast floor
 
 Every foreground/background pair must clear **WCAG AA (4.5:1)** for body text and **3:1** for text ≥ 24px. `--fg-faint` on `--bg` fails AA and is therefore permitted **only** for decorative text that is duplicated in an accessible label — section numerals, letterspaced eyebrow labels of ≤ 3 words. Never for reading copy.
+
+Measured (Task 15): `--fg-muted` on the **light** ground — stone `#6F7A72` on bone `#F1ECE0` — is **3.8:1**. It clears 3:1 for large text and fails 4.5:1 at body, caption and eyebrow size; axe reports it as serious. On dark ground the muted alias (bone at 0.64) passes. Until the owner chooses a darker muted for light grounds, small muted text on bone or sand must be set in `--fg` (the enquiry sheet does this) or be decorative and duplicated.
 
 ---
 

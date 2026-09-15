@@ -84,7 +84,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             nothing uncovers them, so the resting state is restored here.
             docs/09-performance-accessibility.md §Resilience. */}
         <noscript>
-          <style>{`[data-reveal],[data-reveal-children]>*{opacity:1!important;transform:none!important;clip-path:none!important}`}</style>
+          <style>{`[data-reveal],[data-reveal-children]>*{opacity:1!important;transform:none!important;clip-path:none!important}.preloader{display:none}`}</style>
         </noscript>
 
         <a className="skip-link" href="#main">

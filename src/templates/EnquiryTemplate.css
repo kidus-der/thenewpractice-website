@@ -1,0 +1,179 @@
+/* ==========================================================================
+   T7 — ENQUIRY. Co-located with EnquiryTemplate.tsx, imported by it.
+   Tokens for colour, type, space and motion; literal px only for geometry
+   (rule 4 as amended). Block names are `contact-open`, `contact` and
+   `enquiry-form` so nothing collides with the concept site's `.enquiry__*`
+   block that still lives in sections.css.
+   ========================================================================== */
+
+/* — the opening: a letter's first page, headline low in the frame — */
+main > section.contact-open {
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+}
+.contact-open .shell {
+  width: 100%;
+}
+.contact-open__inner {
+  display: flex;
+  flex-direction: column;
+}
+.contact-open__inner .eyebrow {
+  margin-bottom: var(--s-5);
+}
+.contact-open__title {
+  max-width: 14ch;
+  margin-bottom: var(--s-6);
+}
+.contact-open__lead {
+  margin-bottom: var(--s-5);
+}
+.contact__prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+/* — the split: letter left, sheet right, consultation closing the column — */
+.contact__grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: var(--s-7);
+}
+.contact__letter,
+.contact__sheet,
+.contact__consult {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+.contact__block + .contact__block {
+  margin-top: var(--s-7);
+}
+.contact__list-heading {
+  margin-block: var(--s-4) var(--s-4);
+}
+.contact__list {
+  list-style: none;
+  margin: 0 0 var(--s-4);
+  padding: 0;
+}
+.contact__list li {
+  padding-block: var(--s-2);
+  border-top: 1px solid var(--rule);
+}
+.contact__list li:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+.contact__consult .contact__block {
+  margin-bottom: var(--s-5);
+}
+
+/* — founder — */
+.contact__founder {
+  font-style: normal;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+.contact__founder-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-2);
+  margin-block: var(--s-3);
+}
+.contact__founder-location {
+  display: flex;
+  flex-direction: column;
+}
+
+/* — the sheet: bone, inside the canopy section. Below 1024 it runs edge to
+     edge like a band; from 1024 it is a panel in the right half of the grid. — */
+.contact__sheet {
+  margin-inline: calc(-1 * var(--margin));
+}
+.contact__sheet-inner {
+  padding: var(--s-6) var(--margin);
+}
+.contact__sheet-heading {
+  margin-bottom: var(--s-6);
+}
+/* Stone on bone is 3.9:1 — under AA for label-sized text — so on the sheet the
+   secondary voice is ink, kept quiet by size and letterspacing (docs/03 §1
+   contrast floor). The bare `.muted` class is not used inside the sheet. */
+.contact__sheet .field__label,
+.contact__sheet .field__input:focus ~ .field__label,
+.contact__sheet .field__input:not(:placeholder-shown) ~ .field__label,
+.contact__sheet .choice__legend,
+.contact__sheet .choice__option,
+.contact__sheet .contact__sheet-heading {
+  color: var(--fg);
+}
+
+@media (min-width: 1024px) {
+  .contact__letter {
+    grid-column: 1 / 6;
+    grid-row: 1;
+  }
+  .contact__sheet {
+    grid-column: 7 / 13;
+    grid-row: 1 / 3;
+    align-self: start;
+    margin-inline: 0;
+  }
+  .contact__sheet-inner {
+    padding: var(--s-6) var(--s-6);
+  }
+  .contact__consult {
+    grid-column: 1 / 6;
+    grid-row: 2;
+  }
+}
+@media (min-width: 1536px) {
+  .contact__sheet-inner {
+    padding: var(--s-7) var(--s-7);
+  }
+}
+
+/* — the form — */
+.enquiry-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  max-width: 36rem;
+}
+.enquiry-form__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+  margin-top: var(--s-3);
+}
+/* aria-disabled while sending: still focusable, visibly quiet */
+.enquiry-form .line-action[aria-disabled='true'] {
+  color: var(--fg-muted);
+  cursor: progress;
+}
+.enquiry-form__failed {
+  max-width: 46ch;
+}
+.enquiry-form__failed .link + .link {
+  margin-left: 0;
+}
+/* Off-canvas, not display:none: a form-filler still sees it, a person never does. */
+.enquiry-form__hp {
+  position: absolute;
+  left: -200vw;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.enquiry-form__sent {
+  outline: none;
+  min-height: 12rem;
+}
+.enquiry-form__sent-copy {
+  max-width: 24ch;
+}
