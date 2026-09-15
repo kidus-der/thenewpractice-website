@@ -45,8 +45,8 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 16 | done | 2b, 9, 11 | T1 Home template → `/` |
 | 17 | done | 2b, 11 | T5 Residences template → `/residences` |
 | 18 | done | 11 | Remaining T2 pages: `/our-process`, `/a-personal-message`, `/fees`, `/privacy`, `/terms` |
-| 18b | doing | 12 | Interactive self-assessment scorer → `/self-assessment/[slug]` × 10 |
-| 19 | todo | 13, 14, 15, 16, 17, 18, 18b | Cross-template hardening: viewports, 4× throttle traces, reduced motion, keyboard, axe, Safari |
+| 18b | done | 12 | Interactive self-assessment scorer → `/self-assessment/[slug]` × 10 |
+| 19 | doing | 13, 14, 15, 16, 17, 18, 18b | Cross-template hardening: viewports, 4× throttle traces, reduced motion, keyboard, axe, Safari |
 | 20 | todo | 19 | Performance budgets: Lighthouse, image sizes, font preload, bundle audit |
 | 21 | todo | 20, 6 | Staging deploy, live smoke test, `HANDOFF.md` |
 
@@ -520,3 +520,10 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **Playwright `sips` tiling note for reviewers:** `sips --cropOffset 0 0` crops from the image centre; use an offset of `1 1` for the top viewport.
 - **Docs not touched:** docs/06's module table still lists `UI` alone for `ui.ts` (Tasks 8, 11, 12, 17, 18 and now 18b all added objects there) and has no row for `enquiry.ts` or `seo.ts`; one sweep at Task 19 or 21.
 - **Open questions for the owner:** the score line (above); the instruction at `--t-eyebrow` versus `--t-small`; whether *Fifteen questions* should be the visible heading of the sheet or the section should carry the questionnaire's own title again; whether the result should also offer a way back to the index besides the rail.
+
+### Main session — triage of Task 18b (2026-09-15)
+
+- Accepted and merged (`task/18b-assessment` → `main`); verify green after merge (288 tests, 95.9% statements, ten questionnaire routes prerendered). Conflicts append-only; `UI_ASSESSMENT` kept.
+- Decisions: keep the "Score N of 15" line; instruction stays at `--t-eyebrow`; the sheet heading stays "Fifteen questions"; no extra back link (the rail carries it).
+- Task 19 also: add RTL `cleanup()` to `vitest.setup.ts`; retire the CLAUDE.md §6a rows and docs/03 figure that describe the pre-triage stone contrast; one docs/06 module-table sweep (`ui.ts` blocks, `enquiry.ts`, `seo.ts`).
+- All seven templates are now on `main`. Task 19 starts in worktree `task/19-hardening` on :3310.
