@@ -1,0 +1,50 @@
+/* ==========================================================================
+   AUDIO TOGGLE — co-located with AudioToggle.tsx, imported once by it.
+   A line action with the site's one permitted icon beside the label: three
+   hairline bars that move only while sound is on (docs/02 §Anti-patterns).
+   Tokens only; px for geometry per rule 4 as amended.
+   ========================================================================== */
+
+.audio-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+.audio-toggle__bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 10px;
+}
+.audio-toggle__bars span {
+  display: block;
+  width: 1px;
+  height: 100%;
+  background: currentColor;
+  transform-origin: bottom;
+  transform: scaleY(0.3);
+  transition: transform var(--d-base) var(--e-out-expo);
+}
+.audio-toggle__bars[data-active='true'] span {
+  animation: audio-bar var(--d-glacial) var(--e-in-out-quart) infinite alternate;
+}
+.audio-toggle__bars[data-active='true'] span:nth-child(2) {
+  animation-delay: calc(var(--d-base) * -1);
+}
+.audio-toggle__bars[data-active='true'] span:nth-child(3) {
+  animation-delay: calc(var(--d-slow) * -1);
+}
+@keyframes audio-bar {
+  from {
+    transform: scaleY(0.3);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .audio-toggle__bars[data-active='true'] span {
+    animation: none;
+    transform: scaleY(1);
+  }
+}

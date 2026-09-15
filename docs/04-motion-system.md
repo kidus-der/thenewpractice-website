@@ -146,7 +146,7 @@ Total budget: **1.8s maximum**, skippable by any input (click, key, scroll), **o
        Preloader removed from DOM, scroll unlocked, `veil:done` dispatched
 ```
 
-The home hero waits for `veil:done` so the two entrance moments never overlap.
+The home hero's words wait for `veil:done` so the two entrance moments never overlap; its media settle does not (§6), so the poster is painting and settling under the veil rather than after it.
 
 ### Route transitions — the curtain, every navigation after the first
 
@@ -218,7 +218,7 @@ The concept site's section moves are the vocabulary the templates draw from. Eac
 
 | Block | Choreography | Used by |
 | --- | --- | --- |
-| **Hero settle** | Media `scale 1.08 → 1` over `--d-glacial × 1.4`, `--e-out-expo`, after `veil:done`; lockup draws (mark strokes from centre, wordmark letterspacing, rule `scaleX`, tagline fade); on scroll the media parallaxes `yPercent: 12` and the content lifts `-40px` and fades over 60vh. **Never parallax text.** With video: poster first, then the video fades in over the poster once it can play. | T1 |
+| **Hero settle** | Media `scale 1.08 → 1` over `--d-glacial × 1.4`, `--e-out-expo`, **from mount** (the poster must not wait for the veil; ledger, Task 4); the lockup does not animate — it is the preloader's lockup in the preloader's place (`--lockup-lift`), so the veil splits onto it; the eyebrow, toggle and cue fade in after `veil:done`; on scroll the media parallaxes `yPercent: 12` and the words lift `-40px` and fade over 60% of the hero. **Never parallax text.** With video: poster first, then the `<video>` fades in over the poster across `--d-slow` on `playing`. | T1 |
 | **Ghosted mark + statement** | The ceiba at ~58vh, `--c-bone` at 0.16, `stroke-width 1.5`, behind three lines revealed one at a time; the gold point lands between lines two and three. Pinned for 2× viewport on desktop, 1.4× on mobile; unpinned under reduced motion and authored to read in flow. | T1 §1 |
 | **Scrubbed manifesto** | Statement at `--t-d1`, `.p-lead`, pinned 1.5× viewport, revealed line by line on `scrub: 0.8`. The reader controls the pace of the sentence. | T1 §4 *Why The New Practice* |
 | **Sticky index** | Left column sticky at `42vh`, one active item at a time: `--fg-muted → --fg` over `--d-base` and a 32px brass rule draws beside it. A reading aid, not a control — anchors are a nicety. ≥ 1024px only. | T1 §4 pillars, T2 pages with ≥ 5 sections |
@@ -228,7 +228,7 @@ The concept site's section moves are the vocabulary the templates draw from. Eac
 | **Mark draw on entry** | Strokes from centre, `stagger 0.09 from center`, `--e-out-quart`; point scales in; once. | T2 `/about` ceiba, T3/T4 accents |
 | **Discretion band** | One statement, one 21:9 plate, a single `mask` reveal. The least animated block; its absence of motion is the effect. | T5 privacy statement, T2 bands |
 | **Field focus / confirmation** | Field rule `scaleX 0 → 1` in `--accent` on focus, `--d-base`; on success (Motion) the fields fade out with a `0.04s` stagger and the confirmation line reveals as `lines`. | T7, home §5 teaser |
-| **Hover plate preview** | A 3:4 plate follows the pointer at ≥ 1024px with `pointer: fine`, its image swapping per row with a `--d-fast` crossfade; static thumbnails on touch. The concept site removed this from its team list because it named no people; the index pages *do*, so it returns there and nowhere else. | T6 |
+| **Hover plate preview** | A 3:4 plate follows the pointer at ≥ 1024px with `pointer: fine` (GSAP `quickTo`, `--d-base`, `--e-out-expo` — no spring), its image swapping per row with a `--d-fast` crossfade; static thumbnails on touch (T6) or the list alone (T1 §3). The concept site removed this from its team list because it named no people; the index pages *do*, so it returns there, and on the home page's conditions, which link to them. | T6, T1 §3 |
 
 ---
 

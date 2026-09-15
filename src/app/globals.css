@@ -94,6 +94,12 @@
   --z-preloader: 100;
 
   --radius-input: 2px;
+
+  /* — the title-page lockup: the preloader's and the home hero's lockup sit
+       this much above the frame's centre (padding-bottom on a centred box
+       lifts the centre by half of it). One value so the veil splits onto the
+       hero's lockup exactly where its own was. — */
+  --lockup-lift: 16vh;
 }
 
 @media (min-width: 768px) {

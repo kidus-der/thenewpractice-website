@@ -1,0 +1,47 @@
+/* ==========================================================================
+   02 — LONG READ — co-located with LongRead.tsx, imported once by it.
+   Headline left, body right; the pull line closes the column in the display
+   italic. Tokens only; px for geometry per rule 4 as amended.
+   ========================================================================== */
+
+.long-read__grid {
+  row-gap: var(--s-6);
+  align-items: start;
+}
+.long-read__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.long-read__title {
+  max-width: 14ch;
+}
+.long-read__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.long-read__prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  max-width: 62ch;
+}
+/* the last sentence, alone, in the site's one emphasis voice */
+.long-read__pull {
+  margin-top: var(--s-6);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--t-d3);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  max-width: 24ch;
+  text-wrap: balance;
+}
+
+@media (min-width: 1024px) {
+  /* the counterweight starts level with the headline, a group down from the eyebrow */
+  .long-read__body {
+    padding-top: calc(var(--s-6) + var(--t-eyebrow));
+  }
+}

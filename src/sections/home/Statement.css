@@ -1,0 +1,94 @@
+/* ==========================================================================
+   01 — STATEMENT — co-located with Statement.tsx, imported once by it. The
+   concept site's "one" block (sections.css) recomposed for the home page:
+   canopy stage, then bone prose. Tokens only; px for geometry per rule 4 as
+   amended.
+   ========================================================================== */
+
+/* the two blocks carry their own rhythm; the section itself has none */
+.statement {
+  padding-block: 0;
+}
+
+.statement__pin {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: var(--s-8);
+  position: relative;
+}
+.statement__stage {
+  position: relative;
+  flex: 1;
+  display: grid;
+  place-items: center;
+}
+
+/* The mark at its largest and quietest — ghosted behind the three lines it
+   illustrates. Its counterpart on /about is small, sharp and gold-pointed. */
+.statement__mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: auto;
+  height: min(58vh, 72vw);
+  transform: translate(-50%, -50%);
+  color: var(--c-bone);
+  opacity: 0.16;
+  /* The mark is drawn at 5 units in a 95-unit box. Scaled to half the viewport
+     that reads as a bold graphic rather than the fine line the identity is —
+     stroke weight has to come down as the mark goes up. */
+  stroke-width: 1.5;
+  user-select: none;
+}
+/* Scaled down with the strokes, and held at full strength: at 0.16 opacity the
+   surrounding tree recedes and the point is the only thing that stays. */
+.statement__mark .mark__point {
+  r: 3;
+  opacity: 1;
+}
+.statement__hairline {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--rule);
+  transform-origin: left;
+}
+.statement__copy {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+.statement__lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  text-align: center;
+  /* lifted half a line, so the gold point — and the hairline through it —
+     land between the second and third lines (docs/01 §The mark) */
+  transform: translateY(-0.55em);
+}
+.statement__line {
+  display: block;
+}
+
+/* the four paragraphs on bone, at the reading placement, a block apart. The
+   foot is a step shorter than the rhythm: the long read that follows is bone
+   too, and two full paddings on one ground read as a void. */
+.statement__prose {
+  padding-block: var(--s-8) var(--s-6);
+}
+.statement__paragraphs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  max-width: 62ch;
+}
+@media (min-width: 1024px) {
+  .statement__prose {
+    padding-block: var(--s-9) var(--s-7);
+  }
+}

@@ -85,3 +85,16 @@ export const UI_INDEX = {
   /** Beneath each questionnaire title, in the eyebrow register. */
   assessmentLength: 'Fifteen questions',
 } as const
+
+/**
+ * HOME TEMPLATE STRINGS — Task 16. The audio toggle's two labels (docs/08
+ * §Audio: the button reads what pressing it will do) and the landmark name
+ * of the philosophy pillars' index. The hero's own words — title, subtitle,
+ * cue — are the client's and live in pages/home.ts.
+ */
+export const UI_HOME = {
+  listen: 'Listen',
+  mute: 'Mute',
+  /** aria-label on the pillars' sticky index <nav>. */
+  pillarsIndexLabel: 'Our philosophy',
+} as const
