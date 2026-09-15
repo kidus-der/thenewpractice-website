@@ -97,7 +97,7 @@ T1 Home
 T2 Interior     bone throughout; inline plates on sand bands; enquire band canopy
 T3 Treatment    bone; "may include" on sand; related services bone; enquire band canopy
 T4 Profile      bone; portrait plate frame sand
-T5 Residences   bone; amenities table sand; privacy statement canopy
+T5 Residences   bone; plate carousel sand; amenities table bone; privacy statement canopy
 T6 Index        bone throughout — the list is the composition
 T7 Enquiry      split: canopy (letter + founder contact) / bone (form)
 ```

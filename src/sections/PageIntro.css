@@ -25,6 +25,14 @@
 /* the eyebrow keeps its rhythm but reads in ink: stone on bone is 3.8:1,
    under AA at this size, and axe holds the numeral to it whether or not it is
    aria-hidden (docs/03 §Contrast floor; ledger, Task 11) */
+/* the review flag: quiet, serif italic, a block above the lockup, so it reads
+   as a note on the proof rather than as part of the page */
+.page-intro__notice {
+  margin-bottom: var(--s-5);
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--fg-muted);
+}
 .page-intro__eyebrow {
   margin-bottom: var(--s-6);
   color: var(--fg);
