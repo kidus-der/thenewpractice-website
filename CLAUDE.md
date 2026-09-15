@@ -126,6 +126,8 @@ Every place the shipped code departs from the plan or this doc set is logged her
 
 | Spec | Shipped | Why | Task |
 | --- | --- | --- | --- |
+| Raw hex only in `globals.css` and `motion/tokens.ts` (§5 _Tokens or nothing_) | `src/lib/tokens.ts` also carries `PALETTE`, a TS mirror of the seven core colours, used only as the fallback argument to `readToken()` | The gradient needs a colour value before the stylesheet can be read (server, tests). One mirror beside the reader beats literals in components; GroundManager switches to it in task 7. | 3 |
+| Curtain cover/reveal at `--d-slow` (docs/04 §4) | `curtainVariants` use `--d-glacial` | docs/04 §1 and the task brief both put the curtain at `--d-glacial`; §4 disagreed with its own §1. §4 now reads `--d-glacial`. Task 9 may tune. | 3 |
 
 ## 7. Definition of done
 

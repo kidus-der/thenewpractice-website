@@ -7,11 +7,16 @@
 import { BRAND } from '@/content/brand'
 import { UI } from '@/content/ui'
 import { Mark } from '@/components/Mark'
+import { AmbientGradientLazy } from '@/webgl/AmbientGradientLazy'
 
 export default function Page() {
   return (
     <main id="main">
       <section className="hero" data-ground="dark" data-n="00" aria-labelledby="hero-wordmark">
+        {/* Task 3 proof: the gated ambient gradient behind the lockup. Mounts
+            only on an eligible desktop (docs/04 §8); otherwise renders nothing
+            and its chunk is never requested. Task 16 keeps it behind the video. */}
+        <AmbientGradientLazy className="hero__ambient" opacity={0.35} />
         <div className="hero__scrim" aria-hidden="true" />
 
         <div className="hero__content">

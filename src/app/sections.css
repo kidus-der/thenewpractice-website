@@ -310,6 +310,14 @@ html[data-cursor='custom'] * {
   height: 100%;
   object-fit: cover;
 }
+/* The ambient gradient (src/webgl) sits beneath the media and the scrim and
+   above the section's own canopy. Opacity is set by the mounting template;
+   docs/05 fixes the hero at 0.35. */
+.hero__ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
 /* Two layers: a vertical gradient for the chrome at top and bottom, and a soft
    pool behind the lockup. The photograph is busy in the middle and the wordmark
    has to hold against it without the frame going flat. */

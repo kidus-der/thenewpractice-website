@@ -9,8 +9,8 @@
 | Framework | **Next.js 16, App Router, React 19, TypeScript strict, `noUncheckedIndexedAccess`** | Same as the concept site, so the concept is a head start, not a rewrite. `next/image`, `next/font`, static generation of every content route, a server action for the one form. Turbopack in dev and build. |
 | Styling | **Tailwind CSS v4** (`@theme`) + the token CSS in `globals.css` | CSS-first config maps 1:1 onto `docs/03`. No `tailwind.config.js`. Utilities are rarely used; the design is written as tokenised CSS classes. |
 | Scroll choreography | **GSAP 3 + ScrollTrigger + SplitText**, **Lenis** on the GSAP ticker | Pins, scrubs, line masks — the signature moves. All GSAP plugins are free. One RAF loop. |
-| React transitions | **Motion** (`motion/react`) | Route curtain, nav overlay `AnimatePresence`, form → confirmation, result reveal. Global `MotionConfig` forces tweens on the identity's curves. **Boundary rule: scroll-driven → GSAP, state-driven → Motion; no springs.** `useScroll`, `useSpring`, `useTransform` are lint-banned. See `docs/04` §0. |
-| Ambient WebGL | **@shadergradient/react** on **@react-three/fiber v9 + three** (+ `three-stdlib`, `camera-controls`, `@types/three`) | One `ShaderGradientCanvas` behind the home hero video, colours canopy / canopy-soft / stone read from CSS variables, `uSpeed ≤ 0.2`, `grain="off"`, `pixelDensity 1`. `next/dynamic({ ssr: false })`, gated by `useAmbientEligible()` (reduced-motion, WebGL2, `saveData`, `≥ 1024px` + fine pointer, `deviceMemory`), paused offscreen and on tab blur, a separate chunk on `/` only. Contract §3 excludes WebGL from the fee, so it is a voluntary, removable enhancement and never load-bearing. |
+| React transitions | **Motion** (`motion/react`) | Route curtain, nav overlay `AnimatePresence`, form → confirmation, result reveal. `<MotionProvider>` (`src/motion/motion-config.ts`) is a global `MotionConfig` with `reducedMotion="user"` and a tween default on the identity's curves. **Boundary rule: scroll-driven → GSAP, state-driven → Motion; no springs.** `useScroll`, `useSpring`, `useTransform`, `useVelocity`, `useMotionValueEvent` and the `framer-motion` entry are lint-banned (`eslint.config.mjs`). See `docs/04` §0. |
+| Ambient WebGL | **@shadergradient/react 2.4.20** on **@react-three/fiber 9.7.0 + three 0.186.0** (+ `three-stdlib`, `camera-controls`, `@types/three`) | One `ShaderGradientCanvas` behind the home hero video, colours canopy / canopy-soft / stone read from CSS variables with `readToken()`, `uSpeed 0.16`, `grain="off"`, `pixelDensity 1`. `next/dynamic({ ssr: false })` behind `useAmbientEligible()` (reduced-motion, WebGL2, `saveData`, `≥ 1024px` + fine pointer, `deviceMemory`), paused offscreen and on tab blur via R3F `frameloop`, one lazy chunk (277 KB gzip) on `/` only. Contract §3 excludes WebGL from the fee, so it is a voluntary, removable enhancement and never load-bearing. Details below. |
 | Forms | **React Hook Form + Zod** (client) · **Zod** again in a **server action** · **Resend** adapter behind env · honeypot + time-trap | Nothing submitted is stored (contract §1). The adapter falls back to a structured stdout log when `RESEND_API_KEY` is absent. |
 | Content | **Typed TS modules per collection with Zod schemas** (`src/content/**`), generated from the client document by `scripts/ingest-content.mjs` | Validated at build and in unit tests. Shaped so a CMS (recommendation: Sanity, on the client's account) can replace the module source after template approval without touching templates. |
 | Search / AI visibility | Metadata API per template, JSON-LD (`Organization`, `Person`, `WebPage`, `BreadcrumbList`), `sitemap.ts`, `robots.ts` (disallow-all when `SITE_ENV=staging`), `/llms.txt`, OG image per template | Baked into templates now because the client judges them working |
@@ -35,13 +35,38 @@
 
 ```
 next 16.3.x · react / react-dom 19.2.x · typescript ^5 · tailwindcss ^4 (@tailwindcss/postcss)
-gsap ^3.15 · lenis ^1.3 · motion (task 3)
-@shadergradient/react · @react-three/fiber ^9 · three · three-stdlib · camera-controls (task 3)
+gsap ^3.15 · lenis ^1.3 · motion ^13.3
+@shadergradient/react 2.4.20 · @react-three/fiber 9.7.0 · three 0.186.0 · three-stdlib 2.36.1 · camera-controls 3.1.2
 react-hook-form ^7 · zod ^4 · @hookform/resolvers ^5
 resend (task 15)
 ```
 
-Dev only: `eslint ^9` + `eslint-config-next`, `prettier` + `prettier-plugin-tailwindcss`, `sharp` (asset pipeline), `@types/*`, `vitest` + `@testing-library/react` + `jsdom`, `@playwright/test` + `@axe-core/playwright`, `@lhci/cli` (task 4).
+### The Motion and WebGL packages (task 3)
+
+| Package | Version | Why this one, why pinned |
+| --- | --- | --- |
+| `motion` | `^13.3.0` | The `motion/react` entry (Motion for React). `framer-motion` is its legacy name and is lint-banned. Caret: it follows semver and has no peer coupling to the WebGL group. |
+| `@shadergradient/react` | `2.4.20` (exact) | The gradient itself. Declares only React as a peer and imports `three` and `@react-three/fiber` as externals, so the versions below are what it actually runs against; a caret here could silently move the whole group. |
+| `@react-three/fiber` | `9.7.0` (exact) | The React 19 line of R3F; v8 does not support React 19. Exact because its `three` peer range and its global JSX augmentation both matter to type-checking (see `Reveal.tsx`). |
+| `three` | `0.186.0` (exact) | three.js has no semver: every minor is breaking. Pinned to the release the R3F and three-stdlib pins were tested against. |
+| `three-stdlib` | `2.36.1` (exact) | ShaderGradient's shader helpers. Peer `three >= 0.128`; pinned with `three`. |
+| `camera-controls` | `3.1.2` (exact) | ShaderGradient's camera rig. Peer `three >= 0.126`; pinned with `three`. |
+| `@types/three` | `0.186.0` (exact, dev) | Must match `three` minor-for-minor or the types lie. |
+
+Upgrade the exact-pinned six together, never one at a time, and re-run the gradient proof (docs/04 §8) afterwards.
+
+**Type-checking note.** `@react-three/fiber` augments `JSX.IntrinsicElements` with three.js elements globally. A component that renders a dynamic tag typed as a bare `ElementType` then resolves its JSX props to `never`; `<Reveal>` casts its tag to a narrow HTML component type at the JSX site for that reason. New polymorphic components should do the same.
+
+### The ambient gradient's gate and budget
+
+- Entry: `<AmbientGradientLazy>` (`src/webgl/AmbientGradientLazy.tsx`). It renders nothing until `useAmbientEligible()` is true — server, hydration, and any ineligible device all get `null` — and only then calls `next/dynamic(() => import('./AmbientGradient'), { ssr: false })`.
+- Eligibility (`decideAmbientEligibility`, unit-tested): `(prefers-reduced-motion: no-preference)` · `(min-width: 1024px) and (pointer: fine)` · WebGL2 context creatable · `navigator.connection.saveData !== true` · `navigator.deviceMemory` unreported or `≥ 4`. The media queries are live; the WebGL probe runs once and only after the cheap guards pass.
+- Pause: `frameloop` → `'never'` when the wrapper leaves the viewport (IntersectionObserver) or the tab is hidden (`visibilitychange`), back to `'always'` on return. No unmount, no context loss.
+- Render: `waterPlane`, `uSpeed 0.16`, `uStrength 1.5`, `uDensity 1.2`, `brightness 1`, `grain="off"`, `lightType="3d"`, `pixelDensity 1`, `fov 45`, `powerPreference="low-power"`, `enableTransition={false}` (no camera spring on mount). Colours from `--c-canopy`, `--c-canopy-soft`, `--c-stone` via `readToken()`.
+- Cost (production build, Turbopack, at 2.4.20 / 9.7.0 / 0.186.0): one lazy chunk of **1,139,970 bytes raw / 277,017 bytes gzip** carrying three + R3F + ShaderGradient + the component, plus a 2 KB gzip loader. It is referenced by no route's prerendered HTML and requested only when `<AmbientGradientLazy>` decides yes. Today that is `/` alone; task 20 re-checks. If it ever costs a Lighthouse point on mobile it is removed (see _Explicitly rejected_).
+- Verified headless (Chromium 151, SwiftShader): at 1440×900 with motion allowed the canvas mounts at wrapper opacity 0.35 and the chunk loads; at 390×844, and at 1440×900 with `prefers-reduced-motion: reduce`, no canvas exists and the chunk is not requested.
+
+Dev only: `eslint ^9` + `eslint-config-next`, `prettier` + `prettier-plugin-tailwindcss`, `sharp` (asset pipeline), `@types/*` (including `@types/three 0.186.0`), `vitest` + `@testing-library/react` + `jsdom`, `@playwright/test` + `@axe-core/playwright`, `@lhci/cli` (task 4).
 
 No icon library, no utility grab-bag, no date library, no animation helper on top of GSAP or Motion.
 

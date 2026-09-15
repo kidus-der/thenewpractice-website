@@ -13,6 +13,7 @@ import { Preloader } from '@/components/Preloader'
 import { ScrollRail } from '@/components/ScrollRail'
 import { Cursor } from '@/components/Cursor'
 import { SmoothScroll } from '@/motion/SmoothScroll'
+import { MotionProvider } from '@/motion/motion-config'
 import { env, isIndexable } from '@/lib/env'
 
 /**
@@ -128,7 +129,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             in <RouteCurtain /> and re-runs on every navigation. Nothing mounts
             here for it; the slot is the template file, not this layout. */}
 
-        {children}
+        {/* Motion's global config: reducedMotion follows the OS, and every
+            transition defaults to a tween on the identity's curves (docs/04 §0). */}
+        <MotionProvider>{children}</MotionProvider>
 
         {/* CHROME SLOT — task 8 mounts <Footer /> here, after the page and
             before the texture. It is a server component with data-ground="dark"

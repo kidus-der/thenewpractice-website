@@ -27,9 +27,23 @@ The site uses **GSAP** (ScrollTrigger, SplitText, Lenis on its ticker) and **Mot
 
 Enforced by:
 
-- A global `<MotionConfig reducedMotion="user" transition={tween}>` in `src/motion/motion-config.ts` (task 3) whose default transition is a tween on the identity's curves. No component passes `type: 'spring'`.
-- An ESLint `no-restricted-imports` rule forbidding `useScroll`, `useSpring` and `useTransform` from `motion/react`. Scroll belongs to GSAP; springs are banned.
+- `<MotionProvider>` in `src/motion/motion-config.ts`, mounted once in `app/layout.tsx` around the page. It is `<MotionConfig reducedMotion="user" transition={defaultTransition}>`, and `defaultTransition` is `{ type: 'tween', duration: D.base, ease: identityEase.outExpo }`. Every child `motion` component inherits it; no component passes `type: 'spring'`.
+- An ESLint `no-restricted-imports` rule (`eslint.config.mjs`) forbidding `useScroll`, `useSpring`, `useTransform`, `useVelocity` and `useMotionValueEvent` from both `motion/react` and `motion`, and forbidding `framer-motion` outright. Scroll belongs to GSAP; springs are banned. Import from `motion/react` only.
 - Never both on one element. If a scroll-revealed element also needs a state transition, split it into a GSAP wrapper and a Motion child.
+
+### What `motion-config.ts` exports
+
+| Export | What it is |
+| --- | --- |
+| `identityEase` | `outExpo`, `outQuart`, `inOutQuart` as cubic-bezier arrays — the `--e-*` tokens for Motion. |
+| `durations` | The same `D` object GSAP uses (`src/motion/tokens.ts`), re-exported so a Motion file imports one thing. |
+| `defaultTransition` | The tween above. Spread it when a variant needs a different duration. |
+| `curtainVariants` | `hidden → cover → reveal`: a canopy panel rises to cover (`clip-path`, `--d-glacial`, `--e-in-out-quart`), then wipes away upward. Task 9 mounts it. |
+| `overlayVariants` | `panel` (wipe in `--d-slow`, out `--d-base`, `--e-in-out-quart`, children after the panel on open and before it on close) and `item` (masked line rise, `delayChildren: stagger(0.08)`). Task 7 mounts it. |
+| `fadeVariants` | `hidden / visible / exit` on opacity only, inheriting the default transition. The reduced-motion curtain, the result reveal, small swaps. |
+| `MotionProvider` | The `MotionConfig` wrapper. |
+
+**Reduced motion in Motion.** With `reducedMotion="user"`, Motion completes every positional value — transforms, `x`/`y`, layout — instantly and keeps only opacity and colour tweens. That gives the nav overlay its specified reduced-motion design (opacity only) for free. It does _not_ touch `clip-path`, so a component whose reduced-motion design is a fade rather than a wipe (the curtain) must read `useReducedMotion()` and choose `fadeVariants`. `prefersReducedMotion()` in `tokens.ts` is for non-React code paths only.
 
 ## The forbidden list
 
@@ -139,10 +153,10 @@ The home hero waits for `veil:done` so the two entrance moments never overlap.
 Motion, in `app/template.tsx` → `<RouteCurtain>` (task 9), keyed on `usePathname()`:
 
 ```
-Cover    canopy panel wipes over the outgoing page, clip-path, --d-slow, --e-in-out-quart
+Cover    canopy panel wipes over the outgoing page, clip-path, --d-glacial, --e-in-out-quart
          the small ceiba draws outward in the centre (strokes from the point)
 Under    scrollTo(0) instantly; Lenis and ScrollTrigger refreshed after mount
-Reveal   panel wipes away, --d-slow, --e-in-out-quart; page reveals run as normal
+Reveal   panel wipes away, --d-glacial, --e-in-out-quart; page reveals run as normal
 ```
 
 Reduced motion: an opacity fade only, `--d-base`. `curtainVariants` live in `motion-config.ts`; the curtain never imports GSAP for its own motion — the mark draw inside it is a CSS `stroke-dashoffset` transition on the same curve.
@@ -226,7 +240,10 @@ Implement as three guards, all three: `gsap.matchMedia()` with `(prefers-reduced
 
 - Character-level splits: at most two per page.
 - **One pinned ScrollTrigger active at a time.** Pins only on Home and `/our-process`.
-- Ambient gradient (`src/webgl/AmbientGradient.tsx`): home hero only; desktop `≥ 1024px` with `pointer: fine`; `prefers-reduced-motion: no-preference`; WebGL2 present; `saveData` off; `deviceMemory ≥ 4` when reported; `uSpeed ≤ 0.2`; `pixelDensity 1`; paused when its section leaves the viewport and on `visibilitychange`; loaded with `next/dynamic({ ssr: false })` after the hero LCP; a separate chunk that no other route loads. The poster and video are the deliverable; the gradient is additive and removable in one file.
+- Ambient gradient (`src/webgl/`): home hero only; desktop `≥ 1024px` with `pointer: fine`; `prefers-reduced-motion: no-preference`; WebGL2 present; `saveData` off; `deviceMemory ≥ 4` when reported; `uSpeed ≤ 0.2` (shipped 0.16); `pixelDensity 1`; paused when its section leaves the viewport and on `visibilitychange`; loaded with `next/dynamic({ ssr: false })` after the hero LCP; a separate chunk that no other route loads. The poster and video are the deliverable; the gradient is additive and removable in one file.
+  - Mount `<AmbientGradientLazy className opacity>` and nothing else. It calls `useAmbientEligible()` — the pure rule is `decideAmbientEligibility(env)` in `ambientEligibility.ts`, unit-tested — and renders nothing until every guard passes, so the chunk is never requested on an ineligible device. The two media queries are live subscriptions; flipping Reduce Motion on mid-session unmounts it.
+  - Pausing is a real stop: a `FrameloopGate` child inside the R3F tree switches `frameloop` between `always` and `never` from an IntersectionObserver on the wrapper and `document.visibilityState`. The shader keeps its own clock, so on resume the surface is simply further along.
+  - Colours are read from `--c-canopy`, `--c-canopy-soft`, `--c-stone` at mount via `readToken()` (`src/lib/tokens.ts`). Never brass. `grain="off"`: the site has its own grain layer above it.
 - Every SplitText instance reverted on unmount; every GSAP context scoped to a ref and reverted in cleanup; `ScrollTrigger.getAll().length` stable across three navigations.
 - `will-change` applied immediately before a tween and removed in `onComplete`. Never left in a stylesheet (the grain layer and the carousel track are the two tolerated exceptions, documented in their CSS).
 - `ScrollTrigger.refresh()` on resize debounced at 200ms and skipped on mobile viewport-height changes (width-only check in `SmoothScroll`).

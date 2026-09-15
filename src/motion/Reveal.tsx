@@ -6,11 +6,33 @@
  * Five variants, one component. 95% of the site's scroll motion runs through
  * here. Reveals are once:true — nothing re-animates on scroll-back.
  */
-import { useLayoutEffect, useRef, type ElementType, type ReactNode } from 'react'
+import {
+  useLayoutEffect,
+  useRef,
+  type ComponentType,
+  type ElementType,
+  type HTMLAttributes,
+  type ReactNode,
+  type Ref,
+} from 'react'
 import { gsap, ScrollTrigger, SplitText } from './gsap'
 import { D, E, REVEAL_START, STAGGER } from './tokens'
 
 export type RevealVariant = 'fade' | 'rise' | 'mask' | 'lines' | 'chars'
+
+/**
+ * The props a reveal element actually receives. @react-three/fiber (task 3)
+ * augments JSX.IntrinsicElements with three.js elements, and a JSX tag typed
+ * as a bare ElementType then intersects every element's props into `never`.
+ * Casting the tag to this narrow component type at the JSX site sidesteps it.
+ */
+type RevealElement = ComponentType<
+  HTMLAttributes<HTMLElement> & {
+    ref?: Ref<HTMLElement>
+    'data-reveal'?: string
+    'data-reveal-children'?: string
+  }
+>
 
 type Props = {
   variant?: RevealVariant
@@ -29,7 +51,7 @@ export function Reveal({
   delay = 0,
   stagger,
   staggerChildren = false,
-  as: Tag = 'div',
+  as = 'div',
   className,
   children,
   id,
@@ -109,6 +131,7 @@ export function Reveal({
 
   const dataAttr =
     variant === 'lines' || variant === 'chars' ? undefined : staggerChildren ? undefined : variant
+  const Tag = as as RevealElement
 
   return (
     <Tag

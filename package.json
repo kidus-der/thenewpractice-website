@@ -11,16 +11,24 @@
     "format": "prettier --write .",
     "assets": "node scripts/prepare-assets.mjs",
     "og": "node scripts/make-og.mjs",
-    "verify": "npm run lint && npm run typecheck && npm run build"
+    "verify": "npm run lint && npm run typecheck && npm run build",
+    "video": "node scripts/prepare-video.mjs",
+    "media": "npm run video && npm run assets"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
+    "@react-three/fiber": "9.7.0",
+    "@shadergradient/react": "2.4.20",
+    "camera-controls": "3.1.2",
     "gsap": "^3.15.0",
     "lenis": "^1.3.26",
+    "motion": "^13.3.0",
     "next": "16.3.5",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-hook-form": "^7.88.0",
+    "three": "0.186.0",
+    "three-stdlib": "2.36.1",
     "zod": "^4.6.5"
   },
   "devDependencies": {
@@ -28,6 +36,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "0.186.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
     "prettier": "^3.9.6",

@@ -31,5 +31,10 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    // Task 4 installs Vitest and removes this line; until then the *.test.ts
+    // files next to their sources import a package that is not installed.
+    "**/*.test.ts"
+  ]
 }
