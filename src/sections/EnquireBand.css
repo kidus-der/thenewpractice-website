@@ -1,0 +1,19 @@
+/* ==========================================================================
+   ENQUIRE BAND — co-located with EnquireBand.tsx, imported once by it.
+   Canopy, one line, one action. The least it can be. Tokens only.
+   ========================================================================== */
+
+.enquire-band .eyebrow {
+  color: var(--fg);
+}
+.enquire-band__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.enquire-band__line {
+  max-width: 20ch;
+}
+.enquire-band__action {
+  margin-top: var(--s-6);
+}

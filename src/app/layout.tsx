@@ -5,7 +5,6 @@ import './globals.css'
 // in globals.css, or overrides like .manifesto__body's measure lose the tie.
 import './sections.css'
 
-import { BRAND } from '@/content/brand'
 import { UI } from '@/content/ui'
 import { Grain } from '@/components/Grain'
 import { GroundManager } from '@/components/GroundManager'
@@ -16,7 +15,10 @@ import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { SmoothScroll } from '@/motion/SmoothScroll'
 import { MotionProvider } from '@/motion/motion-config'
-import { env, isIndexable } from '@/lib/env'
+import { env } from '@/lib/env'
+import { buildMetadata } from '@/lib/seo'
+import { routes } from '@/content/nav'
+import { ROUTE_SEO } from '@/content/seo'
 
 /**
  * The identity specifies a high-contrast Didone in the Didot/Bodoni family —
@@ -44,41 +46,15 @@ const text = Jost({
 })
 
 // Validated in src/lib/env.ts (defaults to the dev origin, so metadataBase is
-// always valid). Task 10 replaces the metadata below with buildMetadata().
+// always valid). The site defaults come from buildMetadata() with the home
+// entry (Task 10): an absolute title, the canonical, robots from SITE_ENV, and
+// the generated Open Graph card — every page overrides them the same way.
 const SITE_URL = env().NEXT_PUBLIC_SITE_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: {
-    default: `${BRAND.name}${BRAND.trademark} — ${BRAND.tagline}`,
-    template: `%s — ${BRAND.name}`,
-  },
-  description: `${BRAND.tagline}. ${BRAND.locale}.`,
-  // Staging must not be indexed: only SITE_ENV=production indexes, mirrored by
-  // app/robots.ts. This meta and robots.txt are the only guard on the review URL.
-  robots: isIndexable() ? { index: true, follow: true } : { index: false, follow: false },
+  ...buildMetadata({ ...ROUTE_SEO.home, path: routes.home }),
   icons: { icon: '/icon.svg', apple: '/icon.svg' },
-  openGraph: {
-    title: BRAND.name,
-    description: BRAND.tagline,
-    type: 'website',
-    url: SITE_URL,
-    siteName: BRAND.name,
-    images: [
-      {
-        url: '/og.png',
-        width: 1200,
-        height: 630,
-        alt: `${BRAND.nameUpper} — ${BRAND.tagline}`,
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: BRAND.name,
-    description: BRAND.tagline,
-    images: ['/og.png'],
-  },
 }
 
 export const viewport: Viewport = {

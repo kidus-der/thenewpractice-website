@@ -29,3 +29,19 @@ export const UI_FOOTER = {
   /** Decorative separator between marquee repetitions; never read aloud. */
   marqueeSeparator: '·',
 } as const
+
+/**
+ * INTERIOR TEMPLATE STRINGS — Task 11. Landmark names for the sticky section
+ * index and the previous/next rail, and the ceiba figure's caption. The
+ * caption is factual — the species and the Yucatec Maya name of the tree the
+ * mark is drawn from — and makes no claim (docs/01 §On the Maya material).
+ */
+export const UI_INTERIOR = {
+  /** aria-label on the sticky index <nav>. */
+  indexLabel: 'On this page',
+  /** aria-label on the previous/next <nav>. */
+  railLabel: 'Adjacent pages',
+  previous: 'Previous',
+  next: 'Next',
+  ceibaCaption: 'Ceiba pentandra · Ya’axché',
+} as const

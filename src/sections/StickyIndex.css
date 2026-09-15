@@ -1,0 +1,60 @@
+/* ==========================================================================
+   STICKY INDEX — co-located with StickyIndex.tsx, imported once by it.
+   The nav's own look; where it sits (the sticky left column from 1024px)
+   is the template's business (InteriorTemplate.css). Tokens only; px for
+   geometry per rule 4 as amended.
+   ========================================================================== */
+
+.sticky-index__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.sticky-index__link {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+  color: var(--fg);
+  text-decoration: none;
+  /* docs/04 §6 asks for --fg-muted → --fg; stone on bone is under AA at this
+     size, so the quiet state is the ink itself held back, and the shift is
+     opacity — compositor-only and legible at both ends. */
+  opacity: 0.72;
+  transition: opacity var(--d-base) var(--e-out-expo);
+  /* reach the 44px hit floor without the list opening up */
+  padding-block: var(--s-2);
+}
+.sticky-index__link:hover,
+.sticky-index__link:focus-visible,
+.sticky-index__link[aria-current='true'] {
+  opacity: 1;
+}
+/* the 32px brass rule (docs/04 §6), drawn from the left as its section arrives;
+   it lives in the margin so the numeral never moves */
+.sticky-index__rule {
+  position: absolute;
+  left: calc(-1 * (32px + var(--s-3)));
+  top: 50%;
+  width: 32px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--d-base) var(--e-out-expo);
+}
+.sticky-index__link[aria-current='true'] .sticky-index__rule {
+  transform: scaleX(1);
+}
+/* ink like the title (clay on bone is 1.6:1, and axe holds even an
+   aria-hidden numeral to the contrast floor); the size keeps it quiet */
+.sticky-index__numeral {
+  flex: 0 0 auto;
+  width: 2ch;
+}
+.sticky-index__title {
+  text-wrap: pretty;
+}

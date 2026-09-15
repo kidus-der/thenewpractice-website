@@ -18,7 +18,6 @@
     "lighthouse": "node tests/lighthouse/run.mjs",
     "content:check": "node --experimental-strip-types scripts/check-content.ts",
     "assets": "node scripts/prepare-assets.mjs",
-    "og": "node scripts/make-og.mjs",
     "video": "node scripts/prepare-video.mjs",
     "media": "npm run video && npm run assets",
     "verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build"
