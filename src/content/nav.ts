@@ -26,6 +26,14 @@ export const routes = {
 export type RouteKey = keyof typeof routes
 export type StaticRoute = (typeof routes)[RouteKey]
 
+/**
+ * Routes kept out of the index and the sitemap while their copy is a
+ * PLACEHOLDER stub (docs/CONTENT-GAPS.md G3). Each page also passes
+ * `noIndex: true` to `buildMetadata()`. Remove a route from here when the
+ * client's counsel supplies its text.
+ */
+export const NOINDEX_ROUTES: ReadonlySet<string> = new Set([routes.privacy, routes.terms])
+
 export const serviceHref = (slug: string): string => `${routes.clinicalServices}/${slug}`
 export const teamHref = (slug: string): string => `${routes.team}/${slug}`
 export const assessmentHref = (slug: string): string => `${routes.selfAssessment}/${slug}`

@@ -59,6 +59,21 @@
 .content-section__prose + .content-section__prose {
   margin-top: var(--s-4);
 }
+/* an untitled section (a letter, a statement) opens on its prose: no eyebrow
+   above it, so the section's own padding is the whole top margin */
+.content-section__body > .content-section__prose:first-child {
+  margin-top: 0;
+}
+/* the lead register — a letter or a single statement — takes the column's
+   full measure and looser leading than .t-lead's 46ch/1.45 (docs/03 §2) */
+.content-section__prose-lead {
+  max-width: 100%;
+  line-height: 1.6;
+}
+.content-section__prose:has(> .content-section__prose-lead) {
+  gap: var(--s-5);
+  max-width: 54ch;
+}
 
 /* — the plate opens a chapter: after the heading, before the prose. Two
      classes, because PlateFigure's own stylesheet cascades after this one
@@ -148,4 +163,12 @@
 }
 .content-section__signature-role {
   color: var(--fg);
+}
+/* the valediction sits with the name, a paragraph above it */
+.content-section__signature-valediction {
+  margin-bottom: var(--s-3);
+}
+/* a letter's signature shares its measure */
+.content-section__prose:has(> .content-section__prose-lead) + .content-section__signature {
+  max-width: 54ch;
 }

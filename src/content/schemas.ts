@@ -31,6 +31,8 @@ const order = z.number().int().positive()
 export const definitionSchema = z.object({ term: text, description: text })
 
 export const signatureSchema = z.object({
+  /** The closing line above the name ("Warm regards,"); a route composes it from the last paragraph. */
+  valediction: text.optional(),
   name: text,
   credentials: text.optional(),
   role: text,

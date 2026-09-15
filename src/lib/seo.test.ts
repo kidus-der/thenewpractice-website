@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { ASSESSMENTS, BRAND, SERVICES, TEAM, allRoutes, routes } from '@/content'
+import { ASSESSMENTS, BRAND, NOINDEX_ROUTES, SERVICES, TEAM, allRoutes, routes } from '@/content'
 import {
   ADDRESS,
   DESCRIPTION_MAX,
@@ -251,21 +251,33 @@ describe('sitemapEntries', () => {
     expect(sitemapEntries(staging, when)).toEqual([])
   })
 
-  it('lists every route with priorities by kind', () => {
+  it('lists every indexable route with priorities by kind', () => {
     const entries = sitemapEntries(production, when)
-    expect(entries).toHaveLength(allRoutes().length)
+    expect(entries).toHaveLength(allRoutes().length - NOINDEX_ROUTES.size)
     const byUrl = new Map(entries.map((e) => [e.url, e]))
     expect(byUrl.get('https://www.example.health/')?.priority).toBe(1)
     expect(byUrl.get('https://www.example.health/about')?.priority).toBe(0.8)
-    expect(byUrl.get('https://www.example.health/privacy')).toMatchObject({
-      priority: 0.3,
-      changeFrequency: 'yearly',
-    })
     const service = SERVICES[0]
     expect(
       byUrl.get(`https://www.example.health/clinical-services/${service?.slug}`)?.priority
     ).toBe(0.6)
     for (const entry of entries) expect(entry.lastModified).toBe(when)
+  })
+
+  it('leaves out the noindex routes — the PLACEHOLDER legal stubs — by default', () => {
+    const urls = sitemapEntries(production, when).map((e) => e.url)
+    expect(NOINDEX_ROUTES.has(routes.privacy)).toBe(true)
+    expect(NOINDEX_ROUTES.has(routes.terms)).toBe(true)
+    for (const path of NOINDEX_ROUTES) {
+      expect(urls).not.toContain(canonicalUrl(production.siteUrl, path))
+    }
+  })
+
+  it('lists a legal route as yearly and low priority once it is no longer excluded', () => {
+    const entries = sitemapEntries(production, when, new Set())
+    expect(entries).toHaveLength(allRoutes().length)
+    const privacy = entries.find((e) => e.url === 'https://www.example.health/privacy')
+    expect(privacy).toMatchObject({ priority: 0.3, changeFrequency: 'yearly' })
   })
 })
 

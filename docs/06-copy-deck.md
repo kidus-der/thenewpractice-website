@@ -18,6 +18,7 @@
 | `pages/fees.ts` | `FEES` (one statement, rendered as written) | Cost (l.1283–1285) | Generated |
 | `pages/contact.ts` | `CONTACT` (intro + three sections, `lead`, `contact`) | Contact (l.1197–1250) | Generated |
 | `pages/residences.ts` | `RESIDENCES` | **None supplied** | Hand-written, all `PLACEHOLDER` |
+| `pages/legal.ts` | `PRIVACY`, `TERMS` (four headings each, one pending sentence) | **None supplied** (CONTENT-GAPS G3) | Hand-written, all `PLACEHOLDER` (Task 18) |
 | `services.ts` | `SERVICES_PAGE` (index intro), `SERVICES` (11) | Clinical Services (l.400–718) | Generated |
 | `team.ts` | `TEAM_PAGE` (intro + *One Client. One Team.*), `TEAM` (11, document order) | Our Team (l.719–949) | Generated |
 | `assessments.ts` | `ASSESSMENTS_PAGE` (intro, disclaimer, how-to, available, consultation), `ASSESSMENT_SERIES` (shared scoring strings, superseded scale), `ASSESSMENTS` (10 × 15) | Self-Assessment (l.950–1196) | Generated |
@@ -44,7 +45,7 @@ Contact values are never literals in a generated module: `HOME.contact` and `CON
 
 1. **Verbatim.** The client's wording is preserved exactly: British and North American spellings as they wrote them, their casing in section titles (*ABOUT THE NEW PRACTICE*), their punctuation, their paragraph breaks, their typographic quotes and dashes. Only markdown is removed: emphasis markers, pandoc escapes (`\-`, `\.`, `\+`, `\_`), link syntax, hard-break trailing spaces, and word-processor residue (zero-width characters, non-breaking spaces). Wrapped lines are rejoined only when a line stops mid-sentence. Six random paragraphs were diffed byte-for-byte against the source at ingestion; `content.checks.ts` keeps the residue rules enforced.
 2. **Nothing clinical is invented.** No claim, statistic, credential, accreditation, outcome or named individual that is not in the document. Where the document is silent (nine assessment interpretations) the module carries the client's generic sentence, not ours.
-3. **Structural copy we write is marked.** `PLACEHOLDER` is permitted in exactly three places, and `content.checks.ts` fails otherwise: `pages/residences.ts` (every string prefixed `PLACEHOLDER — `), `CONTACT.contact.website`, and the future legal module. Form labels, errors and confirmation lines are interface, not content; they are ours and unmarked (Task 15).
+3. **Structural copy we write is marked.** `PLACEHOLDER` is permitted in exactly three places, and `content.checks.ts` fails otherwise: `pages/residences.ts` and `pages/legal.ts` (every string prefixed `PLACEHOLDER — `) and `CONTACT.contact.website`. Form labels, errors and confirmation lines are interface, not content; they are ours and unmarked (Task 15).
 4. **Components never contain literals.** Not a heading, a label, an `aria-label` or a `title`. Everything comes from a module; `alt` text for stock plates lives in `media.ts` or the page module.
 5. **One source for contact details.** `brand.ts`. The contact page's blank fields resolve to it (owner decision, ledger).
 6. **Contradictions are resolved by the owner, recorded in `CONTENT-GAPS.md`, and rendered one way.** Assessment scoring is the known case.
