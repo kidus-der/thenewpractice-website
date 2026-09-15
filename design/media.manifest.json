@@ -1,0 +1,21 @@
+{
+  "video": [
+    { "key": "hero-surf",   "url": "https://videos.pexels.com/video-files/35575712/15076554_2560_1440_30fps.mp4", "trimStart": 4, "trimSeconds": 12 },
+    { "key": "hero-canopy", "url": "https://videos.pexels.com/video-files/35232259/14926814_2560_1440_30fps.mp4", "trimStart": 2, "trimSeconds": 12 },
+    { "key": "cenote",      "url": "https://videos.pexels.com/video-files/17145872/17145872-uhd_2560_1440_30fps.mp4", "trimStart": 1, "trimSeconds": 12 }
+  ],
+  "stills": [
+    { "key": "hero-poster",     "url": "https://images.pexels.com/photos/9221275/pexels-photo-9221275.jpeg",   "aspect": "16:9", "ev": 0 },
+    { "key": "residence-01",    "url": "https://images.pexels.com/photos/37408889/pexels-photo-37408889.jpeg", "aspect": "3:4",  "ev": 0 },
+    { "key": "residence-02",    "url": "https://images.pexels.com/photos/16596630/pexels-photo-16596630.jpeg", "aspect": "3:4",  "ev": 0 },
+    { "key": "residence-03",    "url": "https://images.pexels.com/photos/36251225/pexels-photo-36251225.jpeg", "aspect": "3:4",  "ev": 0 },
+    { "key": "residence-04",    "url": "https://images.pexels.com/photos/4917109/pexels-photo-4917109.jpeg",   "aspect": "3:4",  "ev": 0 },
+    { "key": "residence-05",    "url": "https://images.pexels.com/photos/15383436/pexels-photo-15383436.jpeg", "aspect": "3:4",  "ev": 0 },
+    { "key": "residence-06",    "url": "https://images.pexels.com/photos/31325345/pexels-photo-31325345.jpeg", "aspect": "3:4",  "ev": 0 },
+    { "key": "index-01",        "url": "https://images.pexels.com/photos/14222209/pexels-photo-14222209.jpeg", "aspect": "3:4",  "ev": 0 },
+    { "key": "index-02",        "url": "https://images.pexels.com/photos/6665221/pexels-photo-6665221.jpeg",   "aspect": "3:4",  "ev": 0 },
+    { "key": "index-03",        "url": "https://images.pexels.com/photos/9862523/pexels-photo-9862523.jpeg",   "aspect": "3:4",  "ev": 0 },
+    { "key": "index-04",        "url": "https://images.pexels.com/photos/7784532/pexels-photo-7784532.jpeg",   "aspect": "3:4",  "ev": 0 },
+    { "key": "band-discretion", "url": "https://images.pexels.com/photos/16634008/pexels-photo-16634008.jpeg", "aspect": "21:9", "ev": 0 }
+  ]
+}

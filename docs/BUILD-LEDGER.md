@@ -27,8 +27,8 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | id | status | depends_on | task |
 |---|---|---|---|
 | 1 | done | — | Scaffold Next 16 in this repo; port the concept site's foundation, docs and client resources |
-| 2a | doing | — | Research and shortlist licence-free stock video and imagery with direct download URLs |
-| 2b | todo | 1, 2a | Download, grade and encode the stock media; generate `media.ts`; write `design/ASSETS.md` |
+| 2a | done | — | Research and shortlist licence-free stock video and imagery with direct download URLs |
+| 2b | doing | 1, 2a | Download, grade and encode the stock media; generate `media.ts`; write `design/ASSETS.md` |
 | 3 | doing | 1 | Motion integration (tween-only config, route curtain primitive) and gated shader gradient |
 | 4 | todo | 1 | Test harness: Vitest + RTL, Playwright (4 viewports + reduced motion + axe), Lighthouse CI, `npm run verify` |
 | 5 | doing | 1 | Content ingestion: client doc → typed, Zod-validated `src/content/**`; `docs/CONTENT-GAPS.md` |
