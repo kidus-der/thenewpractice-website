@@ -118,6 +118,15 @@ The full reduced-motion specification is in `docs/04` §7. The failure modes to 
 | Old Safari | Motion degrades, layout holds |
 | Print | Bone ground, ink type, images at 3:4, no fixed elements. The self-assessment pages print cleanly — someone will print one to bring to a clinician. |
 
+### Enquiry data handling
+
+The enquiry form is the only place a visitor can hand the site anything, and the contract (§1) says the site collects nothing beyond what a person types there and stores none of it. What happens to a submission, end to end (`src/server/`, Task 15):
+
+- **Sent:** the six fields — name, email, telephone if given, who the enquiry concerns, the message, the preferred channel — as one plain-text email from `enquiries@<site host>` (or `ENQUIRY_FROM_EMAIL`) to `ENQUIRY_TO_EMAIL` through Resend, with the enquirer as reply-to. Resend receives exactly that email and nothing else (no tags, no metadata, no HTML). While `RESEND_API_KEY` is unset (staging today) nothing leaves the machine.
+- **Logged:** one JSON line per event on stdout — `enquiry.sent | invalid | rejected | failed | logged | mail.*` — carrying the level, the time, the provider message id, the enquiring-for and preferred-contact values, whether a telephone was given, the rejection reason (`honeypot`, `too-fast`, `expired`) and, for text fields, only their character counts. `src/lib/logger.ts` reduces `name`, `email`, `telephone` and `message` to lengths at every depth; a unit test asserts the words never appear.
+- **Stored:** nothing. No database, no file, no cookie, no analytics event. The action's result to the browser is a status and, when invalid, the content-layer error messages — never the submitted text, which is also why a no-JavaScript resubmission starts from an empty form.
+- **Not done:** no rate limiting beyond the honeypot and the 3 s / 2 h timing window (the window applies when the client stamped the form; without JavaScript only the honeypot guards), no IP logging, no reCAPTCHA or third-party anti-abuse.
+
 ### Security headers
 
 Set in `vercel.json` for every route (task 6), so they apply at the edge without a middleware. Vercel adds `Strict-Transport-Security` itself. Any task that introduces a new origin (a video CDN, an embedded map, an analytics endpoint after approval) widens the matching CSP directive in the same commit and records why here.

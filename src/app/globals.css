@@ -125,6 +125,22 @@
   --bg-raised: var(--c-bone);
 }
 
+/* — a light surface *inside* a dark section (the enquiry sheet). Same aliases
+     as the light ground, declared here so they exist in one file; not a
+     section, so GroundManager (`main [data-ground]`) never reads it and the
+     chrome keeps the section's ground. — */
+[data-surface='light'] {
+  --fg: var(--c-canopy);
+  --fg-muted: var(--c-stone);
+  --fg-faint: var(--c-clay);
+  --bg: var(--c-bone);
+  --bg-raised: var(--c-sand);
+  --rule: rgb(20 35 28 / 0.14);
+  --rule-strong: rgb(20 35 28 / 0.3);
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
 /* ==========================================================================
    BASE
    ========================================================================== */

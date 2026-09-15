@@ -19,6 +19,8 @@ export const E = {
 
 export const STAGGER = {
   chars: 0.04,
+  /** Form fields fading out before a confirmation (docs/04 §6). */
+  fields: 0.04,
   default: 0.06,
   large: 0.08,
 } as const

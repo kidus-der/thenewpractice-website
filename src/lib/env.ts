@@ -29,6 +29,8 @@ const envSchema = z.object({
   // staging until the client's Resend account exists; the adapter logs instead.
   RESEND_API_KEY: z.string().min(1).optional(),
   ENQUIRY_TO_EMAIL: z.email().optional(),
+  // Verified sending address; defaults to enquiries@<site host> (mail.adapter.ts).
+  ENQUIRY_FROM_EMAIL: z.email().optional(),
 })
 
 export type Env = z.infer<typeof envSchema>
@@ -56,6 +58,7 @@ const readProcessEnv = (): RawEnv => ({
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   ENQUIRY_TO_EMAIL: process.env.ENQUIRY_TO_EMAIL,
+  ENQUIRY_FROM_EMAIL: process.env.ENQUIRY_FROM_EMAIL,
 })
 
 let cached: Env | undefined

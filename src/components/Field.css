@@ -1,0 +1,91 @@
+/* ==========================================================================
+   FIELD — co-located with Field.tsx. The text-field grammar (.field*) lives
+   in globals.css; this file adds the radio group rendered as line-action
+   toggles, and the always-present error line. Tokens for colour, type,
+   space and motion; literal px only for geometry (rule 4 as amended).
+   ========================================================================== */
+
+.field__error {
+  display: block;
+  min-height: 1.4em;
+  margin-top: var(--s-2);
+  color: var(--accent);
+}
+
+/* A textarea is written from the top, so its label rests on the first line
+   rather than on the rule, and floats up from there. */
+.field--multiline .field__label {
+  top: calc(var(--s-5) + var(--s-2));
+  bottom: auto;
+  transform-origin: left top;
+}
+
+/* — choice: a fieldset that ends on the same rule as every other field — */
+.choice {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.choice__legend {
+  padding: 0;
+  margin-bottom: var(--s-3);
+  color: var(--fg-muted);
+}
+.choice__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3) var(--s-5);
+  padding-bottom: var(--s-3);
+  border-bottom: 1px solid var(--rule-strong);
+}
+.choice__option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--fg-muted);
+  cursor: pointer;
+  transition: color var(--d-base) var(--e-out-expo);
+}
+/* The radio stays in the document for focus and the arrow-key model; it is
+   simply not painted. Never display:none — that removes it from the tab order. */
+.choice__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+/* The tick: the line action's rule laid beside the word instead of under it. */
+.choice__tick {
+  display: block;
+  width: 16px;
+  height: 1px;
+  background: var(--rule-strong);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition:
+    transform var(--d-base) var(--e-out-expo),
+    background-color var(--d-base) var(--e-out-expo);
+}
+.choice__label {
+  line-height: 1.4;
+}
+@media (hover: hover) {
+  .choice__option:hover .choice__tick {
+    transform: scaleX(1);
+  }
+}
+.choice__option:has(.choice__input:checked) {
+  color: var(--fg);
+}
+.choice__option:has(.choice__input:checked) .choice__tick {
+  transform: scaleX(1);
+  background: var(--accent);
+}
+.choice__option:has(.choice__input:focus-visible) {
+  outline: 1px solid var(--accent);
+  outline-offset: 4px;
+}
