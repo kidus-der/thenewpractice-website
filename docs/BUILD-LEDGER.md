@@ -43,7 +43,7 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 14 | todo | 12 | T4 Profile template → `/team/[slug]` × 11 |
 | 15 | doing | 11 | T7 Enquiry template → `/contact` with server action and mail adapter |
 | 16 | doing | 2b, 9, 11 | T1 Home template → `/` |
-| 17 | doing | 2b, 11 | T5 Residences template → `/residences` |
+| 17 | done | 2b, 11 | T5 Residences template → `/residences` |
 | 18 | doing | 11 | Remaining T2 pages: `/our-process`, `/a-personal-message`, `/fees`, `/privacy`, `/terms` |
 | 18b | todo | 12 | Interactive self-assessment scorer → `/self-assessment/[slug]` × 10 |
 | 19 | todo | 13, 14, 15, 16, 17, 18, 18b | Cross-template hardening: viewports, 4× throttle traces, reduced motion, keyboard, axe, Safari |
@@ -389,3 +389,9 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **Amenities markup is an `<ol>`, not a `<table>`.** The content is five labels with no values, so the "label in eyebrow register, value in body" reading is numeral + amenity. A headerless two-column `<table>` for a list would have been the wrong semantics for the same picture. The component keeps the brief's name.
 - **Verification:** `npm run verify` green; `E2E_BASE_URL=http://localhost:3305 npm run e2e:route -- residences` green on all five projects (the reduced-motion axe run failed once on the scroller before the tab stop above); screenshots at 390 / 768 / 1280 / 1920 and reduced motion cropped to viewport height with sharp and read. Dev server on 3305 stopped after.
 
+
+### Main session — triage of Task 17 (2026-09-15)
+
+- Accepted and merged (`task/17-residences` → `main`); verify green after merge (176 tests, 95.3% statements, `/residences` prerendered). Append-only conflicts resolved by keeping both sides.
+- The staging-only review flag (`PageIntro notice`) is the pattern for every PLACEHOLDER page: Task 18 uses it on `/privacy` and `/terms` (reconcile the `ui.ts` string on merge).
+- Task 19: unify eyebrow numerals on `--fg-muted` across Task 11's blocks; relax the intro padding at short viewports; switch `about.spec.ts` to the shared `revealAll`.
