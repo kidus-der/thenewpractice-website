@@ -40,7 +40,7 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 11 | done | 7, 8, 10 | T2 Interior template → `/about` |
 | 12 | done | 11 | T6 Index template → `/clinical-services`, `/team`, `/self-assessment` |
 | 13 | done | 12 | T3 Treatment template → `/clinical-services/[slug]` × 11 |
-| 14 | doing | 12 | T4 Profile template → `/team/[slug]` × 11 |
+| 14 | done | 12 | T4 Profile template → `/team/[slug]` × 11 |
 | 15 | doing | 11 | T7 Enquiry template → `/contact` with server action and mail adapter |
 | 16 | done | 2b, 9, 11 | T1 Home template → `/` |
 | 17 | done | 2b, 11 | T5 Residences template → `/residences` |
@@ -498,3 +498,9 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **The custom cursor dot appears in every full-page capture** at the viewport centre, including the `mobile-390` (touch) project. Chrome, not this route; Task 19.
 - **`/team` rows still show no portraits.** When `media.ts` gains keys, `rowsFromTeam` and the route's `portrait` prop are the two places to wire them.
 - **Open to the owner:** the h1 size (d1 as briefed vs. d2 as docs/03 lists); whether the plate should grow once portraits exist; whether _Team_ in the eyebrow should read `Team · 0N` literally instead of the eyebrow grammar; whether the hairline-and-point placeholder or the initials variant is preferred.
+
+### Main session — triage of Task 14 (2026-09-15)
+
+- Accepted and merged (`task/14-profile` → `main`); verify green after merge. Conflicts append-only (docs/05 had both T3 and T4 sections rewritten; both kept).
+- Decisions: profile and treatment titles stay at `--t-d1` — Task 19 updates the docs/03 scale row to match; the hairline-and-point placeholder stays (no initials); the `0N ─── Team` eyebrow grammar stays; the plate grows to fill `.p-plate` only when real portraits arrive (noted in CONTENT-GAPS G4).
+- Task 19: hide the custom cursor dot in headless captures and on touch projects (it currently paints at viewport centre); `generateStaticParams` must not be typed `readonly` under Next 16's route validator.
