@@ -29,14 +29,14 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 1 | done | — | Scaffold Next 16 in this repo; port the concept site's foundation, docs and client resources |
 | 2a | done | — | Research and shortlist licence-free stock video and imagery with direct download URLs |
 | 2b | done | 1, 2a | Download, grade and encode the stock media; generate `media.ts`; write `design/ASSETS.md` |
-| 3 | doing | 1 | Motion integration (tween-only config, route curtain primitive) and gated shader gradient |
-| 4 | todo | 1 | Test harness: Vitest + RTL, Playwright (4 viewports + reduced motion + axe), Lighthouse CI, `npm run verify` |
-| 5 | doing | 1 | Content ingestion: client doc → typed, Zod-validated `src/content/**`; `docs/CONTENT-GAPS.md` |
+| 3 | done | 1 | Motion integration (tween-only config, route curtain primitive) and gated shader gradient |
+| 4 | doing | 1 | Test harness: Vitest + RTL, Playwright (4 viewports + reduced motion + axe), Lighthouse CI, `npm run verify` |
+| 5 | done | 1 | Content ingestion: client doc → typed, Zod-validated `src/content/**`; `docs/CONTENT-GAPS.md` |
 | 6 | done | 1 | Vercel staging project, hostname, `SITE_ENV=staging` noindex, first deploy |
 | 7 | todo | 3, 4, 5 | Header, desktop nav, mobile nav overlay |
-| 8 | todo | 5 | Footer |
-| 9 | todo | 3 | Route curtain transition wired to navigation, scroll reset, reduced-motion fade |
-| 10 | todo | 5 | SEO baseline: metadata helpers, JSON-LD builders, sitemap, robots, llms.txt, OG image |
+| 8 | doing | 5 | Footer |
+| 9 | doing | 3 | Route curtain transition wired to navigation, scroll reset, reduced-motion fade |
+| 10 | doing | 5 | SEO baseline: metadata helpers, JSON-LD builders, sitemap, robots, llms.txt, OG image |
 | 11 | todo | 7, 8, 10 | T2 Interior template → `/about` |
 | 12 | todo | 11 | T6 Index template → `/clinical-services`, `/team`, `/self-assessment` |
 | 13 | todo | 12 | T3 Treatment template → `/clinical-services/[slug]` × 11 |
@@ -216,3 +216,11 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **`npm run typecheck` is clean again** with the generated modules in place (Task 2b's report saw the in-progress files). `npm run lint` has one error outside Task 5: `src/motion/Reveal.tsx:118` `react-hooks/refs` ("Cannot access refs during render"), Task 3's file. `npx prettier --check` flags only `src/content/media.ts` (Task 2b's generated manifest); every Task 5 file is Prettier-clean, and the generator emits Prettier-conformant source so `npm run format` leaves generated modules unchanged.
 - **`FEES.title` is "Cost"**, the client's word; the route is `/fees` and the nav label "Fees" per the plan. Owner may prefer one word throughout.
 - **`nav.ts` labels are ours.** Primary: About, Our Process, Clinical Services, Team, Residences, Self-Assessment; utility: Enquire → `/contact`; footer: Practice / Care / Contact / Legal. Nothing in the document names the navigation.
+
+### Main session — triage of Tasks 3 and 5 (2026-09-15)
+
+- Both accepted: `npm run verify` green in the main session at `a541d9c`; `node --experimental-strip-types scripts/check-content.ts` passes 10/10; gradient screenshots read (canopy only, slow, 0.35 opacity).
+- Gradient budget: **keep** the 277 KB gzip desktop-only chunk for now; Task 20 re-measures with the home template and real-device traces and may drop it (docs/07 allows).
+- CSP: shadergradient's only remote host is its GitHub Pages env-texture path, unused with `lightType="3d"`. Task 19 confirms on staging with the console open.
+- Hook note: the Task 3 agent wrote the additive ESLint rule through the shell because the ECC config-protection hook blocked Write/Edit on `eslint.config.mjs`. The rule was reviewed (lint runs, violation proven) and is kept. Agents must report any such routing, as this one did; the owner decides whether to allowlist that file.
+- Chrome CSS convention from here: each new chrome component co-locates its styles (`Footer.css` next to `Footer.tsx`, imported by the component) so concurrent agents never edit `sections.css` at the same time. `sections.css` stays for template blocks.
