@@ -20,6 +20,9 @@ export type JsonLdNode = { readonly [key: string]: JsonLdValue | undefined }
 
 export type BreadcrumbItem = { name: string; path: string }
 
+/** One entry of a collection page's list: what it is called and where it lives. */
+export type ItemListEntry = { name: string; path: string }
+
 export type WebPageInput = {
   title: string
   description: string
@@ -114,6 +117,23 @@ export function breadcrumb(
       position: index + 1,
       name: item.name,
       item: canonicalUrl(origin, item.path),
+    })),
+  }
+}
+
+/**
+ * A collection page's rows (docs/05 §T6): names and URLs, nothing else. No
+ * description, no speciality, no claim travels with an item.
+ */
+export function itemList(items: readonly ItemListEntry[], origin: string = siteUrl()): JsonLdNode {
+  return {
+    '@context': SCHEMA_CONTEXT,
+    '@type': 'ItemList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      url: canonicalUrl(origin, item.path),
     })),
   }
 }

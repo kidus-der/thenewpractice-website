@@ -24,6 +24,8 @@ export function useMediaQuery(query: string): boolean {
 
 export const FINE_POINTER = '(hover: hover) and (pointer: fine)'
 export const MOTION_OK = '(prefers-reduced-motion: no-preference)'
+/** docs/03 §7: the threshold for desktop-only behaviour (indexes, pointer-following plates). */
+export const DESKTOP = '(min-width: 1024px)'
 
 /** True only on a desktop-style pointer with motion permitted. */
 export function useRichPointer(): boolean {

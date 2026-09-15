@@ -38,7 +38,8 @@ src/
               ResidencesTemplate IndexTemplate EnquiryTemplate
   sections/   reusable section blocks shared across templates
   components/ chrome + primitives (Mark, Plate, LineAction, SectionHeader, Field, Header,
-              NavOverlay, Footer, RouteCurtain, AudioToggle, StickyIndex, PlateHover, …)
+              NavOverlay, Footer, RouteCurtain, AudioToggle, Field, …)
+  sections/   … IndexList IndexPlate (T6)
   motion/     gsap.ts SmoothScroll.tsx Reveal.tsx tokens.ts sectionStops.ts useMediaQuery.ts
               motion-config.ts
   webgl/      AmbientGradient.tsx (dynamic, gated)
@@ -161,9 +162,26 @@ Full-bleed 16:9 plate; the drifting plate carousel (six 3:4 plates); amenities a
 
 ### T6 — Index (`/clinical-services`, `/team`, `/self-assessment`)
 
-**Job:** a list that reads as a composition.
+**Job:** a list that reads as a composition — the contents page of a monograph.
 
-Intro block (the collection's own intro copy — Services intro, Team §1, Assessment intro + disclaimer + how-to); numbered editorial list (`01 — Addiction Treatment`) with the single travelling glow; hover plate preview following the pointer at ≥ 1024px with `pointer: fine`; static thumbnails on touch; every row is a link. Filters only if a collection exceeds twelve items (none does).
+Shipped in Task 12 as `src/templates/IndexTemplate.tsx` over the T2 blocks plus one new one. The template takes a `Page` for the title page, the sections the document places `before` and `after` the list, `grounds` (section id → `light` | `mid`), a `list` (`label`, optional `lead`, optional `id`, the `rows`) and `prevNext`. Rows are `IndexRow`s (`src/lib/indexPage.ts`: `href`, `title`, optional `meta`, optional `media`) built by `rowsFromServices`, `rowsFromTeam` and `rowsFromAssessments`; the two page compositions a route may make — `liftLead(page, sectionId)` (an untitled opening paragraph becomes the title page's lead) and `liftHeader(section)` (a section's first sentence becomes its serif header line) — are pure and unit-tested. The template contains no copy, no route and no media key.
+
+| Block | Spec as shipped |
+| --- | --- |
+| `PageIntro`, `ContentSection`, `PrevNextRail`, `EnquireBand` | Reused from T2 unchanged. The long-read sections sit directly in `main` at the reading column `2 / 8`; an untitled section (the team's opening remainder) drops the prose's second gap after the eyebrow. |
+| List section | `<section id data-ground="light" data-n aria-labelledby>`: the eyebrow lockup with the collection's heading as the `h2` at the eyebrow register (`SectionHeader`), the document's introducing line beneath it when there is one (`t-body`, `.p-lead`), then the list at columns `2 / 12` from 1024px — the numerals align with the eyebrow numerals and the section titles above, and the margin to the left holds the brass tick (CLAUDE.md §6a). |
+| `IndexList` | Client. An `<ol>` (one `rise` reveal, rows staggered) of rows: numeral `01`–`11` in `--fg-muted` tabular figures and `aria-hidden` (the ordered list carries the count), the title in the Didone at `--t-d3` to 32ch, an optional line beneath in the eyebrow register (`--fg-muted`; the team's roles, the questionnaires' _Fifteen questions_), the whole row one `<Link>`; a hairline above the list and between rows; `--s-5` of padding a side from 768px. **One** travelling glow (docs/04 §6): a radial gradient in `--c-canopy` at 20 → 12 → 0 %, bleeding `--s-6` past the list each side and 10px above and below the row, moved by GSAP as a `y` transform over `--d-base` on the expo curve on pointer **and** focus; instant under reduced motion; its `::after` is the brass tick in the left margin (12 / 20 / 32px as the margin grows). The active row's numeral goes to `--fg`; nothing else changes colour. Exposed for tests as `data-row` on the glow and `data-active` on the row. |
+| `IndexPlate` | Client, Motion. Mounted only when some row has a `media` key **and** the viewport is ≥ 1024px with `pointer: fine` and motion allowed: one 3:4 `.plate` clamped to 160–240px that follows the pointer at a fixed offset (`--s-5` to the right, centred on it) through motion values, revealed with the `mask` wipe while the active row has an image and swapping image per row with a `--d-fast` opacity crossfade over frames that are all rendered once. On touch, or under reduced motion, each row with an image shows it instead as a static 64 / 96px thumbnail at the row's end (a thumbnail column from 1024px). No route carries plates yet — services have none, and people never get a landscape plate (docs/02) — so today the three listings are pure type; the branch was exercised in Task 12 with the four `index-*` plates and then removed. |
+
+Grounds: intro bone; one sand band where the collection has intro copy (services: the document's one section; team: the opening remainder; self-assessment: the disclaimer); list bone — the list is the composition; rail bone; band canopy. Numerals run `00` (title page) through the sections, the list, and the band.
+
+The three routes (`src/app/{clinical-services,team,self-assessment}/page.tsx`), each with `buildMetadata({ ...ROUTE_SEO.<route>, path })` and `<JsonLd>` with `webPage`, `breadcrumb` (home → the page) and `organization()`:
+
+- `/clinical-services`: title page; _Individualized Treatment for Complex Human Problems_ on sand; the eleven services under the eyebrow heading _Clinical Services_; rail Our Process ← → Team. Adds an `ItemList` of the eleven names and URLs (`itemList()`).
+- `/team`: title page with the document's untitled first paragraph as the lead (`liftLead`), the rest of that opening on sand, _One Client. One Team._ with its three subsections (the multidisciplinary roles as the hairline two-column list) on bone, the eleven members under _Team_ — name over role, no portraits; rail Clinical Services ← → Residences. Adds an `ItemList` of the eleven names and URLs.
+- `/self-assessment`: title page; _Understanding Yourself…_; _Important Disclaimer_ on sand with its first sentence as the header line (`liftHeader`); _How to Complete the Assessment_ — its one remaining sentence and then `ASSESSMENT_SERIES.scoringText` (the superseded 0–3 scale never renders, ledger Task 5); the ten questionnaires under the document's own _Available Self-Assessments_ heading and its introducing line, each with _Fifteen questions_ beneath (`UI_INDEX`); _A Confidential Consultation_ after the list; rail Residences ← . `ASSESSMENT_SERIES.instruction` (the colon-terminated prompt that precedes each questionnaire's questions) is left to the scorer (Task 18b).
+
+Playwright: `tests/e2e/index.spec.ts` on all three routes and five projects (h1 and first ground, intro headings in order, exactly 11 / 11 / 10 rows each one link to its href with its title and meta, numerals hidden from the reader, the glow following keyboard focus — instantly on the reduced-motion project — no plate or image when no row has one, the rail, axe scoped to `main`, full-page captures after `revealAll`). Filters only if a collection exceeds twelve items (none does).
 
 ### T7 — Enquiry (`/contact`)
 
@@ -201,7 +219,7 @@ The concept site's ten sections were specified as a single narrative. Their spec
 
 Foundation (ported, task 1): `Mark`, `Grain`, `GroundManager`, `Preloader`, `ScrollRail`, `Cursor`, `LineAction` / `LineActionButton`, `SectionHeader`, `Plate`, `Reveal`, `SmoothScroll`.
 
-Chrome and primitives (tasks 3–10): `Header`, `NavOverlay`, `Footer`, `RouteCurtain`, `AudioToggle`, `StickyIndex`, `PlateHover`, `Field`, `AmbientGradient`, `MotionProvider`.
+Chrome and primitives (tasks 3–10): `Header`, `NavOverlay`, `Footer`, `RouteCurtain`, `AudioToggle`, `Field`, `AmbientGradient`, `MotionProvider`. Section blocks (tasks 11–12): `PageIntro`, `ContentSection`, `PlateFigure`, `StickyIndex`, `PrevNextRail`, `EnquireBand`, `CeibaFigure`, `IndexList`, `IndexPlate` (the plan's `PlateHover`).
 
 Templates (tasks 11–18b): the seven above plus the assessment scorer.
 

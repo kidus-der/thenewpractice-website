@@ -1,0 +1,37 @@
+/* ==========================================================================
+   INDEX TEMPLATE — the composition the blocks do not know about: where the
+   list's head and the list itself sit on the grid. Co-located with
+   IndexTemplate.tsx, imported once by it. Tokens only.
+   ========================================================================== */
+
+.index-section__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.index-section__head .eyebrow {
+  margin-bottom: 0;
+}
+.index-section__lead {
+  margin-top: var(--s-6);
+}
+/* the rows: full width below 1024; from 1024 they start at the reading column
+   and stop a column short of the edge, leaving the margin for the brass tick */
+.index-section__list {
+  grid-column: 1 / -1;
+  margin-top: var(--s-7);
+}
+@media (min-width: 1024px) {
+  .index-section__list {
+    grid-column: 2 / 12;
+  }
+  /* the body column of the long-read sections, as the interior template sets it */
+  .index .content-section__body {
+    grid-column: 2 / 8;
+  }
+}
+/* an untitled section (the team's opening remainder): the eyebrow's own gap
+   already separates it from the prose, so the prose does not add a second */
+.index .content-section__eyebrow + .content-section__prose {
+  margin-top: 0;
+}

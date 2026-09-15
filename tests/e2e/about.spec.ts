@@ -17,6 +17,7 @@ import {
   expect,
   expectNoAxeViolations,
   expectNoConsoleErrors,
+  revealAll,
   screenshotRoute,
   settleMotion,
   test,
@@ -30,9 +31,6 @@ const DESKTOP_PROJECTS: readonly string[] = [
   PROJECTS.wide,
   PROJECTS.reducedMotion,
 ]
-/** Reveals run at --d-slow with a stagger; this is generous headroom after the last scroll step. */
-const REVEAL_SETTLE_MS = 2500
-const SCROLL_STEP_VH = 0.6
 
 /** The section titles in document order: top level, then each one's subsections. */
 const TITLES = ABOUT.sections.map((s) => s.title).filter((t): t is string => Boolean(t))
@@ -40,29 +38,6 @@ const SUB_TITLES = ABOUT.sections
   .flatMap((s) => s.subsections ?? [])
   .map((s) => s.title)
   .filter((t): t is string => Boolean(t))
-
-/**
- * Scroll the whole page once so every once:true reveal has fired, then
- * return to the top and wait for the tweens to land; a full-page capture of
- * an unscrolled page would otherwise show the body still hidden.
- */
-async function revealAll(page: import('@playwright/test').Page): Promise<void> {
-  await page.evaluate(async (stepVh) => {
-    const step = window.innerHeight * stepVh
-    const frame = () => new Promise<void>((r) => requestAnimationFrame(() => r()))
-    const max = () => document.documentElement.scrollHeight - window.innerHeight
-    for (let y = 0; y <= max(); y += step) {
-      window.scrollTo(0, y)
-      await frame()
-      await frame()
-    }
-    window.scrollTo(0, max())
-    await frame()
-    window.scrollTo(0, 0)
-    await frame()
-  }, SCROLL_STEP_VH)
-  await page.waitForTimeout(REVEAL_SETTLE_MS)
-}
 
 test.describe('about', () => {
   test.beforeEach(async ({ page }) => {
