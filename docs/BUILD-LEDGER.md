@@ -14,7 +14,7 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 1. **GateGuard.** Before your first Bash call, state in one line the task you are doing and what that command verifies or produces. Do this once at the start and again if a hook asks.
 2. **Read first.** `CLAUDE.md`, then the `docs/*` that governs your layer, then the task brief below, then the plan section referenced. The concept site at `/Volumes/main-storage-2tb/projects/luxury-spa-website-demo` is the pattern source; copy its conventions, not its placeholder prose.
 3. **Use the ECC harness.** Invoke the skills that fit the task before writing code: `ecc:tdd-workflow` for any logic; `ecc:frontend-design-direction`, `ecc:design-system`, `ecc:make-interfaces-feel-better` for layout and polish; `ecc:motion-foundations` / `ecc:motion-patterns` / `ecc:motion-advanced` for animation; `ecc:frontend-a11y` / `ecc:accessibility` for keyboard and screen-reader work; `ecc:seo` for metadata and structured data; `ecc:react-patterns` / `ecc:react-performance` / `ecc:nextjs-turbopack` for framework work; `ecc:e2e-testing` / `ecc:browser-qa` for Playwright; `ecc:verification-loop` before reporting done. Use `context7` for library docs (Next 16, Motion, GSAP, shadergradient, R3F) rather than memory.
-4. **Tokens or nothing.** No raw hex, px, ms or easing outside `globals.css` and `motion/tokens.ts`. No spring/bounce easing. One accent (`--c-brass`). No `#000`, no `#fff`, no shadows, no radius over 2px.
+4. **Tokens or nothing.** No raw hex, ms or easing outside `globals.css` and `motion/tokens.ts`; type sizes and spacing come from tokens; literal px for component geometry is permitted only in `sections.css` (the concept site's convention). No spring/bounce easing. One accent (`--c-brass`). No `#000`, no `#fff`, no shadows, no radius over 2px.
 5. **Content from the content layer.** Components never contain user-facing literals. Clinical copy is the client's text verbatim; never invent claims, credentials or outcomes. Invented structural copy is marked `PLACEHOLDER` in the content module.
 6. **Reduced motion is a second finished design.** Every effect inside `gsap.matchMedia('(prefers-reduced-motion: no-preference)')` or Motion's `useReducedMotion`, plus the CSS safety net.
 7. **Verify before claiming.** Run `npm run verify` (lint, typecheck, unit tests, build). For UI tasks also run the Playwright project for the touched routes and read the screenshots at 390 / 768 / 1280 / 1920 yourself. Report evidence: commands run, results, screenshot paths. "It should work" is not a status.
@@ -26,13 +26,13 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 
 | id | status | depends_on | task |
 |---|---|---|---|
-| 1 | doing | — | Scaffold Next 16 in this repo; port the concept site's foundation, docs and client resources |
+| 1 | done | — | Scaffold Next 16 in this repo; port the concept site's foundation, docs and client resources |
 | 2a | doing | — | Research and shortlist licence-free stock video and imagery with direct download URLs |
 | 2b | todo | 1, 2a | Download, grade and encode the stock media; generate `media.ts`; write `design/ASSETS.md` |
-| 3 | todo | 1 | Motion integration (tween-only config, route curtain primitive) and gated shader gradient |
+| 3 | doing | 1 | Motion integration (tween-only config, route curtain primitive) and gated shader gradient |
 | 4 | todo | 1 | Test harness: Vitest + RTL, Playwright (4 viewports + reduced motion + axe), Lighthouse CI, `npm run verify` |
-| 5 | todo | 1 | Content ingestion: client doc → typed, Zod-validated `src/content/**`; `docs/CONTENT-GAPS.md` |
-| 6 | todo | 1 | Vercel staging project, hostname, `SITE_ENV=staging` noindex, first deploy |
+| 5 | doing | 1 | Content ingestion: client doc → typed, Zod-validated `src/content/**`; `docs/CONTENT-GAPS.md` |
+| 6 | doing | 1 | Vercel staging project, hostname, `SITE_ENV=staging` noindex, first deploy |
 | 7 | todo | 3, 4, 5 | Header, desktop nav, mobile nav overlay |
 | 8 | todo | 5 | Footer |
 | 9 | todo | 3 | Route curtain transition wired to navigation, scroll reset, reduced-motion fade |
@@ -143,3 +143,11 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **`.gitignore`** keeps `.env*` and whitelists `.env.example` so task 6 can commit the example file.
 - **`public/og.png`** is the static lockup card from `npm run og`, so `layout.tsx` metadata resolves; task 10's `opengraph-image.tsx` supersedes it.
 - **The client document and the signed contract PDF are committed** at the repo root because the brief said to commit everything; both are excluded from Vercel uploads via `.vercelignore`. Owner to confirm that is intended for wherever this repo is hosted.
+
+### Main session — triage of Task 1 findings (2026-09-14)
+
+- Task 1 accepted: main session re-ran `npm run verify` (lint, typecheck, build) clean at `ae9384b`.
+- ™ decision: render the trademark once per page at most — in the home hero wordmark and in the footer lockup, as a superscript at `--t-eyebrow`; never in the header or running text.
+- `sections.css` raw px is blessed as the concept site's convention for component geometry; colour, motion and type sizes remain token-only. Rule 4 amended accordingly.
+- `GroundManager.tsx` raw hex: Task 3 exports a `readToken(name)` helper; Task 7 (header) switches GroundManager to it.
+- Client doc and contract PDF committed at the repo root: flagged to the owner; not removed by agents.
