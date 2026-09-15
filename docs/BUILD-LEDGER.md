@@ -34,7 +34,7 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 5 | done | 1 | Content ingestion: client doc → typed, Zod-validated `src/content/**`; `docs/CONTENT-GAPS.md` |
 | 6 | done | 1 | Vercel staging project, hostname, `SITE_ENV=staging` noindex, first deploy |
 | 7 | doing | 3, 4, 5 | Header, desktop nav, mobile nav overlay |
-| 8 | doing | 5 | Footer |
+| 8 | done | 5 | Footer |
 | 9 | doing | 3 | Route curtain transition wired to navigation, scroll reset, reduced-motion fade |
 | 10 | done | 5 | SEO baseline: metadata helpers, JSON-LD builders, sitemap, robots, llms.txt, OG image |
 | 11 | todo | 7, 8, 10 | T2 Interior template → `/about` |
@@ -280,3 +280,10 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - Accepted: `vitest run src/lib` 63/63 in the main session; OG card read back (lockup on canopy, per-page title).
 - Decisions: keep the single dynamic `/og` route with the week-long CDN cache; keep the "…" truncation on the three long service descriptions until the client supplies one-line summaries (listed in CONTENT-GAPS G7); `/fees` keeps the label "Fees" in nav and metadata while the page heading stays the client's "Cost".
 - Task 11: drop `/og.png` from the layout metadata and delete `public/og.png`, `scripts/make-og.mjs`, `design/og-card.svg` and the `og` script in the same commit.
+
+### Main session — triage of Task 8 (2026-09-15)
+
+- Accepted on the committed desktop screenshot and the agent's 49-pass Playwright run (the main session's own run was blocked by another agent's dev server; see the worktree note below).
+- Decisions: drop Privacy/Terms from the legal line (the Legal column carries them) — Task 19 makes that edit; accept the reduced-motion crop of the static ghost wordmark; add `D.marquee = 40` to `motion/tokens.ts` and docs/03 §9 in Task 19 and have `Marquee.tsx` read it.
+- `.scroll-rail__n` colour contrast (axe serious at ≥ 768): Task 19 lifts it to `--fg-muted` or marks it decorative with an accessible duplicate.
+- **Operational rule from here:** Next 16 permits one dev server per checkout, and concurrent `next build` runs clobber `.next`. Template tasks (11 onward) therefore run in their own git worktree on a branch (`task/<id>-<slug>`), run `npm ci` there, verify there, and the main session merges the branch into `main`. Shared-file coordination rules no longer apply inside a worktree; merge conflicts are resolved by the main session.
