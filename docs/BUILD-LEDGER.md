@@ -39,7 +39,7 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 10 | done | 5 | SEO baseline: metadata helpers, JSON-LD builders, sitemap, robots, llms.txt, OG image |
 | 11 | done | 7, 8, 10 | T2 Interior template → `/about` |
 | 12 | done | 11 | T6 Index template → `/clinical-services`, `/team`, `/self-assessment` |
-| 13 | doing | 12 | T3 Treatment template → `/clinical-services/[slug]` × 11 |
+| 13 | done | 12 | T3 Treatment template → `/clinical-services/[slug]` × 11 |
 | 14 | doing | 12 | T4 Profile template → `/team/[slug]` × 11 |
 | 15 | doing | 11 | T7 Enquiry template → `/contact` with server action and mail adapter |
 | 16 | done | 2b, 9, 11 | T1 Home template → `/` |
@@ -474,3 +474,8 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **`generateMetadata` calls `notFound()`** for an unknown slug as the page does; `dynamicParams` is left at its default, so an unknown slug is a 404 render rather than a build-time refusal. Setting `dynamicParams = false` would make the route fully static on Vercel; one line if Task 20 wants it.
 - **Related rows are the next three by `order`, wrapping** — Interventions (10) gets Family Program, Addiction, Trauma. A curated *related* mapping (Addiction ↔ Family Program, Trauma ↔ Somatic) would be a content decision for the client; the data shape (`rows` on the block) is ready for it.
 - **Dev server exclusivity, again.** The detached server on :3307 did not survive a session pause; restarted with `nohup … &` and stopped at the end.
+
+### Main session — triage of Task 13 (2026-09-15)
+
+- Accepted and merged (`task/13-treatment` → `main`); verify green after merge. Conflicts append-only; `UI_TREATMENT` kept.
+- Decisions: related services stay "next three by document order, wrapping" until the client supplies a curated map (CONTENT-GAPS); the label "Related services" and the "Clinical Services" eyebrow stay; the h2 register split (client colon sentences at `--t-d3`, titles at `--t-d2`) and the "no sand after sand" ground rule are adopted site-wide — Task 19 applies the same rule in the other templates where it does not already hold.
