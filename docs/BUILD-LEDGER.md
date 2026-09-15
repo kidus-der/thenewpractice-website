@@ -44,7 +44,7 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 15 | doing | 11 | T7 Enquiry template → `/contact` with server action and mail adapter |
 | 16 | doing | 2b, 9, 11 | T1 Home template → `/` |
 | 17 | done | 2b, 11 | T5 Residences template → `/residences` |
-| 18 | doing | 11 | Remaining T2 pages: `/our-process`, `/a-personal-message`, `/fees`, `/privacy`, `/terms` |
+| 18 | done | 11 | Remaining T2 pages: `/our-process`, `/a-personal-message`, `/fees`, `/privacy`, `/terms` |
 | 18b | todo | 12 | Interactive self-assessment scorer → `/self-assessment/[slug]` × 10 |
 | 19 | todo | 13, 14, 15, 16, 17, 18, 18b | Cross-template hardening: viewports, 4× throttle traces, reduced motion, keyboard, axe, Safari |
 | 20 | todo | 19 | Performance budgets: Lighthouse, image sizes, font preload, bundle audit |
@@ -408,3 +408,8 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **Legal `h1`s wrap as `PLACEHOLDER` / `— Privacy`** at 1280 because the prefix is one long word; acceptable for a stub that is flagged and noindexed, and it goes with the copy.
 - **Region captures used `node_modules/playwright/index.mjs` directly** from a scratchpad script (the project has no script for one-off viewport captures of a scrolled region); the Playwright spec's full-page captures remain the artefact of record.
 - **Dev server** on 3306 was started for the e2e runs and stopped after; `npm run verify` ran with it up (Next 16 keeps `.next/dev` apart) and passed.
+
+### Main session — triage of Task 18 (2026-09-15)
+
+- Accepted and merged (`task/18-interior-pages` → `main`); verify green after merge (184 tests, 95.4% statements, all five routes prerendered). Conflicts: docs append-only (both kept); `ui.ts` resolved so `UI_STAGING.copyPending` is the single string and `UI_RESIDENCES.copyPending` aliases it; identical `revealAll` helpers deduplicated; a duplicate re-export in `tests/e2e/helpers/index.ts` removed in a follow-up commit.
+- Decisions: `readingOrder()` **does** extend to the footer Practice group so Fees and A Personal Message get a rail (About → Our Process → A Personal Message → Fees) — Task 19; the timeline's base hairline stays `--rule-strong` (the `--rule` value disappears on sand); legal stubs keep four headings as scaffolding for counsel; `/llms.txt` filters `NOINDEX_ROUTES` — Task 19.
