@@ -19,7 +19,7 @@ Tokens are declared once as CSS custom properties on `:root` in `src/app/globals
 | `--c-bone` | `#F1ECE0` | Primary light ground. Warm alabaster — never `#fff`, never clinical. |
 | `--c-sand` | `#E3DCCB` | Mid ground; the ceiba section, index bands, plate frames |
 | `--c-clay` | `#C8B9A0` | Muted warm neutral; decorative text on light |
-| `--c-stone` | `#6F7A72` | Tertiary text, captions, metadata; the third gradient colour |
+| `--c-stone` | `#566059` | Tertiary text, captions, metadata; the third gradient colour |
 | `--c-brass` | `#A9895C` | **The only accent in the identity.** Aged brass. The gold point in the mark, the lockup rule, focus rings, active states, the travelling glow's tick. |
 
 The client's rationale is explicit: *"The single gold point at the center is the only accent color anywhere in the identity."* There is no second accent, and `--accent` therefore does **not** flip between grounds. Adding a second accent breaks the identity, not just the palette. The ambient gradient uses canopy, canopy-soft and stone — never brass.

@@ -37,14 +37,14 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 8 | done | 5 | Footer |
 | 9 | done | 3 | Route curtain transition wired to navigation, scroll reset, reduced-motion fade |
 | 10 | done | 5 | SEO baseline: metadata helpers, JSON-LD builders, sitemap, robots, llms.txt, OG image |
-| 11 | doing | 7, 8, 10 | T2 Interior template → `/about` |
-| 12 | todo | 11 | T6 Index template → `/clinical-services`, `/team`, `/self-assessment` |
+| 11 | done | 7, 8, 10 | T2 Interior template → `/about` |
+| 12 | doing | 11 | T6 Index template → `/clinical-services`, `/team`, `/self-assessment` |
 | 13 | todo | 12 | T3 Treatment template → `/clinical-services/[slug]` × 11 |
 | 14 | todo | 12 | T4 Profile template → `/team/[slug]` × 11 |
 | 15 | doing | 11 | T7 Enquiry template → `/contact` with server action and mail adapter |
-| 16 | todo | 2b, 9, 11 | T1 Home template → `/` |
-| 17 | todo | 2b, 11 | T5 Residences template → `/residences` |
-| 18 | todo | 11 | Remaining T2 pages: `/our-process`, `/a-personal-message`, `/fees`, `/privacy`, `/terms` |
+| 16 | doing | 2b, 9, 11 | T1 Home template → `/` |
+| 17 | doing | 2b, 11 | T5 Residences template → `/residences` |
+| 18 | doing | 11 | Remaining T2 pages: `/our-process`, `/a-personal-message`, `/fees`, `/privacy`, `/terms` |
 | 18b | todo | 12 | Interactive self-assessment scorer → `/self-assessment/[slug]` × 10 |
 | 19 | todo | 13, 14, 15, 16, 17, 18, 18b | Cross-template hardening: viewports, 4× throttle traces, reduced motion, keyboard, axe, Safari |
 | 20 | todo | 19 | Performance budgets: Lighthouse, image sizes, font preload, bundle audit |
@@ -350,3 +350,12 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **`/dev/curtain` sets `metadata.title` as a string**; with the root layout now on `title.absolute` (no template) it renders as bare _Curtain harness_. Dev-only, deleted by Task 19.
 - **Full-page captures show the fixed vignette and the cursor dot at the first viewport only** (fixed layers do not repeat down a stitched capture); the grey corners on bone in the screenshots are that artefact, not the page. The "N" badge bottom-left is Next's dev indicator.
 - **Verification:** dev server on 3301 for the e2e run and stopped after; `npm run verify` ran with the dev server up (Next 16 keeps `.next/dev` apart from the build output) and passed. Screenshots read: `tests/e2e/__screenshots__/{mobile-390,tablet-768,desktop-1280,wide-1920,reduced-motion}/about.png`, plus crops in the session scratchpad. `npm run lighthouse` was not run (Task 20 owns budgets; `lighthouserc.json` does not yet list `/about`).
+
+### Main session — triage of Task 11 (2026-09-15)
+
+- Accepted and merged (`task/11-interior` → `main`); `npm run verify` green after merge (103 tests, 88.9% statements, `/about` prerendered).
+- **Token decision (systemic):** `--c-stone` darkened from `#6F7A72` to `#566059` so `--fg-muted` on bone is 5.5:1 and on sand 4.8:1 (AA for body text). `--fg-faint` (clay) stays decorative-only and must be `aria-hidden` with an accessible duplicate. Templates 12–18 use `--fg-muted` for eyebrows, index items and captions as docs/03 intends; Task 19 returns the About page's index and eyebrows from `--fg`/opacity to `--fg-muted`.
+- The empty first viewport (title page) is the register for every T2 page; `PageIntro` handles pages with and without a lead.
+- Footer marquee at 0.06 alpha is decorative and `aria-hidden`; Task 19 confirms axe ignores it whole-document or scopes the rule.
+- Mixed title casing in the client's headings is rendered verbatim; added to CONTENT-GAPS by Task 19.
+- Tasks 12, 16, 17 and 18 start now in worktrees (`task/12-index` :3303, `task/16-home` :3304, `task/17-residences` :3305, `task/18-interior-pages` :3306); Task 15 continues on :3302.

@@ -19,7 +19,7 @@ export const PALETTE = {
   bone: '#f1ece0',
   sand: '#e3dccb',
   clay: '#c8b9a0',
-  stone: '#6f7a72',
+  stone: '#566059',
   brass: '#a9895c',
 } as const
 
