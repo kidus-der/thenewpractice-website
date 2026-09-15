@@ -42,7 +42,7 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 13 | doing | 12 | T3 Treatment template → `/clinical-services/[slug]` × 11 |
 | 14 | doing | 12 | T4 Profile template → `/team/[slug]` × 11 |
 | 15 | doing | 11 | T7 Enquiry template → `/contact` with server action and mail adapter |
-| 16 | doing | 2b, 9, 11 | T1 Home template → `/` |
+| 16 | done | 2b, 9, 11 | T1 Home template → `/` |
 | 17 | done | 2b, 11 | T5 Residences template → `/residences` |
 | 18 | done | 11 | Remaining T2 pages: `/our-process`, `/a-personal-message`, `/fees`, `/privacy`, `/terms` |
 | 18b | doing | 12 | Interactive self-assessment scorer → `/self-assessment/[slug]` × 10 |
@@ -452,3 +452,10 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **The hero lockup and the preloader's lockup share `--lockup-lift` (16vh)**: both centres sit 8vh above the frame's, so the veil splits onto the hero's lockup already in place, and the hero mark is not drawn a second time. This moves the preloader's lockup on every route by the same amount — a chrome change made from a template task; the owner may prefer it reverted to dead centre (one token).
 - **AudioToggle fades** use `D.glacial` (1.4 s) in and `D.slow` (0.8 s) out; docs/08 asked for 1.2 s / 0.6 s, which are not tokens. The component is unmounted until the client supplies a recording; add the tokens then if the difference matters.
 - **Full-page captures show the two pinned stages at their scrub start** (mark undrawn, lines masked) because the reveal pass returns to the top before the capture; the in-motion frames were read from a scroll-through in the session scratchpad instead.
+
+### Main session — triage of Task 16 (2026-09-15)
+
+- Accepted and merged (`task/16-home` → `main`); verify green after merge (220 tests, 95.5% statements, `/` prerendered). Conflicts append-only; `UI_HOME` kept beside the other UI blocks.
+- Decisions: keep the 8vh lockup lift on preloader and hero; accept the `h1` as Chromium's reported LCP element (poster is complete at first paint; the e2e spec pins LCP − FCP ≤ 250 ms); keep the hover plate on the twelve conditions.
+- Task 20 owns the Lighthouse method and the JS budget: measure with `throttlingMethod: devtools`, and remove Zod from the client bundle by having the content modules export plain objects validated in `scripts/check-content.ts` / the unit tests rather than `.parse()` at module scope.
+- Task 19: `Reveal` `lines` variant passes `aria: 'none'` to SplitText; fold the home `ConditionsList` hover plate and the index `IndexPlate` into one component; switch `home.spec.ts` to the shared `revealAll`.
