@@ -1,0 +1,31 @@
+/* ==========================================================================
+   PORTRAIT PLACEHOLDER — co-located with PortraitPlaceholder.tsx, imported
+   once by it. A 3:4 plate on the raised ground (sand on bone), one hairline,
+   one gold point. Tokens only; the SVG has no viewBox so the hairline stays
+   1px and the point 6px at every plate size.
+   ========================================================================== */
+
+.portrait-placeholder {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+}
+.portrait-placeholder__ground {
+  fill: var(--bg-raised);
+}
+/* the duotone: the ground darkens by a breath toward the foot, as light
+   falling from above would leave it; canopy mixed into transparency, so it
+   reads over sand and over canopy alike */
+.portrait-placeholder__stop-top {
+  stop-color: color-mix(in srgb, var(--c-canopy) 0%, transparent);
+}
+.portrait-placeholder__stop-foot {
+  stop-color: color-mix(in srgb, var(--c-canopy) 9%, transparent);
+}
+.portrait-placeholder__line {
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+}
+.portrait-placeholder__point {
+  fill: var(--accent);
+}
