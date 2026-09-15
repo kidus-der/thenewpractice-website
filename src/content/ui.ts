@@ -74,3 +74,14 @@ export const UI_RESIDENCES = {
   /** Shown above the intro when SITE_ENV is not production; one string, shared with UI_STAGING. */
   copyPending: UI_STAGING.copyPending,
 } as const
+
+/**
+ * INDEX TEMPLATE STRINGS — Task 12. The one line the self-assessment index
+ * sets beneath each questionnaire's title. Structural, ours: every
+ * questionnaire has QUESTIONS_PER_ASSESSMENT questions (schemas.ts), and the
+ * content test pins that count, so the word here cannot drift from it.
+ */
+export const UI_INDEX = {
+  /** Beneath each questionnaire title, in the eyebrow register. */
+  assessmentLength: 'Fifteen questions',
+} as const

@@ -4,6 +4,7 @@ import { BRAND, TEAM } from '@/content'
 import { ADDRESS } from '@/content/seo'
 import {
   breadcrumb,
+  itemList,
   medicalWebPage,
   organization,
   person,
@@ -134,6 +135,43 @@ describe('webPage and medicalWebPage', () => {
       about: { '@type': 'Thing', name: 'Eating Disorders' },
     })
     expect(JSON.stringify(node)).not.toMatch(/outcome|success|cure|guarantee/i)
+  })
+})
+
+describe('itemList', () => {
+  const node = itemList(
+    [
+      { name: 'Addiction Treatment', path: '/clinical-services/addiction-treatment' },
+      { name: 'Trauma & Complex Trauma', path: '/clinical-services/trauma-and-complex-trauma/' },
+    ],
+    origin
+  )
+
+  it('numbers the collection from one with names and absolute URLs only', () => {
+    expect(node).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Addiction Treatment',
+          url: `${origin}/clinical-services/addiction-treatment`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Trauma & Complex Trauma',
+          url: `${origin}/clinical-services/trauma-and-complex-trauma`,
+        },
+      ],
+    })
+  })
+
+  it('carries no description, rating or outcome for any item', () => {
+    expect(JSON.stringify(node)).not.toMatch(
+      /description|aggregateRating|review|outcome|success|medicalSpecialty/i
+    )
   })
 })
 

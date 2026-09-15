@@ -31,6 +31,7 @@ const DESKTOP_PROJECTS: readonly string[] = [
   PROJECTS.wide,
   PROJECTS.reducedMotion,
 ]
+
 /** The section titles in document order: top level, then each one's subsections. */
 const TITLES = ABOUT.sections.map((s) => s.title).filter((t): t is string => Boolean(t))
 const SUB_TITLES = ABOUT.sections
