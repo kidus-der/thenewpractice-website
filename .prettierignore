@@ -1,0 +1,6 @@
+.next
+node_modules
+package-lock.json
+public/media
+*.docx.md
+docs/BUILD-LEDGER.md

@@ -1,0 +1,8 @@
+# Nothing here is needed to build or serve the site. The logo concept PDF, the
+# signed contract and the client's content document are the client's own
+# material — none of it has any business being uploaded to a host.
+*.pdf
+*.docx.md
+docs/
+design/
+scripts/

@@ -1,0 +1,630 @@
+@import 'tailwindcss';
+/* sections.css is NOT imported here. CSS requires @import at the top of the
+   file, which would place every section rule *before* the component rules
+   below — so globals would win every specificity tie and section overrides
+   would silently do nothing. It is imported after this file in layout.tsx
+   instead, which is the only way to get the cascade order right. */
+
+/* ==========================================================================
+   TOKENS — docs/03-design-system.md
+   Nothing in this codebase may declare a raw hex, px, duration or easing
+   outside this file. If a value is missing, add it here and to the doc.
+   ========================================================================== */
+
+/* Palette values are taken from the vector in the client's logo concept PDF,
+   not sampled by eye. The identity permits exactly one accent — the brass —
+   and it is the same on both grounds. Do not add a second. */
+@theme {
+  --color-canopy: #14231c;
+  --color-canopy-soft: #1c2e25;
+  --color-bone: #f1ece0;
+  --color-sand: #e3dccb;
+  --color-clay: #c8b9a0;
+  --color-stone: #6f7a72;
+  --color-brass: #a9895c;
+
+  --font-display: var(--font-bodoni-moda), 'Didot', 'Bodoni MT', serif;
+  --font-text: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  /* — core palette (mirrors @theme for use in plain CSS) — */
+  --c-canopy: #14231c;
+  --c-canopy-soft: #1c2e25;
+  --c-bone: #f1ece0;
+  --c-sand: #e3dccb;
+  --c-clay: #c8b9a0;
+  --c-stone: #6f7a72;
+  --c-brass: #a9895c;
+
+  /* — semantic aliases · light ground — */
+  --fg: var(--c-canopy);
+  --fg-muted: var(--c-stone);
+  --fg-faint: var(--c-clay);
+  --bg: var(--c-bone);
+  --bg-raised: var(--c-sand);
+  --rule: rgb(20 35 28 / 0.14);
+  --rule-strong: rgb(20 35 28 / 0.3);
+  --accent: var(--c-brass);
+
+  /* — type scale — */
+  --t-hero: clamp(3.5rem, 11vw, 12rem);
+  --t-d1: clamp(2.5rem, 6vw, 5.5rem);
+  --t-d2: clamp(2rem, 4vw, 3.5rem);
+  --t-d3: clamp(1.5rem, 2.5vw, 2.25rem);
+  --t-lead: clamp(1.125rem, 1.5vw, 1.5rem);
+  --t-body: clamp(1rem, 1.1vw, 1.125rem);
+  --t-small: 0.875rem;
+  --t-eyebrow: 0.6875rem;
+
+  /* — space — */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 40px;
+  --s-6: 64px;
+  --s-7: 104px;
+  --s-8: 168px;
+  --s-9: 264px;
+  --s-10: 400px;
+
+  /* — grid — */
+  --margin: 20px;
+  --gutter: 24px;
+  --container: 1720px;
+
+  /* — motion — */
+  --d-instant: 120ms;
+  --d-fast: 240ms;
+  --d-base: 480ms;
+  --d-slow: 800ms;
+  --d-glacial: 1400ms;
+  --e-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --e-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --e-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  /* — z-index — */
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-nav: 40;
+  --z-overlay: 60;
+  --z-texture: 80;
+  --z-cursor: 90;
+  --z-preloader: 100;
+
+  --radius-input: 2px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --margin: 40px;
+  }
+}
+@media (min-width: 1280px) {
+  :root {
+    --margin: 64px;
+  }
+}
+
+/* — ground inversion. The only place these aliases flip.
+     --accent does NOT flip: the brass is the identity's single accent and it
+     is legible on both grounds. — */
+[data-ground='dark'] {
+  --fg: var(--c-bone);
+  --fg-muted: rgb(241 236 224 / 0.64);
+  --fg-faint: rgb(241 236 224 / 0.4);
+  --bg: var(--c-canopy);
+  --bg-raised: var(--c-canopy-soft);
+  --rule: rgb(241 236 224 / 0.16);
+  --rule-strong: rgb(241 236 224 / 0.32);
+}
+
+[data-ground='mid'] {
+  --bg: var(--c-sand);
+  --bg-raised: var(--c-bone);
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  /* ScrollTrigger sizes pin spacers from the window width, which overshoots the
+     client width whenever a classic scrollbar is present. `clip` removes the
+     stray horizontal scroll without making the root a scroll container — which
+     `hidden` would, breaking pinning. */
+  overflow-x: clip;
+}
+
+/* Lenis drives scroll; html must not fight it. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  margin: 0;
+  background-color: var(--c-canopy);
+  color: var(--fg);
+  font-family: var(--font-text);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  font-weight: 350;
+  /* clip, not hidden — `hidden` here makes <body> a scroll container and the
+     stray pin-spacer width becomes a real horizontal scrollbar. */
+  overflow-x: clip;
+}
+
+body[data-locked='true'] {
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote {
+  margin: 0;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+::selection {
+  background: var(--c-brass);
+  color: var(--c-bone);
+}
+
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--s-3);
+  left: var(--s-3);
+  z-index: 200;
+  padding: var(--s-2) var(--s-3);
+  background: var(--c-bone);
+  color: var(--c-canopy);
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transform: translateY(-200%);
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   LAYOUT PRIMITIVES — docs/03-design-system.md §4
+   ========================================================================== */
+
+.shell {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--margin);
+}
+
+.grid12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+
+.section {
+  position: relative;
+  padding-block: var(--s-8);
+}
+@media (min-width: 1024px) {
+  .section {
+    padding-block: var(--s-9);
+  }
+}
+
+/* standing placements — do not invent new spans */
+.p-lead {
+  grid-column: 1 / -1;
+}
+.p-offset {
+  grid-column: 1 / -1;
+}
+.p-narrow {
+  grid-column: 1 / -1;
+}
+.p-plate {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 1024px) {
+  .p-lead {
+    grid-column: 2 / 8;
+  }
+  .p-offset {
+    grid-column: 7 / 13;
+  }
+  .p-narrow {
+    grid-column: 4 / 10;
+  }
+  .p-plate {
+    grid-column: 1 / 7;
+  }
+}
+
+/* ==========================================================================
+   TYPOGRAPHY
+   ========================================================================== */
+
+.t-hero,
+.t-d1,
+.t-d2,
+.t-d3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.t-hero {
+  font-size: var(--t-hero);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+.t-d1 {
+  font-size: var(--t-d1);
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+.t-d2 {
+  font-size: var(--t-d2);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.t-d3 {
+  font-size: var(--t-d3);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.t-lead {
+  font-size: var(--t-lead);
+  line-height: 1.45;
+  font-weight: 350;
+  max-width: 46ch;
+  text-wrap: pretty;
+}
+.t-body {
+  font-size: var(--t-body);
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+.t-small {
+  font-size: var(--t-small);
+  line-height: 1.55;
+}
+
+.t-eyebrow {
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 450;
+  line-height: 1;
+}
+
+.muted {
+  color: var(--fg-muted);
+}
+.faint {
+  color: var(--fg-faint);
+}
+.em {
+  font-style: italic;
+}
+
+/* ==========================================================================
+   COMPONENTS
+   ========================================================================== */
+
+/* — section header: numeral · rule · label — */
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  /* muted, not faint — the label is real content and has to clear AA */
+  color: var(--fg-muted);
+  margin-bottom: var(--s-6);
+}
+.eyebrow__rule {
+  display: block;
+  width: 48px;
+  height: 1px;
+  background: var(--rule-strong);
+  transform-origin: left;
+}
+
+/* — line action: the one button treatment — */
+.line-action {
+  position: relative;
+  display: inline-block;
+  padding-bottom: var(--s-2);
+  /* inherit, not var(--fg): this is used inside the fixed header, which sits
+     outside every section and so resolves --fg from :root — canopy on canopy. */
+  color: inherit;
+  text-decoration: none;
+}
+.line-action::before,
+.line-action::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  transform-origin: left;
+}
+.line-action::before {
+  background: var(--rule-strong);
+}
+.line-action::after {
+  background: var(--accent);
+  transform: scaleX(0);
+  transition: transform var(--d-base) var(--e-out-expo);
+}
+.line-action:hover::after,
+.line-action:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* — inline text link — */
+.link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 30%, transparent);
+  padding-bottom: 2px;
+  transition: border-color var(--d-fast) var(--e-out-quart);
+}
+.link:hover,
+.link:focus-visible {
+  border-bottom-color: currentColor;
+}
+
+/* — media surface — */
+.plate {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-raised);
+}
+.plate img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--d-slow) var(--e-out-expo);
+}
+@media (hover: hover) {
+  .plate:hover img {
+    transform: scale(1.03);
+  }
+}
+
+/* — hairline — */
+.rule {
+  width: 100%;
+  height: 1px;
+  background: var(--rule);
+  border: 0;
+  margin: 0;
+}
+
+/* — form field —
+   The label overlays the input's baseline and floats up into the control's
+   padding on focus, so the rule always reads as the line you write on. The
+   error sits outside the control; inside it, it pushes the rule away. */
+.field {
+  display: flex;
+  flex-direction: column;
+}
+.field__control {
+  position: relative;
+  padding-top: var(--s-5);
+}
+.field__input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule-strong);
+  border-radius: var(--radius-input);
+  padding: var(--s-2) 0;
+  outline: none;
+  resize: none;
+}
+.field__input::placeholder {
+  color: transparent;
+}
+.field__underline {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--d-base) var(--e-out-expo);
+}
+.field__input:focus ~ .field__underline {
+  transform: scaleX(1);
+}
+.field__label {
+  position: absolute;
+  left: 0;
+  bottom: var(--s-2);
+  color: var(--fg-muted);
+  transform-origin: left bottom;
+  transition:
+    transform var(--d-base) var(--e-out-expo),
+    color var(--d-base) var(--e-out-expo);
+  pointer-events: none;
+}
+.field__input:focus ~ .field__label,
+.field__input:not(:placeholder-shown) ~ .field__label {
+  transform: translateY(-32px) scale(0.72);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+/* ==========================================================================
+   TEXTURE — docs/02-art-direction.md §Texture
+   ========================================================================== */
+
+.texture {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-texture);
+  pointer-events: none;
+}
+.texture__grain {
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: var(--grain-url);
+  background-repeat: repeat;
+  background-size: 180px 180px;
+}
+.texture__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 42%, rgb(20 35 28 / 0.18) 100%);
+}
+
+/* base layer behind everything, so overscroll never exposes bare canvas */
+.ground {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--ground, var(--c-canopy));
+  transition: background-color var(--d-base) var(--e-out-expo);
+}
+
+/* ==========================================================================
+   REVEAL PRIMITIVE — initial states.
+   The @media block below is the safety net: if JS never runs, or motion is
+   reduced, nothing is left invisible.
+   ========================================================================== */
+
+[data-reveal] {
+  will-change: auto;
+}
+[data-reveal='rise'],
+[data-reveal='fade'] {
+  opacity: 0;
+}
+[data-reveal='rise'] {
+  transform: translateY(28px);
+}
+[data-reveal='mask'] {
+  clip-path: inset(0 0 100% 0);
+}
+
+.split-line {
+  display: block;
+  overflow: hidden;
+}
+.split-line > * {
+  display: block;
+}
+
+/* ==========================================================================
+   REDUCED MOTION — a second, finished design. Not a degradation.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+
+  .plate:hover img {
+    transform: none;
+  }
+  .plate:hover {
+    outline: 1px solid var(--rule-strong);
+  }
+}
+
+/* ==========================================================================
+   PRINT
+   ========================================================================== */
+
+@media print {
+  .texture,
+  .ground,
+  .cursor,
+  .preloader,
+  .scroll-rail,
+  .audio-toggle,
+  .site-header {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .section {
+    padding-block: 24pt;
+    break-inside: avoid;
+  }
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}

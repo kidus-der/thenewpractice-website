@@ -1,0 +1,950 @@
+/* ==========================================================================
+   SECTION + CHROME STYLES
+   Tokens only. If a value you need is not a token, add it to globals.css and
+   to docs/03-design-system.md in the same change.
+
+   Ported from the concept site. The chrome blocks (mark, preloader, header,
+   scroll rail, cursor) are global. The numbered section blocks (hero,
+   manifesto, one, ceiba, residence, method, day, discretion, team, enquiry,
+   footer) are the reusable section grammar the seven templates are built
+   from — docs/05-template-architecture.md §Reusable blocks maps each to the
+   templates that use it. Templates add their own files beside this one;
+   they do not fork these blocks.
+   ========================================================================== */
+
+/* Sections own their ground. See GroundManager for why this is not a
+   crossfading fixed layer. */
+[data-ground] {
+  background-color: var(--bg);
+  /* Redefining --fg on a section does NOT re-resolve an inherited `color`
+     computed further up the tree — the section must claim it explicitly.
+     Without this line every dark section renders ink-on-ink. */
+  color: var(--fg);
+}
+
+/* ==========================================================================
+   SECTION RHYTHM
+   The `.section` utility in globals.css was written for this and then never
+   applied to a single section element — so most sections had no vertical
+   padding at all, and a ground change put the next section's eyebrow directly
+   on the colour boundary. Applied to the elements themselves instead, so it
+   cannot silently stop being true again.
+   ========================================================================== */
+
+main > section {
+  padding-block: var(--s-8);
+}
+@media (min-width: 1024px) {
+  main > section {
+    padding-block: var(--s-9);
+  }
+}
+
+/* Pinned sections size an inner element to the viewport and centre their
+   content in it. Padding on the section would push that frame down and leave a
+   gap at the top of the pin for its whole duration. */
+main > section.manifesto,
+main > section.one,
+main > section.hero {
+  padding-block: 0;
+}
+
+[data-reveal-children='rise'] > * {
+  opacity: 0;
+  transform: translateY(28px);
+}
+[data-reveal-children='fade'] > * {
+  opacity: 0;
+}
+[data-reveal-children='mask'] > * {
+  clip-path: inset(0 0 100% 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal-children] > * {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}
+
+/* ==========================================================================
+   THE MARK — the client's ceiba. See src/components/Mark.tsx.
+   ========================================================================== */
+
+.mark {
+  display: block;
+  height: auto;
+  overflow: visible;
+}
+/* Strokes are authored with pathLength=1 so one dash length drives every one
+   of them regardless of its actual arc length — the six arrive together. */
+.mark--animated .mark__stroke {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.mark__point {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark--animated .mark__stroke {
+    stroke-dashoffset: 0 !important;
+  }
+  .mark__point {
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   PRELOADER
+   ========================================================================== */
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-preloader);
+}
+.preloader__veil {
+  position: absolute;
+  inset: 0;
+  background: var(--c-canopy);
+  clip-path: inset(0 0 0 0);
+  display: grid;
+  place-items: center;
+}
+.preloader__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  color: var(--c-bone);
+}
+.preloader__ceiba {
+  width: clamp(44px, 5vw, 64px);
+  stroke-width: 4;
+}
+.preloader__mark {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.4vw, 1.9rem);
+  font-weight: 400;
+  opacity: 0.4;
+  letter-spacing: 0.7em;
+  text-indent: 0.7em;
+  white-space: nowrap;
+}
+.preloader__rule {
+  width: clamp(120px, 22vw, 260px);
+  height: 1px;
+  background: var(--c-brass);
+  transform-origin: center;
+}
+.preloader__descriptor {
+  color: rgb(241 236 224 / 0.42);
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+
+.site-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: var(--z-nav);
+  padding-block: var(--s-4);
+  color: var(--c-bone);
+  transition:
+    transform var(--d-base) var(--e-out-expo),
+    background-color var(--d-base) var(--e-out-expo),
+    color var(--d-base) var(--e-out-expo);
+}
+.site-header[data-hidden='true'] {
+  transform: translateY(-110%);
+}
+.site-header[data-settled='true'] {
+  color: var(--ground-fg, var(--fg));
+  background-color: color-mix(in srgb, var(--ground, var(--bg)) 88%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid color-mix(in srgb, var(--ground-fg, var(--fg)) 14%, transparent);
+}
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+.site-header__mark {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+.site-header__ceiba {
+  width: 16px;
+  stroke-width: 8;
+  flex: 0 0 auto;
+}
+.site-header__wordmark {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  letter-spacing: 0.26em;
+  white-space: nowrap;
+}
+.site-header__right {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+}
+.site-header__locale {
+  cursor: default;
+  /* match the line-action's rule offset so the two sit on one baseline */
+  padding-bottom: var(--s-2);
+}
+
+/* ==========================================================================
+   SCROLL RAIL
+   ========================================================================== */
+
+.scroll-rail {
+  position: fixed;
+  right: var(--margin);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: var(--z-nav);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  color: var(--ground-fg, var(--fg));
+  transition: color var(--d-base) var(--e-out-expo);
+}
+@media (min-width: 768px) {
+  .scroll-rail {
+    display: flex;
+  }
+}
+.scroll-rail__n {
+  color: color-mix(in srgb, currentColor 45%, transparent);
+}
+.scroll-rail__track {
+  position: relative;
+  width: 1px;
+  height: 88px;
+  background: color-mix(in srgb, currentColor 24%, transparent);
+}
+.scroll-rail__fill {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, currentColor 78%, transparent);
+  transform-origin: top;
+  transform: scaleY(0);
+}
+
+/* ==========================================================================
+   CURSOR
+   ========================================================================== */
+
+html[data-cursor='custom'],
+html[data-cursor='custom'] * {
+  cursor: none;
+}
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: currentColor;
+  color: var(--ground-fg, var(--fg));
+  /* difference blending used to keep this subtle; without it the dot needs to
+     be held back explicitly or it reads as a bullet point on the page */
+  opacity: 0.55;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  /* No mix-blend-mode: difference blending on a fixed element makes the
+     compositor re-read the backdrop every frame, and it was the most expensive
+     thing here. --ground-fg is already legible on either ground. */
+  will-change: transform;
+  transition:
+    width var(--d-fast) var(--e-out-expo),
+    height var(--d-fast) var(--e-out-expo),
+    margin var(--d-fast) var(--e-out-expo),
+    opacity var(--d-fast) var(--e-out-expo);
+}
+.cursor[data-state='active'] {
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  opacity: 0.28;
+}
+.cursor[data-state='label'] {
+  width: 72px;
+  height: 72px;
+  margin: -36px 0 0 -36px;
+  background: transparent;
+  border: 1px solid currentColor;
+  opacity: 1;
+}
+
+/* ==========================================================================
+   00 — HERO
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 620px;
+  overflow: hidden;
+}
+.hero__media {
+  position: absolute;
+  inset: -8% 0;
+  will-change: transform;
+}
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Two layers: a vertical gradient for the chrome at top and bottom, and a soft
+   pool behind the lockup. The photograph is busy in the middle and the wordmark
+   has to hold against it without the frame going flat. */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 58% 46% at 50% 46%, rgb(20 35 28 / 0.42) 0%, rgb(20 35 28 / 0) 100%),
+    linear-gradient(
+      180deg,
+      rgb(20 35 28 / 0.58) 0%,
+      rgb(20 35 28 / 0.14) 40%,
+      rgb(20 35 28 / 0.72) 100%
+    );
+}
+.hero__content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding-block: var(--s-8) var(--s-8);
+  color: var(--c-bone);
+}
+/* The client's reversed lockup: mark, wordmark, brass rule, tagline. */
+.hero__lockup {
+  align-self: center;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  text-align: center;
+  max-width: 100%;
+}
+.hero__mark {
+  width: clamp(52px, 6vw, 88px);
+  stroke-width: 4;
+}
+.hero__wordmark {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 4.6vw, 4rem);
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-indent: 0.16em;
+  white-space: nowrap;
+}
+.hero__rule {
+  display: block;
+  width: clamp(90px, 12vw, 190px);
+  height: 1px;
+  background: var(--c-brass);
+  transform-origin: center;
+}
+.hero__tagline {
+  color: rgb(241 236 224 / 0.78);
+}
+.hero__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: rgb(241 236 224 / 0.6);
+  padding-inline: var(--margin);
+}
+.hero__cue {
+  position: absolute;
+  bottom: var(--s-5);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  color: rgb(241 236 224 / 0.5);
+}
+.hero__cue-rule {
+  width: 1px;
+  height: 40px;
+  background: currentColor;
+  transform-origin: top;
+  animation: cue 2.4s var(--e-in-out-quart) infinite;
+}
+@keyframes cue {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__cue-rule {
+    animation: none;
+    transform: scaleY(1);
+  }
+}
+
+/* ==========================================================================
+   01 — MANIFESTO
+   ========================================================================== */
+
+.manifesto__pin {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding-block: var(--s-6);
+}
+/* the statement is the section — the label gives up room to it */
+.manifesto .eyebrow {
+  margin-bottom: var(--s-5);
+}
+.manifesto__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  /* Retuned for Bodoni Moda, which sets considerably wider than the face this
+     was first measured against. At --t-d1 on a 22ch measure the statement runs
+     to five lines and overshoots the pinned viewport at both ends. */
+  font-size: clamp(1.9rem, 4vw, 3.6rem);
+  max-width: 30ch;
+}
+/* The closing sentence drops out of the display face — the argument ends in a
+   normal speaking voice. Targeted by class, never by :last-child: SplitText
+   restructures the subtree and positional selectors stop meaning what you think. */
+.manifesto__coda {
+  font-size: var(--t-lead);
+  font-family: var(--font-text);
+  line-height: 1.45;
+  letter-spacing: 0;
+  max-width: 58ch;
+  color: var(--fg-muted);
+}
+
+/* ==========================================================================
+   02 — ONE
+   ========================================================================== */
+
+.one__pin {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: var(--s-8);
+  position: relative;
+}
+.one__stage {
+  position: relative;
+  flex: 1;
+  display: grid;
+  place-items: center;
+}
+/* The mark at its largest and quietest — ghosted behind the three lines it
+   illustrates. Its counterpart in §03 is small, sharp and gold-pointed. */
+.one__mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: auto;
+  height: min(58vh, 72vw);
+  transform: translate(-50%, -50%);
+  color: var(--c-bone);
+  opacity: 0.16;
+  /* The mark is drawn at 5 units in a 95-unit box. Scaled to half the viewport
+     that reads as a bold graphic rather than the fine line the identity is —
+     stroke weight has to come down as the mark goes up. */
+  stroke-width: 1.5;
+  user-select: none;
+}
+/* Scaled down with the strokes, and held at full strength: at 0.16 opacity the
+   surrounding tree recedes and the point is the only thing that stays. */
+.one__mark .mark__point {
+  r: 3;
+  opacity: 1;
+}
+.one__hairline {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--rule);
+  transform-origin: left;
+}
+.one__copy {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+.one__lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  text-align: center;
+}
+.one__support {
+  margin-top: var(--s-6);
+  text-align: center;
+  margin-inline: auto;
+  max-width: 44ch;
+}
+
+/* ==========================================================================
+   03 — THE CEIBA
+   ========================================================================== */
+
+.ceiba__body {
+  margin-top: var(--s-6);
+  row-gap: var(--s-7);
+  align-items: start;
+}
+.ceiba__figure {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+}
+.ceiba__mark {
+  width: clamp(96px, 11vw, 168px);
+  stroke-width: 3.5;
+}
+.ceiba__text {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+.ceiba__lead {
+  max-width: 20ch;
+}
+.ceiba__note {
+  max-width: 54ch;
+}
+
+@media (min-width: 1024px) {
+  .ceiba__figure {
+    grid-column: 2 / 5;
+    align-items: center;
+  }
+  .ceiba__text {
+    grid-column: 6 / 12;
+  }
+}
+
+/* ==========================================================================
+   04 — THE HOUSE
+   ========================================================================== */
+
+.residence__head {
+  row-gap: var(--s-5);
+  margin-bottom: var(--s-7);
+}
+
+/* The carousel drifts on its own — no pin, no scrub, no drag. The viewport
+   clips; the track inside is twice the plate set and travels -50% forever. */
+.residence__viewport {
+  width: 100%;
+  overflow: hidden;
+}
+.residence__track {
+  display: flex;
+  width: max-content;
+  gap: var(--s-6);
+  list-style: none;
+  margin: 0;
+  padding-inline: 0;
+  will-change: transform;
+}
+.residence__plate {
+  flex: 0 0 auto;
+  width: clamp(240px, 62vw, 320px);
+}
+.residence__frame {
+  aspect-ratio: 3 / 4;
+}
+.residence__caption {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-top: var(--s-3);
+}
+
+@media (min-width: 768px) {
+  .residence__plate {
+    width: auto;
+  }
+  .residence__frame {
+    height: clamp(300px, 46vh, 520px);
+    width: calc(clamp(300px, 46vh, 520px) * 3 / 4);
+  }
+}
+
+/* Reduced motion: nothing drifts, so the track has to be reachable by hand.
+   Native horizontal scroll with snap, and the duplicate set is harmless. */
+@media (prefers-reduced-motion: reduce) {
+  .residence__viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-inline: var(--margin);
+  }
+  .residence__viewport::-webkit-scrollbar {
+    display: none;
+  }
+  .residence__plate {
+    scroll-snap-align: center;
+  }
+  .residence__track {
+    will-change: auto;
+  }
+}
+
+/* ==========================================================================
+   04 — THE METHOD
+   ========================================================================== */
+
+.method__body {
+  margin-top: var(--s-7);
+  row-gap: var(--s-6);
+}
+.method__index {
+  display: none;
+}
+.method__panels {
+  grid-column: 1 / -1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.method__panel {
+  padding-block: var(--s-7);
+  border-top: 1px solid var(--rule);
+}
+.method__panel:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+.method__numeral {
+  display: block;
+  margin-bottom: var(--s-4);
+}
+.method__title {
+  margin-bottom: var(--s-4);
+}
+
+@media (min-width: 1024px) {
+  .method__index {
+    display: block;
+    grid-column: 1 / 5;
+    position: sticky;
+    top: 42vh;
+    align-self: start;
+  }
+  .method__index ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+  }
+  .method__index-item {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    color: var(--fg-muted);
+    transition: color var(--d-base) var(--e-out-expo);
+  }
+  .method__index-item.is-active {
+    color: var(--fg);
+  }
+  .method__index-rule {
+    display: block;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width var(--d-base) var(--e-out-expo);
+  }
+  .method__index-item.is-active .method__index-rule {
+    width: 32px;
+  }
+  .method__panels {
+    grid-column: 6 / 13;
+  }
+}
+
+/* ==========================================================================
+   05 — A DAY
+   ========================================================================== */
+
+.day__list {
+  position: relative;
+  list-style: none;
+  margin: var(--s-7) 0 0;
+  padding: 0 0 0 var(--s-6);
+}
+.day__rail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--rule-strong);
+}
+.day__rail-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: top;
+  transform: scaleY(0);
+}
+.day__moment {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: var(--s-4);
+  align-items: baseline;
+  padding-block: var(--s-4);
+  border-bottom: 1px solid var(--rule);
+}
+.day__time {
+  color: var(--fg-muted);
+  transition: color var(--d-base) var(--e-out-expo);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+}
+.day__moment.is-passed .day__time {
+  color: var(--accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .day__rail-fill {
+    transform: scaleY(1);
+  }
+}
+
+/* ==========================================================================
+   06 — DISCRETION
+   ========================================================================== */
+
+.discretion__band {
+  margin-block: var(--s-7);
+}
+.discretion__plate {
+  aspect-ratio: 21 / 9;
+}
+.discretion__notes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+/* ==========================================================================
+   07 — THE TEAM
+   ========================================================================== */
+
+/* The glow travels between rows inside this wrapper, so it needs to be the
+   positioning context and the list must not create its own. */
+.team__wrap {
+  position: relative;
+  margin-top: var(--s-7);
+}
+
+/* A gradient, not a box-shadow — the codebase has none, and a soft radial
+   reads more like light than a blurred rectangle does. Radial rather than
+   linear so the top and bottom edges fall off too; a linear gradient gave the
+   band hard horizontal edges that looked like a table row, not a glow.
+   Only transform and opacity animate. */
+.team__glow {
+  position: absolute;
+  top: 0;
+  left: calc(var(--s-6) * -1);
+  right: calc(var(--s-6) * -1);
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    ellipse 62% 128% at 50% 50%,
+    color-mix(in srgb, var(--c-canopy) 20%, transparent) 0%,
+    color-mix(in srgb, var(--c-canopy) 12%, transparent) 46%,
+    transparent 74%
+  );
+  will-change: transform;
+}
+/* The brass tick sits in the margin to the left of the roles, not under them —
+   at the list's own left edge it lands directly behind the first word. */
+.team__glow::after {
+  content: '';
+  position: absolute;
+  left: var(--s-2);
+  top: 50%;
+  width: 20px;
+  height: 1px;
+  transform: translateY(-50%);
+  background: var(--accent);
+}
+
+.team__list {
+  position: relative;
+  z-index: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+.team__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: var(--s-4);
+  padding-block: var(--s-4);
+  border-bottom: 1px solid var(--rule);
+}
+.team__role {
+  color: var(--fg-muted);
+  transition:
+    color var(--d-base) var(--e-out-expo),
+    transform var(--d-base) var(--e-out-expo);
+}
+.team__presence {
+  color: var(--fg-muted);
+  transition: color var(--d-base) var(--e-out-expo);
+}
+.team__row.is-hover .team__role {
+  color: var(--fg);
+}
+.team__row.is-hover .team__presence {
+  color: var(--accent);
+}
+.team__note {
+  margin-top: var(--s-5);
+  max-width: 46ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .team__glow {
+    background: color-mix(in srgb, var(--c-canopy) 10%, transparent);
+  }
+}
+
+/* ==========================================================================
+   08 — ENQUIRE
+   ========================================================================== */
+
+.enquiry__contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  margin-top: var(--s-6);
+  align-items: flex-start;
+}
+.enquiry__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  margin-top: var(--s-6);
+}
+/* the action is a word, not a bar — it must not stretch to the column */
+.enquiry__form .line-action {
+  align-self: flex-start;
+  margin-top: var(--s-4);
+}
+@media (min-width: 1024px) {
+  .enquiry__form {
+    margin-top: 0;
+  }
+}
+.field__error {
+  display: block;
+  min-height: 1.4em;
+  margin-top: var(--s-1);
+  color: var(--accent);
+}
+.enquiry__success {
+  max-width: 22ch;
+}
+
+/* ==========================================================================
+   09 — FOOTER
+   ========================================================================== */
+
+.site-footer {
+  padding-block: var(--s-7) var(--s-5);
+  overflow: hidden;
+}
+.site-footer__marquee {
+  overflow: hidden;
+  opacity: 0.055;
+  user-select: none;
+}
+.site-footer__marquee-track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  animation: marquee 40s linear infinite;
+  font-family: var(--font-display);
+}
+.site-footer__marquee-track span {
+  white-space: pre;
+  padding-right: 0.2em;
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-footer__marquee-track {
+    animation: none;
+  }
+}
+.site-footer__base {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  margin-top: var(--s-7);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--rule);
+}
+@media (min-width: 768px) {
+  .site-footer__base {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
