@@ -4,12 +4,13 @@
    to docs/03-design-system.md in the same change.
 
    Ported from the concept site. The chrome blocks (mark, preloader, header,
-   scroll rail, cursor) are global. The numbered section blocks (hero,
+   scroll rail, cursor) are global. The numbered section blocks (
    manifesto, one, ceiba, residence, method, day, discretion, team, enquiry,
    footer) are the reusable section grammar the seven templates are built
    from — docs/05-template-architecture.md §Reusable blocks maps each to the
    templates that use it. Templates add their own files beside this one;
-   they do not fork these blocks.
+   they do not fork these blocks. The hero block moved to
+   src/sections/home/Hero.css in Task 16: it belongs to the home page alone.
    ========================================================================== */
 
 /* Sections own their ground. See GroundManager for why this is not a
@@ -44,8 +45,7 @@ main > section {
    content in it. Padding on the section would push that frame down and leave a
    gap at the top of the pin for its whole duration. */
 main > section.manifesto,
-main > section.one,
-main > section.hero {
+main > section.one {
   padding-block: 0;
 }
 
@@ -113,6 +113,8 @@ main > section.hero {
   clip-path: inset(0 0 0 0);
   display: grid;
   place-items: center;
+  /* the home hero's lockup sits at the same lift, so the veil opens onto it */
+  padding-bottom: var(--lockup-lift);
 }
 .preloader__inner {
   display: flex;
@@ -288,143 +290,6 @@ html[data-cursor='custom'] * {
   background: transparent;
   border: 1px solid currentColor;
   opacity: 1;
-}
-
-/* ==========================================================================
-   00 — HERO
-   ========================================================================== */
-
-.hero {
-  position: relative;
-  height: 100svh;
-  min-height: 620px;
-  overflow: hidden;
-}
-.hero__media {
-  position: absolute;
-  inset: -8% 0;
-  will-change: transform;
-}
-.hero__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-/* The ambient gradient (src/webgl) sits beneath the media and the scrim and
-   above the section's own canopy. Opacity is set by the mounting template;
-   docs/05 fixes the hero at 0.35. */
-.hero__ambient {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-/* Two layers: a vertical gradient for the chrome at top and bottom, and a soft
-   pool behind the lockup. The photograph is busy in the middle and the wordmark
-   has to hold against it without the frame going flat. */
-.hero__scrim {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 58% 46% at 50% 46%, rgb(20 35 28 / 0.42) 0%, rgb(20 35 28 / 0) 100%),
-    linear-gradient(
-      180deg,
-      rgb(20 35 28 / 0.58) 0%,
-      rgb(20 35 28 / 0.14) 40%,
-      rgb(20 35 28 / 0.72) 100%
-    );
-}
-.hero__content {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: grid;
-  grid-template-rows: 1fr auto;
-  padding-block: var(--s-8) var(--s-8);
-  color: var(--c-bone);
-}
-/* The client's reversed lockup: mark, wordmark, brass rule, tagline. */
-.hero__lockup {
-  align-self: center;
-  justify-self: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--s-4);
-  text-align: center;
-  max-width: 100%;
-}
-.hero__mark {
-  width: clamp(52px, 6vw, 88px);
-  stroke-width: 4;
-}
-.hero__wordmark {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(1.5rem, 4.6vw, 4rem);
-  line-height: 1;
-  letter-spacing: 0.16em;
-  text-indent: 0.16em;
-  white-space: nowrap;
-}
-.hero__rule {
-  display: block;
-  width: clamp(90px, 12vw, 190px);
-  height: 1px;
-  background: var(--c-brass);
-  transform-origin: center;
-}
-.hero__tagline {
-  color: rgb(241 236 224 / 0.78);
-}
-.hero__meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  color: rgb(241 236 224 / 0.6);
-  padding-inline: var(--margin);
-}
-.hero__cue {
-  position: absolute;
-  bottom: var(--s-5);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--s-3);
-  color: rgb(241 236 224 / 0.5);
-}
-.hero__cue-rule {
-  width: 1px;
-  height: 40px;
-  background: currentColor;
-  transform-origin: top;
-  animation: cue 2.4s var(--e-in-out-quart) infinite;
-}
-@keyframes cue {
-  0% {
-    transform: scaleY(0);
-    transform-origin: top;
-  }
-  45% {
-    transform: scaleY(1);
-    transform-origin: top;
-  }
-  55% {
-    transform: scaleY(1);
-    transform-origin: bottom;
-  }
-  100% {
-    transform: scaleY(0);
-    transform-origin: bottom;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero__cue-rule {
-    animation: none;
-    transform: scaleY(1);
-  }
 }
 
 /* ==========================================================================

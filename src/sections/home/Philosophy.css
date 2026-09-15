@@ -1,0 +1,69 @@
+/* ==========================================================================
+   04 — PHILOSOPHY — co-located with Philosophy.tsx, imported once by it. The
+   concept site's method block on canopy: index left, panels right. The
+   index's own look is StickyIndex.css; where it sits is decided here, as
+   the interior template decides for its pages. Tokens only; px for geometry
+   per rule 4 as amended.
+   ========================================================================== */
+
+.philosophy__body {
+  margin-top: var(--s-7);
+  row-gap: var(--s-6);
+  align-items: start;
+}
+.philosophy__index {
+  display: none;
+}
+.philosophy__panels {
+  grid-column: 1 / -1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.philosophy__panel {
+  padding-block: var(--s-7);
+  border-top: 1px solid var(--rule);
+}
+.philosophy__panel:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+.philosophy__numeral {
+  display: block;
+  margin-bottom: var(--s-4);
+  color: var(--fg-muted);
+}
+.philosophy__term {
+  margin-bottom: var(--s-4);
+  max-width: 16ch;
+}
+.philosophy__description {
+  color: var(--fg-muted);
+  max-width: 46ch;
+}
+
+@media (min-width: 1024px) {
+  .philosophy__index {
+    display: block;
+    grid-column: 1 / 5;
+    position: sticky;
+    /* docs/04 §6: the index rests at 42vh */
+    top: 42vh;
+    align-self: start;
+    /* room for the brass rule that draws in the margin to its left */
+    padding-left: calc(32px + var(--s-3));
+  }
+  /* on canopy the quiet item is --fg-muted (bone at 0.64), AA on canopy */
+  .philosophy__index .sticky-index__link {
+    color: var(--fg-muted);
+    opacity: 1;
+    transition: color var(--d-base) var(--e-out-expo);
+  }
+  .philosophy__index .sticky-index__link:hover,
+  .philosophy__index .sticky-index__link:focus-visible,
+  .philosophy__index .sticky-index__link[aria-current='true'] {
+    color: var(--fg);
+  }
+  .philosophy__panels {
+    grid-column: 6 / 13;
+  }
+}

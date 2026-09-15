@@ -1,0 +1,92 @@
+/* ==========================================================================
+   03 — CONDITIONS — co-located with Conditions.tsx, imported once by it (the
+   list component shares it). The hairline list on sand, one column below
+   1024px and two above; the hover plate is one element that travels. Tokens
+   only; px for geometry per rule 4 as amended.
+   ========================================================================== */
+
+.conditions__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.conditions__lead {
+  max-width: 40ch;
+}
+
+/* the plate travels inside this wrapper, so it is the positioning context */
+.conditions__wrap {
+  position: relative;
+  margin-top: var(--s-7);
+}
+.conditions__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--gutter);
+  border-top: 1px solid var(--rule);
+}
+.conditions__row {
+  border-bottom: 1px solid var(--rule);
+}
+.conditions__link {
+  display: grid;
+  grid-template-columns: 3ch 1fr;
+  align-items: baseline;
+  gap: var(--s-4);
+  padding-block: var(--s-4);
+  color: inherit;
+  text-decoration: none;
+}
+.conditions__numeral {
+  color: var(--fg-muted);
+}
+.conditions__label {
+  color: var(--fg);
+  /* the rule beneath the row is the treatment; the word itself only settles */
+  transition: opacity var(--d-fast) var(--e-out-quart);
+}
+.conditions__link:hover .conditions__label,
+.conditions__link:focus-visible .conditions__label {
+  opacity: 0.72;
+}
+@media (min-width: 1024px) {
+  .conditions__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* the top rule spans both columns; the second column repeats it for row one */
+  .conditions__row:nth-child(2) {
+    border-top: 0;
+  }
+}
+
+/* — the hover plate: 3:4, narrow, travelling on transform only — */
+.conditions__plate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: var(--z-sticky);
+  width: clamp(160px, 14vw, 220px);
+  aspect-ratio: 3 / 4;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--d-base) var(--e-out-expo);
+  will-change: transform;
+}
+.conditions__plate[data-shown='true'] {
+  opacity: 1;
+}
+.conditions__frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--d-fast) var(--e-out-quart);
+}
+.conditions__frame.is-active {
+  opacity: 1;
+}
+.conditions__frame img {
+  height: 100%;
+}

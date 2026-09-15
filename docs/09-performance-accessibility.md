@@ -35,7 +35,7 @@ Lighthouse scores are easy to game with a light page. What decides whether this 
 
 | Cost | Mitigation |
 | --- | --- |
-| Hero video | `preload="metadata"`, poster-first, poster is the LCP, skipped on saveData / reduced motion, ≤ 4MB |
+| Hero video | `preload="metadata"`, poster-first, the poster complete at first paint, skipped on saveData / reduced motion, ≤ 4MB. Chromium excludes an image that covers the whole viewport from the LCP candidates, so the *reported* LCP element on `/` is the `<h1>`; it must paint with first paint, never after the veil (Task 16, `home.spec.ts`). |
 | Ambient gradient (three + R3F + shadergradient) | Separate dynamic chunk, `/` only, desktop only, after LCP, gated, paused offscreen; removed outright if it costs a mobile point |
 | GSAP + ScrollTrigger + SplitText | ~50kB gz. Accepted — the core of the product. |
 | Motion | Accepted for the curtain and overlay; tree-shaken; no `useScroll`. |

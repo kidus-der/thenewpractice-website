@@ -1,0 +1,65 @@
+/* ==========================================================================
+   05 — CONVERSATION — co-located with Conversation.tsx, imported once by it.
+   Copy left, founder right; the line action closes the page. Tokens only; px
+   for geometry per rule 4 as amended.
+   ========================================================================== */
+
+.conversation__grid {
+  row-gap: var(--s-7);
+  align-items: start;
+}
+.conversation__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.conversation__lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  max-width: 46ch;
+}
+.conversation__founder {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.conversation__address {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-2);
+  font-style: normal;
+}
+.conversation__name {
+  font-family: var(--font-display);
+  font-size: var(--t-d3);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+.conversation__role {
+  color: var(--fg-muted);
+  margin-top: var(--s-2);
+}
+.conversation__contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-2);
+  margin-top: var(--s-5);
+}
+.conversation__locale {
+  color: var(--fg-muted);
+  margin-top: var(--s-3);
+  max-width: 28ch;
+}
+.conversation__action {
+  margin-top: var(--s-7);
+}
+
+@media (min-width: 1024px) {
+  /* the founder block starts level with the copy, a group down from the eyebrow */
+  .conversation__founder {
+    padding-top: calc(var(--s-6) + var(--t-eyebrow));
+  }
+}

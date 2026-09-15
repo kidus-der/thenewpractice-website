@@ -1,0 +1,43 @@
+/* ==========================================================================
+   MANIFESTO — co-located with Manifesto.tsx, imported once by it. The
+   statement is the block; the label gives up room to it. Tokens only; px for
+   geometry per rule 4 as amended.
+   ========================================================================== */
+
+.manifesto {
+  margin-top: var(--s-8);
+}
+.manifesto__pin {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding-block: var(--s-6);
+}
+.manifesto .eyebrow {
+  margin-bottom: var(--s-5);
+}
+/* Retuned for Bodoni Moda, which sets considerably wider than the face this
+   was first measured against. At --t-d1 on a 22ch measure the statement runs
+   past the pinned viewport at both ends (concept site, manifesto). */
+.manifesto__statement {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3.1vw, 3rem);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  max-width: 30ch;
+  text-wrap: balance;
+}
+.manifesto__prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  max-width: 62ch;
+  padding-block: var(--s-6) 0;
+  color: var(--fg-muted);
+}
+@media (min-width: 1024px) {
+  .manifesto {
+    margin-top: var(--s-9);
+  }
+}

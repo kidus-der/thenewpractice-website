@@ -1,0 +1,196 @@
+/* ==========================================================================
+   00 — HERO — co-located with Hero.tsx, imported once by it. Moved here from
+   sections.css (Task 16); the poster, video and lockup layers are the home
+   page's alone. Tokens for colour, type, space and motion; literal px only
+   for geometry (rule 4 as amended).
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 620px;
+  overflow: hidden;
+  /* the frame is the viewport; the section rhythm would push it down */
+  padding-block: 0;
+}
+
+/* — media: poster beneath, video over it, both bleeding 8% for the parallax — */
+.hero__media {
+  position: absolute;
+  inset: -8% 0;
+  will-change: transform;
+}
+.hero__media img,
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Transparent until it can play; HeroVideo fades it in over --d-slow so the
+   poster's duotone never cuts to the loop's colour (ledger, Task 2b triage). */
+.hero__video {
+  opacity: 0;
+}
+/* With the gradient present the media lets a little of it through in the
+   shadows; without it (mobile, reduced motion) the frame is the poster alone. */
+.hero:has(> .hero__ambient) .hero__media {
+  opacity: 0.9;
+}
+
+/* The ambient gradient sits beneath the media and above the section's own
+   canopy (docs/04 §8). Opacity is set by the mounting section. */
+.hero__ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Two layers: a vertical gradient for the chrome at top and bottom, and a soft
+   pool behind the lockup. The surf is bright in the middle and the lockup has
+   to hold against it without the frame going flat. */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 58% 46% at 50% 46%, rgb(20 35 28 / 0.42) 0%, rgb(20 35 28 / 0) 100%),
+    linear-gradient(
+      180deg,
+      rgb(20 35 28 / 0.58) 0%,
+      rgb(20 35 28 / 0.14) 40%,
+      rgb(20 35 28 / 0.72) 100%
+    );
+}
+
+/* — the lockup: a title page's placement, its centre a little above the
+     frame's, sized and placed as the preloader draws it (sections.css sets
+     the veil's lockup to the same --lockup-lift), so the veil splits onto
+     the same lockup in the same place. The words sit beneath, lower left. — */
+.hero__lockup {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-4);
+  padding-bottom: var(--lockup-lift);
+  text-align: center;
+  color: var(--c-bone);
+  pointer-events: none;
+}
+.hero__mark {
+  width: clamp(44px, 5vw, 64px);
+  stroke-width: 4;
+}
+.hero__wordmark {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.4vw, 1.9rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  white-space: nowrap;
+}
+/* the trademark, once per page, at the eyebrow size (ledger, Task 1 triage) */
+.hero__tm {
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0;
+  line-height: 0;
+  vertical-align: super;
+  margin-left: 0.1em;
+}
+.hero__rule {
+  display: block;
+  width: clamp(120px, 22vw, 260px);
+  height: 1px;
+  background: var(--c-brass);
+}
+.hero__tagline {
+  color: rgb(241 236 224 / 0.72);
+}
+
+/* — the words: the client's title and its kicker, lower left — */
+.hero__content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: var(--s-5);
+  padding-bottom: var(--s-8);
+  color: var(--c-bone);
+}
+.hero__title-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.hero__eyebrow {
+  color: rgb(241 236 224 / 0.72);
+}
+.hero__title {
+  max-width: 14ch;
+}
+.hero__toggle {
+  pointer-events: auto;
+}
+
+/* — the cue, bottom centre, with the looping vertical rule — */
+.hero__cue {
+  position: absolute;
+  bottom: var(--s-5);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  color: rgb(241 236 224 / 0.5);
+}
+.hero__cue-rule {
+  width: 1px;
+  height: 40px;
+  background: currentColor;
+  transform-origin: top;
+  animation: cue 2.4s var(--e-in-out-quart) infinite;
+}
+@keyframes cue {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero__content {
+    padding-bottom: var(--s-8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__media {
+    will-change: auto;
+  }
+  .hero__cue-rule {
+    animation: none;
+    transform: scaleY(1);
+  }
+}
