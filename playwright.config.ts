@@ -9,13 +9,16 @@ import { PROJECTS } from './tests/e2e/helpers/projects'
  *
  * The server under test is the dev server by default; set CI or E2E_PROD to
  * build and serve the production bundle instead, which is what the Lighthouse
- * run and the deploy checkpoints measure.
+ * run and the deploy checkpoints measure. Set E2E_BASE_URL to test a server
+ * that is already running (another agent's `next dev` holds the project lock,
+ * or the staging URL) and no server is started.
  */
 const PORT = 3210
 const BASE_URL = `http://localhost:${PORT}`
 const IS_CI = Boolean(process.env.CI)
 const USE_PRODUCTION_SERVER = IS_CI || Boolean(process.env.E2E_PROD)
 const SERVER_START_TIMEOUT_MS = 240_000
+const EXTERNAL_BASE_URL = process.env.E2E_BASE_URL
 
 const desktop = devices['Desktop Chrome']
 
@@ -27,7 +30,7 @@ export default defineConfig({
   workers: IS_CI ? 1 : undefined,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL: BASE_URL,
+    baseURL: EXTERNAL_BASE_URL ?? BASE_URL,
     screenshot: 'only-on-failure',
     trace: 'retain-on-failure',
   },
@@ -64,12 +67,14 @@ export default defineConfig({
       use: { ...desktop, viewport: { width: 1280, height: 800 }, reducedMotion: 'reduce' },
     },
   ],
-  webServer: {
-    command: USE_PRODUCTION_SERVER
-      ? `npm run build && npm run start -- --port ${PORT}`
-      : `npm run dev -- --port ${PORT}`,
-    url: BASE_URL,
-    reuseExistingServer: !IS_CI,
-    timeout: SERVER_START_TIMEOUT_MS,
-  },
+  webServer: EXTERNAL_BASE_URL
+    ? undefined
+    : {
+        command: USE_PRODUCTION_SERVER
+          ? `npm run build && npm run start -- --port ${PORT}`
+          : `npm run dev -- --port ${PORT}`,
+        url: BASE_URL,
+        reuseExistingServer: !IS_CI,
+        timeout: SERVER_START_TIMEOUT_MS,
+      },
 })

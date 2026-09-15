@@ -4,19 +4,25 @@ import { expect, type Page } from '@playwright/test'
 const IMPACT_ORDER = ['minor', 'moderate', 'serious', 'critical'] as const
 type Impact = (typeof IMPACT_ORDER)[number]
 
-type Options = Readonly<{ impactAtLeast?: Impact }>
+type Options = Readonly<{
+  impactAtLeast?: Impact
+  /** CSS selector to scope the scan to one region (a chrome component's own spec). */
+  include?: string
+}>
 
 type Violation = Readonly<{ id: string; impact: Impact; help: string; targets: readonly string[] }>
 
 /**
- * Runs axe-core against the current document and fails on any violation at or
- * above the given impact (docs/09 §2: a serious violation fails the run).
+ * Runs axe-core against the current document — or the `include` region only —
+ * and fails on any violation at or above the given impact (docs/09 §2: a
+ * serious violation fails the run).
  */
 export async function expectNoAxeViolations(
   page: Page,
-  { impactAtLeast = 'serious' }: Options = {}
+  { impactAtLeast = 'serious', include }: Options = {}
 ): Promise<void> {
-  const results = await new AxeBuilder({ page }).analyze()
+  const builder = new AxeBuilder({ page })
+  const results = await (include ? builder.include(include) : builder).analyze()
   const floor = IMPACT_ORDER.indexOf(impactAtLeast)
 
   const violations: readonly Violation[] = results.violations
@@ -31,5 +37,6 @@ export async function expectNoAxeViolations(
       targets: v.nodes.map((n) => n.target.join(' ')),
     }))
 
-  expect(violations, `axe violations at or above "${impactAtLeast}"`).toEqual([])
+  const scope = include ? ` within "${include}"` : ''
+  expect(violations, `axe violations at or above "${impactAtLeast}"${scope}`).toEqual([])
 }

@@ -25,7 +25,7 @@ Four commands, in this order. Each one must be green before the next is worth ru
 | 3 | `npm run e2e` (or `npm run e2e:route -- <pattern>` for one spec) | Playwright on five projects: `mobile-390`, `tablet-768`, `desktop-1280`, `wide-1920`, `reduced-motion`. Each spec fails on a console error, an uncaught exception or an axe violation at `serious` or above, and writes a full-page PNG to `tests/e2e/__screenshots__/<project>/<name>.png`. |
 | 4 | `npm run build && npm run lighthouse` | Lighthouse CI, mobile emulation, three runs against the production build on port 3211: Performance ≥ 0.9, CLS ≤ 0.1, LCP ≤ 2500 ms. Reports land in `.lighthouseci/`. |
 
-`npm run e2e` starts the dev server on port 3210 (or reuses one already there). Set `E2E_PROD=1` to build and serve the production bundle instead, which is what the deploy checkpoints and the Lighthouse run measure. `npm run e2e:ui` opens the Playwright inspector for a failing spec. `npm run content:check` runs the content-layer checks without Vitest.
+`npm run e2e` starts the dev server on port 3210 (or reuses one already there). Set `E2E_PROD=1` to build and serve the production bundle instead, which is what the deploy checkpoints and the Lighthouse run measure. Set `E2E_BASE_URL` to point the suite at a server that is already running and skip starting one: Next holds one dev-server lock per project, so in a shared tree pass the port another agent's `next dev` printed, and at Gate 2 pass the staging URL. `npm run e2e:ui` opens the Playwright inspector for a failing spec. `npm run content:check` runs the content-layer checks without Vitest.
 
 ### The screenshot review
 
@@ -33,7 +33,7 @@ Screenshots are read, not diffed. After `npm run e2e`, open the four width captu
 
 What to look for, in order: horizontal scroll or clipped type; a collapsed or stretched image; a headline widow; a section whose ground does not match its spec; anything invisible under reduced motion; and finally the stillness test — does the frame read as a designed page with nothing moving.
 
-Every spec uses the helpers in `tests/e2e/helpers/`: `settleMotion(page)` waits for fonts, the preloader handshake and one painted frame; `expectNoConsoleErrors(page)`; `expectNoAxeViolations(page, { impactAtLeast: 'serious' })`; `screenshotRoute(page, name)`. Import `test` from the helpers, not from `@playwright/test`, so console capture starts before navigation.
+Every spec uses the helpers in `tests/e2e/helpers/`: `settleMotion(page)` waits for fonts, the preloader handshake and one painted frame; `expectNoConsoleErrors(page)`; `expectNoAxeViolations(page, { impactAtLeast: 'serious', include?: selector })`; `screenshotRoute(page, name)`. Import `test` from the helpers, not from `@playwright/test`, so console capture starts before navigation.
 
 ### Structure
 - [ ] Matches its spec in `docs/05` and plan §3.3 — ground sequence, placements, blocks used, eyebrow
