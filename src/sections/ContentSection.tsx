@@ -6,7 +6,7 @@
  *
  * Title in the Didone at --t-d2 arriving line by line; subtitle at --t-d3;
  * the document's one `Header:` line as a serif-italic line; body at 62ch;
- * the list as a hairline two-column list from 1024px; definitions as a
+ * the list as the shared HairlineList (two columns from 1024px); definitions as a
  * hairline list of term and description; the signature right-aligned.
  * Server component; the reveals are the only client code.
  *
@@ -21,6 +21,7 @@ import './ContentSection.css'
 import type { MediaKey } from '@/content/media'
 import type { Section, Signature } from '@/content/schemas'
 import { Reveal } from '@/motion/Reveal'
+import { HairlineList } from './HairlineList'
 import { PlateFigure } from './PlateFigure'
 
 export type Ground = 'light' | 'mid'
@@ -60,25 +61,6 @@ function Paragraphs({ items, register, className }: ProseProps) {
         </p>
       ))}
     </Reveal>
-  )
-}
-
-function HairlineList({ heading, items }: { heading?: string; items: readonly string[] }) {
-  return (
-    <div className="content-section__list-block">
-      {heading && (
-        <Reveal as="p" className="t-body content-section__list-heading">
-          {heading}
-        </Reveal>
-      )}
-      <Reveal as="ul" staggerChildren className="content-section__list">
-        {items.map((item) => (
-          <li key={item} className="t-body">
-            {item}
-          </li>
-        ))}
-      </Reveal>
-    </div>
   )
 }
 
@@ -128,7 +110,11 @@ function SectionBody({ section, plates, register }: BodyProps) {
       )}
       <Paragraphs items={section.paragraphs} register={register} />
       {section.list?.length ? (
-        <HairlineList heading={section.listHeading} items={section.list} />
+        <HairlineList
+          heading={section.listHeading}
+          items={section.list}
+          className="content-section__list-block"
+        />
       ) : null}
       {section.outro?.length ? <Paragraphs items={section.outro} register={register} /> : null}
       <Definitions items={section.definitions} />

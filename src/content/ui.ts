@@ -98,3 +98,19 @@ export const UI_HOME = {
   /** aria-label on the pillars' sticky index <nav>. */
   pillarsIndexLabel: 'Our philosophy',
 } as const
+
+/**
+ * TREATMENT TEMPLATE STRINGS — Task 13. The heading over the related-services
+ * rows, which the document does not write, and the two list headings the
+ * template falls back to when a service carries a list without its own
+ * introducing line (today every service that has a list also has its
+ * heading, so the fallbacks never render). Structural, ours.
+ */
+export const UI_TREATMENT = {
+  /** Over the three related-service rows, in the eyebrow register. */
+  relatedHeading: 'Related services',
+  /** Fallback over `treats` when a service has no `treatsHeading`. */
+  treatsHeading: 'We provide treatment for',
+  /** Fallback over `mayInclude` when a service has no `mayIncludeHeading`. */
+  mayIncludeHeading: 'Treatment may include',
+} as const

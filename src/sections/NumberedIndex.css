@@ -1,0 +1,47 @@
+/* ==========================================================================
+   NUMBERED INDEX — co-located with NumberedIndex.tsx, imported once by it.
+   A table of contents for a programme: numeral, short rule, name. Tokens for
+   colour, type, space and motion; literal px only for geometry (rule 4 as
+   amended). The ordered list carries the count for assistive technology;
+   the painted numerals are hidden from it.
+   ========================================================================== */
+
+.numbered-index {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  border-top: 1px solid var(--rule);
+}
+.numbered-index__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--s-4);
+  align-items: baseline;
+  padding-block: var(--s-4);
+  border-bottom: 1px solid var(--rule);
+}
+/* numeral and rule sit on the item's baseline; tabular figures keep the
+   column square as the count climbs past 09 */
+.numbered-index__numeral {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+.numbered-index__rule {
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: var(--rule-strong);
+}
+.numbered-index__item {
+  max-width: 28ch;
+}
+@media (min-width: 768px) {
+  .numbered-index__row {
+    column-gap: var(--s-5);
+    padding-block: var(--s-5);
+  }
+}

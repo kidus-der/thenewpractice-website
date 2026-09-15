@@ -1,0 +1,19 @@
+/* ==========================================================================
+   TREATMENT TEMPLATE — the composition the blocks do not know about: where
+   the prose column sits. Co-located with TreatmentTemplate.tsx, imported
+   once by it. Tokens only.
+   ========================================================================== */
+
+/* the long-read column, as the interior template sets it without an index */
+@media (min-width: 1024px) {
+  .treatment .content-section__body {
+    grid-column: 2 / 8;
+  }
+}
+/* the definitions run the full reading column: the terms are long */
+.treatment .content-section__definitions {
+  max-width: 100%;
+}
+.treatment .content-section__definition dd {
+  max-width: 62ch;
+}
