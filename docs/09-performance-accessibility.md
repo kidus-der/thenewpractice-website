@@ -118,6 +118,37 @@ The full reduced-motion specification is in `docs/04` §7. The failure modes to 
 | Old Safari | Motion degrades, layout holds |
 | Print | Bone ground, ink type, images at 3:4, no fixed elements. The self-assessment pages print cleanly — someone will print one to bring to a clinician. |
 
+### Security headers
+
+Set in `vercel.json` for every route (task 6), so they apply at the edge without a middleware. Vercel adds `Strict-Transport-Security` itself. Any task that introduces a new origin (a video CDN, an embedded map, an analytics endpoint after approval) widens the matching CSP directive in the same commit and records why here.
+
+| Header | Value | Why |
+| --- | --- | --- |
+| `Content-Security-Policy` | see below | Only our own origin may run code, load media or be a form target |
+| `X-Frame-Options` | `DENY` | Belt-and-braces with `frame-ancestors 'none'` for older agents |
+| `X-Content-Type-Options` | `nosniff` | No MIME sniffing of our responses |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` | Outbound links learn the origin, never the path a visitor was on |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` | The site never asks for any of them |
+
+CSP directives and the reason each one is as wide as it is:
+
+| Directive | Value | Why |
+| --- | --- | --- |
+| `default-src` | `'self'` | The floor for anything not listed |
+| `script-src` | `'self' 'unsafe-inline' https://vercel.live` | Next emits inline bootstrap scripts for hydration; a nonce-based policy needs a middleware and per-request rendering, which conflicts with static generation (§1). `vercel.live` is the toolbar on preview deployments only. |
+| `style-src` | `'self' 'unsafe-inline'` | GSAP and Motion write inline `style` attributes |
+| `img-src` | `'self' data: blob:` | LQIP data URIs; three.js textures via blob |
+| `media-src` | `'self' blob:` | Hero video and (later) ambient audio are self-hosted |
+| `font-src` | `'self'` | `next/font` self-hosts; no Google Fonts host at runtime |
+| `connect-src` | `'self' https://vitals.vercel-insights.com` | Server actions; Vercel Speed Insights if ever enabled after approval |
+| `worker-src` | `'self' blob:` | three.js and R3F may spawn workers |
+| `frame-ancestors` | `'none'` | The site is never embedded |
+| `object-src` | `'none'` | No plugins |
+| `base-uri` | `'self'` | No `<base>` hijack |
+| `form-action` | `'self'` | The enquiry form posts only to its own server action |
+
+Not set: `Cross-Origin-Embedder-Policy` and `Cross-Origin-Opener-Policy`, because nothing here needs `SharedArrayBuffer`, and COEP would block any future cross-origin media without CORP headers.
+
 ---
 
 ## 4. Verification routine

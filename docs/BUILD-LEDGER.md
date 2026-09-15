@@ -127,6 +127,7 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 
 | after task | URL | date |
 |---|---|---|
+| 6 | https://thenewpractice-staging.kidusder.com | 2026-09-14 |
 
 ## Findings and cross-task notes
 
@@ -151,3 +152,15 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - `sections.css` raw px is blessed as the concept site's convention for component geometry; colour, motion and type sizes remain token-only. Rule 4 amended accordingly.
 - `GroundManager.tsx` raw hex: Task 3 exports a `readToken(name)` helper; Task 7 (header) switches GroundManager to it.
 - Client doc and contract PDF committed at the repo root: flagged to the owner; not removed by agents.
+
+### Task 6 — findings (2026-09-14)
+
+- **Vercel project** `thenewpractice-staging` (`prj_u6aBqX42pJiMJFH41FDW1eEK1kKv`) under scope `kidus-projects-8964b022`, Node 24.x, framework preset Next.js. Production target env: `SITE_ENV=staging`, `NEXT_PUBLIC_SITE_URL=https://thenewpractice-staging.kidusder.com`. Preview target has **no** env set, so a plain `npx vercel deploy` (preview) builds as `development` with a localhost `metadataBase` — still noindex, but OG URLs would be wrong. Set the same two variables on `preview` if preview deploys are ever used for review.
+- **`vercel link --yes` auto-connected the GitHub repo** `kidus-der/thenewpractice-website` to the new project (the CLI printed "Connecting GitHub repository … Connected"). This contradicts the demo's `HANDOFF.md` ("`git push` does not deploy"): on this project a push to `main` **will** trigger a production build to the staging URL. Owner to decide: keep it (main auto-deploys to staging) or run `npx vercel git disconnect --scope kidus-projects-8964b022`. Not changed by task 6; the brief did not cover it.
+- **Hostname**: `vercel domains add thenewpractice-staging.kidusder.com thenewpractice-staging` succeeded with no DNS change; the wildcard ALIAS on `kidusder.com` routes it, exactly as the demo handoff described. The deployment also answers on `thenewpractice-staging.vercel.app`, which carries the same noindex.
+- **`SITE_ENV` was stored as type "Secret"** (value hidden) while `NEXT_PUBLIC_SITE_URL` became "Config"; the CLI chose the types when the values arrived on stdin. Harmless for a five-character enum, but `vercel env ls` will not show its value; `vercel env update SITE_ENV production` changes it.
+- **Deploys upload the working tree, not a commit.** The first deploy included whatever other agents had on disk (task 3's `src/webgl/` and `src/lib/tokens.ts` were present, untracked, and built cleanly). Main session may prefer to deploy only from a clean checkout at the deploy checkpoints.
+- **`src/lib/env.test.ts` carries a `@ts-expect-error` on the `vitest` import** so `tsc` passes before task 4 installs Vitest. Task 4 must delete that line, or `tsc` fails with "unused directive". The test was executed once under Node 26's native type stripping with a throwaway shim (15/15 pass); the shim was deleted.
+- **CSP and the ambient gradient (task 3):** if `@shadergradient/react` loads an environment texture from its own CDN, `img-src`/`connect-src` in `vercel.json` will block it and the canvas will fail silently. Task 3 should confirm on the staging URL with the console open and, if a host is needed, add it to the CSP and to `docs/09` §3 in the same commit.
+- **`vercel inspect` lists every route as a function (λ)** including `/`. Vercel emits a function per App Router route alongside the prerender output, so this is not proof of dynamic rendering, but task 20 should confirm `/` is served from the prerender (`x-vercel-cache: HIT`/`PRERENDER`) rather than a lambda.
+- **`.env.local` was created by `vercel link`** with `VERCEL_OIDC_TOKEN` only; gitignored via `.env*`. Nothing to do.

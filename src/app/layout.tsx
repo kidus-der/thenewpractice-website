@@ -13,6 +13,7 @@ import { Preloader } from '@/components/Preloader'
 import { ScrollRail } from '@/components/ScrollRail'
 import { Cursor } from '@/components/Cursor'
 import { SmoothScroll } from '@/motion/SmoothScroll'
+import { env, isIndexable } from '@/lib/env'
 
 /**
  * The identity specifies a high-contrast Didone in the Didot/Bodoni family —
@@ -39,10 +40,9 @@ const text = Jost({
   preload: false,
 })
 
-// Task 6 moves this into src/lib/env.ts (Zod-validated, with SITE_ENV) and
-// task 10 replaces the metadata below with buildMetadata(). Until then the
-// base URL falls back to the dev origin so metadataBase is always valid.
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+// Validated in src/lib/env.ts (defaults to the dev origin, so metadataBase is
+// always valid). Task 10 replaces the metadata below with buildMetadata().
+const SITE_URL = env().NEXT_PUBLIC_SITE_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -51,9 +51,9 @@ export const metadata: Metadata = {
     template: `%s — ${BRAND.name}`,
   },
   description: `${BRAND.tagline}. ${BRAND.locale}.`,
-  // Staging must not be indexed. Task 6 makes this env-driven (SITE_ENV=staging
-  // → noindex; production → index) alongside robots.ts. Hard-coded off until then.
-  robots: { index: false, follow: false },
+  // Staging must not be indexed: only SITE_ENV=production indexes, mirrored by
+  // app/robots.ts. This meta and robots.txt are the only guard on the review URL.
+  robots: isIndexable() ? { index: true, follow: true } : { index: false, follow: false },
   icons: { icon: '/icon.svg', apple: '/icon.svg' },
   openGraph: {
     title: BRAND.name,
