@@ -35,7 +35,7 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 6 | done | 1 | Vercel staging project, hostname, `SITE_ENV=staging` noindex, first deploy |
 | 7 | doing | 3, 4, 5 | Header, desktop nav, mobile nav overlay |
 | 8 | done | 5 | Footer |
-| 9 | doing | 3 | Route curtain transition wired to navigation, scroll reset, reduced-motion fade |
+| 9 | done | 3 | Route curtain transition wired to navigation, scroll reset, reduced-motion fade |
 | 10 | done | 5 | SEO baseline: metadata helpers, JSON-LD builders, sitemap, robots, llms.txt, OG image |
 | 11 | todo | 7, 8, 10 | T2 Interior template → `/about` |
 | 12 | todo | 11 | T6 Index template → `/clinical-services`, `/team`, `/self-assessment` |
@@ -308,3 +308,9 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **`RouteCurtain.css` carries `clamp(44px, 5vw, 64px)`** for the mark, copied from `.preloader__ceiba` in `sections.css`; the co-located chrome CSS convention inherits `sections.css`'s px-geometry blessing or it does not — main session to say which.
 - **Dev route copy** lives as `PLACEHOLDER` literals inside `dev/curtain/page.tsx`, contrary to rule 5, because the file is a temporary harness that 404s on production and is deleted by Task 19.
 - **Commit scope:** `tests/e2e/route-curtain.spec.ts` imports Task 4's `tests/e2e/helpers`, which are still uncommitted in the shared tree; the spec commit lands ahead of them and runs once Task 4's commit is in.
+
+### Main session — triage of Task 9 (2026-09-15)
+
+- Accepted: `playwright test route-curtain` 6/6 on desktop-1280 and reduced-motion in the main session; cover/covered/reveal frames read back.
+- Decisions: `wheel` stays a skip input (mirrors the preloader); the suppressed focus ring on `<main>` after navigation is provisionally accepted, Task 19's keyboard pass confirms; Task 19 splits the phase store out of `RouteCurtain.tsx` (415 lines) and replaces the CLAUDE.md §6a row that still says the curtain runs at `--d-glacial` (it runs at `--d-slow` per docs/04).
+- Co-located chrome CSS inherits the `sections.css` px allowance for geometry.
