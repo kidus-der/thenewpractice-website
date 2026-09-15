@@ -30,10 +30,10 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 2a | done | — | Research and shortlist licence-free stock video and imagery with direct download URLs |
 | 2b | done | 1, 2a | Download, grade and encode the stock media; generate `media.ts`; write `design/ASSETS.md` |
 | 3 | done | 1 | Motion integration (tween-only config, route curtain primitive) and gated shader gradient |
-| 4 | doing | 1 | Test harness: Vitest + RTL, Playwright (4 viewports + reduced motion + axe), Lighthouse CI, `npm run verify` |
+| 4 | done | 1 | Test harness: Vitest + RTL, Playwright (4 viewports + reduced motion + axe), Lighthouse CI, `npm run verify` |
 | 5 | done | 1 | Content ingestion: client doc → typed, Zod-validated `src/content/**`; `docs/CONTENT-GAPS.md` |
 | 6 | done | 1 | Vercel staging project, hostname, `SITE_ENV=staging` noindex, first deploy |
-| 7 | todo | 3, 4, 5 | Header, desktop nav, mobile nav overlay |
+| 7 | doing | 3, 4, 5 | Header, desktop nav, mobile nav overlay |
 | 8 | doing | 5 | Footer |
 | 9 | doing | 3 | Route curtain transition wired to navigation, scroll reset, reduced-motion fade |
 | 10 | doing | 5 | SEO baseline: metadata helpers, JSON-LD builders, sitemap, robots, llms.txt, OG image |
@@ -240,3 +240,9 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **Coverage shape to know about:** `src/content/media.ts` reports 0 % because no test imports the generated manifest; global coverage is still 92.9 %. Thresholds are global, not per-file, so a new `src/server/**` module lands under the same 80 % gate; add its tests in the same commit.
 - **`src/lib/tokens.test.ts` says it runs "in a node environment"**; Vitest now runs every file in jsdom. The test still passes (jsdom's `getComputedStyle` returns an empty value, so `readToken` falls back). Cosmetic comment drift, Task 3's file.
 - **`content:check` keeps `--experimental-strip-types`** as the brief asked; on Node 26 type stripping is on by default and the flag is a harmless no-op.
+
+### Main session — triage of Task 4 (2026-09-15)
+
+- Accepted: main session ran `vitest run --coverage` → 8 files, 88 tests, 88.8% statements.
+- `verify` now runs `test:coverage` so the 80% gate blocks a commit. Vitest stays on 3.x until `@types/node` is bumped (Task 20 decides). Lint ignore patterns stay in the script; `eslint.config.mjs` is hook-protected.
+- LCP 2.9 s on the temporary home page is the preloader holding the hero; Task 16 makes the poster the LCP and Task 20 re-measures. Threshold unchanged.

@@ -21,7 +21,7 @@
     "og": "node scripts/make-og.mjs",
     "video": "node scripts/prepare-video.mjs",
     "media": "npm run video && npm run assets",
-    "verify": "npm run lint && npm run typecheck && npm run test && npm run build"
+    "verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
