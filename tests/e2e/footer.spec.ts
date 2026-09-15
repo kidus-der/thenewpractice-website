@@ -5,13 +5,12 @@
  * Landmarks, link integrity, the founder's tel:/mailto: links, the marquee's
  * accessibility contract, the reduced-motion single repetition, and axe.
  */
-import AxeBuilder from '@axe-core/playwright'
-
 import { BRAND } from '../../src/content/brand'
 import { NAV, routes } from '../../src/content/nav'
 import {
   PROJECTS,
   expect,
+  expectNoAxeViolations,
   expectNoConsoleErrors,
   screenshotRoute,
   settleMotion,
@@ -146,10 +145,6 @@ test.describe('footer', () => {
     // Scoped to the landmark: the page around it belongs to other tasks
     // (home.spec.ts runs the whole document).
     await page.locator(FOOTER).scrollIntoViewIfNeeded()
-    const results = await new AxeBuilder({ page }).include(FOOTER).analyze()
-    const blocking = results.violations
-      .filter((v) => v.impact === 'serious' || v.impact === 'critical')
-      .map((v) => ({ id: v.id, help: v.help, targets: v.nodes.map((n) => n.target.join(' ')) }))
-    expect(blocking, 'serious or critical axe violations in the footer').toEqual([])
+    await expectNoAxeViolations(page, { impactAtLeast: 'serious', include: FOOTER })
   })
 })
