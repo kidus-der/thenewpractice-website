@@ -33,15 +33,15 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 4 | done | 1 | Test harness: Vitest + RTL, Playwright (4 viewports + reduced motion + axe), Lighthouse CI, `npm run verify` |
 | 5 | done | 1 | Content ingestion: client doc → typed, Zod-validated `src/content/**`; `docs/CONTENT-GAPS.md` |
 | 6 | done | 1 | Vercel staging project, hostname, `SITE_ENV=staging` noindex, first deploy |
-| 7 | doing | 3, 4, 5 | Header, desktop nav, mobile nav overlay |
+| 7 | done | 3, 4, 5 | Header, desktop nav, mobile nav overlay |
 | 8 | done | 5 | Footer |
 | 9 | done | 3 | Route curtain transition wired to navigation, scroll reset, reduced-motion fade |
 | 10 | done | 5 | SEO baseline: metadata helpers, JSON-LD builders, sitemap, robots, llms.txt, OG image |
-| 11 | todo | 7, 8, 10 | T2 Interior template → `/about` |
+| 11 | doing | 7, 8, 10 | T2 Interior template → `/about` |
 | 12 | todo | 11 | T6 Index template → `/clinical-services`, `/team`, `/self-assessment` |
 | 13 | todo | 12 | T3 Treatment template → `/clinical-services/[slug]` × 11 |
 | 14 | todo | 12 | T4 Profile template → `/team/[slug]` × 11 |
-| 15 | todo | 11 | T7 Enquiry template → `/contact` with server action and mail adapter |
+| 15 | doing | 11 | T7 Enquiry template → `/contact` with server action and mail adapter |
 | 16 | todo | 2b, 9, 11 | T1 Home template → `/` |
 | 17 | todo | 2b, 11 | T5 Residences template → `/residences` |
 | 18 | todo | 11 | Remaining T2 pages: `/our-process`, `/a-personal-message`, `/fees`, `/privacy`, `/terms` |
@@ -328,3 +328,9 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **Dev-server exclusivity.** Next 16 refuses a second `next dev` in the same directory ("Another next dev server is already running"), so a concurrent agent's `npm run dev` on 3000 made Playwright's `webServer` on 3210 fail to start once during this task. Agents running e2e concurrently should start one shared server on 3210 (Playwright reuses it) or run with `E2E_PROD=1`.
 - **Playwright verification used the dev server on 3210**, started by this task and stopped at the end. Screenshots read: `tests/e2e/__screenshots__/{mobile-390/nav-header-top,mobile-390/nav-overlay-open,tablet-768/nav-overlay-open,desktop-1280/nav-header-top,desktop-1280/nav-header-settled,desktop-1280/nav-header-hidden,wide-1920/nav-header-top,reduced-motion/nav-overlay-reduced}.png`, plus 1024 and `/about` header crops in the session scratchpad. The settled/hidden captures stretch `main` to 400vh through an init script because the placeholder home cannot scroll 200vh; the hero therefore sits above empty canopy in those two frames.
 - **Navigating to an unbuilt route from the overlay** (`/contact`, a 404 for now) arrives as a hard document load in dev, so the test asserts navigation and closure, not the soft-navigation lock release; the soft path is covered from `/dev/curtain` to `/` via the wordmark link and goes away with that route (Task 19) unless another second route is used.
+
+### Main session — triage of Task 7 (2026-09-15)
+
+- Accepted: `playwright test nav` 16 passed on desktop-1280 and mobile-390 in the main session; overlay, top and settled header frames read back.
+- Decisions: resting route links carry no hairline (Enquire keeps the line action) — accepted, Task 19 adds the CLAUDE.md §6a row; menu links close under the curtain rather than on click — accepted; reference-counted scroll lock and the `tel:`/`mailto:` helper duplication go to Task 19; `isActiveRoute()` gets two unit tests in Task 19.
+- Task 15 starts alongside Task 11 (its split layout does not depend on the interior long-read blocks). Both run in worktrees: `task/11-interior`, `task/15-enquiry`.
