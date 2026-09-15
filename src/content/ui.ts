@@ -85,3 +85,17 @@ export const UI_INDEX = {
   /** Beneath each questionnaire title, in the eyebrow register. */
   assessmentLength: 'Fifteen questions',
 } as const
+
+/**
+ * PROFILE TEMPLATE STRINGS — Task 14. The label the portrait plate carries
+ * while it is a placeholder (docs/CONTENT-GAPS.md G4: no portraits yet), and
+ * the heading over the three other members each profile points to.
+ * Structural, ours; the eyebrow label is the collection's own name from
+ * seo.ts, not repeated here.
+ */
+export const UI_PROFILE = {
+  /** aria-label on the placeholder plate; replaced by the portrait's alt when one exists. */
+  portraitPending: 'Portrait to follow',
+  /** Heading over the three cross-links beneath the biography. */
+  worksAlongside: 'Works alongside',
+} as const

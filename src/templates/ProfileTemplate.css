@@ -1,0 +1,95 @@
+/* ==========================================================================
+   PROFILE TEMPLATE — the composition the blocks do not know about: the
+   title page with the plate beside the name, the biography column, where
+   the colleagues' list sits on the grid. Co-located with ProfileTemplate.tsx,
+   imported once by it. Tokens only; px for geometry per rule 4 as amended.
+   ========================================================================== */
+
+/* — title page: a tall frame, the plate and the lockup hanging from one
+     baseline low in it, as PageIntro does (docs/02 §Composition) — */
+.profile-intro {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+.profile-intro__grid {
+  flex: 1;
+  align-items: end;
+  row-gap: var(--s-7);
+}
+/* the plate keeps to part of its column so the page stays 60–70% empty and
+   the name is in the first viewport at every width: half the column while
+   the plate sits above the name, ContentSection's 62% for a 3:4 plate once
+   it sits beside it */
+.profile-intro__plate {
+  width: 100%;
+  max-width: 50%;
+}
+.profile__plate-frame {
+  width: 100%;
+}
+.profile-intro__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-bottom: var(--s-7);
+}
+.profile-intro__eyebrow {
+  margin-bottom: var(--s-6);
+}
+.profile-intro__index {
+  color: inherit;
+}
+.profile-intro__name {
+  max-width: 14ch;
+}
+/* the letters after the name: letterspaced caps in ink, a small step below
+   the last line of the Didone, before the role */
+.profile-intro__credentials {
+  margin-top: var(--s-4);
+  color: var(--fg);
+}
+.profile-intro__role {
+  margin-top: var(--s-5);
+  color: var(--fg-muted);
+  max-width: 30ch;
+}
+.profile-intro__credentials + .profile-intro__role {
+  margin-top: var(--s-4);
+}
+.profile-intro__lead {
+  margin-top: var(--s-6);
+}
+@media (min-width: 1024px) {
+  .profile-intro__plate {
+    max-width: 62%;
+    align-self: end;
+  }
+}
+
+/* — biography: the long-read section reads at .p-offset (docs/03 §4) — */
+@media (min-width: 1024px) {
+  .profile .content-section__body {
+    grid-column: 7 / 13;
+  }
+}
+
+/* — works alongside: the eyebrow heading, then the rows at the standing
+     .p-list placement (2 / 12 from 1024px, blessed in the Task 12 triage) — */
+.profile-alongside__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.profile-alongside__head .eyebrow {
+  margin-bottom: 0;
+}
+.profile-alongside__list {
+  grid-column: 1 / -1;
+  margin-top: var(--s-7);
+}
+@media (min-width: 1024px) {
+  .profile-alongside__list {
+    grid-column: 2 / 12;
+  }
+}

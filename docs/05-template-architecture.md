@@ -167,7 +167,21 @@ Hero statement + service numeral (`01`–`11`); intro paragraphs at `.p-lead`; _
 
 **Job:** a person, presented with the same restraint as the place.
 
-Portrait plate (3:4, duotoned; generated silhouette placeholder until portraits arrive) at `.p-plate`; name in the Didone at `--t-d2`; credentials after the name; role in the eyebrow register; biography at `.p-offset`, paragraphs as in the document; _Works alongside_ — three other members as an index list; back-to-team rail. Order as in the document.
+Shipped in Task 14 as `src/templates/ProfileTemplate.tsx` + `ProfileTemplate.css` over the T2/T6 blocks plus one new component. The template takes a `TeamMember`, the member's `ordinal` (`01`–`11`), the collection page as a `NavItem` (`index`), the `biography` (`{ lead?, paragraphs }`), the three colleagues as `IndexRow`s (`alongside`), the rail's `prevNext`, and an optional `portrait: MediaKey`. It contains no copy, no route and no media key. The compositions are pure and unit-tested in `src/lib/profile.ts`: `memberBySlug`, `worksAlongside(slug, n = 3)` (the next three in document order, wrapping), `profilePrevNext(slug)` (neighbours; either end returns to `/team`), `profileNumeral`, `biographyLead` (an opening paragraph of at most `DESCRIPTION_MAX` characters is lifted onto the title page as the lead — none of the eleven qualifies today), `initials` (`Dr. Elena Vasquez-Whitfield` → `EV`, ready for an initials placeholder should the owner prefer one).
+
+| Block | Spec as shipped |
+| --- | --- |
+| Title page | `<section data-ground="light" data-n="00" aria-labelledby>`, `min-height: 100svh`, the plate and the lockup hanging from one baseline low in the frame as `PageIntro` does. The portrait at `.p-plate` (columns 1–6), capped to 62% of the column so the name stays in the first viewport at 1280 × 800 (the 3:4 rule from `ContentSection`); below 1024px it sits above the name. At `.p-offset`: the eyebrow lockup with the member's ordinal as its numeral and _Team_ as its label, a `.link` back to the collection (the visible breadcrumb); the name as the `h1` in the Didone at `--t-d1` (`lines`), 14ch; the credentials, when the document gives them, on their own line at `--t-eyebrow` in ink (`MA`, `M.D.`, `MSc` as written); the role at `--t-lead` in `--fg-muted`; the lead, when `biographyLead` lifts one. |
+| `PortraitPlaceholder` | `src/components/PortraitPlaceholder.tsx`: a server-rendered SVG, `role="img"` with `UI_PROFILE.portraitPending` as its label, 3:4 by CSS, no `viewBox` so the hairline stays 1px and the point 6px at any size. Sand (`--bg-raised`) darkened by a breath toward the foot (canopy at 9% into transparency), one vertical hairline in `--rule-strong`, the gold point (`--accent`) at the upper golden section. No face, no silhouette, no initials: the human presence only obliquely (docs/02 §Imagery). It reveals with the `mask` wipe as a plate does. When `media.ts` gains a key for a member the route passes `portrait` and `PlateFigure` renders it in the same frame; nothing else changes. |
+| Biography | One `ContentSection` (`id="biography"`, `data-n="01"`, bone) with the paragraphs as the document gives them, untitled so it carries no eyebrow (§6a, Task 18); the body column at `7 / 13` from 1024px, prose at 62ch. The bio irregularities in CONTENT-GAPS C8 render verbatim. |
+| _Works alongside_ | `<section id="works-alongside" data-ground="mid" data-n="02" aria-labelledby>`: `SectionHeader` at `.p-lead` with `UI_PROFILE.worksAlongside` as the `h2`, then `IndexList` at the standing `.p-list` placement (`2 / 12` from 1024px) with the next three members in document order — name over role, no plates, one travelling glow. |
+| `PrevNextRail`, `EnquireBand` | Reused unchanged: the previous and next member by name, the first and last member's outer neighbour being _Team_; then the band at `03`. Rail before band, as T2 and T6 ship it. |
+
+Grounds: title page bone (the plate frame is the sand); biography bone; _Works alongside_ sand; rail bone; band canopy.
+
+The route `src/app/team/[slug]/page.tsx`: `generateStaticParams` from `TEAM`; `notFound()` on an unknown slug; `generateMetadata` → `buildMetadata({ ...teamSeo(member), path: teamHref(slug), type: 'profile' })`; `<JsonLd>` with `person(member)` (name, `honorificSuffix` only where the document gives credentials, `jobTitle`, `worksFor`, `url` — no `alumniOf`, `award` or `knowsAbout`), `webPage`, `breadcrumb` (Home → Team → the name) and `organization()`.
+
+Playwright: `tests/e2e/profile.spec.ts` on three members (`lowell-monkhouse`, `elena-vasquez-whitfield`, `fernando-escobosa-garcia`) and five projects — the exact name as the only `h1` and the first ground, the credentials line only where given, the role, the paragraph count and text, the eyebrow ordinal and back link, the placeholder plate at 3:4 with its label and no `<img>`, three rows with the right hrefs on sand, the rail's two links, the `Person` node with `jobTitle` and no `award`, axe scoped to `main`, a full-page capture after `revealAll` — plus a smoke pass over all eleven routes (200 and the right `h1`) and a 404 for a stranger.
 
 ### T5 — Residences (`/residences`)
 
@@ -256,7 +270,7 @@ The concept site's ten sections were specified as a single narrative. Their spec
 
 Foundation (ported, task 1): `Mark`, `Grain`, `GroundManager`, `Preloader`, `ScrollRail`, `Cursor`, `LineAction` / `LineActionButton`, `SectionHeader`, `Plate`, `Reveal`, `SmoothScroll`.
 
-Chrome and primitives (tasks 3–10): `Header`, `NavOverlay`, `Footer`, `RouteCurtain`, `AudioToggle`, `Field`, `AmbientGradient`, `MotionProvider`. Section blocks (tasks 11–12): `PageIntro`, `ContentSection`, `PlateFigure`, `StickyIndex`, `PrevNextRail`, `EnquireBand`, `CeibaFigure`, `IndexList`, `IndexPlate` (the plan's `PlateHover`).
+Chrome and primitives (tasks 3–10): `Header`, `NavOverlay`, `Footer`, `RouteCurtain`, `AudioToggle`, `Field`, `AmbientGradient`, `MotionProvider`. Section blocks (tasks 11–12): `PageIntro`, `ContentSection`, `PlateFigure`, `StickyIndex`, `PrevNextRail`, `EnquireBand`, `CeibaFigure`, `IndexList`, `IndexPlate` (the plan's `PlateHover`); `PortraitPlaceholder` (task 14).
 
 Templates (tasks 11–18b): the seven above plus the assessment scorer.
 
