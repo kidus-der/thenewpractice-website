@@ -1,0 +1,146 @@
+/* ==========================================================================
+   ASSESSMENT FORM — co-located with AssessmentForm.tsx, imported once by it.
+   Tokens for colour, type, space and motion; literal px only for geometry
+   (rule 4 as amended). A printed form: numeral, question, two words, a
+   hairline. The toggle grammar (.choice__*) comes from Field.css through
+   ChoiceToggle; nothing is restated here.
+   ========================================================================== */
+
+.assessment {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+/* — the rows — */
+.assessment__rows {
+  width: 100%;
+  border-top: 1px solid var(--rule);
+}
+.assessment__row {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+  padding: var(--s-4) 0;
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: var(--s-3);
+  column-gap: var(--s-5);
+  align-items: baseline;
+}
+/* Floated, the legend stops being a rendered legend and becomes an ordinary
+   child of the fieldset's grid; the float itself is ignored by the grid. Its
+   accessible role is unchanged: it still names the group. */
+.assessment__legend {
+  float: left;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 3ch minmax(0, 1fr);
+  column-gap: var(--s-4);
+  align-items: baseline;
+  max-width: 62ch;
+}
+.assessment__numeral {
+  color: var(--fg-muted);
+  font-variant-numeric: tabular-nums;
+}
+.assessment__question {
+  line-height: 1.5;
+}
+/* the two words sit under the question, aligned with its text column */
+.assessment__options {
+  display: flex;
+  gap: var(--s-5);
+  padding-left: calc(3ch + var(--s-4));
+}
+@media (min-width: 768px) {
+  .assessment__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .assessment__options {
+    padding-left: 0;
+    justify-content: flex-end;
+  }
+}
+
+/* — tally and action — */
+.assessment__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+  margin-top: var(--s-6);
+}
+/* always one line tall, so the action does not move when the tally arrives */
+.assessment__tally {
+  min-height: 1em;
+  color: var(--fg-muted);
+}
+/* aria-disabled until the sheet is complete: still focusable, visibly quiet,
+   and the rule does not offer a wipe there is nothing to act on */
+.assessment .line-action[aria-disabled='true'] {
+  color: var(--fg-muted);
+  cursor: default;
+}
+.assessment .line-action[aria-disabled='true']:hover::after {
+  transform: scaleX(0);
+}
+
+/* — the result: a rule, the score, the band in the Didone, the client's words — */
+.assessment__result {
+  width: 100%;
+  margin-top: var(--s-7);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--rule-strong);
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.assessment__score {
+  color: var(--fg-muted);
+  margin-bottom: var(--s-4);
+}
+.assessment__band {
+  max-width: 18ch;
+}
+.assessment__band-description {
+  margin-top: var(--s-4);
+  max-width: 46ch;
+}
+.assessment__interpretation {
+  margin-top: var(--s-5);
+  max-width: 62ch;
+}
+.assessment__consultation {
+  margin-top: var(--s-7);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.assessment__consultation-title {
+  max-width: 22ch;
+}
+.assessment__prose {
+  margin-top: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  max-width: 62ch;
+}
+.assessment__enquire {
+  margin-top: var(--s-6);
+}
+
+/* — print: the sheet and, when revealed, the result; no controls (docs/09 §3) — */
+@media print {
+  .assessment__actions {
+    display: none;
+  }
+  .assessment__row {
+    break-inside: avoid;
+  }
+}

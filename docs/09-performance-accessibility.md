@@ -127,6 +127,10 @@ The enquiry form is the only place a visitor can hand the site anything, and the
 - **Stored:** nothing. No database, no file, no cookie, no analytics event. The action's result to the browser is a status and, when invalid, the content-layer error messages — never the submitted text, which is also why a no-JavaScript resubmission starts from an empty form.
 - **Not done:** no rate limiting beyond the honeypot and the 3 s / 2 h timing window (the window applies when the client stamped the form; without JavaScript only the honeypot guards), no IP logging, no reCAPTCHA or third-party anti-abuse.
 
+### Self-assessment data handling
+
+The ten questionnaires (`/self-assessment/[slug]`, Task 18b) are scored in the browser and nowhere else: the answers are one array in React state (`src/lib/assessment.ts`), there is no `<form>` to submit, and nothing is written to storage, cookies or the URL, sent in a request, or logged — closing the tab is the only exit, and the metadata says so. The unit test in `src/sections/AssessmentForm.test.tsx` and the e2e in `tests/e2e/assessment.spec.ts` assert each of those absences.
+
 ### Security headers
 
 Set in `vercel.json` for every route (task 6), so they apply at the edge without a middleware. Vercel adds `Strict-Transport-Security` itself. Any task that introduces a new origin (a video CDN, an embedded map, an analytics endpoint after approval) widens the matching CSP directive in the same commit and records why here.
