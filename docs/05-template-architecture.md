@@ -226,9 +226,29 @@ Playwright: `tests/e2e/index.spec.ts` on all three routes and five projects (h1 
 
 **States.** `sent`: the rows fade out with a `STAGGER.fields` (0.04 s) stagger (Motion) and the confirmation — three declaratives — reveals as `lines` (GSAP `<Reveal>`, a different element) inside a focused `role="status"`. `failed`: a calm line under _Send_ with the founder's telephone and email. `invalid` from the server (no JavaScript): the field errors render under their fields. Reduced motion: instant swap. Playwright: `tests/e2e/contact.spec.ts` — keyboard-only completion, blur validation, honeypot, no-JS submission, same-origin action, axe on `main`, screenshots.
 
-### Interactive self-assessment (`/self-assessment/[slug]` × 10)
+### Self-assessment — the T2 variant (`/self-assessment/[slug]` × 10)
 
-Fifteen yes/no questions as a hairline list with two line-action toggles per row (radio-group semantics); a live tally after the first answer; _See your result_ reveals the band (0–4 mild, 5–9 moderate, 10–15 severe) with the questionnaire's own interpretation text and a link to `/contact`; `aria-live` on the result; nothing stored, nothing sent. Scoring is a pure function, unit-tested.
+**Job:** a questionnaire that reads as a quiet printed form, not a quiz. Nothing a person answers leaves the browser.
+
+Shipped in Task 18b as `src/templates/AssessmentTemplate.tsx` + `.css` (server) over the T2 blocks and one new client block, `src/sections/AssessmentForm.tsx` + `.css`. The pure core is `src/lib/assessment.ts`. Route: `src/app/self-assessment/[slug]/page.tsx` — `generateStaticParams` from `ASSESSMENTS`, `dynamicParams = false` and `notFound()` for anything else, `buildMetadata({ ...assessmentSeo(a), path: assessmentHref(slug) })`, `<JsonLd>` with `webPage`, `breadcrumb` (home → Self-Assessment → title) and `organization()`. No `MedicalTest`, `Quiz` or any schema that would describe the questionnaire as an instrument (docs/09 §5 no-claims rule).
+
+**Composition** (grounds: bone, sand, bone, bone, canopy):
+
+| Block | Spec as shipped |
+| --- | --- |
+| `PageIntro` | Eyebrow `Self-Assessment · 0N` (the navigation label, `UI_ASSESSMENT.eyebrowSeparator`, the questionnaire's `order`); `h1` = the questionnaire title; lead = `ASSESSMENT_SERIES.scoringText` (the series' own *Scoring: Give yourself 1 point for each "yes" answer. Total score: 0–15.*). |
+| `ContentSection` | The series' *Important Disclaimer* on sand, on **every** questionnaire, above the questions, composed exactly as the index composes it (`liftHeader`: first sentence as the serif header line). |
+| Questions section | `data-n="02"`, `aria-labelledby` its eyebrow heading *Fifteen questions* (`UI_INDEX.assessmentLength`, the same word the index uses), then the series' instruction line (`ASSESSMENT_SERIES.instruction`, the sentence ending in a colon that the index deliberately does not render; ledger Task 12 triage) at `--t-eyebrow` with reading leading, then the form at the standing list placement `2 / 12` from 1024px. |
+| `AssessmentForm` | Client, `useReducer` over one frozen answers array (`assessmentReducer`). Fifteen `<fieldset>` rows on hairlines; each `<legend>` is the numeral (aria-hidden) and the question at `--t-body`; two native radios per row painted as the enquiry sheet's line-action toggles (`ChoiceToggle`, extracted from `Field.tsx`: letterspaced *Yes* / *No*, 16px brass tick beside the chosen word, hairline tick on hover). Tab moves between rows, arrow keys within one. The legend is floated so it becomes an ordinary grid item: words under the question below 768px, right-aligned on the rule from 768px. Beneath the list an always-present `aria-live="polite"` tally, empty until the first answer, then *N of 15 answered*; then one `LineActionButton`, *See your result*, `aria-disabled` and described by the tally until all fifteen are answered, becoming *Start again* once revealed. No `<form>` element, so Enter can submit nothing anywhere. |
+| Result | Rendered only when complete and revealed: `role="status"`, `tabIndex={-1}`, focused on mount. A `--rule-strong` hairline, the eyebrow *Score N of 15*, the band label (`scoring.bands[].label`, e.g. *Moderate concern*) as an `h2` at `--t-d2` in the Didone with a `lines` reveal, the band's `description` when the content has one (none does today), the questionnaire's `interpretation` verbatim, then the series' *A Confidential Consultation* (`h3` at `--t-d3`, its four paragraphs) and the *Enquire* line action from `NAV.utility`. Changing any answer withdraws the result (the sheet no longer matches it); *Start again* returns to the empty sheet with focus kept on the button. Reduced motion: the GSAP match-media gate skips the split, so the band is plain text at once. |
+| `PrevNextRail` | Previous / next questionnaire in `ASSESSMENTS` order; either end wraps to `/self-assessment` (`assessmentPrevNext()`). Rail then band, as T2 and T6 ship it. |
+| `EnquireBand` | `data-n="03"`. |
+
+**Scoring.** `scoreAssessment(answers, scoring) → { answered, total, band | null }` — one point per `true` (`scoring.perYes`), the band named only once all fifteen are booleans; `bandFor(total, bands)`; `isComplete`; `progressLabel` / `scoreLabel` fill the `ui.ts` templates. It reads `ASSESSMENTS[n].scoring` and `.interpretation` only; the retired `supersededScale` is never touched. Unit tests cover the 4/5 and 9/10 boundaries, all yes, all no, an unanswered sheet, the reducer's immutability and the rail's wrap-around; the component test proves that answering writes to no storage, no cookie, no URL and no request.
+
+**Print.** The actions are hidden and rows do not break across pages; a revealed result prints beneath the sheet (docs/09 §3).
+
+Playwright: `tests/e2e/assessment.spec.ts` — `alcohol` and `codependency` on five projects (title page, disclaimer above the questions, fifteen groups named by their questions, tally and disabled action, keyboard-only completion to a focused correct result, a pointer pattern and its withdrawal, start again, no non-prefetch request and unchanged storage, the rail, axe on `main` before and after the result, full-page captures of both states), plus a 200 and h1 smoke over all ten routes and a 404 for an unknown slug.
 
 ---
 
@@ -256,8 +276,8 @@ The concept site's ten sections were specified as a single narrative. Their spec
 
 Foundation (ported, task 1): `Mark`, `Grain`, `GroundManager`, `Preloader`, `ScrollRail`, `Cursor`, `LineAction` / `LineActionButton`, `SectionHeader`, `Plate`, `Reveal`, `SmoothScroll`.
 
-Chrome and primitives (tasks 3–10): `Header`, `NavOverlay`, `Footer`, `RouteCurtain`, `AudioToggle`, `Field`, `AmbientGradient`, `MotionProvider`. Section blocks (tasks 11–12): `PageIntro`, `ContentSection`, `PlateFigure`, `StickyIndex`, `PrevNextRail`, `EnquireBand`, `CeibaFigure`, `IndexList`, `IndexPlate` (the plan's `PlateHover`).
+Chrome and primitives (tasks 3–10): `Header`, `NavOverlay`, `Footer`, `RouteCurtain`, `AudioToggle`, `Field`, `AmbientGradient`, `MotionProvider`. Section blocks (tasks 11–18b): `PageIntro`, `ContentSection`, `PlateFigure`, `StickyIndex`, `PrevNextRail`, `EnquireBand`, `CeibaFigure`, `IndexList`, `IndexPlate` (the plan's `PlateHover`), `DayTimeline`, `AssessmentForm`; `ChoiceToggle` joined `Field` for the scorer.
 
-Templates (tasks 11–18b): the seven above plus the assessment scorer.
+Templates (tasks 11–18b): the seven above plus `AssessmentTemplate`, the T2 variant for the scorer.
 
 If the component count climbs far past twenty-five, something is being over-engineered. Prefer a prop on an existing primitive to a new file.

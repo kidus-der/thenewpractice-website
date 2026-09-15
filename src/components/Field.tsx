@@ -84,6 +84,30 @@ type ChoiceFieldProps = Shell & {
   input: Omit<ComponentPropsWithRef<'input'>, 'id' | 'type' | 'value' | 'className'>
 }
 
+type ChoiceToggleProps = {
+  id: string
+  label: string
+  /** Spread onto the radio: name, value, checked, onChange, required, register(). */
+  input: Omit<ComponentPropsWithRef<'input'>, 'id' | 'type' | 'className'>
+}
+
+/**
+ * One radio painted as a line-action toggle: letterspaced caps with a brass
+ * tick drawn beside the word when chosen, no box. The radio itself stays in
+ * the document, unpainted, so the native keyboard model (arrow keys move,
+ * Space selects) and the group semantics come for free. Used by ChoiceField
+ * below and by the self-assessment scorer (Task 18b).
+ */
+export function ChoiceToggle({ id, label, input }: ChoiceToggleProps) {
+  return (
+    <label className="choice__option" htmlFor={id}>
+      <input id={id} className="choice__input" type="radio" {...input} />
+      <span className="choice__tick" aria-hidden="true" />
+      <span className="choice__label t-eyebrow">{label}</span>
+    </label>
+  )
+}
+
 /**
  * A radio group rendered as line-action toggles: letterspaced caps, a brass
  * tick drawn beside the chosen word, no boxes. Native radios carry the
@@ -101,17 +125,12 @@ export function ChoiceField({ id, label, error, className, options, input }: Cho
       <legend className="choice__legend t-eyebrow">{label}</legend>
       <div className="choice__options">
         {options.map((option) => (
-          <label className="choice__option" key={option.value} htmlFor={`${id}-${option.value}`}>
-            <input
-              id={`${id}-${option.value}`}
-              className="choice__input"
-              type="radio"
-              value={option.value}
-              {...input}
-            />
-            <span className="choice__tick" aria-hidden="true" />
-            <span className="choice__label t-eyebrow">{option.label}</span>
-          </label>
+          <ChoiceToggle
+            key={option.value}
+            id={`${id}-${option.value}`}
+            label={option.label}
+            input={{ value: option.value, ...input }}
+          />
         ))}
       </div>
       <FieldError id={id} error={error} />
