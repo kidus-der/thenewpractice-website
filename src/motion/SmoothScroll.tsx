@@ -78,6 +78,16 @@ export function SmoothScroll() {
   return null
 }
 
+/**
+ * Route curtain: jump to the top while the page is covered. Native first, so
+ * the reduced-motion path (no Lenis) resets too; `force` because the curtain
+ * has stopped Lenis, and a stopped instance otherwise ignores scrollTo.
+ */
+export function resetScroll() {
+  window.scrollTo(0, 0)
+  lenis?.scrollTo(0, { immediate: true, force: true })
+}
+
 export function stopScroll() {
   lenis?.stop()
   document.body.dataset.locked = 'true'

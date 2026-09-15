@@ -70,8 +70,8 @@ Tokens are declared in `docs/03-design-system.md` §9. Their application:
 | `--d-instant` (120ms) | Cursor state changes, focus rings |
 | `--d-fast` (240ms) | Link underlines, small hover states |
 | `--d-base` (480ms) | Line-action rule wipes, nav state, form field focus, header settle, result reveal |
-| `--d-slow` (800ms) | Scroll reveals, image scale on hover, chrome recolour |
-| `--d-glacial` (1400ms) | Hero entrance, the ghosted ceiba, section-opening statements, the curtain |
+| `--d-slow` (800ms) | Scroll reveals, image scale on hover, chrome recolour, the curtain's cover and its reveal (each; §4 _Route transitions_) |
+| `--d-glacial` (1400ms) | Hero entrance, the ghosted ceiba, section-opening statements, the preloader's veil |
 
 | Easing | Used for |
 | --- | --- |
@@ -148,18 +148,38 @@ Total budget: **1.8s maximum**, skippable by any input (click, key, scroll), **o
 
 The home hero waits for `veil:done` so the two entrance moments never overlap.
 
-### Route curtain — every navigation after the first
+### Route transitions — the curtain, every navigation after the first
 
-Motion, in `app/template.tsx` → `<RouteCurtain>` (task 9), keyed on `usePathname()`:
+`app/template.tsx` renders `<RouteCurtain>` (`src/components/RouteCurtain.tsx`, styles co-located in `RouteCurtain.css`). The preloader owns the first load; from then on every client-side navigation passes through the curtain. Total budget **1.6s of motion** plus however long the route takes to commit, which is a frame or two when the link was prefetched.
 
 ```
-Cover    canopy panel wipes over the outgoing page, clip-path, --d-glacial, --e-in-out-quart
-         the small ceiba draws outward in the centre (strokes from the point)
-Under    scrollTo(0) instantly; Lenis and ScrollTrigger refreshed after mount
-Reveal   panel wipes away, --d-glacial, --e-in-out-quart; page reveals run as normal
+0.0s   Click on an internal link is caught in the capture phase; Next's <Link> yields.
+       Lenis stopped, <main> made inert, skip listeners armed.
+Cover  canopy panel rises from the bottom edge, clip-path, --d-slow, --e-in-out-quart
+       the small ceiba draws outward from its point in the centre: strokes 1 → 0,
+       --d-base, --e-out-quart, stagger 0.06 from centre — finished before the cover is
+0.8s   Covered. router.push(). The new route commits under the panel.
+Under  window.scrollTo(0,0) and Lenis scrollTo(0, immediate) via resetScroll();
+       one paint; ScrollTrigger.refresh() (GroundManager and ScrollRail re-measure)
+Reveal panel wipes away upward, --d-slow, --e-in-out-quart; the mark holds, drawn;
+       the page's own reveals run as normal beneath it
+1.6s   Idle. <main> released and focused (tabindex -1, no scroll); Lenis started;
+       the new document.title is announced through a persistent aria-live="polite" region.
 ```
 
-Reduced motion: an opacity fade only, `--d-base`. `curtainVariants` live in `motion-config.ts`; the curtain never imports GSAP for its own motion — the mark draw inside it is a CSS `stroke-dashoffset` transition on the same curve.
+**Why the click is intercepted.** `usePathname()` changes only once the new page is committed, so a curtain keyed on it alone would always be covering the page it is about to reveal. Navigations that cannot be intercepted — back/forward, programmatic pushes — snap the panel on before the browser paints and play the reveal only. Modified clicks, `target="_blank"`, downloads, external hosts, and same-page hash or query changes are left to the browser.
+
+**Why the state lives outside React.** A root `template.tsx` re-mounts only when the top-level segment changes, and when it does, it re-mounts at the exact moment the route commits — mid-choreography. The controller (phase store, pending navigation, skip listeners) is therefore module-level; each mounted `RouteCurtain` is a view that paints the current phase, portalled into a body-level host. An instance that mounts covered paints covered in the same commit that removed the last one, so no frame shows the page. A pushed route that never commits is released by a watchdog at `6 × --d-glacial`.
+
+**Duration.** Cover and reveal run at `--d-slow` each: `curtainVariants` in `motion-config.ts` declare `--d-glacial`, which is right for one wipe and too long for two back to back. The variants' clip-paths are used as written; the duration is the one thing the curtain tunes, and every animation names its origin keyframe as well as its target, because a finished Web Animation keeps its fill until the next one starts.
+
+**Skip.** Any input — `keydown`, `pointerdown`, `wheel` — completes the running phase and makes the remaining ones instant, exactly as the preloader behaves. The route still commits, scroll still resets, focus still moves.
+
+**Reduced motion.** `useReducedMotion()` selects `fadeVariants`: opacity 0 → 1 → 0 over `--d-fast` on `--e-out-expo`, no clip-path, the mark rendered complete rather than drawn. Scroll reset, `inert`, focus and the announcement are unchanged.
+
+**Boundary.** The panel is Motion (`useAnimate`, state-driven). The mark strokes are the preloader's GSAP `stroke-dashoffset` draw on different elements. No element is driven by both, and `ScrollTrigger.refresh()` is the only other GSAP call.
+
+**Hygiene.** `ScrollTrigger.getAll().length` after three navigations equals a fresh load of the same page; Lenis is created once in `SmoothScroll` and never per route; the preloader's session flag keeps it from returning. `tests/e2e/route-curtain.spec.ts` asserts all of it on every Playwright project, including the reduced-motion project. Next 16 needs no View Transitions flag (the experimental flag was removed as inert) and React's `<ViewTransition>` is not used, so nothing else animates a navigation.
 
 ### Nav overlay
 

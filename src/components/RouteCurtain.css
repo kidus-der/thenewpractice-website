@@ -1,0 +1,49 @@
+/* ==========================================================================
+   ROUTE CURTAIN — docs/04-motion-system.md §4 "Route transitions".
+   Co-located with RouteCurtain.tsx (chrome CSS convention, ledger triage of
+   tasks 3 and 5). Sits at --z-overlay: below the texture so the grain stays
+   continuous across it, below the cursor, above the page and the header.
+   ========================================================================== */
+
+.route-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: grid;
+  place-items: center;
+  background: var(--c-canopy);
+  color: var(--c-bone);
+  /* Compositor-only from here on: Motion animates clip-path (or opacity under
+     reduced motion), never layout. */
+}
+
+/* At rest the panel is out of the accessibility tree and hit-testing entirely;
+   clip-path alone would still let it catch pointer events in some engines. */
+.route-curtain[data-phase='idle'] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* The same small ceiba the preloader draws, so the two moments rhyme. */
+.route-curtain__mark {
+  width: clamp(44px, 5vw, 64px);
+  stroke-width: 4;
+}
+
+/* The polite announcement of the new page title. Visually hidden, never
+   display:none — a hidden live region does not speak. */
+.route-curtain__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The curtain hands focus to <main> after each reveal so screen readers start
+   at the new page. A focus ring around the whole page carries no information
+   the announcement does not; keyboard users get it back on the first Tab. */
+main[data-route-focus]:focus-visible {
+  outline: none;
+}
