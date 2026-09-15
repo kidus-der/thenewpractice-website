@@ -479,3 +479,5 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 
 - Accepted and merged (`task/13-treatment` → `main`); verify green after merge. Conflicts append-only; `UI_TREATMENT` kept.
 - Decisions: related services stay "next three by document order, wrapping" until the client supplies a curated map (CONTENT-GAPS); the label "Related services" and the "Clinical Services" eyebrow stay; the h2 register split (client colon sentences at `--t-d3`, titles at `--t-d2`) and the "no sand after sand" ground rule are adopted site-wide — Task 19 applies the same rule in the other templates where it does not already hold.
+- Task 19 (from the main session's read of the trauma page): definition descriptions split from the client's `Name: description` lines begin lowercase ("practical methods that…"). Capitalise the first character at render time in the definitions block (display transform only; the content module stays verbatim).
+- Task 19: confirm on a real scroll that the home page's pinned "One" section renders (a full-page capture shows its spacer as a blank canopy frame, which is expected for a pin).
