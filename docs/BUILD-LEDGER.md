@@ -28,11 +28,11 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 |---|---|---|---|
 | 1 | done | — | Scaffold Next 16 in this repo; port the concept site's foundation, docs and client resources |
 | 2a | done | — | Research and shortlist licence-free stock video and imagery with direct download URLs |
-| 2b | doing | 1, 2a | Download, grade and encode the stock media; generate `media.ts`; write `design/ASSETS.md` |
+| 2b | done | 1, 2a | Download, grade and encode the stock media; generate `media.ts`; write `design/ASSETS.md` |
 | 3 | doing | 1 | Motion integration (tween-only config, route curtain primitive) and gated shader gradient |
 | 4 | todo | 1 | Test harness: Vitest + RTL, Playwright (4 viewports + reduced motion + axe), Lighthouse CI, `npm run verify` |
 | 5 | doing | 1 | Content ingestion: client doc → typed, Zod-validated `src/content/**`; `docs/CONTENT-GAPS.md` |
-| 6 | doing | 1 | Vercel staging project, hostname, `SITE_ENV=staging` noindex, first deploy |
+| 6 | done | 1 | Vercel staging project, hostname, `SITE_ENV=staging` noindex, first deploy |
 | 7 | todo | 3, 4, 5 | Header, desktop nav, mobile nav overlay |
 | 8 | todo | 5 | Footer |
 | 9 | todo | 3 | Route curtain transition wired to navigation, scroll reset, reduced-motion fade |
@@ -179,3 +179,12 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **`design/ASSETS.md` table shape** changed from `docs/08`'s original sketch to `File | Source page | Author | Licence | Stands in for | Aspect | Focus | ev`; `docs/08` §Asset manifest updated to match.
 - **Package scripts to add (main session, `package.json` is owned elsewhere):** `"video": "node scripts/prepare-video.mjs"` and `"media": "npm run video && npm run assets"`. `assets` already exists.
 - **ffmpeg 9.0.1 installed** via `brew install ffmpeg` (the `ffmpeg-full`-style formula; libx264 and libvpx-vp9 present). The video script needs `ffmpeg` and `ffprobe` on PATH and is not part of `npm run verify`.
+
+### Main session — triage of Tasks 2b and 6 (2026-09-14)
+
+- Tasks 2b and 6 accepted after main-session checks (ffprobe on the encodes, visual read of three frames, live curl of the staging URL).
+- Home hero loop: **`hero-surf`** (the client's brief opens on surf). `hero-canopy` is the second beat if Task 16 wants a crossfade after the first loop; otherwise unused. `hero-cenote` is reserved for the About page's *Puerto Aventuras* section.
+- Poster: **`hero-surf-poster`** (the video's own first frame) is the LCP image; the `<video>` fades in over it across `--d-slow` so the poster-to-video colour shift is never seen as a cut. The photographed `hero-poster` stays in the manifest for the About page's *The Caribbean Sea* plate.
+- `residence-04` (table and stools at the bottom edge): keep; Task 17 crops with `object-position: top` if it reads as furniture.
+- `package.json` gains `video` and `media` scripts (added by the main session in the working tree; Task 3 commits `package.json` with its dependency changes).
+- GitHub → Vercel auto-connect: **kept**. A push to `main` deploys to the staging URL; the main session still deploys from the CLI at checkpoints and will only push when the owner says so.
