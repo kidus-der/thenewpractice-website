@@ -38,14 +38,14 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 9 | done | 3 | Route curtain transition wired to navigation, scroll reset, reduced-motion fade |
 | 10 | done | 5 | SEO baseline: metadata helpers, JSON-LD builders, sitemap, robots, llms.txt, OG image |
 | 11 | done | 7, 8, 10 | T2 Interior template → `/about` |
-| 12 | doing | 11 | T6 Index template → `/clinical-services`, `/team`, `/self-assessment` |
-| 13 | todo | 12 | T3 Treatment template → `/clinical-services/[slug]` × 11 |
-| 14 | todo | 12 | T4 Profile template → `/team/[slug]` × 11 |
+| 12 | done | 11 | T6 Index template → `/clinical-services`, `/team`, `/self-assessment` |
+| 13 | doing | 12 | T3 Treatment template → `/clinical-services/[slug]` × 11 |
+| 14 | doing | 12 | T4 Profile template → `/team/[slug]` × 11 |
 | 15 | doing | 11 | T7 Enquiry template → `/contact` with server action and mail adapter |
 | 16 | doing | 2b, 9, 11 | T1 Home template → `/` |
 | 17 | done | 2b, 11 | T5 Residences template → `/residences` |
 | 18 | done | 11 | Remaining T2 pages: `/our-process`, `/a-personal-message`, `/fees`, `/privacy`, `/terms` |
-| 18b | todo | 12 | Interactive self-assessment scorer → `/self-assessment/[slug]` × 10 |
+| 18b | doing | 12 | Interactive self-assessment scorer → `/self-assessment/[slug]` × 10 |
 | 19 | todo | 13, 14, 15, 16, 17, 18, 18b | Cross-template hardening: viewports, 4× throttle traces, reduced motion, keyboard, axe, Safari |
 | 20 | todo | 19 | Performance budgets: Lighthouse, image sizes, font preload, bundle audit |
 | 21 | todo | 20, 6 | Staging deploy, live smoke test, `HANDOFF.md` |
@@ -429,3 +429,9 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **Row links are `next/link`**, so hovering a row prefetches its detail page; the eleven service and eleven team hrefs 404 until Tasks 13 / 14 / 18b land (dev shows a 404 prefetch as a normal request, no console error).
 - **Touch shows the glow on tap**: `pointerenter` fires on touch before navigation, so the tick and glow flash on the tapped row while the curtain covers. Harmless; a `pointerType` guard would suppress it if the owner prefers nothing to happen on touch.
 - **Docs still to reconcile elsewhere (not Task 12 files):** docs/04 §6 says the glow bleeds `--s-6` "each side" — true from 1024px only now; docs/03 §4 could gain a `.p-list` (`2 / 12`) placement if the owner blesses it; docs/05's route map still spells `PlateHover` under components (updated to `IndexPlate` in the inventory line).
+
+### Main session — triage of Task 12 (2026-09-15)
+
+- Accepted and merged (`task/12-index` → `main`); verify green after merge (201 tests, 95.5% statements, three listings prerendered). Conflicts: docs append-only; `ui.ts` both blocks kept; `about.spec.ts` whitespace; duplicate `revealAll` re-export removed again.
+- Decisions: `2/12` is blessed as the standing `.p-list` placement (docs/03 §4 — Task 19 adds the row); the per-questionnaire `instruction` renders on the questionnaire page (18b), not the index; the team title-page lead stays (the other two listings open bare by design).
+- Tasks 13, 14 and 18b start now in worktrees (`task/13-treatment` :3307, `task/14-profile` :3308, `task/18b-assessment` :3309); Task 16 continues on :3304.
