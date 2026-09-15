@@ -1,0 +1,43 @@
+/* ==========================================================================
+   PAGE INTRO — co-located with PageIntro.tsx, imported once by it.
+   Tokens only; px for geometry per rule 4 as amended. The intro is a title
+   page: the lockup sits low in a tall, otherwise empty frame, so the first
+   viewport holds one thing (docs/02 §Composition).
+   ========================================================================== */
+
+.page-intro {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+.page-intro__grid {
+  flex: 1;
+  align-items: end;
+  row-gap: var(--s-7);
+}
+/* the title sits at roughly the golden section of the frame, not on its floor */
+.page-intro__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-bottom: var(--s-7);
+}
+/* the eyebrow keeps its rhythm but reads in ink: stone on bone is 3.8:1,
+   under AA at this size, and axe holds the numeral to it whether or not it is
+   aria-hidden (docs/03 §Contrast floor; ledger, Task 11) */
+.page-intro__eyebrow {
+  margin-bottom: var(--s-6);
+  color: var(--fg);
+}
+.page-intro__title {
+  max-width: 18ch;
+}
+.page-intro__lead {
+  margin-top: var(--s-6);
+}
+@media (min-width: 1024px) {
+  .page-intro__plate {
+    /* the counterweight hangs from the same baseline as the title */
+    align-self: end;
+  }
+}

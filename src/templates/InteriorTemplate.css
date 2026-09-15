@@ -1,0 +1,50 @@
+/* ==========================================================================
+   INTERIOR TEMPLATE — the composition the blocks do not know about: where
+   the body column sits, and how the sticky index floats beside the whole
+   body. Co-located with InteriorTemplate.tsx, imported once by it.
+   Tokens only; px for geometry per rule 4 as amended.
+   ========================================================================== */
+
+.interior__body {
+  position: relative;
+}
+
+/* The index overlays the body from 1024px. It is absolutely positioned over
+   the full body height so one sticky element can follow the reader through
+   every section — sections keep their own full-width grounds — and it stops
+   where the body stops, before the rail and the band. Pointer events pass
+   through everywhere except the nav itself. */
+.interior__index {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .interior__index {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: var(--z-sticky);
+  }
+  .interior__index-grid {
+    height: 100%;
+    align-items: start;
+  }
+  .sticky-index {
+    grid-column: 1 / 5;
+    position: sticky;
+    /* docs/04 §6: the index rests at 42vh */
+    top: 42vh;
+    pointer-events: auto;
+    /* room for the brass rule that draws in the margin to its left */
+    padding-left: calc(32px + var(--s-3));
+  }
+
+  /* body column: the reading placement without an index; beside it with one
+     (the concept site's method block: index 1/5, panels 6/13) */
+  .content-section__body {
+    grid-column: 2 / 8;
+  }
+  .interior[data-indexed='true'] .content-section__body {
+    grid-column: 6 / 13;
+  }
+}

@@ -114,7 +114,6 @@ npm run lint       # eslint — must be clean
 npm run typecheck  # tsc --noEmit — must be clean
 npm run format     # prettier
 npm run assets     # media pipeline → public/media + src/content/media.ts (task 2b extends)
-npm run og         # static Open Graph card → public/og.png (task 10 supersedes)
 npm run verify     # lint && typecheck && build — task 4 adds unit tests
 ```
 
@@ -128,6 +127,8 @@ Every place the shipped code departs from the plan or this doc set is logged her
 | --- | --- | --- | --- |
 | Raw hex only in `globals.css` and `motion/tokens.ts` (§5 _Tokens or nothing_) | `src/lib/tokens.ts` also carries `PALETTE`, a TS mirror of the seven core colours, used only as the fallback argument to `readToken()` | The gradient needs a colour value before the stylesheet can be read (server, tests). One mirror beside the reader beats literals in components; GroundManager switches to it in task 7. | 3 |
 | Curtain cover/reveal at `--d-slow` (docs/04 §4) | `curtainVariants` use `--d-glacial` | docs/04 §1 and the task brief both put the curtain at `--d-glacial`; §4 disagreed with its own §1. §4 now reads `--d-glacial`. Task 9 may tune. | 3 |
+| Eyebrow numerals and labels at `--fg-muted` (docs/03 §2); decorative numerals at `--fg-faint` (docs/03 §1); sticky index `--fg-muted → --fg` (docs/04 §6) | The interior blocks set eyebrow numerals, index items and plate captions in `--fg`; the index's quiet state is 0.72 opacity | Stone on bone is 3.8:1 (3.3:1 on sand) and clay on bone 1.6:1 — under the AA floor docs/03 itself sets for text below 24px — and axe holds aria-hidden text to the same floor. Owner / Task 19: darken `--c-stone` or add a light-ground muted token, after which the blocks can return to the spec. | 11 |
+| Section rhythm applied through `main > section` (docs/03 §3, `sections.css`) | `ContentSection` restates the same `padding-block` on its own class | Body sections sit inside the template's body wrapper so one sticky index can float beside all of them; the wrapper breaks the `main >` selector. The values are unchanged. | 11 |
 
 ## 7. Definition of done
 

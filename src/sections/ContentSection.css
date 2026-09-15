@@ -1,0 +1,151 @@
+/* ==========================================================================
+   CONTENT SECTION — co-located with ContentSection.tsx, imported once by it.
+   Tokens for colour, type, space and motion; literal px only for geometry
+   (rule 4 as amended). The section rhythm is restated here because these
+   sections sit inside the template's body wrapper, not directly in <main>,
+   so sections.css's `main > section` padding cannot reach them.
+   ========================================================================== */
+
+.content-section {
+  padding-block: var(--s-8);
+}
+@media (min-width: 1024px) {
+  .content-section {
+    padding-block: var(--s-9);
+  }
+}
+
+/* — the column. Full width below 1024; the template sets the span above. — */
+.content-section__body {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+/* in ink, not stone: 3.8:1 on bone is under AA and axe holds the numeral
+   to it whether or not it is aria-hidden (docs/03 §Contrast floor) */
+.content-section__eyebrow {
+  margin-bottom: var(--s-6);
+  color: var(--fg);
+}
+
+/* — headings — */
+.content-section__title {
+  max-width: 18ch;
+}
+.content-section__subtitle {
+  margin-top: var(--s-4);
+  max-width: 24ch;
+}
+/* the document's one Header: line — serif italic, the site's only emphasis */
+.content-section__header {
+  margin-top: var(--s-5);
+  font-family: var(--font-display);
+  font-style: italic;
+  max-width: 30ch;
+}
+.content-section__figure {
+  margin-top: var(--s-7);
+}
+
+/* — prose at 62ch, paragraphs a block apart — */
+.content-section__prose {
+  margin-top: var(--s-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  max-width: 62ch;
+}
+.content-section__prose + .content-section__prose {
+  margin-top: var(--s-4);
+}
+
+/* — the plate opens a chapter: after the heading, before the prose. Two
+     classes, because PlateFigure's own stylesheet cascades after this one
+     and resets the figure margin. — */
+.content-section__body .content-section__plate {
+  margin-top: var(--s-6);
+  width: 100%;
+}
+/* a portrait plate keeps to part of the column so the page stays 60–70% empty */
+.content-section__body .content-section__plate[data-ratio='3:4'] {
+  max-width: 62%;
+}
+
+/* — hairline list: one column, two from 1024 — */
+.content-section__list-block {
+  margin-top: var(--s-6);
+  width: 100%;
+}
+.content-section__list-heading {
+  max-width: 62ch;
+  margin-bottom: var(--s-4);
+}
+.content-section__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--gutter);
+  border-top: 1px solid var(--rule);
+}
+.content-section__list li {
+  padding-block: var(--s-3);
+  border-bottom: 1px solid var(--rule);
+}
+@media (min-width: 1024px) {
+  .content-section__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* — definitions: term in the Didone, description beneath, hairline between — */
+.content-section__definitions {
+  margin: var(--s-6) 0 0;
+  width: 100%;
+  max-width: 62ch;
+}
+.content-section__definition {
+  padding-block: var(--s-5);
+  border-top: 1px solid var(--rule);
+}
+.content-section__definition:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+.content-section__definition dd {
+  margin: var(--s-3) 0 0;
+}
+
+/* — subsections: one level, a group apart, the same column — */
+.content-section__sub {
+  margin-top: var(--s-7);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.content-section__sub-title {
+  max-width: 22ch;
+}
+
+/* — signature: the letter closes at the right edge of the measure — */
+.content-section__signature {
+  margin-top: var(--s-6);
+  width: 100%;
+  max-width: 62ch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: var(--s-2);
+}
+.content-section__signature-name {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--t-lead);
+  line-height: 1.2;
+}
+.content-section__signature-role {
+  color: var(--fg);
+}

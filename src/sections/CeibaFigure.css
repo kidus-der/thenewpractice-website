@@ -1,0 +1,19 @@
+/* ==========================================================================
+   CEIBA FIGURE — co-located with CeibaFigure.tsx, imported once by it.
+   The mark's box is 95 × 160, so the width below stands the tree roughly
+   150px tall (docs/01 §The mark). Stroke weight comes down as the mark goes
+   up, as the concept site's §03 established.
+   ========================================================================== */
+
+.ceiba-figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+  color: var(--fg);
+}
+.ceiba-figure__mark {
+  width: clamp(84px, 7vw, 96px);
+  stroke-width: 3.5;
+}
