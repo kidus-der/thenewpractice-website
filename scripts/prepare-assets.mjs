@@ -1,32 +1,56 @@
 /**
- * prepare-assets.mjs — asset pipeline for the demo.
+ * prepare-assets.mjs — still-image pipeline.
  *
- * Downloads placeholder frames and maps each one into the brand's two-colour
- * range — canopy green in the shadows, bone in the highlights — per
- * docs/08-asset-pipeline.md. Writes AVIF + WebP derivatives plus an LQIP
- * manifest into public/media and src/content/media.ts.
+ * Reads design/media.manifest.json, fetches every still (cached under
+ * node_modules/.cache/tnp-media), crops it to its slot's aspect, exposes it,
+ * maps it into the brand duotone — canopy green in the shadows, bone in the
+ * highlights — and writes AVIF + WebP + an LQIP to public/media/. It then
+ * regenerates src/content/media.ts, the `as const` manifest <Plate> reads.
  *
- * PLACEHOLDER SOURCE. Every frame is a stand-in from Lorem Picsum (Unsplash
- * Licence). None of it was shot in the Riviera Maya. The duotone is what makes
- * a set of unrelated stock photographs read as one commission — and it is the
- * reason the geography does not fight the identity. See design/ASSETS.md.
+ * Video poster frames are picked up from the cache when prepare-video.mjs has
+ * run (node_modules/.cache/tnp-media/posters/<key>-poster.png) and go through
+ * the same grade as `<key>-poster`, 16:9.
  *
- * Run: npm run assets
+ * Everything here is licence-free stock chosen to the art direction
+ * (docs/02-art-direction.md) and logged in design/ASSETS.md. The grade is
+ * documented in docs/08-asset-pipeline.md.
+ *
+ * Run: node scripts/prepare-video.mjs && node scripts/prepare-assets.mjs
  */
-import { mkdir, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { access, mkdir, readFile, writeFile } from 'node:fs/promises'
+import { extname, join } from 'node:path'
 import sharp from 'sharp'
 
-const OUT = join(process.cwd(), 'public', 'media')
-const MANIFEST = join(process.cwd(), 'src', 'content', 'media.ts')
+const ROOT = process.cwd()
+const MANIFEST_PATH = join(ROOT, 'design', 'media.manifest.json')
+const OUT_DIR = join(ROOT, 'public', 'media')
+const MEDIA_TS = join(ROOT, 'src', 'content', 'media.ts')
+export const CACHE_DIR = join(ROOT, 'node_modules', '.cache', 'tnp-media')
+export const SOURCE_DIR = join(CACHE_DIR, 'src')
+export const POSTER_DIR = join(CACHE_DIR, 'posters')
+
+export const USER_AGENT =
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36'
+
+/** Target pixel size per permitted aspect (docs/02 §Treatment). */
+const SIZES = {
+  '16:9': { width: 2400, height: 1350 },
+  '3:4': { width: 1040, height: 1387 },
+  '1:1': { width: 1200, height: 1200 },
+  '21:9': { width: 2100, height: 900 },
+}
+
+/** Manifest `focus` → sharp crop position. Absent → attention-based crop. */
+const FOCUS = {
+  top: 'top',
+  centre: 'centre',
+  bottom: 'bottom',
+}
 
 /**
  * The two ends of the brand's range. Nothing is mapped outside them.
- *
- * The shadow is a *lifted* canopy green rather than the identity's #14231C:
- * mapped straight, the dark end crushes to near-black and the green never
- * reads — the frames come back looking like plain greyscale. Lifting the
- * shadow point is what makes the duotone legible as a colour decision.
+ * The shadow is a *lifted* canopy green, not the identity's #14231C: mapped
+ * straight, the dark end crushes to near-black and the green never reads.
  */
 const SHADOW = { r: 0x18, g: 0x2a, b: 0x21 }
 const HIGHLIGHT = { r: 0xe9, g: 0xe2, b: 0xd3 }
@@ -35,32 +59,85 @@ const GRADE = {
   contrast: 0.95,
   /** Negative: these frames want to sit low and deep, not open and airy. */
   lift: -22,
-  gamma: 1,
-  /** How far each frame travels toward pure duotone. 1 = fully in-brand. */
-  strength: 1,
 }
 
-const FRAMES = [
-  // key, picsum id, w, h, crop position, exposure trim
-  { key: 'hero', id: 189, w: 2400, h: 1350, pos: 'centre', ev: 2 },
-  { key: 'plate-01', id: 11, w: 1040, h: 1387, pos: 'centre', ev: -30 },
-  { key: 'plate-02', id: 194, w: 1040, h: 1387, pos: 'centre', ev: -34 },
-  { key: 'plate-03', id: 326, w: 1040, h: 1387, pos: 'centre', ev: -12 },
-  { key: 'plate-04', id: 15, w: 1040, h: 1387, pos: 'centre', ev: -6 },
-  { key: 'plate-05', id: 28, w: 1040, h: 1387, pos: 'centre', ev: -40 },
-  { key: 'discretion', id: 338, w: 2100, h: 900, pos: 'centre', ev: -10 },
-  { key: 'team-01', id: 189, w: 560, h: 747, pos: 'left', ev: 4 },
-  { key: 'team-02', id: 15, w: 560, h: 747, pos: 'right', ev: -6 },
-  { key: 'team-03', id: 194, w: 560, h: 747, pos: 'centre', ev: -34 },
-]
-
-async function fetchSource(id) {
-  // Ask for generously larger than target so the crop has room to be brave.
-  const url = `https://picsum.photos/id/${id}/3000/2000`
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`${url} → ${res.status}`)
-  return Buffer.from(await res.arrayBuffer())
+const ENCODE = {
+  avif: { quality: 55, effort: 6 },
+  webp: { quality: 78 },
+  lqip: { width: 20, quality: 40 },
 }
+
+const POSTER_ASPECT = '16:9'
+
+// ---------------------------------------------------------------------------
+// Manifest
+
+function fail(message) {
+  throw new Error(`media.manifest.json: ${message}`)
+}
+
+function validateStill(entry, index) {
+  const where = `stills[${index}]`
+  if (typeof entry.key !== 'string' || !/^[a-z0-9-]+$/.test(entry.key)) fail(`${where}.key`)
+  if (typeof entry.url !== 'string' || !entry.url.startsWith('https://')) fail(`${where}.url`)
+  if (!(entry.aspect in SIZES)) fail(`${where}.aspect must be one of ${Object.keys(SIZES)}`)
+  if (typeof entry.ev !== 'number') fail(`${where}.ev must be a number`)
+  if (entry.focus !== undefined && !(entry.focus in FOCUS)) fail(`${where}.focus`)
+  if (typeof entry.alt !== 'string' || entry.alt.length === 0) fail(`${where}.alt is required`)
+  if (typeof entry.credit !== 'string') fail(`${where}.credit is required`)
+  if (typeof entry.licence !== 'string') fail(`${where}.licence is required`)
+  return entry
+}
+
+function validateVideo(entry, index) {
+  const where = `video[${index}]`
+  if (typeof entry.key !== 'string' || !/^[a-z0-9-]+$/.test(entry.key)) fail(`${where}.key`)
+  if (typeof entry.url !== 'string' || !entry.url.startsWith('https://')) fail(`${where}.url`)
+  if (typeof entry.trimStart !== 'number') fail(`${where}.trimStart`)
+  if (typeof entry.trimSeconds !== 'number' || entry.trimSeconds <= 0) fail(`${where}.trimSeconds`)
+  if (typeof entry.posterEv !== 'number') fail(`${where}.posterEv must be a number`)
+  if (typeof entry.alt !== 'string' || entry.alt.length === 0) fail(`${where}.alt is required`)
+  if (typeof entry.credit !== 'string') fail(`${where}.credit is required`)
+  if (typeof entry.licence !== 'string') fail(`${where}.licence is required`)
+  return entry
+}
+
+export async function readManifest() {
+  const raw = JSON.parse(await readFile(MANIFEST_PATH, 'utf8'))
+  if (!Array.isArray(raw.stills) || !Array.isArray(raw.video)) fail('needs stills[] and video[]')
+  return {
+    stills: raw.stills.map(validateStill),
+    video: raw.video.map(validateVideo),
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Fetch (cached)
+
+async function exists(path) {
+  return access(path).then(
+    () => true,
+    () => false
+  )
+}
+
+/** Download `url` once into the cache and return the local path. */
+export async function fetchCached(key, url) {
+  await mkdir(SOURCE_DIR, { recursive: true })
+  const ext = extname(new URL(url).pathname) || '.bin'
+  const local = join(SOURCE_DIR, `${key}${ext}`)
+  if (await exists(local)) return local
+
+  const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT, Accept: '*/*' } })
+  if (!res.ok) throw new Error(`${key}: ${url} → HTTP ${res.status}`)
+  const bytes = Buffer.from(await res.arrayBuffer())
+  if (bytes.length === 0) throw new Error(`${key}: empty response from ${url}`)
+  await writeFile(local, bytes)
+  return local
+}
+
+// ---------------------------------------------------------------------------
+// Grade
 
 /**
  * Greyscale, then remap the single channel across SHADOW→HIGHLIGHT. sharp's
@@ -68,93 +145,161 @@ async function fetchSource(id) {
  * shape of a duotone: out = (high - low)/255 * grey + low.
  */
 function duotone(pipeline) {
-  const k = GRADE.strength
-  const lerp = (a, b) => a + (b - a) * k
-  const low = {
-    r: lerp(0, SHADOW.r),
-    g: lerp(0, SHADOW.g),
-    b: lerp(0, SHADOW.b),
-  }
-  const high = {
-    r: lerp(255, HIGHLIGHT.r),
-    g: lerp(255, HIGHLIGHT.g),
-    b: lerp(255, HIGHLIGHT.b),
-  }
+  const slope = (hi, lo) => (hi - lo) / 255
   return (
     pipeline
-      // modulate, not greyscale(): greyscale collapses to a single band and
-      // linear() cannot expand bands, so the per-channel map below would fail.
+      // modulate, not greyscale(): greyscale collapses to one band and
+      // linear() cannot expand bands, so the per-channel map would fail.
       .modulate({ saturation: 0 })
       .linear(
-        [(high.r - low.r) / 255, (high.g - low.g) / 255, (high.b - low.b) / 255],
-        [low.r, low.g, low.b]
+        [slope(HIGHLIGHT.r, SHADOW.r), slope(HIGHLIGHT.g, SHADOW.g), slope(HIGHLIGHT.b, SHADOW.b)],
+        [SHADOW.r, SHADOW.g, SHADOW.b]
       )
   )
 }
 
-async function grade(buf, { w, h, pos, ev = 0 }) {
-  // ev is a per-frame exposure trim in 0–255 units. Source frames vary a lot
-  // in brightness and a single global curve leaves the airy ones washed out.
-  //
-  // Two passes on purpose: sharp stores a single linear() per pipeline, so
-  // chaining exposure and the duotone map on one instance silently discards
-  // the first — the frames come back correctly toned and wrongly exposed.
-  const exposed = await sharp(buf)
-    .resize(w, h, { fit: 'cover', position: pos })
+function cropPosition(focus) {
+  return focus ? FOCUS[focus] : sharp.strategy.attention
+}
+
+/**
+ * Crop → expose → duotone. Two sharp passes on purpose: a pipeline holds one
+ * linear() and chaining exposure with the duotone map on one instance
+ * silently discards the first.
+ */
+export async function gradeStill(sourcePath, { aspect, ev, focus }) {
+  const { width, height } = SIZES[aspect]
+  const exposed = await sharp(sourcePath)
+    .rotate()
+    .resize(width, height, { fit: 'cover', position: cropPosition(focus) })
     .linear(GRADE.contrast, GRADE.lift + ev)
     .png()
     .toBuffer()
-
-  return duotone(sharp(exposed))
+  const graded = await duotone(sharp(exposed)).png().toBuffer()
+  return { graded, width, height }
 }
 
-async function lqip(buf) {
-  const small = await sharp(buf)
-    .resize(20, null, { fit: 'inside' })
-    .webp({ quality: 40 })
+async function lqip(buffer) {
+  const small = await sharp(buffer)
+    .resize(ENCODE.lqip.width, null, { fit: 'inside' })
+    .webp({ quality: ENCODE.lqip.quality })
     .toBuffer()
   return `data:image/webp;base64,${small.toString('base64')}`
 }
 
-async function main() {
-  await mkdir(OUT, { recursive: true })
-  const manifest = {}
-
-  for (const frame of FRAMES) {
-    process.stdout.write(`  ${frame.key} … `)
-    const src = await fetchSource(frame.id)
-    const graded = await grade(src, frame)
-    const base = await graded.png().toBuffer()
-
-    await sharp(base)
-      .avif({ quality: 55, effort: 6 })
-      .toFile(join(OUT, `${frame.key}.avif`))
-    await sharp(base)
-      .webp({ quality: 78 })
-      .toFile(join(OUT, `${frame.key}.webp`))
-
-    manifest[frame.key] = {
-      src: `/media/${frame.key}.webp`,
-      width: frame.w,
-      height: frame.h,
-      blurDataURL: await lqip(base),
-    }
-    console.log('done')
-  }
-
-  const body = `// GENERATED by scripts/prepare-assets.mjs — do not edit by hand.
-// All imagery is PLACEHOLDER, duotoned into the brand range. See design/ASSETS.md.
-export const MEDIA = ${JSON.stringify(manifest, null, 2)} as const
-
-export type MediaKey = keyof typeof MEDIA
-`
-  await mkdir(join(process.cwd(), 'src', 'content'), { recursive: true })
-  await writeFile(MANIFEST, body, 'utf8')
-  console.log(`\nWrote ${Object.keys(manifest).length} frames → public/media`)
-  console.log(`Wrote manifest → src/content/media.ts`)
+async function writeDerivatives(key, graded) {
+  await sharp(graded).avif(ENCODE.avif).toFile(join(OUT_DIR, `${key}.avif`))
+  await sharp(graded).webp(ENCODE.webp).toFile(join(OUT_DIR, `${key}.webp`))
 }
 
-main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+async function processStill(key, sourcePath, options, meta) {
+  const { graded, width, height } = await gradeStill(sourcePath, options)
+  await writeDerivatives(key, graded)
+  return {
+    src: `/media/${key}.webp`,
+    width,
+    height,
+    blurDataURL: await lqip(graded),
+    alt: meta.alt,
+    credit: meta.credit,
+    licence: meta.licence,
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Entries
+
+async function buildStillEntries(stills, log) {
+  const entries = {}
+  for (const still of stills) {
+    log(`  ${still.key} (ev ${still.ev}) … `)
+    const source = await fetchCached(still.key, still.url)
+    entries[still.key] = await processStill(still.key, source, still, still)
+    log('done\n')
+  }
+  return entries
+}
+
+/** Poster frames exist only after prepare-video.mjs has run; skip otherwise. */
+async function buildPosterEntries(videos, log) {
+  const entries = {}
+  for (const video of videos) {
+    const key = `${video.key}-poster`
+    const frame = join(POSTER_DIR, `${key}.png`)
+    if (!(await exists(frame))) {
+      log(`  ${key} … skipped (run prepare-video.mjs first)\n`)
+      continue
+    }
+    log(`  ${key} (ev ${video.posterEv}) … `)
+    const alt = `Poster frame: ${video.alt}`
+    const options = { aspect: POSTER_ASPECT, ev: video.posterEv, focus: video.posterFocus }
+    entries[key] = await processStill(key, frame, options, { ...video, alt })
+    log('done\n')
+  }
+  return entries
+}
+
+async function buildVideoEntries(videos, posters) {
+  const entries = {}
+  for (const video of videos) {
+    const mp4 = join(ROOT, 'public', 'video', `${video.key}.mp4`)
+    const webm = join(ROOT, 'public', 'video', `${video.key}.webm`)
+    const posterKey = `${video.key}-poster`
+    if (!(await exists(mp4)) || !(await exists(webm)) || !posters[posterKey]) continue
+    entries[video.key] = {
+      mp4: `/video/${video.key}.mp4`,
+      webm: `/video/${video.key}.webm`,
+      poster: posterKey,
+      width: 1920,
+      height: 1080,
+      seconds: video.trimSeconds,
+      alt: video.alt,
+      credit: video.credit,
+      licence: video.licence,
+    }
+  }
+  return entries
+}
+
+// ---------------------------------------------------------------------------
+// media.ts
+
+function renderMediaTs(media, video) {
+  return `// GENERATED by scripts/prepare-assets.mjs — do not edit by hand.
+// Licence-free stock, duotoned into the brand range. Provenance and licence
+// per file in design/ASSETS.md; the pipeline in docs/08-asset-pipeline.md.
+export const MEDIA = ${JSON.stringify(media, null, 2)} as const
+
+export type MediaKey = keyof typeof MEDIA
+export type MediaEntry = (typeof MEDIA)[MediaKey]
+
+/** Hero and full-bleed loops. \`poster\` is a MediaKey; the poster is the LCP. */
+export const VIDEO = ${JSON.stringify(video, null, 2)} as const
+
+export type VideoKey = keyof typeof VIDEO
+`
+}
+
+async function main() {
+  const log = (text) => process.stdout.write(text)
+  const manifest = await readManifest()
+  await mkdir(OUT_DIR, { recursive: true })
+
+  const stills = await buildStillEntries(manifest.stills, log)
+  const posters = await buildPosterEntries(manifest.video, log)
+  const video = await buildVideoEntries(manifest.video, posters)
+  const media = { ...stills, ...posters }
+
+  await mkdir(join(ROOT, 'src', 'content'), { recursive: true })
+  await writeFile(MEDIA_TS, renderMediaTs(media, video), 'utf8')
+  log(`\nWrote ${Object.keys(media).length} frames → public/media\n`)
+  log(`Wrote ${Object.keys(video).length} video entries and the manifest → src/content/media.ts\n`)
+}
+
+const invokedDirectly = process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href
+if (invokedDirectly) {
+  main().catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
+}
