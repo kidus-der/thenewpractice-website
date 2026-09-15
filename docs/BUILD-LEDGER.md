@@ -36,7 +36,7 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 7 | doing | 3, 4, 5 | Header, desktop nav, mobile nav overlay |
 | 8 | doing | 5 | Footer |
 | 9 | doing | 3 | Route curtain transition wired to navigation, scroll reset, reduced-motion fade |
-| 10 | doing | 5 | SEO baseline: metadata helpers, JSON-LD builders, sitemap, robots, llms.txt, OG image |
+| 10 | done | 5 | SEO baseline: metadata helpers, JSON-LD builders, sitemap, robots, llms.txt, OG image |
 | 11 | todo | 7, 8, 10 | T2 Interior template → `/about` |
 | 12 | todo | 11 | T6 Index template → `/clinical-services`, `/team`, `/self-assessment` |
 | 13 | todo | 12 | T3 Treatment template → `/clinical-services/[slug]` × 11 |
@@ -274,3 +274,9 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **`npm run typecheck` is not clean in the shared tree** at the time of this report: three syntax errors in Task 10's in-progress `src/lib/jsonld.ts` (l.165–167, an unterminated regex — the same formatting-hook escape rewrite Task 5 reported). Every Task 8 file typechecks and lints clean; `npm run lint` reports only two unused-directive warnings in the gitignored `coverage/` output.
 - **Year in the legal line** is `new Date().getFullYear()` at render, so a prerendered route bakes the build year. Acceptable for a site redeployed on content changes; Task 21's handoff should mention a rebuild in January.
 - **`Marquee` sets `will-change: transform` from GSAP** (`gsap.set` inside the media match, cleared on revert) rather than from the stylesheet, so docs/04 §8's list of stylesheet exceptions stays at two.
+
+### Main session — triage of Task 10 (2026-09-15)
+
+- Accepted: `vitest run src/lib` 63/63 in the main session; OG card read back (lockup on canopy, per-page title).
+- Decisions: keep the single dynamic `/og` route with the week-long CDN cache; keep the "…" truncation on the three long service descriptions until the client supplies one-line summaries (listed in CONTENT-GAPS G7); `/fees` keeps the label "Fees" in nav and metadata while the page heading stays the client's "Cost".
+- Task 11: drop `/og.png` from the layout metadata and delete `public/og.png`, `scripts/make-og.mjs`, `design/og-card.svg` and the `og` script in the same commit.
