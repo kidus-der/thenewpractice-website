@@ -1,0 +1,95 @@
+/* ==========================================================================
+   PLATE CAROUSEL — co-located with PlateCarousel.tsx, imported once by it.
+   Tokens for colour, type, space and motion; literal px only for geometry
+   (rule 4 as amended). The viewport clips; the track inside is twice the
+   plate set and travels -50% forever. Items space themselves with a trailing
+   margin rather than a flex gap so the track's half is exactly one set and
+   the seam lands on a whole gap.
+   ========================================================================== */
+
+.plate-carousel__eyebrow {
+  margin-bottom: var(--s-7);
+}
+.plate-carousel__viewport {
+  width: 100%;
+  overflow: hidden;
+}
+.plate-carousel__track {
+  display: flex;
+  width: max-content;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  will-change: transform;
+}
+.plate-carousel__item {
+  flex: 0 0 auto;
+  width: clamp(240px, 62vw, 320px);
+  margin-inline-end: var(--s-6);
+}
+.plate-carousel__figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.plate-carousel__frame {
+  aspect-ratio: 3 / 4;
+  width: 100%;
+}
+/* the crop anchor a frame asks for (residence-04 sits its subject high) */
+.plate-carousel__frame img {
+  object-position: var(--plate-position, center);
+}
+
+/* caption left; counter and credit right, in the eyebrow register */
+.plate-carousel__caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s-3);
+}
+.plate-carousel__meta {
+  /* the counter and the credit keep their lines; the caption wraps instead */
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--s-2);
+  color: var(--fg-muted);
+  text-align: right;
+}
+
+@media (min-width: 768px) {
+  .plate-carousel__item {
+    width: auto;
+  }
+  .plate-carousel__frame {
+    height: clamp(300px, 46vh, 520px);
+    width: calc(clamp(300px, 46vh, 520px) * 3 / 4);
+  }
+}
+
+/* Reduced motion: nothing drifts, so the set has to be reachable by hand —
+   native horizontal scroll with snap, the single set, the margin restored. */
+@media (prefers-reduced-motion: reduce) {
+  .plate-carousel__viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-inline: var(--margin);
+    scroll-padding-inline: var(--margin);
+  }
+  .plate-carousel__viewport::-webkit-scrollbar {
+    display: none;
+  }
+  .plate-carousel__track {
+    will-change: auto;
+  }
+  .plate-carousel__item {
+    scroll-snap-align: start;
+  }
+  .plate-carousel__item[data-duplicate] {
+    display: none;
+  }
+}

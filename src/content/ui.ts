@@ -45,3 +45,21 @@ export const UI_INTERIOR = {
   next: 'Next',
   ceibaCaption: 'Ceiba pentandra · Ya’axché',
 } as const
+
+/**
+ * RESIDENCES TEMPLATE STRINGS — Task 17. Landmark names for the two blocks
+ * that have no heading in the content (the plate carousel and the amenities
+ * table), and the review flag rendered over the intro on every deployment
+ * that is not production, because the page's copy is structural PLACEHOLDER
+ * (docs/CONTENT-GAPS.md G1). The flag is interface copy, not page copy, and
+ * deliberately does not carry the PLACEHOLDER marker: content.checks.ts
+ * confines that marker to the modules where content is known to be missing.
+ */
+export const UI_RESIDENCES = {
+  /** aria-label on the carousel <section>. */
+  carouselLabel: 'Plates',
+  /** aria-label on the amenities <section>. */
+  amenitiesLabel: 'Amenities',
+  /** Shown above the intro when SITE_ENV is not production. */
+  copyPending: 'Copy pending client review',
+} as const

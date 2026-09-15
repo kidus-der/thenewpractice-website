@@ -1,0 +1,47 @@
+/* ==========================================================================
+   AMENITIES TABLE — co-located with AmenitiesTable.tsx, imported once by it.
+   Hairlines, not borders (docs/02 §Composition 5). Tokens only; px for
+   geometry per rule 4 as amended.
+   ========================================================================== */
+
+.amenities__body {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.amenities__rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--gutter);
+  border-top: 1px solid var(--rule);
+}
+.amenities__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--s-4);
+  align-items: baseline;
+  padding-block: var(--s-4);
+  border-bottom: 1px solid var(--rule);
+}
+.amenities__n {
+  color: var(--fg-muted);
+  /* the numeral sits on the body's baseline; its own line-height is 1 */
+  padding-top: var(--s-1);
+}
+
+@media (min-width: 768px) {
+  .amenities__rows {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  /* the page's reading column (docs/03 §4 .p-lead) */
+  .amenities__body {
+    grid-column: 2 / 8;
+  }
+}

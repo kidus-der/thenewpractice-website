@@ -1,0 +1,44 @@
+/* ==========================================================================
+   RESIDENCES TEMPLATE — the composition the blocks do not know about: the
+   reading column for the three sections, the two full-bleed plates and the
+   privacy statement. Co-located with ResidencesTemplate.tsx, imported once
+   by it. Tokens only; px for geometry per rule 4 as amended.
+   ========================================================================== */
+
+/* — the full-bleed 16:9 plate: the frame runs edge to edge, the caption
+     keeps the page margin. It follows the title page directly, so it carries
+     no rhythm of its own; the section after it brings its own. — */
+.residences__hero {
+  padding-block: 0;
+}
+.residences__hero-figure .plate-figure__caption,
+.residences__band .plate-figure__caption {
+  padding-inline: var(--margin);
+}
+
+/* — the sections read in the standing column from 1024px (docs/03 §4) — */
+@media (min-width: 1024px) {
+  .residences .content-section__body {
+    grid-column: 2 / 8;
+  }
+}
+
+/* — the privacy statement: canopy, one sentence, one plate. The sentence
+     is the client's own and runs to a paragraph, so it sits at --t-d2 rather
+     than the block's --t-d1 (CLAUDE.md §6a, Task 17). — */
+.residences__privacy-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.residences__statement {
+  max-width: 26ch;
+}
+.residences__band {
+  margin-top: var(--s-7);
+}
+@media (min-width: 1024px) {
+  .residences__band {
+    margin-top: var(--s-8);
+  }
+}
