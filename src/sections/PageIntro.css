@@ -22,9 +22,6 @@
   align-items: flex-start;
   padding-bottom: var(--s-7);
 }
-/* the eyebrow keeps its rhythm but reads in ink: stone on bone is 3.8:1,
-   under AA at this size, and axe holds the numeral to it whether or not it is
-   aria-hidden (docs/03 §Contrast floor; ledger, Task 11) */
 /* the review flag: quiet, serif italic, a block above the lockup, so it reads
    as a note on the proof rather than as part of the page */
 .page-intro__notice {
@@ -35,7 +32,7 @@
 }
 .page-intro__eyebrow {
   margin-bottom: var(--s-6);
-  color: var(--fg);
+  color: var(--fg-muted);
 }
 .page-intro__title {
   max-width: 18ch;
@@ -47,5 +44,28 @@
   .page-intro__plate {
     /* the counterweight hangs from the same baseline as the title */
     align-self: end;
+  }
+}
+
+/* A short desktop frame (1280 × 800, 1440 × 900): the standing --s-9 rhythm
+   above and below leaves ~270px for the lockup, and a four-line title or a
+   ninety-word lead ran past the fold (ledger, Tasks 13 and 17). The title page
+   keeps its full height; only the padding and the gaps relax, so eyebrow,
+   title and lead sit inside the first viewport. */
+@media (min-width: 1024px) and (max-height: 900px) {
+  main > .page-intro {
+    padding-block: var(--s-7) var(--s-5);
+  }
+  .page-intro__copy {
+    padding-bottom: var(--s-5);
+  }
+  .page-intro__notice {
+    margin-bottom: var(--s-4);
+  }
+  .page-intro__eyebrow {
+    margin-bottom: var(--s-5);
+  }
+  .page-intro__lead {
+    margin-top: var(--s-5);
   }
 }

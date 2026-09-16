@@ -14,6 +14,7 @@
     "test:coverage": "vitest run --coverage",
     "e2e": "playwright test",
     "e2e:route": "playwright test --grep",
+    "e2e:webkit": "E2E_WEBKIT=1 playwright test --project=webkit",
     "e2e:ui": "playwright test --ui",
     "lighthouse": "node tests/lighthouse/run.mjs",
     "content:check": "node --experimental-strip-types scripts/check-content.ts",

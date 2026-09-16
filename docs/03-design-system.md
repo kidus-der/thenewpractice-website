@@ -60,7 +60,9 @@ The header, scroll rail, and cursor use these, because they float outside every 
 
 Every foreground/background pair must clear **WCAG AA (4.5:1)** for body text and **3:1** for text ≥ 24px. `--fg-faint` on `--bg` fails AA and is therefore permitted **only** for decorative text that is duplicated in an accessible label — section numerals, letterspaced eyebrow labels of ≤ 3 words. Never for reading copy.
 
-Measured (Task 15): `--fg-muted` on the **light** ground — stone `#6F7A72` on bone `#F1ECE0` — is **3.8:1**. It clears 3:1 for large text and fails 4.5:1 at body, caption and eyebrow size; axe reports it as serious. On dark ground the muted alias (bone at 0.64) passes. Until the owner chooses a darker muted for light grounds, small muted text on bone or sand must be set in `--fg` (the enquiry sheet does this) or be decorative and duplicated.
+Measured: `--fg-muted` on the **light** grounds — stone `#566059` on bone `#F1ECE0` — is **5.5:1**, and on sand `#E3DCCB` **4.8:1**, so the muted register clears AA at every size on both (the stone was darkened from `#6F7A72` after Task 11, when it measured 3.8:1). On dark ground the muted alias (bone at 0.64) passes. `--fg-faint` (clay) remains decorative-only, and axe measures decorative text too: anything set in it must be `aria-hidden` with an accessible duplicate and is still reported, so prefer the muted register.
+
+**Co-located stylesheets cascade child after parent.** A block that imports its own CSS and then imports a child block puts the child's stylesheet later in the cascade, so a parent's single-class rule for the child's root loses to the child's own (`ContentSection` styles `PlateFigure` with two classes for this reason, ledger Task 11). Parents styling a child block use two classes or a wrapper.
 
 ---
 
@@ -84,16 +86,16 @@ Bodoni Moda and Jost are the closest licence-free equivalents, self-hosted throu
 
 A modular scale on a 1.25 ratio, expressed in `clamp()` so every size is fluid between 390px and 1920px viewports. No breakpoint-specific font sizes anywhere.
 
-| Token         | Clamp                            | Use                                                                       |
-| ------------- | -------------------------------- | ------------------------------------------------------------------------- |
-| `--t-hero`    | `clamp(3.5rem, 11vw, 12rem)`     | Footer marquee                                                            |
-| `--t-d1`      | `clamp(2.5rem, 6vw, 5.5rem)`     | Statements, the home overlay title, nav overlay items, interior headlines |
-| `--t-d2`      | `clamp(2rem, 4vw, 3.5rem)`       | Section headlines, treatment and profile titles                           |
-| `--t-d3`      | `clamp(1.5rem, 2.5vw, 2.25rem)`  | Sub-headlines, pillar titles, index list items                            |
-| `--t-lead`    | `clamp(1.125rem, 1.5vw, 1.5rem)` | Lead paragraphs, pull quotes, the letter                                  |
-| `--t-body`    | `clamp(1rem, 1.1vw, 1.125rem)`   | Body copy                                                                 |
-| `--t-small`   | `0.875rem`                       | Captions, form labels, meta                                               |
-| `--t-eyebrow` | `0.6875rem`                      | Letterspaced caps labels, section numerals, line actions                  |
+| Token         | Clamp                            | Use                                                                                                                                                 |
+| ------------- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--t-hero`    | `clamp(3.5rem, 11vw, 12rem)`     | Footer marquee                                                                                                                                      |
+| `--t-d1`      | `clamp(2.5rem, 6vw, 5.5rem)`     | Statements, the home overlay title, nav overlay items, every title page's `h1` — interior headlines, treatment and profile titles (Tasks 13 and 14) |
+| `--t-d2`      | `clamp(2rem, 4vw, 3.5rem)`       | Section headlines, the enquire band's line, the residences statement                                                                                |
+| `--t-d3`      | `clamp(1.5rem, 2.5vw, 2.25rem)`  | Sub-headlines, pillar titles, index list items                                                                                                      |
+| `--t-lead`    | `clamp(1.125rem, 1.5vw, 1.5rem)` | Lead paragraphs, pull quotes, the letter                                                                                                            |
+| `--t-body`    | `clamp(1rem, 1.1vw, 1.125rem)`   | Body copy                                                                                                                                           |
+| `--t-small`   | `0.875rem`                       | Captions, form labels, meta                                                                                                                         |
+| `--t-eyebrow` | `0.6875rem`                      | Letterspaced caps labels, section numerals, line actions                                                                                            |
 
 ### Typographic rules
 
@@ -247,9 +249,12 @@ Defined here for completeness; the choreography that uses them is in `docs/04-mo
 | `--d-base`         | `480ms`                          | `D.base`      | `0.48`               |
 | `--d-slow`         | `800ms`                          | `D.slow`      | `0.8`                |
 | `--d-glacial`      | `1400ms`                         | `D.glacial`   | `1.4`                |
+| _(none)_           | `40s`                            | `D.marquee`   | —                    |
 | `--e-out-expo`     | `cubic-bezier(0.16, 1, 0.3, 1)`  | `expo.out`    | `[0.16, 1, 0.3, 1]`  |
 | `--e-out-quart`    | `cubic-bezier(0.25, 1, 0.5, 1)`  | `quart.out`   | `[0.25, 1, 0.5, 1]`  |
 | `--e-in-out-quart` | `cubic-bezier(0.76, 0, 0.24, 1)` | `quart.inOut` | `[0.76, 0, 0.24, 1]` |
 | `--e-linear`       | `linear`                         | `none`        | `'linear'`           |
+
+`D.marquee` is the footer marquee's seconds per cycle (docs/04 §4), the site's one continuous loop; it has no CSS counterpart because nothing in a stylesheet runs that long.
 
 **There is no spring, elastic, back, or bounce token, and none may be added — in either library.**

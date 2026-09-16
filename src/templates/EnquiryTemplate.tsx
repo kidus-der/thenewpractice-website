@@ -16,6 +16,7 @@ import './EnquiryTemplate.css'
 import { SectionHeader } from '@/components/SectionHeader'
 import { ENQUIRY } from '@/content/enquiry'
 import type { ContactBlock, ContactPage, Section } from '@/content/schemas'
+import { mailHref, telHref } from '@/lib/contact'
 import { Reveal } from '@/motion/Reveal'
 import { EnquiryForm } from './EnquiryForm'
 
@@ -25,7 +26,6 @@ const TITLE_ID = 'contact-title'
 const FORM_HEADING_ID = 'contact-form-heading'
 
 const numeral = (index: number): string => String(index + 1).padStart(2, '0')
-const telHref = (phone: string): string => `tel:${phone.replace(/[^\d+]/g, '')}`
 
 function Paragraphs({ text }: { text: readonly string[] }) {
   if (text.length === 0) return null
@@ -75,7 +75,7 @@ function Founder({ contact }: { contact: ContactBlock }) {
         <a className="link" href={telHref(contact.phone)}>
           {contact.phone}
         </a>
-        <a className="link" href={`mailto:${contact.email}`}>
+        <a className="link" href={mailHref(contact.email)}>
           {contact.email}
         </a>
       </p>

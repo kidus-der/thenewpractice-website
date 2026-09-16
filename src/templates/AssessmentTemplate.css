@@ -20,16 +20,11 @@
   line-height: 1.8;
   color: var(--fg);
 }
-/* the sheet: full width below 1024; from 1024 the standing list placement,
-   starting at the reading column and stopping a column short of the edge */
+/* the sheet sits at the standing .p-list placement (globals.css, docs/03 §4) */
 .assessment-questions__form {
-  grid-column: 1 / -1;
   margin-top: var(--s-7);
 }
 @media (min-width: 1024px) {
-  .assessment-questions__form {
-    grid-column: 2 / 12;
-  }
   /* the disclaimer's body column, as the interior template sets it */
   .assessment-page .content-section__body {
     grid-column: 2 / 8;

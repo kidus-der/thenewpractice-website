@@ -75,7 +75,7 @@
 }
 
 /* — works alongside: the eyebrow heading, then the rows at the standing
-     .p-list placement (2 / 12 from 1024px, blessed in the Task 12 triage) — */
+     .p-list placement (globals.css, docs/03 §4) — */
 .profile-alongside__head {
   display: flex;
   flex-direction: column;
@@ -85,11 +85,5 @@
   margin-bottom: 0;
 }
 .profile-alongside__list {
-  grid-column: 1 / -1;
   margin-top: var(--s-7);
-}
-@media (min-width: 1024px) {
-  .profile-alongside__list {
-    grid-column: 2 / 12;
-  }
 }

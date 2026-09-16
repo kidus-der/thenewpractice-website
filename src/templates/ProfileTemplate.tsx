@@ -116,7 +116,7 @@ function Alongside({ rows, n }: { rows: readonly IndexRow[]; n: string }) {
         <div className="p-lead profile-alongside__head">
           <SectionHeader n={n} label={UI_PROFILE.worksAlongside} id={titleId} />
         </div>
-        <div className="profile-alongside__list">
+        <div className="p-list profile-alongside__list">
           <IndexList rows={rows} />
         </div>
       </div>

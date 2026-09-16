@@ -13,6 +13,7 @@ import {
   expectNoConsoleErrors,
   screenshotRoute,
   settleMotion,
+  tabKey,
   test,
 } from './helpers'
 
@@ -45,7 +46,7 @@ async function tabUntilFocused(
   target: import('@playwright/test').Locator
 ) {
   for (let i = 0; i < MAX_TABS; i += 1) {
-    await page.keyboard.press('Tab')
+    await page.keyboard.press(tabKey(page))
     if (await target.evaluate((el) => el === document.activeElement)) return
   }
   throw new Error(`Tab never reached the target within ${MAX_TABS} presses`)
@@ -134,20 +135,20 @@ test.describe('contact', () => {
     const opened = Date.now()
     await tabUntilFocused(page, textbox(page, ENQUIRY.fields.name))
     await page.keyboard.type(values.name)
-    await page.keyboard.press('Tab')
+    await page.keyboard.press(tabKey(page))
     await page.keyboard.type(values.email)
-    await page.keyboard.press('Tab') // telephone, optional, left empty
-    await page.keyboard.press('Tab') // enquiring for: first radio takes focus
+    await page.keyboard.press(tabKey(page)) // telephone, optional, left empty
+    await page.keyboard.press(tabKey(page)) // enquiring for: first radio takes focus
     await page.keyboard.press('Space')
     await expect(page.getByRole('radio', { name: ENQUIRY.options.enquiringFor.self })).toBeChecked()
-    await page.keyboard.press('Tab')
+    await page.keyboard.press(tabKey(page))
     await page.keyboard.type(values.message)
-    await page.keyboard.press('Tab')
+    await page.keyboard.press(tabKey(page))
     await page.keyboard.press('ArrowRight') // preferred contact: telephone
     await expect(
       page.getByRole('radio', { name: ENQUIRY.options.preferredContact.telephone })
     ).toBeChecked()
-    await page.keyboard.press('Tab')
+    await page.keyboard.press(tabKey(page))
     await expect(page.getByRole('button', { name: ENQUIRY.submit })).toBeFocused()
 
     await waitForTimingWindow(page, opened)
@@ -168,7 +169,7 @@ test.describe('contact', () => {
     const email = textbox(page, ENQUIRY.fields.email)
     await textbox(page, ENQUIRY.fields.name).fill(values.name)
     await email.fill('not-an-address')
-    await page.keyboard.press('Tab')
+    await page.keyboard.press(tabKey(page))
 
     const alert = page.getByRole('alert').filter({ hasText: ENQUIRY.errors.email })
     await expect(alert).toBeVisible()

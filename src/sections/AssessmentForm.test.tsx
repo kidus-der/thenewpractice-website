@@ -5,7 +5,7 @@
  * The reveal primitive is replaced by a plain element: GSAP has no viewport
  * here and the motion is verified in the browser by Playwright.
  */
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ReactNode } from 'react'
@@ -18,8 +18,23 @@ import { progressLabel, scoreLabel } from '@/lib/assessment'
 import { AssessmentForm } from './AssessmentForm'
 
 vi.mock('@/motion/Reveal', () => ({
-  Reveal: ({ as: Tag = 'div', children, ...rest }: { as?: 'div'; children: ReactNode }) => (
-    <Tag {...rest}>{children}</Tag>
+  // The reveal's own props stop here; only DOM attributes reach the element.
+  Reveal: ({
+    as: Tag = 'div',
+    children,
+    className,
+    id,
+  }: {
+    as?: 'div'
+    children: ReactNode
+    className?: string
+    id?: string
+    variant?: string
+    staggerChildren?: boolean
+  }) => (
+    <Tag className={className} id={id}>
+      {children}
+    </Tag>
   ),
 }))
 
@@ -80,7 +95,7 @@ describe('AssessmentForm', () => {
   })
 
   afterEach(() => {
-    cleanup()
+    // RTL cleanup runs from vitest.setup.ts
     vi.unstubAllGlobals()
     fetchSpy.mockReset()
     local.setItem.mockClear()

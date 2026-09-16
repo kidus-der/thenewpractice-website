@@ -104,6 +104,8 @@ T7 Enquiry      split: canopy (letter + founder contact) / bone (form)
 
 Each template's file lists its own sequence in `docs/05`.
 
+**One rule across every template (since Task 13, applied site-wide in Task 19): a sand block never directly follows another sand block.** When a route asks for two in a row, the later one yields to bone — `serviceBlocks()` does this for T3 and `resolveGrounds()` in `src/lib/interior.ts` for the T2, T5 and T6 section runs — so two sand bands never merge into one. Canopy after canopy (the enquire band into the footer) is the one designed exception.
+
 ## Cursor
 
 A custom cursor is permitted and encouraged, but at the quietest possible setting:

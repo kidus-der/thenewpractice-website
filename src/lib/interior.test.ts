@@ -5,9 +5,11 @@ import { pageSchema, type Section } from '@/content/schemas'
 import {
   STICKY_INDEX_MIN_SECTIONS,
   assertSectionIds,
+  capitaliseFirst,
   hasStickyIndex,
   numeral,
   plateRatio,
+  resolveGrounds,
   sectionsToIndex,
 } from './interior'
 
@@ -78,5 +80,60 @@ describe('assertSectionIds', () => {
     expect(() => assertSectionIds(page, ['top', 'gone', 'also-gone'])).toThrow(
       'pages/p: no section with id gone, also-gone'
     )
+  })
+})
+
+describe('resolveGrounds', () => {
+  const sections = [section('a'), section('b'), section('c'), section('d')]
+
+  it('leaves unlisted sections on bone', () => {
+    expect(resolveGrounds(sections, undefined)).toEqual(['light', 'light', 'light', 'light'])
+  })
+
+  it('keeps a lone sand section', () => {
+    expect(resolveGrounds(sections, { b: 'mid' })).toEqual(['light', 'mid', 'light', 'light'])
+  })
+
+  it('yields the second of two adjacent sand sections to bone', () => {
+    expect(resolveGrounds(sections, { b: 'mid', c: 'mid' })).toEqual([
+      'light',
+      'mid',
+      'light',
+      'light',
+    ])
+  })
+
+  it('lets sand return after a bone section between', () => {
+    expect(resolveGrounds(sections, { a: 'mid', c: 'mid' })).toEqual([
+      'mid',
+      'light',
+      'mid',
+      'light',
+    ])
+  })
+
+  it('yields to a sand block above the first section', () => {
+    expect(resolveGrounds(sections, { a: 'mid' }, 'mid')).toEqual([
+      'light',
+      'light',
+      'light',
+      'light',
+    ])
+  })
+})
+
+describe('capitaliseFirst', () => {
+  it('upper-cases the first character only', () => {
+    expect(capitaliseFirst('practical methods that help')).toBe('Practical methods that help')
+  })
+
+  it('leaves an already capitalised or empty string alone', () => {
+    expect(capitaliseFirst('Practical')).toBe('Practical')
+    expect(capitaliseFirst('')).toBe('')
+  })
+
+  it('handles a leading accented or astral character', () => {
+    expect(capitaliseFirst('élan vital')).toBe('Élan vital')
+    expect(capitaliseFirst('𝒶bc')).toBe('𝒶bc')
   })
 })

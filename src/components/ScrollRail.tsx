@@ -55,7 +55,7 @@ export function ScrollRail() {
 
   return (
     <div className="scroll-rail" aria-hidden="true">
-      <span className="scroll-rail__n t-eyebrow faint">{n}</span>
+      <span className="scroll-rail__n t-eyebrow">{n}</span>
       <span className="scroll-rail__track">
         <span className="scroll-rail__fill" ref={fill} />
       </span>

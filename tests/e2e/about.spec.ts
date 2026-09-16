@@ -30,6 +30,7 @@ const DESKTOP_PROJECTS: readonly string[] = [
   PROJECTS.desktop,
   PROJECTS.wide,
   PROJECTS.reducedMotion,
+  PROJECTS.webkit,
 ]
 
 /** The section titles in document order: top level, then each one's subsections. */
@@ -125,11 +126,8 @@ test.describe('about', () => {
 
   test('has no serious axe violations in the page', async ({ page }) => {
     await revealAll(page)
-    // Scoped to <main>: a whole-document run fails on two pieces of chrome
-    // that are not this route's — the scroll rail numeral (ledger, Task 8
-    // findings; Task 19 lifts it) and the footer marquee's ghost wordmark at
-    // 0.06 alpha, both aria-hidden and both held to the contrast floor by axe.
-    await expectNoAxeViolations(page, { impactAtLeast: 'serious', include: 'main' })
+    // The whole document: page, header, sticky index, scroll rail and footer (Task 19).
+    await expectNoAxeViolations(page, { impactAtLeast: 'serious' })
   })
 
   test('renders the mark complete under reduced motion', async ({ page }, info) => {

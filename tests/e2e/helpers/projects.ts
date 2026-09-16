@@ -1,7 +1,7 @@
 /**
  * The Playwright project matrix (docs/07, docs/11): four widths plus a
- * reduced-motion desktop. Names are spelled here once; playwright.config.ts
- * and the specs import them.
+ * reduced-motion desktop, and a WebKit desktop on request. Names are spelled
+ * here once; playwright.config.ts and the specs import them.
  */
 export const PROJECTS = {
   mobile: 'mobile-390',
@@ -9,6 +9,8 @@ export const PROJECTS = {
   desktop: 'desktop-1280',
   wide: 'wide-1920',
   reducedMotion: 'reduced-motion',
+  /** WebKit at 1280 × 800; only in the matrix under `npm run e2e:webkit` (Task 19). */
+  webkit: 'webkit',
 } as const
 
 export type ProjectName = (typeof PROJECTS)[keyof typeof PROJECTS]
@@ -30,4 +32,5 @@ export const AMBIENT_GRADIENT_EXPECTED: Readonly<Record<ProjectName, boolean>> =
   [PROJECTS.desktop]: true,
   [PROJECTS.wide]: true,
   [PROJECTS.reducedMotion]: false,
+  [PROJECTS.webkit]: true,
 }

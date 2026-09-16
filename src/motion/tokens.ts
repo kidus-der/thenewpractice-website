@@ -8,6 +8,8 @@ export const D = {
   base: 0.48,
   slow: 0.8,
   glacial: 1.4,
+  /** Seconds per cycle of the footer marquee, the site's one continuous loop (docs/04 §4). */
+  marquee: 40,
 } as const
 
 export const E = {

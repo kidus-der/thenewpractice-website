@@ -4,8 +4,9 @@ import { PROJECTS } from './tests/e2e/helpers/projects'
 
 /**
  * Browser matrix (docs/07, docs/11 Gate 1): four widths and a reduced-motion
- * desktop, Chromium only — this machine has no Google Chrome, and Safari is
- * checked by hand (docs/07 §Browser support).
+ * desktop on Chromium, plus a WebKit desktop that runs only on request —
+ * `npm run e2e:webkit` sets E2E_WEBKIT, which adds the project (Task 19).
+ * Safari itself is still checked by hand (docs/07 §Browser support).
  *
  * The server under test is the dev server by default; set CI or E2E_PROD to
  * build and serve the production bundle instead, which is what the Lighthouse
@@ -19,8 +20,15 @@ const IS_CI = Boolean(process.env.CI)
 const USE_PRODUCTION_SERVER = IS_CI || Boolean(process.env.E2E_PROD)
 const SERVER_START_TIMEOUT_MS = 240_000
 const EXTERNAL_BASE_URL = process.env.E2E_BASE_URL
+const WITH_WEBKIT = Boolean(process.env.E2E_WEBKIT)
 
 const desktop = devices['Desktop Chrome']
+const safari = devices['Desktop Safari']
+
+/** WebKit at the desktop width; added to the matrix only for `npm run e2e:webkit`. */
+const webkitProjects = WITH_WEBKIT
+  ? [{ name: PROJECTS.webkit, use: { ...safari, viewport: { width: 1280, height: 800 } } }]
+  : []
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -66,6 +74,7 @@ export default defineConfig({
       name: PROJECTS.reducedMotion,
       use: { ...desktop, viewport: { width: 1280, height: 800 }, reducedMotion: 'reduce' },
     },
+    ...webkitProjects,
   ],
   webServer: EXTERNAL_BASE_URL
     ? undefined

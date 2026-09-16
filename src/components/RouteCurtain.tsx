@@ -16,8 +16,8 @@
  * top-level segment changes (/ → /about, not /team/a → /team/b), and when it
  * does it re-mounts at the exact moment the new route commits — the middle of
  * the choreography. Nothing about a transition can therefore live in React
- * state. The controller below is module-level: the phase store, the click
- * interception, the pending navigation. Each mounted component is a view of
+ * state. The controller below is module-level — the phase store
+ * (RouteCurtain.store.ts), the click interception, the pending navigation. Each mounted component is a view of
  * it: it paints the panel for the current phase (an instance mounting
  * mid-transition paints it already covered, in the same commit that removed
  * the previous one, so no frame shows the page), registers its animate
@@ -36,14 +36,7 @@
  * elements — the preloader's draw — and GSAP is where ScrollTrigger.refresh()
  * comes from. No element is driven by both.
  */
-import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-  type CSSProperties,
-} from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAnimate, useReducedMotion, type AnimationPlaybackControls } from 'motion/react'
@@ -52,36 +45,8 @@ import { curtainVariants, fadeVariants, identityEase } from '@/motion/motion-con
 import { D, E, STAGGER } from '@/motion/tokens'
 import { resetScroll, startScroll, stopScroll } from '@/motion/SmoothScroll'
 import { Mark } from './Mark'
+import { curtainStore, isCovered, useCurtainPhase, type Phase } from './RouteCurtain.store'
 import './RouteCurtain.css'
-
-/* ------------------------------------------------------------------------ */
-/* Phase store — one immutable state object, replaced never mutated          */
-/* ------------------------------------------------------------------------ */
-
-export type Phase = 'idle' | 'covering' | 'covered' | 'revealing'
-type CurtainState = Readonly<{ phase: Phase; skipped: boolean }>
-
-const IDLE: CurtainState = { phase: 'idle', skipped: false }
-let state: CurtainState = IDLE
-const listeners = new Set<() => void>()
-
-const curtainStore = {
-  get: (): CurtainState => state,
-  set: (patch: Partial<CurtainState>): void => {
-    state = { ...state, ...patch }
-    listeners.forEach((listener) => listener())
-  },
-  subscribe: (listener: () => void): (() => void) => {
-    listeners.add(listener)
-    return () => {
-      listeners.delete(listener)
-    }
-  },
-}
-
-const getPhase = () => state.phase
-const getServerPhase = (): Phase => 'idle'
-const useCurtainPhase = () => useSyncExternalStore(curtainStore.subscribe, getPhase, getServerPhase)
 
 /**
  * Cover and reveal each run at --d-slow so a whole transition — cover, hold,
@@ -114,6 +79,8 @@ let view: CurtainView | null = null
 let lastPathname: string | null = null
 let generation = 0
 let watchdog: ReturnType<typeof setTimeout> | undefined
+/** The scroll lock is reference-counted (SmoothScroll); the curtain holds at most one. */
+let holdingLock = false
 
 const nextPaint = () =>
   new Promise<void>((resolve) => {
@@ -155,7 +122,11 @@ const skipOnInput = () => {
 }
 
 function lockPage() {
-  stopScroll()
+  if (!holdingLock) {
+    holdingLock = true
+    stopScroll()
+  }
+  // The new <main> mounts without the attribute, so inert is re-asserted.
   setPageInert(true)
   window.addEventListener('keydown', skipOnInput)
   window.addEventListener('pointerdown', skipOnInput)
@@ -167,6 +138,8 @@ function unlockPage() {
   window.removeEventListener('pointerdown', skipOnInput)
   window.removeEventListener('wheel', skipOnInput)
   setPageInert(false)
+  if (!holdingLock) return
+  holdingLock = false
   startScroll()
 }
 
@@ -206,7 +179,6 @@ async function settle() {
   const { phase } = curtainStore.get()
   if (phase === 'revealing') view?.skip()
   if (phase !== 'covered') curtainStore.set({ phase: 'covered', skipped: false })
-  // The new <main> mounted without the attribute; Lenis stop is idempotent.
   lockPage()
   resetScroll()
   await nextPaint()
@@ -254,7 +226,12 @@ function interceptableHref(event: MouseEvent): string | null {
 
 declare global {
   interface Window {
-    __tnp?: Readonly<{ scrollTriggerCount?: () => number; curtainPhase?: () => Phase }>
+    __tnp?: Readonly<{
+      scrollTriggerCount?: () => number
+      /** Pinned triggers currently active: docs/04 §8 allows one at a time. */
+      activePins?: () => number
+      curtainPhase?: () => Phase
+    }>
   }
 }
 
@@ -263,6 +240,7 @@ function installDevHooks() {
   window.__tnp = {
     ...window.__tnp,
     scrollTriggerCount: () => ScrollTrigger.getAll().length,
+    activePins: () => ScrollTrigger.getAll().filter((t) => t.pin && t.isActive).length,
     curtainPhase: () => curtainStore.get().phase,
   }
 }
@@ -270,8 +248,6 @@ function installDevHooks() {
 /* ------------------------------------------------------------------------ */
 /* View                                                                     */
 /* ------------------------------------------------------------------------ */
-
-const isCovered = (phase: Phase) => phase === 'covered' || phase === 'revealing'
 
 /** What the panel must show at rest in each phase; the animations move between these. */
 function panelStyle(phase: Phase, reduced: boolean): CSSProperties {

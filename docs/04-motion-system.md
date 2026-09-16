@@ -4,15 +4,15 @@
 
 ## Philosophy
 
-**Motion here is not decoration. It is pacing.** The page controls how fast the reader is allowed to absorb it, the way a film controls a scene through cut length. Every animation answers one of three questions: *what arrived*, *what is important*, or *where am I*. If a motion answers none of them, it is deleted.
+**Motion here is not decoration. It is pacing.** The page controls how fast the reader is allowed to absorb it, the way a film controls a scene through cut length. Every animation answers one of three questions: _what arrived_, _what is important_, or _where am I_. If a motion answers none of them, it is deleted.
 
 Three governing principles:
 
 **1. Slow in, no out.** Elements enter over `--d-slow` or `--d-glacial`. They almost never leave. Content that scrolls away simply scrolls away — no exit animations except in the preloader, the route curtain and the nav overlay.
 
-**2. One thing moves at a time.** Within a viewport, a single element should command motion. Stagger exists so that a group *reads* as one thing arriving in sequence, not as five things moving at once.
+**2. One thing moves at a time.** Within a viewport, a single element should command motion. Stagger exists so that a group _reads_ as one thing arriving in sequence, not as five things moving at once.
 
-**3. Motion is invisible when it works.** The reader should never think "nice animation." They should think "this is calm." Any effect the user *notices as an effect* is too loud — with exactly three intentional exceptions: the home hero, the home statement with the ghosted ceiba, and the route curtain, which are allowed to be moments.
+**3. Motion is invisible when it works.** The reader should never think "nice animation." They should think "this is calm." Any effect the user _notices as an effect_ is too loud — with exactly three intentional exceptions: the home hero, the home statement with the ghosted ceiba, and the route curtain, which are allowed to be moments.
 
 ## 0. Two libraries, one boundary
 
@@ -20,10 +20,10 @@ The site uses **GSAP** (ScrollTrigger, SplitText, Lenis on its ticker) and **Mot
 
 > **Scroll-driven → GSAP. State-driven → Motion. No springs.**
 
-| Driven by | Library | Examples |
-| --- | --- | --- |
-| Scroll position, viewport entry, pins, scrubs, parallax, smooth scroll | **GSAP** | `<Reveal>`, hero settle, manifesto scrub, sticky index, timeline rule, travelling glow, header settle/hide, drifting carousel |
-| React state: mount/unmount, route change, open/closed, hover/tap, layout change | **Motion** | Route curtain, nav overlay `AnimatePresence`, form → confirmation swap, self-assessment result reveal, index plate preview |
+| Driven by                                                                       | Library    | Examples                                                                                                                      |
+| ------------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Scroll position, viewport entry, pins, scrubs, parallax, smooth scroll          | **GSAP**   | `<Reveal>`, hero settle, manifesto scrub, sticky index, timeline rule, travelling glow, header settle/hide, drifting carousel |
+| React state: mount/unmount, route change, open/closed, hover/tap, layout change | **Motion** | Route curtain, nav overlay `AnimatePresence`, form → confirmation swap, self-assessment result reveal, index plate preview    |
 
 Enforced by:
 
@@ -33,31 +33,31 @@ Enforced by:
 
 ### What `motion-config.ts` exports
 
-| Export | What it is |
-| --- | --- |
-| `identityEase` | `outExpo`, `outQuart`, `inOutQuart` as cubic-bezier arrays — the `--e-*` tokens for Motion. |
-| `durations` | The same `D` object GSAP uses (`src/motion/tokens.ts`), re-exported so a Motion file imports one thing. |
-| `defaultTransition` | The tween above. Spread it when a variant needs a different duration. |
-| `curtainVariants` | `hidden → cover → reveal`: a canopy panel rises to cover (`clip-path`, `--d-glacial`, `--e-in-out-quart`), then wipes away upward. Task 9 mounts it. |
-| `overlayVariants` | `panel` (wipe in `--d-slow`, out `--d-base`, `--e-in-out-quart`, children after the panel on open and before it on close) and `item` (masked line rise, `delayChildren: stagger(0.08)`). Task 7 mounts it. |
-| `fadeVariants` | `hidden / visible / exit` on opacity only, inheriting the default transition. The reduced-motion curtain, the result reveal, small swaps. |
-| `MotionProvider` | The `MotionConfig` wrapper. |
+| Export              | What it is                                                                                                                                                                                                 |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `identityEase`      | `outExpo`, `outQuart`, `inOutQuart` as cubic-bezier arrays — the `--e-*` tokens for Motion.                                                                                                                |
+| `durations`         | The same `D` object GSAP uses (`src/motion/tokens.ts`), re-exported so a Motion file imports one thing.                                                                                                    |
+| `defaultTransition` | The tween above. Spread it when a variant needs a different duration.                                                                                                                                      |
+| `curtainVariants`   | `hidden → cover → reveal`: a canopy panel rises to cover (`clip-path`, `--d-glacial`, `--e-in-out-quart`), then wipes away upward. Task 9 mounts it.                                                       |
+| `overlayVariants`   | `panel` (wipe in `--d-slow`, out `--d-base`, `--e-in-out-quart`, children after the panel on open and before it on close) and `item` (masked line rise, `delayChildren: stagger(0.08)`). Task 7 mounts it. |
+| `fadeVariants`      | `hidden / visible / exit` on opacity only, inheriting the default transition. The reduced-motion curtain, the result reveal, small swaps.                                                                  |
+| `MotionProvider`    | The `MotionConfig` wrapper.                                                                                                                                                                                |
 
 **Reduced motion in Motion.** With `reducedMotion="user"`, Motion completes every positional value — transforms, `x`/`y`, layout — instantly and keeps only opacity and colour tweens. That gives the nav overlay its specified reduced-motion design (opacity only) for free. It does _not_ touch `clip-path`, so a component whose reduced-motion design is a fade rather than a wipe (the curtain) must read `useReducedMotion()` and choose `fadeVariants`. `prefersReducedMotion()` in `tokens.ts` is for non-React code paths only.
 
 ## The forbidden list
 
-| Never | Why |
-| --- | --- |
-| Bounce, elastic, spring, back easing — GSAP, Motion, or CSS | Playful. Wrong register entirely. |
-| Rotation on scroll | Reads as gimmick |
-| Parallax on text | Illegible and dated |
-| Elements flying in from off-screen edges | 2018 AOS-library vocabulary |
-| Anything that animates `width`, `height`, `top`, `left`, or `margin` | Layout thrash. Compositor-only properties: `transform`, `opacity`, `clip-path`, `filter`. |
-| Scroll-jacking (overriding scroll to snap between sections) | Hostile. Users must retain scroll control at all times. Smooth-scroll interpolation is fine; hijacking is not. |
-| Autoplaying audio | Ever. The home *Listen* toggle is opt-in and defaults off. |
-| Loading spinners | The preloader and the curtain are designed moments, not spinners |
-| Layout-shifting entrances (a header that grows, a hero that reflows) | CLS budget is 0.1 in CI and 0.02 in intent |
+| Never                                                                | Why                                                                                                            |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Bounce, elastic, spring, back easing — GSAP, Motion, or CSS          | Playful. Wrong register entirely.                                                                              |
+| Rotation on scroll                                                   | Reads as gimmick                                                                                               |
+| Parallax on text                                                     | Illegible and dated                                                                                            |
+| Elements flying in from off-screen edges                             | 2018 AOS-library vocabulary                                                                                    |
+| Anything that animates `width`, `height`, `top`, `left`, or `margin` | Layout thrash. Compositor-only properties: `transform`, `opacity`, `clip-path`, `filter`.                      |
+| Scroll-jacking (overriding scroll to snap between sections)          | Hostile. Users must retain scroll control at all times. Smooth-scroll interpolation is fine; hijacking is not. |
+| Autoplaying audio                                                    | Ever. The home _Listen_ toggle is opt-in and defaults off.                                                     |
+| Loading spinners                                                     | The preloader and the curtain are designed moments, not spinners                                               |
+| Layout-shifting entrances (a header that grows, a hero that reflows) | CLS budget is 0.1 in CI and 0.02 in intent                                                                     |
 
 ---
 
@@ -65,20 +65,20 @@ Enforced by:
 
 Tokens are declared in `docs/03-design-system.md` §9. Their application:
 
-| Duration | Used for |
-| --- | --- |
-| `--d-instant` (120ms) | Cursor state changes, focus rings |
-| `--d-fast` (240ms) | Link underlines, small hover states |
-| `--d-base` (480ms) | Line-action rule wipes, nav state, form field focus, header settle, result reveal |
-| `--d-slow` (800ms) | Scroll reveals, image scale on hover, chrome recolour, the curtain's cover and its reveal (each; §4 _Route transitions_) |
-| `--d-glacial` (1400ms) | Hero entrance, the ghosted ceiba, section-opening statements, the preloader's veil |
+| Duration               | Used for                                                                                                                 |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `--d-instant` (120ms)  | Cursor state changes, focus rings                                                                                        |
+| `--d-fast` (240ms)     | Link underlines, small hover states                                                                                      |
+| `--d-base` (480ms)     | Line-action rule wipes, nav state, form field focus, header settle, result reveal                                        |
+| `--d-slow` (800ms)     | Scroll reveals, image scale on hover, chrome recolour, the curtain's cover and its reveal (each; §4 _Route transitions_) |
+| `--d-glacial` (1400ms) | Hero entrance, the ghosted ceiba, section-opening statements, the preloader's veil                                       |
 
-| Easing | Used for |
-| --- | --- |
-| `--e-out-expo` | **Default for everything entering.** Fast start, long settle. This curve is 80% of the site's motion. |
-| `--e-out-quart` | Slightly softer entrance; hover states, small UI, the mark's stroke draw |
+| Easing             | Used for                                                                                                         |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `--e-out-expo`     | **Default for everything entering.** Fast start, long settle. This curve is 80% of the site's motion.            |
+| `--e-out-quart`    | Slightly softer entrance; hover states, small UI, the mark's stroke draw                                         |
 | `--e-in-out-quart` | Only for things that both start and stop on screen: nav overlay open/close, curtain cover/reveal, preloader exit |
-| `--e-linear` | Only for continuous loops: the footer marquee, the residences drift |
+| `--e-linear`       | Only for continuous loops: the footer marquee, the residences drift                                              |
 
 **Stagger:** `0.06s` default, `0.08s` for larger elements, `0.04s` for character-level splits. Never above `0.12s` — the sequence stops reading as one gesture and starts reading as a queue.
 
@@ -105,25 +105,25 @@ Tokens are declared in `docs/03-design-system.md` §9. Their application:
 
 95% of the site's scroll motion is one reusable primitive, `<Reveal>` in `src/motion/Reveal.tsx`.
 
-| Property | Value |
-| --- | --- |
-| Trigger | Element top hits 85% of viewport height (`REVEAL_START`) |
-| `once` | `true` — nothing re-animates on scroll-back. Re-triggering reveals is the fastest way to make a site feel cheap. |
-| Transform | `translateY(28px) → 0` |
-| Opacity | `0 → 1` |
-| Clip | `clip-path: inset(0 0 100% 0) → inset(0 0 0% 0)` for masked variants |
-| Duration | `--d-slow` |
-| Easing | `--e-out-expo` |
-| Stagger | `0.06s` between siblings |
+| Property  | Value                                                                                                            |
+| --------- | ---------------------------------------------------------------------------------------------------------------- |
+| Trigger   | Element top hits 85% of viewport height (`REVEAL_START`)                                                         |
+| `once`    | `true` — nothing re-animates on scroll-back. Re-triggering reveals is the fastest way to make a site feel cheap. |
+| Transform | `translateY(28px) → 0`                                                                                           |
+| Opacity   | `0 → 1`                                                                                                          |
+| Clip      | `clip-path: inset(0 0 100% 0) → inset(0 0 0% 0)` for masked variants                                             |
+| Duration  | `--d-slow`                                                                                                       |
+| Easing    | `--e-out-expo`                                                                                                   |
+| Stagger   | `0.06s` between siblings                                                                                         |
 
 Variants (a `variant` prop, not five separate components):
 
-| Variant | Behaviour |
-| --- | --- |
-| `fade` | Opacity only. For images and large media. |
-| `rise` | The default. Translate + opacity. |
-| `mask` | Clip-path wipe upward. For headlines and images entering as a block. |
-| `lines` | SplitText by line; each line masked and rising, staggered. **The signature move for display type.** Interior headlines, the treatment "may include" index, the confirmation line. |
+| Variant | Behaviour                                                                                                                                                                                                                         |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fade`  | Opacity only. For images and large media.                                                                                                                                                                                         |
+| `rise`  | The default. Translate + opacity.                                                                                                                                                                                                 |
+| `mask`  | Clip-path wipe upward. For headlines and images entering as a block.                                                                                                                                                              |
+| `lines` | SplitText by line; each line masked and rising, staggered. **The signature move for display type.** Interior headlines, the treatment "may include" index, the confirmation line.                                                 |
 | `chars` | SplitText by character, staggered `0.04s`. **At most twice per page** — the home overlay title and one statement. Overusing character animation is the single most common way a luxury site starts looking like a portfolio site. |
 
 The CSS in `globals.css` (`[data-reveal]`, the `prefers-reduced-motion` block) is the safety net: if JS never runs or motion is reduced, nothing is left invisible.
@@ -191,7 +191,7 @@ Transparent over the first viewport. Past `90vh`, `data-settled` — picks up `-
 
 ### Footer marquee
 
-The wordmark repeating at `--t-hero` in `--fg` at `0.055` alpha, `--e-linear`, 40s per cycle. **The single permitted marquee on the site.** Static, one repetition, under reduced motion.
+The wordmark repeating at `--t-hero` in `--fg` at `0.06` alpha, `--e-linear`, `D.marquee` (40s) per cycle. **The single permitted marquee on the site.** Static, one repetition, under reduced motion.
 
 ---
 
@@ -201,7 +201,7 @@ The wordmark repeating at `--t-hero` in `--fg` at `0.055` alpha, `--e-linear`, 4
 
 > The concept site's original spec called for the background to interpolate across section boundaries. It was built, looked at, and reversed. The reasoning is kept because an agent will otherwise try it again.
 
-Why the crossfade fails: a section's text colour switches at its own boundary — it has to, because `--fg` is redefined per section. Any ground that fades *across* that boundary spends the whole fade mis-paired: tighten the window and the incoming section's bone type sits on sand; loosen it and the outgoing section's ink type sits on ink. There is no window that is correct at both ends, and pinned sections make it worse.
+Why the crossfade fails: a section's text colour switches at its own boundary — it has to, because `--fg` is redefined per section. Any ground that fades _across_ that boundary spends the whole fade mis-paired: tighten the window and the incoming section's bone type sits on sand; loosen it and the outgoing section's ink type sits on ink. There is no window that is correct at both ends, and pinned sections make it worse.
 
 Two further traps, both worth knowing:
 
@@ -216,19 +216,19 @@ What remains: `<GroundManager>` publishes `--ground` and `--ground-fg` on `<html
 
 The concept site's section moves are the vocabulary the templates draw from. Each is specified once here and mapped to templates in `docs/05`.
 
-| Block | Choreography | Used by |
-| --- | --- | --- |
-| **Hero settle** | Media `scale 1.08 → 1` over `--d-glacial × 1.4`, `--e-out-expo`, **from mount** (the poster must not wait for the veil; ledger, Task 4); the lockup does not animate — it is the preloader's lockup in the preloader's place (`--lockup-lift`), so the veil splits onto it; the eyebrow, toggle and cue fade in after `veil:done`; on scroll the media parallaxes `yPercent: 12` and the words lift `-40px` and fade over 60% of the hero. **Never parallax text.** With video: poster first, then the `<video>` fades in over the poster across `--d-slow` on `playing`. | T1 |
-| **Ghosted mark + statement** | The ceiba at ~58vh, `--c-bone` at 0.16, `stroke-width 1.5`, behind three lines revealed one at a time; the gold point lands between lines two and three. Pinned for 2× viewport on desktop, 1.4× on mobile; unpinned under reduced motion and authored to read in flow. | T1 §1 |
-| **Scrubbed manifesto** | Statement at `--t-d1`, `.p-lead`, pinned 1.5× viewport, revealed line by line on `scrub: 0.8`. The reader controls the pace of the sentence. | T1 §4 *Why The New Practice* |
-| **Sticky index** | Left column sticky at `42vh`, one active item at a time: `--fg-muted → --fg` over `--d-base` and a 32px brass rule draws beside it. A reading aid, not a control — anchors are a nicety. ≥ 1024px only. | T1 §4 pillars, T2 pages with ≥ 5 sections |
-| **Timeline rule** | A `--rule-strong` hairline the list's full height; an `--accent` rule over it, `scaleY` tied 1:1 to section scroll progress; each time marker becomes `--accent` as the rule passes it. Rendered complete under reduced motion. | T2 `/our-process` *A Typical Day* |
-| **Travelling glow** | One radial gradient in `--c-canopy` at 12–20%, bleeding `--s-6` past the row each side, `y` as a transform over `--d-base`; a brass tick in the left margin; driven by pointer **and** focus. One element, not one per row. | T6 index lists |
-| **Drifting carousel** | Plates rendered twice; track tweens `xPercent: -50`, `ease: 'none'`, `repeat: -1`, 34s; pauses offscreen via `onToggle`; hover/focus eases `timeScale` to 0.15. No pin, no scrub, no drag. Reduced motion: native `overflow-x: auto` scroll-snap. | T5 |
-| **Mark draw on entry** | Strokes from centre, `stagger 0.09 from center`, `--e-out-quart`; point scales in; once. | T2 `/about` ceiba, T3/T4 accents |
-| **Discretion band** | One statement, one 21:9 plate, a single `mask` reveal. The least animated block; its absence of motion is the effect. | T5 privacy statement, T2 bands |
-| **Field focus / confirmation** | Field rule `scaleX 0 → 1` in `--accent` on focus, `--d-base`; on success (Motion) the fields fade out with a `0.04s` stagger and the confirmation line reveals as `lines`. | T7, home §5 teaser |
-| **Hover plate preview** | A 3:4 plate follows the pointer at ≥ 1024px with `pointer: fine` (GSAP `quickTo`, `--d-base`, `--e-out-expo` — no spring), its image swapping per row with a `--d-fast` crossfade; static thumbnails on touch (T6) or the list alone (T1 §3). The concept site removed this from its team list because it named no people; the index pages *do*, so it returns there, and on the home page's conditions, which link to them. | T6, T1 §3 |
+| Block                          | Choreography                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Used by                                   |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| **Hero settle**                | Media `scale 1.08 → 1` over `--d-glacial × 1.4`, `--e-out-expo`, **from mount** (the poster must not wait for the veil; ledger, Task 4); the lockup does not animate — it is the preloader's lockup in the preloader's place (`--lockup-lift`), so the veil splits onto it; the eyebrow, toggle and cue fade in after `veil:done`; on scroll the media parallaxes `yPercent: 12` and the words lift `-40px` and fade over 60% of the hero. **Never parallax text.** With video: poster first, then the `<video>` fades in over the poster across `--d-slow` on `playing`.                                                                                                                                                                                                                                               | T1                                        |
+| **Ghosted mark + statement**   | The ceiba at ~58vh, `--c-bone` at 0.16, `stroke-width 1.5`, behind three lines revealed one at a time; the gold point lands between lines two and three. Pinned for 2× viewport on desktop, 1.4× on mobile; unpinned under reduced motion and authored to read in flow.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | T1 §1                                     |
+| **Scrubbed manifesto**         | Statement at `--t-d1`, `.p-lead`, pinned 1.5× viewport, revealed line by line on `scrub: 0.8`. The reader controls the pace of the sentence.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | T1 §4 _Why The New Practice_              |
+| **Sticky index**               | Left column sticky at `42vh`, one active item at a time: `--fg-muted → --fg` over `--d-base` and a 32px brass rule draws beside it. A reading aid, not a control — anchors are a nicety. ≥ 1024px only.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | T1 §4 pillars, T2 pages with ≥ 5 sections |
+| **Timeline rule**              | A `--rule-strong` hairline the list's full height; an `--accent` rule over it, `scaleY` tied 1:1 to section scroll progress; each time marker becomes `--accent` as the rule passes it. Rendered complete under reduced motion.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | T2 `/our-process` _A Typical Day_         |
+| **Travelling glow**            | One radial gradient in `--c-canopy` at 12–20%, bleeding `--s-6` past the row each side, `y` as a transform over `--d-base`; a brass tick in the left margin; driven by pointer **and** focus. One element, not one per row.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | T6 index lists                            |
+| **Drifting carousel**          | Plates rendered twice; track tweens `xPercent: -50`, `ease: 'none'`, `repeat: -1`, 34s; pauses offscreen via `onToggle`; hover/focus eases `timeScale` to 0.15. No pin, no scrub, no drag. Reduced motion: native `overflow-x: auto` scroll-snap.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | T5                                        |
+| **Mark draw on entry**         | Strokes from centre, `stagger 0.09 from center`, `--e-out-quart`; point scales in; once.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | T2 `/about` ceiba, T3/T4 accents          |
+| **Discretion band**            | One statement, one 21:9 plate, a single `mask` reveal. The least animated block; its absence of motion is the effect.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | T5 privacy statement, T2 bands            |
+| **Field focus / confirmation** | Field rule `scaleX 0 → 1` in `--accent` on focus, `--d-base`; on success (Motion) the fields fade out with a `0.04s` stagger and the confirmation line reveals as `lines`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | T7, home §5 teaser                        |
+| **Hover plate preview**        | One shared component, `src/components/HoverPlate.tsx` (Task 19): a 3:4 plate clamped to 160–240px follows the pointer at ≥ 1024px with `pointer: fine` and motion allowed — GSAP `quickTo` on `x`/`y` at `--d-base`, `--e-out-expo`, no spring — riding `--s-5` to the pointer's right and centred on it; it shows over `--d-base` while a row is active and swaps the row's frame with a `--d-fast` opacity crossfade, every frame rendered once and stacked (stylesheet transitions on data attributes, so no element is driven by two libraries). Static thumbnails on touch and under reduced motion (T6) or the list alone (T1 §3). The concept site removed this from its team list because it named no people; the index pages _do_, so it returns there, and on the home page's conditions, which link to them. | T6, T1 §3                                 |
 
 ---
 
@@ -236,21 +236,21 @@ The concept site's section moves are the vocabulary the templates draw from. Eac
 
 `prefers-reduced-motion: reduce` is not a degraded experience. It is a second, equally finished design.
 
-| System | Reduced-motion behaviour |
-| --- | --- |
-| Lenis | Not created. Native scroll. |
-| Reveals | Elements render in final state. **No opacity 0.** |
-| Pinned sections | Unpinned. Content flows normally in document order. |
-| Scrub animations, timeline rule | Rendered at their end state |
-| Parallax | Removed |
-| Hero video | Not loaded; the poster shows. No scale-settle. |
-| Ambient gradient | Not mounted |
-| Preloader | Skipped entirely |
-| Route curtain | Opacity fade only |
-| Nav overlay | Opacity only, no clip-path, no stagger |
-| Marquee, carousel | Static; carousel becomes a native scroll-snap track |
-| Custom cursor | Removed, native cursor restored |
-| Hover scale on images | Removed; hover indicated by a `--rule-strong` outline instead |
+| System                          | Reduced-motion behaviour                                      |
+| ------------------------------- | ------------------------------------------------------------- |
+| Lenis                           | Not created. Native scroll.                                   |
+| Reveals                         | Elements render in final state. **No opacity 0.**             |
+| Pinned sections                 | Unpinned. Content flows normally in document order.           |
+| Scrub animations, timeline rule | Rendered at their end state                                   |
+| Parallax                        | Removed                                                       |
+| Hero video                      | Not loaded; the poster shows. No scale-settle.                |
+| Ambient gradient                | Not mounted                                                   |
+| Preloader                       | Skipped entirely                                              |
+| Route curtain                   | Opacity fade only                                             |
+| Nav overlay                     | Opacity only, no clip-path, no stagger                        |
+| Marquee, carousel               | Static; carousel becomes a native scroll-snap track           |
+| Custom cursor                   | Removed, native cursor restored                               |
+| Hover scale on images           | Removed; hover indicated by a `--rule-strong` outline instead |
 
 Implement as three guards, all three: `gsap.matchMedia()` with `(prefers-reduced-motion: no-preference)` wrapping every GSAP effect; `MotionConfig reducedMotion="user"` plus `useReducedMotion()` where a Motion component needs a different variant; and the CSS `@media` block in `globals.css` that resets transforms, opacity and clip-path to final values. The CSS block is the safety net for anything the JS guards miss.
 

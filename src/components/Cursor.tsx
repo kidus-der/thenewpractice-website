@@ -2,8 +2,9 @@
 
 /**
  * The quietest possible custom cursor. docs/02-art-direction.md §Cursor.
- * Desktop pointer only; removed entirely on touch and under reduced motion,
- * with the native cursor restored.
+ * Desktop pointer only — a fine pointer that can hover, motion allowed, and
+ * not until a mouse has actually moved; removed entirely on touch and under
+ * reduced motion, with the native cursor restored.
  *
  * Three things keep it from feeling laggy, all of which matter:
  *
@@ -44,6 +45,15 @@ export function Cursor() {
     let dirty = true
 
     const onMove = (e: PointerEvent) => {
+      // A touch or pen never counts, and the dot is not painted until a mouse
+      // has moved: before that it sat at the viewport centre in every
+      // headless capture and on touch-emulated viewports (ledger, Task 14).
+      if (e.pointerType !== 'mouse') return
+      if (el.dataset.seen !== 'true') {
+        el.dataset.seen = 'true'
+        pos.x = e.clientX
+        pos.y = e.clientY
+      }
       target.x = e.clientX
       target.y = e.clientY
       dirty = true

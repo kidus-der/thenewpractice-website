@@ -13,7 +13,7 @@
  *
  * Plates appear only where a row has a media key. On a fine pointer at
  * 1024px and above with motion allowed, one 3:4 plate follows the pointer
- * and swaps image per row (IndexPlate, Motion). On touch, or under reduced
+ * and swaps image per row (the shared HoverPlate). On touch, or under reduced
  * motion, each row shows its plate as a static thumbnail instead. With no
  * images anywhere — the three collections today — nothing is added.
  */
@@ -27,7 +27,7 @@ import { gsap } from '@/motion/gsap'
 import { Reveal } from '@/motion/Reveal'
 import { D, E } from '@/motion/tokens'
 import { DESKTOP, MOTION_OK, useMediaQuery, useRichPointer } from '@/motion/useMediaQuery'
-import { IndexPlate } from './IndexPlate'
+import { HoverPlate } from '@/components/HoverPlate'
 
 /** The static thumbnail column is 96px wide at most (IndexList.css). */
 const THUMB_SIZES = '96px'
@@ -86,6 +86,7 @@ export function IndexList({ rows }: Props) {
 
   const clear = (index: number) => setActive((current) => (current === index ? null : current))
   const activeMedia = active === null ? null : (rows[active]?.media ?? null)
+  const plates = rows.flatMap((row) => (row.media ? [row.media] : []))
 
   return (
     <div className="index-list" ref={wrap} onPointerLeave={() => setActive(null)}>
@@ -124,7 +125,7 @@ export function IndexList({ rows }: Props) {
         ))}
       </Reveal>
 
-      {followPlate && <IndexPlate containerRef={wrap} rows={rows} activeMedia={activeMedia} />}
+      {followPlate && <HoverPlate within={wrap} plates={plates} active={activeMedia} />}
     </div>
   )
 }

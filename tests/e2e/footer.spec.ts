@@ -80,11 +80,13 @@ test.describe('footer', () => {
     for (const line of BRAND.locale.split(', ')) await expect(address).toContainText(line)
   })
 
-  test('carries the legal line with privacy and terms', async ({ page }) => {
+  test('carries the legal line without repeating privacy and terms', async ({ page }) => {
     const legal = page.locator('.site-footer__legal')
     await expect(legal).toContainText(`${new Date().getFullYear()} ${BRAND.name}`)
-    await expect(legal.locator(`a[href="${routes.privacy}"]`)).toHaveCount(1)
-    await expect(legal.locator(`a[href="${routes.terms}"]`)).toHaveCount(1)
+    // The Legal column carries both links; the line does not repeat them (ledger, Task 8 triage).
+    await expect(legal.locator('a')).toHaveCount(0)
+    await expect(page.locator(`.site-footer__nav a[href="${routes.privacy}"]`)).toHaveCount(1)
+    await expect(page.locator(`.site-footer__nav a[href="${routes.terms}"]`)).toHaveCount(1)
   })
 
   test('renders the lockup once with the trademark as a superscript', async ({ page }) => {

@@ -27,11 +27,11 @@ import { SCREENSHOT_ROOT } from './helpers/screenshotRoute'
 const HEADER = 'header.site-header'
 const DIALOG = `[role="dialog"][aria-label="${UI_NAV.ariaLabels.overlay}"]`
 const NARROW_VIEWPORT = { width: 390, height: 844 } as const
-/** Task 9's demo route, when it exists; otherwise the overlay test starts on `/`. */
-const CURTAIN_DEMO_ROUTE = '/dev/curtain'
+/** A second real route, so a soft navigation from the open overlay is observable. */
+const SECOND_ROUTE = routes.about
 /** Panel wipe plus stagger plus item duration (docs/04 §4), with headroom. */
 const OVERLAY_SETTLE_MS = 4000
-const DESKTOP_PROJECTS: readonly string[] = [PROJECTS.desktop, PROJECTS.wide]
+const DESKTOP_PROJECTS: readonly string[] = [PROJECTS.desktop, PROJECTS.wide, PROJECTS.webkit]
 const AT_REST_CLIP = /^(none|inset\(0(px)?(\s0(px)?){0,3}\))$/
 
 /** A viewport (not full-page) capture: header and overlay states are scroll-bound. */
@@ -70,11 +70,6 @@ async function openOverlay(page: Page) {
 
 function primaryLinks(page: Page) {
   return page.locator(DIALOG).getByRole('navigation', { name: UI_NAV.ariaLabels.primary })
-}
-
-async function routeExists(page: Page, path: string): Promise<boolean> {
-  const response = await page.request.get(path)
-  return response.ok()
 }
 
 test.describe('header', () => {
@@ -306,17 +301,13 @@ test.describe('navigation overlay', () => {
   })
 
   test('Enter on a menu link navigates and closes the overlay', async ({ page }) => {
-    const start = (await routeExists(page, CURTAIN_DEMO_ROUTE)) ? CURTAIN_DEMO_ROUTE : routes.home
-    if (start !== routes.home) {
-      await page.goto(start)
-      await settleMotion(page)
-    }
+    await page.goto(SECOND_ROUTE)
+    await settleMotion(page)
     const dialog = await openOverlay(page)
     const [enquire] = NAV.utility
     if (!enquire) throw new Error('nav.ts has no utility items')
     await dialog.getByRole('link', { name: enquire.label, exact: true }).focus()
     await page.keyboard.press('Enter')
-    // The destination may still be a 404 (Task 15 builds it); navigation is the assertion.
     await page.waitForURL((url) => url.pathname === enquire.href)
     await expect(page.locator(DIALOG)).toHaveCount(0)
     await expect(page.locator(HEADER)).toBeVisible()
@@ -324,11 +315,9 @@ test.describe('navigation overlay', () => {
   })
 
   test('closes and releases the scroll lock when a soft navigation commits', async ({ page }) => {
-    // Needs a second real route for a client-side navigation; Task 9's demo
-    // route is the first one to exist. The wordmark link home is inside the
-    // focus scope, so Enter on it navigates from the open overlay.
-    test.skip(!(await routeExists(page, CURTAIN_DEMO_ROUTE)), `${CURTAIN_DEMO_ROUTE} not built`)
-    await page.goto(CURTAIN_DEMO_ROUTE)
+    // A client-side navigation needs a second route. The wordmark link home
+    // is inside the focus scope, so Enter on it navigates from the open overlay.
+    await page.goto(SECOND_ROUTE)
     await settleMotion(page)
     await openOverlay(page)
     await page.locator(HEADER).getByRole('link', { name: BRAND.name }).focus()

@@ -74,6 +74,8 @@ const GLOW = '.index-list__glow'
 const RAIL = `nav[aria-label="${UI_INTERIOR.railLabel}"]`
 /** The glow tweens over --d-base; poll well past it. */
 const GLOW_SETTLE_MS = 2000
+/** Under reduced motion the glow is placed, not tweened; the computed style needs a few frames. */
+const REDUCED_SETTLE_MS = 500
 
 /** The glow's translateY, from its computed transform matrix. */
 const glowY = (el: Element): number => {
@@ -162,11 +164,13 @@ for (const fixture of FIXTURES) {
 
       if (info.project.name === PROJECTS.reducedMotion) {
         // Instant: placed by gsap.set in the focus commit. The computed style
-        // catches up one frame later because the global safety net gives every
-        // element a 0.01ms transition, so read after a single frame — far
-        // inside the --d-base tween the other projects run.
-        await page.evaluate(() => new Promise<void>((r) => requestAnimationFrame(() => r())))
-        expect(await glow.evaluate(glowY)).toBeCloseTo(rowTop, 0)
+        // catches up a few frames later because the global safety net gives
+        // every element a 0.01ms transition (one frame was not always enough;
+        // Task 19), so poll briefly — far inside the --d-base tween the other
+        // projects run.
+        await expect
+          .poll(() => glow.evaluate(glowY), { timeout: REDUCED_SETTLE_MS })
+          .toBeCloseTo(rowTop, 0)
         await expect(glow).toHaveCSS('opacity', '1')
       } else {
         await expect
@@ -187,7 +191,7 @@ for (const fixture of FIXTURES) {
     })
 
     test('shows no plate when no row has an image', async ({ page }) => {
-      await expect(page.locator('.index-plate')).toHaveCount(0)
+      await expect(page.locator('.hover-plate')).toHaveCount(0)
       await expect(page.locator('.index-list__thumb')).toHaveCount(0)
       await expect(page.locator('main img')).toHaveCount(0)
     })

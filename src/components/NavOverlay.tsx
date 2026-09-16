@@ -33,6 +33,7 @@ import Link from 'next/link'
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react'
 import { BRAND } from '@/content/brand'
 import { NAV, UI_NAV, isActiveRoute } from '@/content/nav'
+import { mailHref, telHref } from '@/lib/contact'
 import { gsap } from '@/motion/gsap'
 import { fadeVariants, identityEase, overlayVariants } from '@/motion/motion-config'
 import { D, E, STAGGER } from '@/motion/tokens'
@@ -65,10 +66,6 @@ const asideVariants = {
     transition: { type: 'tween', duration: D.slow, ease: identityEase.outExpo },
   },
 } as const satisfies Variants
-
-/** tel: URIs carry digits and the leading plus only. */
-const telHref = (phone: string): string => `tel:${phone.replace(/[^\d+]/g, '')}`
-const mailHref = (email: string): string => `mailto:${email}`
 
 /** Visible, tabbable elements inside the given roots, in document order. */
 function focusableWithin(roots: readonly (HTMLElement | null)[]): HTMLElement[] {

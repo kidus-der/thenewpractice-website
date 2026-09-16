@@ -56,3 +56,38 @@ export function assertSectionIds(page: Page, ids: readonly string[]): void {
     throw new Error(`pages/${page.slug}: no section with id ${missing.join(', ')}`)
   }
 }
+
+/** The two light grounds a body section may sit on (ContentSection's `Ground`). */
+export type SectionGround = 'light' | 'mid'
+
+/**
+ * docs/02 §Ground rhythm, site-wide since Task 13: a sand block never follows
+ * another sand block — the later one yields to bone, so two sand bands never
+ * merge into one. Given the sections in order and the grounds a route asked
+ * for (unlisted sections are bone), returns the ground each section renders
+ * on. `preceding` is the ground of whatever block sits directly above the
+ * first section, when that block is not one of these sections.
+ */
+export function resolveGrounds(
+  sections: readonly Section[],
+  requested: Readonly<Record<string, SectionGround>> | undefined,
+  preceding: SectionGround = 'light'
+): readonly SectionGround[] {
+  return sections.reduce<readonly SectionGround[]>((acc, section) => {
+    const above = acc.at(-1) ?? preceding
+    const wants = requested?.[section.id] ?? 'light'
+    return [...acc, wants === 'mid' && above === 'mid' ? 'light' : wants]
+  }, [])
+}
+
+/**
+ * A description split from the client's `Name: description` lines begins
+ * lowercase; the definitions block capitalises its first character at render
+ * (ledger, Task 13 triage). Display only — the content module stays verbatim.
+ */
+export function capitaliseFirst(text: string): string {
+  const first = text.codePointAt(0)
+  if (first === undefined) return text
+  const head = String.fromCodePoint(first)
+  return head.toLocaleUpperCase('en-GB') + text.slice(head.length)
+}

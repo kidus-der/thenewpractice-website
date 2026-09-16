@@ -29,11 +29,17 @@
   width: max-content;
   white-space: nowrap;
 }
+/* the wordmark and the separator come from the item's data attributes, so the
+   ghost holds no text node for axe to measure (Marquee.tsx) */
 .marquee__item {
   display: inline-block;
   padding-inline-end: 0.35em;
 }
-.marquee__sep {
+.marquee__item::before {
+  content: attr(data-text);
+}
+.marquee__item::after {
+  content: attr(data-sep);
   padding-inline-start: 0.35em;
 }
 /* Reduced motion: a single static repetition, aligned to the page margin,
@@ -47,7 +53,7 @@
   }
   .marquee__set--dup,
   .marquee__item:not(:first-child),
-  .marquee__sep {
+  .marquee__item::after {
     display: none;
   }
 }

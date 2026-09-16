@@ -1,5 +1,5 @@
 import { ASSESSMENTS, BRAND, HOME, SERVICES, TEAM, routes } from '@/content'
-import { assessmentHref, serviceHref, teamHref } from '@/content/nav'
+import { NOINDEX_ROUTES, assessmentHref, serviceHref, teamHref } from '@/content/nav'
 import { ROUTE_SEO, excerpt } from '@/content/seo'
 import { canonicalUrl, liveSeoContext } from '@/lib/seo'
 
@@ -38,10 +38,14 @@ const section = (heading: string, lines: readonly string[]): string =>
 export function buildLlmsText(siteUrl: string): string {
   const url = (path: string): string => canonicalUrl(siteUrl, path)
 
-  const pages = Object.entries(routes).map(([key, path]) => {
-    const seo = ROUTE_SEO[key as keyof typeof routes]
-    return link(seo.name, url(path), seo.description)
-  })
+  // The legal stubs are noindex while they are PLACEHOLDER (nav.ts), and
+  // what the sitemap leaves out this file leaves out too (ledger, Task 18).
+  const pages = Object.entries(routes)
+    .filter(([, path]) => !NOINDEX_ROUTES.has(path))
+    .map(([key, path]) => {
+      const seo = ROUTE_SEO[key as keyof typeof routes]
+      return link(seo.name, url(path), seo.description)
+    })
   const services = SERVICES.map((s) =>
     link(s.title, url(serviceHref(s.slug)), excerpt(s.intro[0] ?? s.title))
   )

@@ -15,16 +15,11 @@
 .index-section__lead {
   margin-top: var(--s-6);
 }
-/* the rows: full width below 1024; from 1024 they start at the reading column
-   and stop a column short of the edge, leaving the margin for the brass tick */
+/* the rows sit at the standing .p-list placement (globals.css, docs/03 §4) */
 .index-section__list {
-  grid-column: 1 / -1;
   margin-top: var(--s-7);
 }
 @media (min-width: 1024px) {
-  .index-section__list {
-    grid-column: 2 / 12;
-  }
   /* the body column of the long-read sections, as the interior template sets it */
   .index .content-section__body {
     grid-column: 2 / 8;

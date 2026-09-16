@@ -100,18 +100,6 @@ main > section.contact-open {
 .contact__sheet-heading {
   margin-bottom: var(--s-6);
 }
-/* Stone on bone is 3.9:1 — under AA for label-sized text — so on the sheet the
-   secondary voice is ink, kept quiet by size and letterspacing (docs/03 §1
-   contrast floor). The bare `.muted` class is not used inside the sheet. */
-.contact__sheet .field__label,
-.contact__sheet .field__input:focus ~ .field__label,
-.contact__sheet .field__input:not(:placeholder-shown) ~ .field__label,
-.contact__sheet .choice__legend,
-.contact__sheet .choice__option,
-.contact__sheet .contact__sheet-heading {
-  color: var(--fg);
-}
-
 @media (min-width: 1024px) {
   .contact__letter {
     grid-column: 1 / 6;
