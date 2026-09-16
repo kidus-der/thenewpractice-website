@@ -47,7 +47,6 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 18 | done | 11 | Remaining T2 pages: `/our-process`, `/a-personal-message`, `/fees`, `/privacy`, `/terms` |
 | 18b | done | 12 | Interactive self-assessment scorer → `/self-assessment/[slug]` × 10 |
 | 19 | done | 13, 14, 15, 16, 17, 18, 18b | Cross-template hardening: viewports, 4× throttle traces, reduced motion, keyboard, axe, Safari |
-| 20 | doing |
 | 20 | doing | 19 | Performance budgets: Lighthouse, image sizes, font preload, bundle audit |
 | 20b | doing | 19 | Content provenance fixes from docs/CONTENT-PROVENANCE-AUDIT.md (no invented text ships) |
 | 21 | todo | 20, 20b, 6 | Staging deploy, live smoke test, `HANDOFF.md` |
