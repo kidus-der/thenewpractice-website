@@ -14,7 +14,7 @@ import './IndexTemplate.css'
 import { SectionHeader } from '@/components/SectionHeader'
 import type { Page, Section } from '@/content/schemas'
 import type { IndexRow } from '@/lib/indexPage'
-import { numeral } from '@/lib/interior'
+import { numeral, resolveGrounds } from '@/lib/interior'
 import type { PrevNext } from '@/lib/prevNext'
 import { Reveal } from '@/motion/Reveal'
 import { ContentSection, type Ground } from '@/sections/ContentSection'
@@ -64,7 +64,7 @@ function IndexSection({ spec, id, n }: { spec: IndexListSpec; id: string; n: str
             </Reveal>
           )}
         </div>
-        <div className="index-section__list">
+        <div className="p-list index-section__list">
           <IndexList rows={spec.rows} />
         </div>
       </div>
@@ -82,6 +82,10 @@ export function IndexTemplate({
 }: IndexTemplateProps) {
   const listPosition = before.length + 1
   const bandPosition = listPosition + after.length + 1
+  // docs/02 §Ground rhythm: a sand section never directly follows another; the
+  // list between the two runs is bone, so each run resolves on its own.
+  const beforeGrounds = resolveGrounds(before, grounds)
+  const afterGrounds = resolveGrounds(after, grounds)
 
   return (
     <main id="main" className="index">
@@ -98,7 +102,7 @@ export function IndexTemplate({
           key={section.id}
           section={section}
           numeral={numeral(i + 1)}
-          ground={grounds?.[section.id] ?? 'light'}
+          ground={beforeGrounds[i]}
         />
       ))}
 
@@ -109,7 +113,7 @@ export function IndexTemplate({
           key={section.id}
           section={section}
           numeral={numeral(listPosition + i + 1)}
-          ground={grounds?.[section.id] ?? 'light'}
+          ground={afterGrounds[i]}
         />
       ))}
 

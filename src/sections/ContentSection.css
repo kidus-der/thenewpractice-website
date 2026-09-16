@@ -22,11 +22,11 @@
   flex-direction: column;
   align-items: flex-start;
 }
-/* in ink, not stone: 3.8:1 on bone is under AA and axe holds the numeral
-   to it whether or not it is aria-hidden (docs/03 §Contrast floor) */
+/* the eyebrow register (docs/03 §2): stone, AA on bone and sand since the
+   Task 11 triage darkened --c-stone */
 .content-section__eyebrow {
   margin-bottom: var(--s-6);
-  color: var(--fg);
+  color: var(--fg-muted);
 }
 
 /* — headings — */
@@ -139,7 +139,7 @@
   line-height: 1.2;
 }
 .content-section__signature-role {
-  color: var(--fg);
+  color: var(--fg-muted);
 }
 /* the valediction sits with the name, a paragraph above it */
 .content-section__signature-valediction {

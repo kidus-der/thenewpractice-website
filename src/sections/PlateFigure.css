@@ -28,8 +28,10 @@
   aspect-ratio: 21 / 9;
 }
 
-/* caption left, credit right — one line at any width that allows it */
+/* caption left, credit right — one line at any width that allows it; the
+   caption register is --fg-muted (docs/03 §1 "captions, metadata") */
 .plate-figure__caption {
+  color: var(--fg-muted);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;

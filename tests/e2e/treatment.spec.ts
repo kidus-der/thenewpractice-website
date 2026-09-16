@@ -14,6 +14,7 @@
 import { routes, serviceHref } from '../../src/content/nav'
 import { SERVICES } from '../../src/content/services'
 import { UI_INTERIOR, UI_TREATMENT } from '../../src/content/ui'
+import { capitaliseFirst } from '../../src/lib/interior'
 import {
   relatedServices,
   serviceBlocks,
@@ -143,8 +144,9 @@ for (const slug of FIXTURE_SLUGS) {
           block.section.title ?? ''
         )
         const descriptions = section.locator('dd')
+        // The first character is capitalised at render; the module stays verbatim (Task 19).
         await expect(descriptions).toHaveText(
-          (block.section.definitions ?? []).map((d) => d.description)
+          (block.section.definitions ?? []).map((d) => capitaliseFirst(d.description))
         )
         for (const dd of await descriptions.all()) await expect(dd).toBeVisible()
       }

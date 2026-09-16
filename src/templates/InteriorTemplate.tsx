@@ -5,7 +5,8 @@
  * blocks; contains no copy, no route strings and no media keys of its own.
  *
  * Grounds: the intro on bone; the body on bone with the sections the page
- * names in `grounds` on sand; the band on canopy. The sticky index appears
+ * names in `grounds` on sand — never two sand sections in a row (docs/02
+ * §Ground rhythm; `resolveGrounds`); the band on canopy. The sticky index appears
  * from 1024px on pages with five or more sections and floats in the left
  * column beside the whole body.
  *
@@ -20,7 +21,7 @@ import type { ReactNode } from 'react'
 import './InteriorTemplate.css'
 import type { Page } from '@/content/schemas'
 import { UI_INTERIOR } from '@/content/ui'
-import { hasStickyIndex, numeral, sectionsToIndex } from '@/lib/interior'
+import { hasStickyIndex, numeral, resolveGrounds, sectionsToIndex } from '@/lib/interior'
 import type { PrevNext } from '@/lib/prevNext'
 import {
   ContentSection,
@@ -65,6 +66,8 @@ export function InteriorTemplate({
 }: InteriorTemplateProps) {
   const indexed = hasStickyIndex(page.sections)
   const items = sectionsToIndex(page.sections)
+  // docs/02 §Ground rhythm: a sand section never directly follows another.
+  const sectionGrounds = resolveGrounds(page.sections, grounds)
 
   return (
     <main
@@ -94,7 +97,7 @@ export function InteriorTemplate({
             key={section.id}
             section={section}
             numeral={numeral(i + 1)}
-            ground={grounds?.[section.id] ?? 'light'}
+            ground={sectionGrounds[i]}
             plates={plates}
             figure={figures?.[section.id]}
             body={bodies?.[section.id]}

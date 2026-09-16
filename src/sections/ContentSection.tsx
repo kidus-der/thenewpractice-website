@@ -20,6 +20,7 @@ import type { ReactNode } from 'react'
 import './ContentSection.css'
 import type { MediaKey } from '@/content/media'
 import type { Section, Signature } from '@/content/schemas'
+import { capitaliseFirst } from '@/lib/interior'
 import { Reveal } from '@/motion/Reveal'
 import { HairlineList } from './HairlineList'
 import { PlateFigure } from './PlateFigure'
@@ -64,6 +65,8 @@ function Paragraphs({ items, register, className }: ProseProps) {
   )
 }
 
+/** Descriptions split from `Name: description` lines begin lowercase; the first
+ *  character is capitalised at render only (ledger, Task 13 triage). */
 function Definitions({ items }: { items: Section['definitions'] }) {
   if (!items?.length) return null
   return (
@@ -71,7 +74,7 @@ function Definitions({ items }: { items: Section['definitions'] }) {
       {items.map((d) => (
         <Reveal key={d.term} className="content-section__definition">
           <dt className="t-d3">{d.term}</dt>
-          <dd className="t-body">{d.description}</dd>
+          <dd className="t-body">{capitaliseFirst(d.description)}</dd>
         </Reveal>
       ))}
     </dl>

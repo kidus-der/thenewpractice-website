@@ -19,7 +19,7 @@ import './ResidencesTemplate.css'
 import type { MediaKey } from '@/content/media'
 import type { ResidencesPage } from '@/content/schemas'
 import { UI_RESIDENCES } from '@/content/ui'
-import { numeral } from '@/lib/interior'
+import { numeral, resolveGrounds } from '@/lib/interior'
 import type { PrevNext } from '@/lib/prevNext'
 import { discretionStatement, residencePlates } from '@/lib/residences'
 import { Reveal } from '@/motion/Reveal'
@@ -102,6 +102,8 @@ export function ResidencesTemplate({
   notice,
 }: ResidencesTemplateProps) {
   const plates = residencePlates(page.plates, carousel)
+  // docs/02 §Ground rhythm: a sand section never directly follows another.
+  const sectionGrounds = resolveGrounds(page.sections, grounds)
   const sectionCount = page.sections.length
   const carouselNumeral = numeral(sectionCount + 1)
   const amenitiesNumeral = numeral(sectionCount + 2)
@@ -128,7 +130,7 @@ export function ResidencesTemplate({
           key={section.id}
           section={section}
           numeral={numeral(i + 1)}
-          ground={grounds?.[section.id] ?? 'light'}
+          ground={sectionGrounds[i]}
         />
       ))}
 

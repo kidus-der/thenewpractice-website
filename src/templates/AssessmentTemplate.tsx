@@ -94,7 +94,7 @@ export function AssessmentTemplate({
               {instruction}
             </Reveal>
           </div>
-          <div className="assessment-questions__form">
+          <div className="p-list assessment-questions__form">
             <AssessmentForm assessment={assessment} consultation={consultation} enquire={enquire} />
           </div>
         </div>
