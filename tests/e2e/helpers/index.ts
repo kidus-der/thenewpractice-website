@@ -1,6 +1,6 @@
 export { expect, test } from './fixtures'
 export { expectNoAxeViolations } from './axe'
-export { expectNoConsoleErrors } from './console'
+export { expectNoConsoleErrors, expectNoMissingMotionTargets } from './console'
 export { settleMotion } from './settleMotion'
 export { revealAll } from './revealAll'
 export { tabKey } from './keys'

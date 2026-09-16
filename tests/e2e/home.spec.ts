@@ -21,6 +21,7 @@ import {
   expect,
   expectNoAxeViolations,
   expectNoConsoleErrors,
+  expectNoMissingMotionTargets,
   isProjectName,
   revealAll,
   screenshotRoute,
@@ -52,6 +53,26 @@ const LCP_BUDGET_MS = 2500
 const LCP_AFTER_FCP_MAX_MS = 250
 
 type LcpSummary = Readonly<{ tag: string | null; url: string; size: number; time: number }>
+
+type SampledWindow = Window & { __heroEyebrowOpacity?: number[] }
+
+/**
+ * Installed before navigation: from the frame `data-veil="done"` lands, the
+ * eyebrow's computed opacity is sampled every frame. The post-veil fade is a
+ * `from` tween, so the samples must open below 1 and close at 1 (docs/04 §4).
+ */
+function sampleEyebrowOpacity(): void {
+  const samples: number[] = []
+  ;(window as SampledWindow).__heroEyebrowOpacity = samples
+  const tick = () => {
+    if (document.documentElement.dataset.veil === 'done') {
+      const eyebrow = document.querySelector('.hero__eyebrow')
+      if (eyebrow) samples.push(Number(getComputedStyle(eyebrow).opacity))
+    }
+    requestAnimationFrame(tick)
+  }
+  requestAnimationFrame(tick)
+}
 
 /** The last buffered largest-contentful-paint entry, or null when none was recorded. */
 async function readLcp(page: import('@playwright/test').Page): Promise<LcpSummary | null> {
@@ -288,6 +309,30 @@ test.describe('home', () => {
     await expect(enquire).toHaveCount(1)
     // the page closes here: no repeated enquire band before the footer
     await expect(page.locator('main .enquire-band')).toHaveCount(0)
+  })
+
+  test('fades the eyebrow and the cue in after the veil, every tween target found', async ({
+    page,
+  }, info) => {
+    // The load in beforeEach: no tween was built against a selector that matched nothing.
+    expectNoMissingMotionTargets(page)
+    if (info.project.name === PROJECTS.reducedMotion) return // no entrance under reduced motion
+
+    // A second cold load, with the veil's session flag cleared so it plays
+    // again and the words wait for `veil:done` (Task 21b).
+    await page.evaluate(() => sessionStorage.clear())
+    await page.addInitScript(sampleEyebrowOpacity)
+    await page.goto(ROUTE)
+    await settleMotion(page)
+    const samplesOf = () =>
+      page.evaluate(() => (window as SampledWindow).__heroEyebrowOpacity ?? [])
+    await expect.poll(async () => (await samplesOf()).at(-1), { timeout: 10_000 }).toBe(1)
+    const samples = await samplesOf()
+    expect(Math.min(...samples), 'the eyebrow opened below full opacity').toBeLessThan(1)
+    await expect
+      .poll(() => page.locator('.hero__cue').evaluate((el) => getComputedStyle(el).opacity))
+      .toBe('1')
+    expectNoMissingMotionTargets(page)
   })
 
   test('renders no audio toggle while the client has no recording', async ({ page }) => {
