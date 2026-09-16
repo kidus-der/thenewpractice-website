@@ -1,13 +1,11 @@
 /**
  * 03 — Who We Help (docs/05 §T1, §Reusable blocks "Hairline list"). The
  * client's sentence, then the twelve conditions as a hairline two-column
- * list on sand; every row is a link to the clinical services index. From
- * 1024px with a fine pointer a plate follows the pointer over the rows
- * (ConditionsList owns that); on touch the list stands alone. Server
- * component apart from the list.
+ * list on sand; every row is a link to the clinical services index. One
+ * travelling glow moves between the rows on pointer and focus
+ * (ConditionsList owns that). Server component apart from the list.
  */
 import './Conditions.css'
-import type { MediaKey } from '@/content/media'
 import type { Section } from '@/content/schemas'
 import { SectionHeader } from '@/components/SectionHeader'
 import { Reveal } from '@/motion/Reveal'
@@ -17,10 +15,9 @@ type Props = Readonly<{
   section: Section
   numeral: string
   href: string
-  plates: readonly MediaKey[]
 }>
 
-export function Conditions({ section, numeral, href, plates }: Props) {
+export function Conditions({ section, numeral, href }: Props) {
   const headingId = `${section.id}-title`
   return (
     <section
@@ -42,7 +39,7 @@ export function Conditions({ section, numeral, href, plates }: Props) {
       </div>
 
       <div className="shell">
-        <ConditionsList items={section.list ?? []} href={href} plates={plates} />
+        <ConditionsList items={section.list ?? []} href={href} />
       </div>
     </section>
   )

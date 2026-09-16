@@ -4,10 +4,11 @@
  * Every project: the client's title as the only h1, the section headings in
  * document order, the triad, the twelve conditions as links, the five
  * pillars, the manifesto, the founder block, a clean console, axe scoped to
- * main, and a full-page capture after a reveal pass. Desktop: the poster is
- * the largest contentful paint, the loop plays over it, the gradient mounts,
- * the hover plate follows the pointer. Reduced motion: poster only, no
- * video, no pin, no plate.
+ * main, and a full-page capture after a reveal pass. Every project: one
+ * travelling glow follows keyboard focus over the conditions. Desktop: the
+ * poster is the largest contentful paint, the loop plays over it, the
+ * gradient mounts, the glow follows the pointer. Reduced motion: poster
+ * only, no video, no pin, the glow placed rather than moved.
  */
 import { BRAND } from '../../src/content/brand'
 import { MEDIA, VIDEO } from '../../src/content/media'
@@ -17,13 +18,18 @@ import { UI_HOME } from '../../src/content/ui'
 import { homeSections, triadLines } from '../../src/lib/home'
 import {
   AMBIENT_GRADIENT_EXPECTED,
+  GLOW,
+  GLOW_SETTLE_MS,
   PROJECTS,
+  REDUCED_SETTLE_MS,
   expect,
   expectNoAxeViolations,
   expectNoConsoleErrors,
   expectNoMissingMotionTargets,
+  glowTranslate,
   isProjectName,
   revealAll,
+  rowOffset,
   screenshotRoute,
   settleMotion,
   test,
@@ -37,7 +43,10 @@ const TRIAD = triadLines(SECTIONS.statement.subtitle ?? '')
 const CONDITIONS = SECTIONS.conditions.list ?? []
 const PILLARS = (SECTIONS.philosophy.definitions ?? []).map((d) => d.term)
 const H2_TITLES = HOME.sections.map((s) => s.title).filter((t): t is string => Boolean(t))
-const PLATE_PROJECTS: readonly string[] = [PROJECTS.desktop, PROJECTS.wide, PROJECTS.webkit]
+/** Where a pointer hovers the rows; the keyboard part of the glow test runs everywhere. */
+const HOVER_PROJECTS: readonly string[] = [PROJECTS.desktop, PROJECTS.wide, PROJECTS.webkit]
+const CONDITIONS_GLOW = `.conditions__wrap ${GLOW}`
+const CONDITION_ROWS = '.conditions__row'
 const INDEX_PROJECTS: readonly string[] = [
   PROJECTS.desktop,
   PROJECTS.wide,
@@ -250,19 +259,87 @@ test.describe('home', () => {
     expect(new Set(hrefs)).toEqual(new Set([routes.clinicalServices]))
   })
 
-  test('shows the hover plate on a fine-pointer desktop only', async ({ page }, info) => {
-    const plate = page.locator('.conditions__wrap .hover-plate')
-    if (!PLATE_PROJECTS.includes(info.project.name)) {
-      await expect(plate).toHaveCount(0)
-      return
+  test('moves one travelling glow between the condition rows, no image anywhere', async ({
+    page,
+  }, info) => {
+    const glow = page.locator(CONDITIONS_GLOW)
+    await expect(glow).toHaveCount(1)
+    await expect(glow).toHaveAttribute('aria-hidden', 'true')
+    await expect(glow).toHaveCSS('opacity', '0')
+    await expect(page.locator('.conditions img, .conditions .hover-plate')).toHaveCount(0)
+
+    const rows = page.locator(CONDITION_ROWS)
+    const third = rows.nth(2)
+    await third.scrollIntoViewIfNeeded()
+
+    // Keyboard, every project: focus takes the glow to the row.
+    await third.getByRole('link').focus()
+    await expect(glow).toHaveAttribute('data-row', '2')
+    await expect(third).toHaveAttribute('data-active', 'true')
+    const thirdAt = await third.evaluate(rowOffset)
+    if (info.project.name === PROJECTS.reducedMotion) {
+      // Placed by gsap.set in the focus commit, with no transition to wait on.
+      await expect
+        .poll(() => glow.evaluate(glowTranslate), { timeout: REDUCED_SETTLE_MS })
+        .toEqual(thirdAt)
+      const transition = await glow.evaluate((el) => getComputedStyle(el).transitionDuration)
+      expect(parseFloat(transition)).toBeLessThanOrEqual(0.01)
+      await expect(glow).toHaveCSS('opacity', '1')
+    } else {
+      await expect
+        .poll(() => glow.evaluate(glowTranslate), { timeout: GLOW_SETTLE_MS })
+        .toEqual(thirdAt)
+      await expect.poll(() => glow.evaluate((el) => getComputedStyle(el).opacity)).toBe('1')
     }
-    const row = page.locator('.conditions__link').nth(2)
-    await row.scrollIntoViewIfNeeded()
-    await row.hover()
-    await expect(plate).toHaveAttribute('data-shown', 'true')
-    await expect(plate.locator('.hover-plate__frame.is-active img')).toHaveCount(1)
+
+    // Tab to the next row: the same element travels there.
+    await page.keyboard.press('Tab')
+    await expect(glow).toHaveAttribute('data-row', '3')
+    await expect(rows.nth(3)).toHaveAttribute('data-active', 'true')
+    await expect(third).not.toHaveAttribute('data-active', 'true')
+    await expect
+      .poll(() => glow.evaluate(glowTranslate), { timeout: GLOW_SETTLE_MS })
+      .toEqual(await rows.nth(3).evaluate(rowOffset))
+
+    if (!HOVER_PROJECTS.includes(info.project.name)) return
+
+    // Pointer, fine-pointer desktops: hover row three, then row seven; the
+    // glow's transform follows over --d-base and the tick marks the row.
+    // Focus holds the glow, so the row lets go of it before the pointer starts.
+    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur())
     await page.mouse.move(0, 0)
-    await expect(plate).toHaveAttribute('data-shown', 'false')
+    await expect.poll(() => glow.evaluate((el) => getComputedStyle(el).opacity)).toBe('0')
+    await third.hover()
+    await expect(glow).toHaveAttribute('data-row', '2')
+    await expect
+      .poll(() => glow.evaluate(glowTranslate), { timeout: GLOW_SETTLE_MS })
+      .toEqual(thirdAt)
+    const seventh = rows.nth(6)
+    await seventh.hover()
+    await expect(glow).toHaveAttribute('data-row', '6')
+    await expect(seventh).toHaveAttribute('data-active', 'true')
+    const seventhAt = await seventh.evaluate(rowOffset)
+    expect(seventhAt.y).toBeGreaterThan(thirdAt.y)
+    await expect
+      .poll(() => glow.evaluate(glowTranslate), { timeout: GLOW_SETTLE_MS })
+      .toEqual(seventhAt)
+    const tick = await glow.evaluate((el) => {
+      const after = getComputedStyle(el, '::after')
+      return { width: parseFloat(after.width), color: after.backgroundColor }
+    })
+    const brass = await page.evaluate(() => {
+      const probe = document.createElement('span')
+      probe.style.color = 'var(--accent)'
+      document.body.append(probe)
+      const color = getComputedStyle(probe).color
+      probe.remove()
+      return color
+    })
+    expect(tick.width).toBeGreaterThan(0)
+    expect(tick.color).toBe(brass)
+    // Leaving the list eases the glow out.
+    await page.mouse.move(0, 0)
+    await expect.poll(() => glow.evaluate((el) => getComputedStyle(el).opacity)).toBe('0')
   })
 
   test('sets the five pillars beside a sticky index from 1024px', async ({ page }, info) => {
