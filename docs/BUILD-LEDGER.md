@@ -47,7 +47,7 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 18 | done | 11 | Remaining T2 pages: `/our-process`, `/a-personal-message`, `/fees`, `/privacy`, `/terms` |
 | 18b | done | 12 | Interactive self-assessment scorer → `/self-assessment/[slug]` × 10 |
 | 19 | done | 13, 14, 15, 16, 17, 18, 18b | Cross-template hardening: viewports, 4× throttle traces, reduced motion, keyboard, axe, Safari |
-| 20 | doing | 19 | Performance budgets: Lighthouse, image sizes, font preload, bundle audit |
+| 20 | done | 19 | Performance budgets: Lighthouse, image sizes, font preload, bundle audit |
 | 20b | doing | 19 | Content provenance fixes from docs/CONTENT-PROVENANCE-AUDIT.md (no invented text ships) |
 | 21 | todo | 20, 20b, 6 | Staging deploy, live smoke test, `HANDOFF.md` |
 
@@ -572,3 +572,9 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **Verification:** `npm run verify` (lint, typecheck, `vitest run --coverage`, build) green — see the report for the run; `node scripts/check-content.ts` 11/11; `npm run lighthouse` output in the report (assertions fail as recorded above, by design); full `npm run e2e` on five projects against the dev server: **1419 passed / 0 failed / 146 project-scoped skips in 12.9 min** (`E2E_BASE_URL=http://localhost:3313 npm run e2e`, five projects, 4 workers) — the one clean full run Task 19 asked for on the merged tree, no re-runs needed.
 - **For Task 21:** re-run `npm run lighthouse` against the live URL and the `x-vercel-cache` check above; the two `// known` misses (treatment and contact LCP, and the five sub-90 scores) are the gate's state until the owner decides on the lead reveal and the veil; repeat the gradient's CSP capture (Task 19's note); the `index-01` frame decision.
 - **Open questions for the owner:** swap the `mask` variant onto the lead paragraphs (the LCP fix); shorten or gate the preloader veil on slow devices (the Speed Index cost); replace `index-01` or accept 136–400 kB for that one plate; schedule `LazyMotion` (the last 25–30 kB gzip lever) or accept ≈ 250 kB gzip as the site's floor and amend docs/09 §1.
+
+### Main session — triage of Task 20 (2026-09-15)
+
+- Accepted and merged (`task/20-performance` → `main`, no conflicts); verify green after `npm ci` (314 tests, 93.0% statements under Vitest 5's counting, 52 pages). Shared first-load JS down ~90 KB gzip on every route; Zod ships only on `/contact`; 0 long tasks on the three 4× traces.
+- Decisions: Task 21 makes the one-line LCP fix (lead paragraphs in `PageIntro` and the enquiry letter use the `mask` reveal so Chromium credits them at first paint), re-runs `npm run lighthouse`, and records the result; the preloader veil stays as designed (the Speed Index cost is the entry moment — owner's call, listed in the handoff); `index-01` stays for now with a swap candidate named in the handoff; `LazyMotion` and the 160 KB intent go to the handoff as post-launch options; the docs/09 intent is amended to ≈ 250 KB.
+- Task 21 waits on Task 20b (provenance fixes) so the deploy carries no unsourced text.
