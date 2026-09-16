@@ -22,8 +22,8 @@ import { cn } from '@/lib/cn'
 import { gsap } from '@/motion/gsap'
 import { D, E } from '@/motion/tokens'
 
-/** The plate is clamped to 240px wide (HoverPlate.css); next/image needs no more. */
-const PLATE_SIZES = '240px'
+/** Mirrors `clamp(160px, 14vw, 240px)` in HoverPlate.css: 14vw reaches 160px at 1143px and 240px at 1715px. */
+const PLATE_SIZES = '(min-width: 1715px) 240px, (min-width: 1143px) 14vw, 160px'
 
 type Props = Readonly<{
   /** The positioned ancestor the plate moves within and listens on. */
