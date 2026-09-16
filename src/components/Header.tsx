@@ -25,12 +25,17 @@
  * (--z-overlay + 1) so the trigger stays reachable; the moment a menu link is
  * clicked it drops back under, so the route curtain covers header and
  * overlay together and the page changes beneath one continuous canopy.
+ *
+ * The navigation arrives as a prop from the layout (`liveNav()`): on
+ * production the PLACEHOLDER routes are absent, and only the server knows
+ * which deployment this is (src/lib/placeholderRoutes.ts).
  */
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { BRAND } from '@/content/brand'
-import { NAV, UI_NAV, isActiveRoute, routes } from '@/content/nav'
+import { UI_NAV, isActiveRoute, routes } from '@/content/nav'
+import type { Nav } from '@/content/schemas'
 import { gsap, ScrollTrigger } from '@/motion/gsap'
 import { startScroll, stopScroll } from '@/motion/SmoothScroll'
 import { useMediaQuery } from '@/motion/useMediaQuery'
@@ -105,7 +110,7 @@ function useScrollLock(locked: boolean) {
   }, [locked])
 }
 
-export function Header() {
+export function Header({ nav }: Readonly<{ nav: Nav }>) {
   const ref = useRef<HTMLElement>(null)
   const trigger = useRef<HTMLButtonElement>(null)
   const pathname = usePathname()
@@ -162,7 +167,7 @@ export function Header() {
           <div className="site-header__right">
             <nav className="site-header__nav" aria-label={UI_NAV.ariaLabels.primary}>
               <ul className="site-header__links">
-                {NAV.primary.map((item) => (
+                {nav.primary.map((item) => (
                   <li key={item.href}>
                     <Link
                       href={item.href}
@@ -174,7 +179,7 @@ export function Header() {
                   </li>
                 ))}
               </ul>
-              {NAV.utility.map((item) => (
+              {nav.utility.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -212,6 +217,7 @@ export function Header() {
 
       <NavOverlay
         id={overlayId}
+        nav={nav}
         open={open}
         pathname={pathname}
         headerRef={ref}

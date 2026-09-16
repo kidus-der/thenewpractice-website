@@ -3,9 +3,11 @@
  *
  * Plain objects, rendered by <JsonLd />. Every fact comes from the content
  * layer: the organisation is what brand.ts says it is, a person is what
- * team.ts says they are. Nothing here rates, reviews, promises an outcome or
- * names a speciality the client has not claimed. `FAQPage` is deliberately
- * absent: nothing in the content is a question and its answer.
+ * team.ts says they are. Nothing here rates, reviews, promises an outcome,
+ * names a speciality or classifies the practice as a kind of business the
+ * client has not claimed: the types are `Organization` and `WebPage`, never
+ * the medical subtypes (docs/CONTENT-PROVENANCE-AUDIT.md A6–A8). `FAQPage`
+ * is deliberately absent: nothing in the content is a question and its answer.
  */
 import { BRAND } from '@/content/brand'
 import { teamHref } from '@/content/nav'
@@ -30,18 +32,10 @@ export type WebPageInput = {
   breadcrumb?: readonly BreadcrumbItem[]
 }
 
-export type MedicalWebPageInput = WebPageInput & {
-  /** The condition group or service, in the client's words (the service title). */
-  about: string
-}
-
 const ORGANIZATION_FRAGMENT = '#organization'
 const WEBSITE_FRAGMENT = '#website'
 const LOGO_PATH = '/icon.svg'
 const IMAGE_PATH = '/opengraph-image'
-const ORGANIZATION_TYPES = ['Organization', 'MedicalBusiness'] as const
-/** The one speciality the client's own copy supports (a consulting psychiatrist on the team). */
-const MEDICAL_SPECIALTY = 'Psychiatric'
 
 const siteUrl = (override?: string): string => override ?? liveSeoContext().siteUrl
 const organizationId = (origin: string): string => `${origin}/${ORGANIZATION_FRAGMENT}`
@@ -64,7 +58,7 @@ const websiteRef = (origin: string): JsonLdNode => ({
 export function organization(origin: string = siteUrl()): JsonLdNode {
   return {
     '@context': SCHEMA_CONTEXT,
-    '@type': [...ORGANIZATION_TYPES],
+    '@type': 'Organization',
     '@id': organizationId(origin),
     name: BRAND.name,
     slogan: BRAND.tagline,
@@ -85,7 +79,6 @@ export function organization(origin: string = siteUrl()): JsonLdNode {
       honorificSuffix: BRAND.founder.credentials,
       jobTitle: BRAND.founder.role,
     },
-    medicalSpecialty: MEDICAL_SPECIALTY,
   }
 }
 
@@ -154,18 +147,9 @@ const pageNode = (type: string, input: WebPageInput, origin: string): JsonLdNode
   }
 }
 
-/** Any page. */
+/** Any page, the service pages included. */
 export const webPage = (input: WebPageInput, origin: string = siteUrl()): JsonLdNode =>
   pageNode('WebPage', input, origin)
-
-/** A service page: names what the page is about and nothing more. */
-export const medicalWebPage = (
-  input: MedicalWebPageInput,
-  origin: string = siteUrl()
-): JsonLdNode => ({
-  ...pageNode('MedicalWebPage', input, origin),
-  about: { '@type': 'Thing', name: input.about },
-})
 
 const LINE_SEPARATOR = String.fromCodePoint(0x2028)
 const PARAGRAPH_SEPARATOR = String.fromCodePoint(0x2029)

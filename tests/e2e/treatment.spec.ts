@@ -6,7 +6,7 @@
  * numerals equal to `serviceBlocks()`; list counts equal to the content;
  * definitions rendered open with nothing expandable; three related rows in
  * wrap-around order; the rail to the neighbouring services; the JSON-LD
- * parsing with a MedicalWebPage about the service and no rating or review;
+ * parsing with a plain WebPage for the service, no medical type, no rating or review;
  * axe scoped to <main>; full-page captures of two fixtures after a reveal
  * pass. Desktop project only: every one of the eleven routes answers 200
  * with its title as the h1.
@@ -201,17 +201,18 @@ for (const slug of FIXTURE_SLUGS) {
       )
     })
 
-    test('carries a MedicalWebPage about the service and makes no claim', async ({ page }) => {
+    test('carries a plain WebPage for the service and makes no claim', async ({ page }) => {
       const raw = await page.locator('script[type="application/ld+json"]').first().textContent()
       if (!raw) throw new Error('no JSON-LD script')
       const nodes = JSON.parse(raw) as JsonLdNode[]
       expect(Array.isArray(nodes)).toBe(true)
-      const medical = nodes.find((n) => n['@type'] === 'MedicalWebPage')
-      expect(medical).toMatchObject({
-        name: `${fixture.title} — The New Practice`,
-        about: { '@type': 'Thing', name: fixture.title },
-      })
-      expect(String(medical?.url)).toMatch(new RegExp(`${route}$`))
+      // No medical subtype and no `about`: the page is classified as nothing
+      // the client has not claimed (docs/CONTENT-PROVENANCE-AUDIT.md A6–A8).
+      const webPage = nodes.find((n) => n['@type'] === 'WebPage')
+      expect(webPage).toMatchObject({ name: `${fixture.title} — The New Practice` })
+      expect(webPage).not.toHaveProperty('about')
+      expect(String(webPage?.url)).toMatch(new RegExp(`${route}$`))
+      expect(raw).not.toMatch(/Medical|medicalSpecialty/)
       const crumbs = nodes.find((n) => n['@type'] === 'BreadcrumbList')
       expect(crumbs).toMatchObject({
         itemListElement: [

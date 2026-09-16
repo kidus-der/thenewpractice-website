@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { NAV, routes } from '@/content/nav'
+import { liveNav } from '@/lib/placeholderRoutes'
 import { prevNextFor, readingOrder } from './prevNext'
 
 describe('readingOrder', () => {
@@ -22,6 +23,23 @@ describe('readingOrder', () => {
       routes.fees,
       routes.clinicalServices,
     ])
+  })
+
+  it('skips residences on production, so Team reads on to Self-Assessment', () => {
+    const order = readingOrder(liveNav('production'))
+    const hrefs = order.map((item) => item.href)
+    expect(hrefs).not.toContain(routes.residences)
+    const { prev, next } = prevNextFor(routes.team, order)
+    expect(prev?.href).toBe(routes.clinicalServices)
+    expect(next?.href).toBe(routes.selfAssessment)
+    expect(prevNextFor(routes.residences, order)).toEqual({})
+  })
+
+  it('keeps residences between Team and Self-Assessment on staging', () => {
+    const order = readingOrder(liveNav('staging'))
+    const { prev, next } = prevNextFor(routes.residences, order)
+    expect(prev?.href).toBe(routes.team)
+    expect(next?.href).toBe(routes.selfAssessment)
   })
 
   it('leaves the contact and legal groups out', () => {

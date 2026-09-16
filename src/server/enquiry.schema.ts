@@ -13,8 +13,12 @@ export const ENQUIRY_MIN_ELAPSED_MS = 3_000
 /** A form left open longer than this is re-rendered rather than trusted. */
 export const ENQUIRY_MAX_AGE_MS = 2 * 60 * 60 * 1_000
 
-/** Digits, spaces and the usual punctuation, with an optional leading plus: loose E.164. */
-const TELEPHONE = /^\+?[\d\s().-]{6,24}$/
+/**
+ * A leading plus and country code, then digits, spaces and the usual
+ * punctuation: loose E.164. The plus is required because the field's error
+ * message asks for the country code (provenance audit, B6).
+ */
+const TELEPHONE = /^\+\d[\d\s().-]{5,23}$/
 const DIGITS = /^\d+$/
 
 const trimmed = z.string().trim()

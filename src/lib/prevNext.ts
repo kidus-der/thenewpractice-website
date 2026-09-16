@@ -4,11 +4,14 @@
  * orders it, with the footer's secondary pages slotted in after the primary
  * page that precedes them in their footer group — so the Practice group reads
  * About → Our Process → A Personal Message → Fees (ledger, Task 18 triage).
+ * The order is built from the deployment's navigation, so on production a
+ * PLACEHOLDER route is not a neighbour of anything (src/lib/placeholderRoutes.ts).
  * The rail never spells a route or a label of its own.
  */
-import { NAV, routes } from '@/content/nav'
-import type { NavItem } from '@/content/schemas'
+import { routes } from '@/content/nav'
+import type { Nav, NavItem } from '@/content/schemas'
 import { ROUTE_SEO } from '@/content/seo'
+import { liveNav } from '@/lib/placeholderRoutes'
 
 export type PrevNext = Readonly<{ prev?: NavItem; next?: NavItem }>
 
@@ -39,10 +42,10 @@ const weaveGroup = (order: readonly NavItem[], items: readonly NavItem[]): reado
   }, order)
 
 /** Home, the primary routes in navigation order, the footer's secondary pages woven in. */
-export const readingOrder = (): readonly NavItem[] =>
-  NAV.footer.reduce<readonly NavItem[]>(
+export const readingOrder = (nav: Nav = liveNav()): readonly NavItem[] =>
+  nav.footer.reduce<readonly NavItem[]>(
     (order, group) => weaveGroup(order, group.items),
-    [{ label: ROUTE_SEO.home.name, href: routes.home }, ...NAV.primary]
+    [{ label: ROUTE_SEO.home.name, href: routes.home }, ...nav.primary]
   )
 
 /** The neighbours of a route in reading order; an unknown route has none. */

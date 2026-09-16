@@ -121,6 +121,20 @@ describe('ROUTE_SEO', () => {
     expect(SEO_DEFAULTS.siteName).not.toContain('™')
   })
 
+  it('marks the three placeholder routes and no other', () => {
+    for (const [key, seo] of Object.entries(ROUTE_SEO)) {
+      const path = routes[key as keyof typeof routes]
+      expect(seo.description.startsWith('PLACEHOLDER — ')).toBe(NOINDEX_ROUTES.has(path))
+    }
+  })
+
+  it('never names the founder or a count in a description of its own', () => {
+    for (const description of ourDescriptions) {
+      expect(description).not.toContain(BRAND.founder.name)
+      expect(description).not.toMatch(/\b(Eleven|Ten|Fifteen|led by|stored)\b/)
+    }
+  })
+
   it("builds the home description from the client's own opening statement", () => {
     expect(SEO_DEFAULTS.description).toContain('We treat one client at a time.')
     expect(SEO_DEFAULTS.description.length).toBeLessThanOrEqual(DESCRIPTION_MAX)
@@ -156,10 +170,12 @@ describe('collection builders', () => {
     }
   })
 
-  it('names every assessment and keeps within the limit', () => {
+  it("names every assessment, then the document's scoring line, within the limit", () => {
     for (const assessment of ASSESSMENTS) {
       const seo = assessmentSeo(assessment)
-      expect(seo.description.startsWith(assessment.title)).toBe(true)
+      expect(seo.description).toBe(
+        `${assessment.title}. Scoring: Give yourself 1 point for each “yes” answer. Total score: 0–15.`
+      )
       expect(seo.description.length).toBeLessThanOrEqual(DESCRIPTION_MAX)
     }
   })
@@ -264,8 +280,9 @@ describe('sitemapEntries', () => {
     for (const entry of entries) expect(entry.lastModified).toBe(when)
   })
 
-  it('leaves out the noindex routes — the PLACEHOLDER legal stubs — by default', () => {
+  it('leaves out the noindex routes — the PLACEHOLDER residences and legal stubs — by default', () => {
     const urls = sitemapEntries(production, when).map((e) => e.url)
+    expect(NOINDEX_ROUTES.has(routes.residences)).toBe(true)
     expect(NOINDEX_ROUTES.has(routes.privacy)).toBe(true)
     expect(NOINDEX_ROUTES.has(routes.terms)).toBe(true)
     for (const path of NOINDEX_ROUTES) {
@@ -305,5 +322,7 @@ describe('buildLlmsText', () => {
     for (const path of NOINDEX_ROUTES) {
       expect(text).not.toContain(`](${canonicalUrl(production.siteUrl, path)})`)
     }
+    expect(text).not.toContain(routes.residences)
+    expect(text).not.toContain('PLACEHOLDER')
   })
 })

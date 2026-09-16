@@ -2,15 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { BRAND, TEAM } from '@/content'
 import { ADDRESS } from '@/content/seo'
-import {
-  breadcrumb,
-  itemList,
-  medicalWebPage,
-  organization,
-  person,
-  serializeJsonLd,
-  webPage,
-} from './jsonld'
+import { breadcrumb, itemList, organization, person, serializeJsonLd, webPage } from './jsonld'
 
 const origin = 'https://www.example.health'
 
@@ -20,10 +12,10 @@ const uncredentialed = TEAM.find((m) => !m.credentials)
 describe('organization', () => {
   const node = organization(origin)
 
-  it('is an Organization and MedicalBusiness with only the facts in brand.ts', () => {
+  it('is a plain Organization with only the facts in brand.ts', () => {
     expect(node).toMatchObject({
       '@context': 'https://schema.org',
-      '@type': ['Organization', 'MedicalBusiness'],
+      '@type': 'Organization',
       '@id': `${origin}/#organization`,
       name: BRAND.name,
       slogan: BRAND.tagline,
@@ -38,8 +30,12 @@ describe('organization', () => {
         addressCountry: ADDRESS.country,
       },
       founder: { '@type': 'Person', name: BRAND.founder.name, jobTitle: BRAND.founder.role },
-      medicalSpecialty: 'Psychiatric',
     })
+  })
+
+  it('claims no speciality and no medical business type the client did not (audit A6, A7)', () => {
+    const json = JSON.stringify(node)
+    expect(json).not.toMatch(/medicalSpecialty|MedicalBusiness|Medical/)
   })
 
   it('makes no rating, review or outcome claim', () => {
@@ -95,7 +91,7 @@ describe('breadcrumb', () => {
   })
 })
 
-describe('webPage and medicalWebPage', () => {
+describe('webPage', () => {
   const input = {
     title: 'About — The New Practice',
     description: 'How the practice began.',
@@ -125,16 +121,11 @@ describe('webPage and medicalWebPage', () => {
     expect(webPage({ ...input, breadcrumb: undefined }, origin)).not.toHaveProperty('breadcrumb')
   })
 
-  it('builds a MedicalWebPage that names its subject and claims nothing else', () => {
-    const node = medicalWebPage(
-      { ...input, path: '/clinical-services/eating-disorders', about: 'Eating Disorders' },
-      origin
-    )
-    expect(node).toMatchObject({
-      '@type': 'MedicalWebPage',
-      about: { '@type': 'Thing', name: 'Eating Disorders' },
-    })
-    expect(JSON.stringify(node)).not.toMatch(/outcome|success|cure|guarantee/i)
+  it('is a plain WebPage for a service too, with no medical type or subject (audit A8)', () => {
+    const node = webPage({ ...input, path: '/clinical-services/eating-disorders' }, origin)
+    expect(node['@type']).toBe('WebPage')
+    expect(node).not.toHaveProperty('about')
+    expect(JSON.stringify(node)).not.toMatch(/Medical|outcome|success|cure|guarantee/)
   })
 })
 

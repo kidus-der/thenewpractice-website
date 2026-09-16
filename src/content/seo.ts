@@ -1,10 +1,11 @@
 /**
  * SEARCH METADATA — docs/09-performance-accessibility.md §Search and AI visibility.
  *
- * Titles and descriptions are ours, written in the brand voice (docs/01 §Voice;
- * CONTENT-GAPS G7): short declaratives, British spelling, none of the
- * forbidden words, no claims the client's copy does not make. Where a sentence
- * of the client's own copy says it better, that sentence is used verbatim.
+ * Titles are the page names. Every description is a sentence of the client's
+ * own document, verbatim (docs/CONTENT-PROVENANCE-AUDIT.md A9–A20; the line
+ * cited beside each), or is prefixed `PLACEHOLDER — ` where the page itself is
+ * a stub. content.checks.ts holds the guard: a description that is neither is
+ * a failing build. Nothing here states a fact the document does not.
  *
  * The ™ never appears in metadata: the ledger's rule is once per page at most,
  * in the hero wordmark and the footer lockup, never in running text. A <title>
@@ -137,51 +138,59 @@ const route = (
   ...overrides,
 })
 
-const founderLine = `${BRAND.founder.name}, ${BRAND.founder.role.replace('&', 'and')}`
+/** Marks the three routes whose copy the client has not yet supplied (G1, G3). */
+const PLACEHOLDER = 'PLACEHOLDER — '
 
 export const ROUTE_SEO: Readonly<Record<RouteKey, RouteSeo>> = {
   home: route('Home', SEO_DEFAULTS.description, { title: SEO_DEFAULTS.title, ogTitle: null }),
-  about: route(
-    'About',
-    'How The New Practice began, from The Kusnacht Practice in 2007 to Puerto Aventuras today. The founder’s message, the ceiba mark and our principles.'
-  ),
+  // l.126 — the About page's own header.
+  about: route('About', 'A New Standard in Private Behavioural Healthcare'),
+  // l.254 — the first line of Our Process.
   process: route(
     'Our Process',
-    'From the first telephone call to after care: assessment, a programme designed for one person, a live-in Lead Clinician, and the return home.'
+    'For many people, making the first telephone call is the most difficult step in building a new life.'
   ),
+  // l.1269 — from the founder's letter.
   personalMessage: route(
     'A Personal Message',
-    `A personal message from ${founderLine} of The New Practice, for anyone considering treatment.`
+    'Sometimes a single conversation can change the direction of a life.'
   ),
+  // l.1285, second sentence — the Cost section.
   fees: route(
     'Fees',
-    'The all-inclusive weekly fee for treatment in Puerto Aventuras, and how the cost of treatment at home or elsewhere in the world is set.'
+    'Costs for treatment in your home or another clinical residence in the world will be provided on a case-by-case basis.'
   ),
+  // PLACEHOLDER page (G1); the sentence is l.291.
   residences: route(
     'Residences',
-    'A private clinical residence in Puerto Aventuras, on the Riviera Maya, where treatment and everyday life exist together.'
+    `${PLACEHOLDER}On arrival, you will be welcomed into your private residence in Puerto Aventuras.`
   ),
+  // l.404 — the Clinical Services subtitle.
   clinicalServices: route(
     'Clinical Services',
-    'Eleven clinical services, from addiction and trauma to eating disorders, executive burnout, somatic therapies, recovery management and the family program.'
+    'Individualized Treatment for Complex Human Problems'
   ),
+  // l.723 — the first line of Our Team.
   team: route(
     'Team',
-    `The clinical and operations team at The New Practice, led by ${founderLine}. One client. One team.`
+    'The quality of any treatment program is ultimately determined by the quality of the people delivering it.'
   ),
+  // l.954 — the Self-Assessment subtitle.
   selfAssessment: route(
     'Self-Assessment',
-    'Ten confidential self-assessments, from alcohol and drugs to work, technology, codependency and family history. Nothing you enter is stored.'
+    'Understanding Yourself Is the First Step Toward Recovery'
   ),
+  // l.1206, first sentence — the Contact page.
   contact: route(
     'Contact',
-    `Begin the conversation. Every enquiry is handled personally, in complete confidence, by ${founderLine}.`
+    'At The New Practice, every enquiry is handled personally, professionally, and with complete confidentiality.'
   ),
+  // PLACEHOLDER pages (G3): no policy or terms exist yet.
   privacy: route(
     'Privacy',
-    'How The New Practice handles the personal information of visitors and enquirers.'
+    `${PLACEHOLDER}How The New Practice handles the personal information of visitors and enquirers.`
   ),
-  terms: route('Terms', 'The terms on which The New Practice website is provided.'),
+  terms: route('Terms', `${PLACEHOLDER}The terms on which The New Practice website is provided.`),
 }
 
 // ---------------------------------------------------------------------------
@@ -203,9 +212,9 @@ export function teamSeo(member: TeamMember): RouteSeo {
   return route(member.name, description, { type: 'profile' })
 }
 
-/** A questionnaire page. The scorer keeps nothing (ledger, owner decisions). */
+/** The document's own scoring line, l.1020, verbatim; it follows every questionnaire. */
+const SCORING_LINE = 'Scoring: Give yourself 1 point for each “yes” answer. Total score: 0–15.'
+
+/** A questionnaire page: its title, then the client's scoring line. */
 export const assessmentSeo = (assessment: Assessment): RouteSeo =>
-  route(
-    assessment.title,
-    `${assessment.title}. Fifteen yes-or-no questions, scored here in confidence. Nothing you enter is stored.`
-  )
+  route(assessment.title, `${assessment.title}. ${SCORING_LINE}`)

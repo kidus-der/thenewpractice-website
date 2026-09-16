@@ -27,12 +27,17 @@ export type RouteKey = keyof typeof routes
 export type StaticRoute = (typeof routes)[RouteKey]
 
 /**
- * Routes kept out of the index and the sitemap while their copy is a
- * PLACEHOLDER stub (docs/CONTENT-GAPS.md G3). Each page also passes
- * `noIndex: true` to `buildMetadata()`. Remove a route from here when the
- * client's counsel supplies its text.
+ * Routes whose page is a PLACEHOLDER stub until the client supplies its copy
+ * (docs/CONTENT-GAPS.md G1, G3). Each page passes `noIndex: true` to
+ * `buildMetadata()`, none is in the sitemap or llms.txt, and on production
+ * none is linked from the navigation (src/lib/placeholderRoutes.ts). Remove a
+ * route from here when its text arrives.
  */
-export const NOINDEX_ROUTES: ReadonlySet<string> = new Set([routes.privacy, routes.terms])
+export const NOINDEX_ROUTES: ReadonlySet<string> = new Set([
+  routes.residences,
+  routes.privacy,
+  routes.terms,
+])
 
 export const serviceHref = (slug: string): string => `${routes.clinicalServices}/${slug}`
 export const teamHref = (slug: string): string => `${routes.team}/${slug}`

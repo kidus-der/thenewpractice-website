@@ -100,7 +100,8 @@ test.describe('about', () => {
   test('draws the mark and the two plates with content-layer alt text', async ({ page }) => {
     const ceiba = page.locator('.ceiba-figure svg.mark')
     await expect(ceiba).toHaveCount(1)
-    await expect(page.locator('.ceiba-figure figcaption')).toHaveText(UI_INTERIOR.ceibaCaption)
+    // No caption: nothing names the species or the Maya name (provenance audit, A1).
+    await expect(page.locator('.ceiba-figure figcaption')).toHaveCount(0)
 
     const images = page.locator('main img')
     await expect(images).toHaveCount(2)
