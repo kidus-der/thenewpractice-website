@@ -4,7 +4,9 @@
  *
  * Server component on canopy ground. Reads: the marquee (the site's one
  * permitted marquee, the only client code here), the sitemap from nav.ts,
- * the founder contact from brand.ts, the legal line, and the lockup — mark,
+ * the founder contact from brand.ts, the legal line (copyright and the
+ * confidentiality sentence; privacy and terms belong to the Legal column,
+ * ledger Task 8 triage), and the lockup — mark,
  * wordmark with the ™, tagline — alone at the very bottom, the way a
  * monograph ends on the publisher's device. Every string comes from the
  * content layer; the confidentiality line is the client's own sentence.
@@ -12,11 +14,12 @@
 import Link from 'next/link'
 import './Footer.css'
 import { BRAND } from '@/content/brand'
-import { NAV, routes } from '@/content/nav'
+import { NAV } from '@/content/nav'
 import { HOME } from '@/content/pages/home'
 import { UI_FOOTER } from '@/content/ui'
 import { Mark } from '@/components/Mark'
 import { Marquee } from '@/components/Marquee'
+import { mailHref, telHref } from '@/lib/contact'
 
 /**
  * "Every enquiry is handled with complete confidentiality." — the second
@@ -27,25 +30,9 @@ import { Marquee } from '@/components/Marquee'
 const CONFIDENTIALITY_SECTION = 'begin-the-conversation'
 const CONFIDENTIALITY_PARAGRAPH = 1
 
-const LEGAL_ROUTES: readonly string[] = [routes.privacy, routes.terms]
-
-/** tel: URIs carry digits and the leading plus only. */
-function telHref(phone: string): string {
-  return `tel:${phone.replace(/[^\d+]/g, '')}`
-}
-
-function mailHref(email: string): string {
-  return `mailto:${email}`
-}
-
 function confidentialityLine(): string | undefined {
   const section = HOME.sections.find((s) => s.id === CONFIDENTIALITY_SECTION)
   return section?.paragraphs[CONFIDENTIALITY_PARAGRAPH]
-}
-
-/** The privacy and terms links, with their labels as nav.ts spells them. */
-function legalLinks() {
-  return NAV.footer.flatMap((group) => group.items).filter((i) => LEGAL_ROUTES.includes(i.href))
 }
 
 function Sitemap() {
@@ -110,11 +97,6 @@ function Legal({ year }: { year: number }) {
         <span>
           {UI_FOOTER.copyright} {year} {BRAND.name}
         </span>
-        {legalLinks().map((item) => (
-          <Link className="link" href={item.href} key={item.href}>
-            {item.label}
-          </Link>
-        ))}
       </p>
       {note && <p className="site-footer__note">{note}</p>}
     </div>

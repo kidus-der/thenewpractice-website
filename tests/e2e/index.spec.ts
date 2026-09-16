@@ -187,7 +187,7 @@ for (const fixture of FIXTURES) {
     })
 
     test('shows no plate when no row has an image', async ({ page }) => {
-      await expect(page.locator('.index-plate')).toHaveCount(0)
+      await expect(page.locator('.hover-plate')).toHaveCount(0)
       await expect(page.locator('.index-list__thumb')).toHaveCount(0)
       await expect(page.locator('main img')).toHaveCount(0)
     })

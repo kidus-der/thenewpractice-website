@@ -62,31 +62,4 @@
   }
 }
 
-/* — the hover plate: 3:4, narrow, travelling on transform only — */
-.conditions__plate {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: var(--z-sticky);
-  width: clamp(160px, 14vw, 220px);
-  aspect-ratio: 3 / 4;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity var(--d-base) var(--e-out-expo);
-  will-change: transform;
-}
-.conditions__plate[data-shown='true'] {
-  opacity: 1;
-}
-.conditions__frame {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity var(--d-fast) var(--e-out-quart);
-}
-.conditions__frame.is-active {
-  opacity: 1;
-}
-.conditions__frame img {
-  height: 100%;
-}
+/* the hover plate is the shared HoverPlate (src/components/HoverPlate.css) */

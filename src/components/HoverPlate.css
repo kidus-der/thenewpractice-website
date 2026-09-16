@@ -1,0 +1,42 @@
+/* ==========================================================================
+   HOVER PLATE — co-located with HoverPlate.tsx, imported once by it.
+   The pointer-following 3:4 plate. GSAP writes `transform` for the pointer
+   position; the fixed offset from the pointer — to its right, centred on it —
+   is the `translate` property, which composes with it. Only transform and
+   opacity move. Tokens only; px for geometry per rule 4 as amended.
+   ========================================================================== */
+
+.hover-plate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: var(--z-sticky);
+  width: clamp(160px, 14vw, 240px);
+  aspect-ratio: 3 / 4;
+  translate: var(--s-5) -50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--d-base) var(--e-out-expo);
+  /* the one element on the page that moves with the pointer; held on its own
+     layer for the whole time it exists (docs/04 §8 tolerates this class) */
+  will-change: transform;
+}
+.hover-plate[data-shown='true'] {
+  opacity: 1;
+}
+.hover-plate__frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--d-fast) var(--e-out-quart);
+}
+.hover-plate__frame.is-active {
+  opacity: 1;
+}
+.hover-plate__frame img {
+  height: 100%;
+}
+/* the plate never reacts to hover itself: it is the hover */
+.hover-plate .plate:hover img {
+  transform: none;
+}

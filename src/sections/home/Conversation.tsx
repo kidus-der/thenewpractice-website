@@ -10,6 +10,7 @@ import Link from 'next/link'
 import './Conversation.css'
 import type { ContactBlock, NavItem, Section } from '@/content/schemas'
 import { SectionHeader } from '@/components/SectionHeader'
+import { mailHref, telHref } from '@/lib/contact'
 import { Reveal } from '@/motion/Reveal'
 
 type Props = Readonly<{
@@ -18,10 +19,6 @@ type Props = Readonly<{
   action: NavItem
   numeral: string
 }>
-
-/** tel: URIs carry digits and the leading plus only. */
-const telHref = (phone: string): string => `tel:${phone.replace(/[^\d+]/g, '')}`
-const mailHref = (email: string): string => `mailto:${email}`
 
 export function Conversation({ section, contact, action, numeral }: Props) {
   const headingId = `${section.id}-title`

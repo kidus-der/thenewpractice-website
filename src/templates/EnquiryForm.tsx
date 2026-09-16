@@ -30,6 +30,7 @@ import { LineActionButton } from '@/components/LineAction'
 import { ChoiceField, TextArea, TextField } from '@/components/Field'
 import { BRAND } from '@/content/brand'
 import { ENQUIRING_FOR, ENQUIRY, PREFERRED_CONTACT } from '@/content/enquiry'
+import { mailHref, telHref } from '@/lib/contact'
 import { Reveal } from '@/motion/Reveal'
 import { D, STAGGER } from '@/motion/tokens'
 import { submitEnquiry } from '@/server/enquiry.action'
@@ -74,8 +75,6 @@ function useStartedAt(): string {
   return useSyncExternalStore(noop, clock.get, clock.server)
 }
 
-const telHref = (phone: string): string => `tel:${phone.replace(/[^\d+]/g, '')}`
-
 function Failed() {
   return (
     <p className="enquiry-form__failed t-small" role="status">
@@ -84,7 +83,7 @@ function Failed() {
         {BRAND.phone}
       </a>{' '}
       {ENQUIRY.failedSeparator}{' '}
-      <a className="link" href={`mailto:${BRAND.email}`}>
+      <a className="link" href={mailHref(BRAND.email)}>
         {BRAND.email}
       </a>
     </p>
