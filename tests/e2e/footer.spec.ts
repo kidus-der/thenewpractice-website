@@ -6,7 +6,7 @@
  * accessibility contract, the reduced-motion single repetition, and axe.
  */
 import { BRAND } from '../../src/content/brand'
-import { NAV, routes } from '../../src/content/nav'
+import { routes } from '../../src/content/nav'
 import {
   PROJECTS,
   expect,
@@ -16,10 +16,13 @@ import {
   settleMotion,
   test,
 } from './helpers'
+import { EXPECTED_NAV } from './helpers/siteEnv'
 
 const ROUTE = '/'
 const FOOTER = 'footer[data-ground="dark"]'
-const FOOTER_LINK_COUNT = NAV.footer.reduce((n, group) => n + group.items.length, 0)
+/** On a production-mode server the Legal group is not rendered (helpers/siteEnv.ts, Task 20b). */
+const FOOTER_LINK_COUNT = EXPECTED_NAV.footer.reduce((n, group) => n + group.items.length, 0)
+const LEGAL_LINKS_EXPECTED = EXPECTED_NAV.footer.some((group) => group.heading === 'Legal')
 /** Long enough for the 40s loop to move a visible distance, short enough to keep the suite quick. */
 const MOTION_SAMPLE_MS = 1200
 
@@ -42,7 +45,7 @@ test.describe('footer', () => {
 
   test('renders every sitemap group with a heading and its links', async ({ page }) => {
     const nav = page.locator(`${FOOTER} nav`)
-    for (const group of NAV.footer) {
+    for (const group of EXPECTED_NAV.footer) {
       await expect(nav.getByRole('heading', { level: 3, name: group.heading })).toBeVisible()
       for (const item of group.items) {
         await expect(nav.getByRole('link', { name: item.label, exact: true })).toHaveAttribute(
@@ -83,10 +86,14 @@ test.describe('footer', () => {
   test('carries the legal line without repeating privacy and terms', async ({ page }) => {
     const legal = page.locator('.site-footer__legal')
     await expect(legal).toContainText(`${new Date().getFullYear()} ${BRAND.name}`)
-    // The Legal column carries both links; the line does not repeat them (ledger, Task 8 triage).
+    // The Legal column carries both links off production; the line never repeats
+    // them (ledger, Task 8 triage). On production the column is not rendered (Task 20b).
     await expect(legal.locator('a')).toHaveCount(0)
-    await expect(page.locator(`.site-footer__nav a[href="${routes.privacy}"]`)).toHaveCount(1)
-    await expect(page.locator(`.site-footer__nav a[href="${routes.terms}"]`)).toHaveCount(1)
+    const expected = LEGAL_LINKS_EXPECTED ? 1 : 0
+    await expect(page.locator(`.site-footer__nav a[href="${routes.privacy}"]`)).toHaveCount(
+      expected
+    )
+    await expect(page.locator(`.site-footer__nav a[href="${routes.terms}"]`)).toHaveCount(expected)
   })
 
   test('renders the lockup once with the trademark as a superscript', async ({ page }) => {

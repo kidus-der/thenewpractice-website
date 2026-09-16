@@ -1,8 +1,8 @@
 /**
  * Header and navigation overlay — Task 7. docs/05 §Global chrome, docs/09 §2.
  *
- * Every project: the header and its wordmark link. Desktop projects: the six
- * primary links, the current-route mark, settle and hide on scroll. Narrow
+ * Every project: the header and its wordmark link. Desktop projects: the
+ * primary links (helpers/siteEnv.ts: five on a production-mode server), the current-route mark, settle and hide on scroll. Narrow
  * projects (and the reduced-motion project at a narrow viewport): the Menu
  * trigger, the overlay's focus contract, Escape, Enter on a link, the scroll
  * lock, axe with the overlay open and closed.
@@ -11,7 +11,7 @@ import { join } from 'node:path'
 import type { Page } from '@playwright/test'
 
 import { BRAND } from '../../src/content/brand'
-import { NAV, UI_NAV, routes } from '../../src/content/nav'
+import { UI_NAV, routes } from '../../src/content/nav'
 import {
   PROJECTS,
   expect,
@@ -23,6 +23,7 @@ import {
   test,
 } from './helpers'
 import { SCREENSHOT_ROOT } from './helpers/screenshotRoute'
+import { EXPECTED_NAV } from './helpers/siteEnv'
 
 const HEADER = 'header.site-header'
 const DIALOG = `[role="dialog"][aria-label="${UI_NAV.ariaLabels.overlay}"]`
@@ -97,18 +98,18 @@ test.describe('header', () => {
     await expectNoAxeViolations(page, { impactAtLeast: 'serious' })
   })
 
-  test('shows the six primary links and Enquire from 1024px, nothing current on /', async ({
+  test('shows the primary links and Enquire from 1024px, nothing current on /', async ({
     page,
   }, info) => {
     test.skip(!DESKTOP_PROJECTS.includes(info.project.name), 'desktop projects only')
     const nav = page.locator(HEADER).getByRole('navigation', { name: UI_NAV.ariaLabels.primary })
     await expect(nav).toBeVisible()
-    for (const item of NAV.primary) {
+    for (const item of EXPECTED_NAV.primary) {
       const link = nav.getByRole('link', { name: item.label, exact: true })
       await expect(link).toBeVisible()
       await expect(link).toHaveAttribute('href', item.href)
     }
-    for (const item of NAV.utility) {
+    for (const item of EXPECTED_NAV.utility) {
       await expect(nav.getByRole('link', { name: item.label, exact: true })).toHaveAttribute(
         'href',
         item.href
@@ -122,7 +123,7 @@ test.describe('header', () => {
     test.skip(!DESKTOP_PROJECTS.includes(info.project.name), 'desktop projects only')
     // The header is layout chrome, so it renders on every route — including
     // one that is still a 404 while its template is unbuilt.
-    const [first] = NAV.primary
+    const [first] = EXPECTED_NAV.primary
     if (!first) throw new Error('nav.ts has no primary items')
     await page.goto(first.href)
     await settleMotion(page)
@@ -205,9 +206,9 @@ test.describe('navigation overlay', () => {
     await expect(header).toHaveAttribute('data-menu-open', 'true')
 
     const links = primaryLinks(page).getByRole('link')
-    await expect(links).toHaveCount(NAV.primary.length)
+    await expect(links).toHaveCount(EXPECTED_NAV.primary.length)
     await expect(links.first()).toBeFocused()
-    for (const item of NAV.primary) {
+    for (const item of EXPECTED_NAV.primary) {
       await expect(primaryLinks(page).getByRole('link', { name: item.label })).toHaveAttribute(
         'href',
         item.href
@@ -264,7 +265,7 @@ test.describe('navigation overlay', () => {
         .flatMap((root) => (root ? Array.from(root.querySelectorAll(selector)) : []))
         .filter((el) => el.getClientRects().length > 0).length
     })
-    expect(focusableCount).toBeGreaterThan(NAV.primary.length)
+    expect(focusableCount).toBeGreaterThan(EXPECTED_NAV.primary.length)
 
     // Forward: one full lap and one more lands back on the first link.
     for (let i = 0; i < focusableCount + 1; i++) {
@@ -304,7 +305,7 @@ test.describe('navigation overlay', () => {
     await page.goto(SECOND_ROUTE)
     await settleMotion(page)
     const dialog = await openOverlay(page)
-    const [enquire] = NAV.utility
+    const [enquire] = EXPECTED_NAV.utility
     if (!enquire) throw new Error('nav.ts has no utility items')
     await dialog.getByRole('link', { name: enquire.label, exact: true }).focus()
     await page.keyboard.press('Enter')
