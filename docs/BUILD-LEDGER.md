@@ -631,3 +631,9 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 
 - Hero fade fix merged (`task/21b-hero` → `main` at `760df83`), verify green, redeployed as `thenewpractice-staging-fisydojbc` (Ready, PRERENDER on first hit). Live home spec re-run recorded below.
 - **Milestone delivered.** All 22 ledger tasks done. `main` is 90+ commits ahead of `origin/main`; nothing has been pushed (owner decides when). GitHub → Vercel auto-deploy is connected, so a push to `main` will redeploy staging.
+
+### Fix — conditions glow (2026-09-15)
+
+- **Shipped** on `fix/conditions-glow` (worktree, dev :3320): the home §3 hover plate is replaced by the travelling glow, one implementation now — `src/sections/RowGlow.tsx` + `.css` (the glow, the brass tick, `x`/`y` over `--d-base` `--e-out-expo`, `gsap.set` under reduced motion, pointer and focus) used by `IndexList` and `ConditionsList`; the pure `glowBox()` / `releaseRow()` in `src/lib/rowGlow.ts` are unit-tested; `plateForRow()`, the `conditionPlates` prop and the route's `CONDITION_PLATES` are gone; `HoverPlate` stays for the index lists; `index-01..04` untouched in `media.ts`.
+- **Evidence.** `npm run verify` green; `home` on desktop-1280, mobile-390 and reduced-motion and `index` on desktop-1280 against :3320 green (the new home test: one `.row-glow` in the list, no image, focus and Tab move it on every project, hover row 3 → row 7 moves its transform and the tick is `--accent`, reduced motion places it with no transition); a 1280 capture with the pointer over row 07 shows one soft canopy glow with the brass tick and no image.
+- **Deviations.** From 1024px the conditions glow bleeds the gutter (24px) each side rather than `--s-6`, with a 16px tick: the list fills the shell, so a second-column row has only the gutter to its left and a first-column row only the page margin (40px at 1024). docs/04 §6, docs/05 §T1 and CLAUDE.md §6a updated.

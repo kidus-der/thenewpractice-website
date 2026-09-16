@@ -10,9 +10,10 @@
  * per-row crossfade are stylesheet transitions on data attributes, so no
  * element is driven by two libraries (docs/04 §0).
  *
- * Shared by the home conditions list and the index lists (ledger, Task 16
- * triage). The caller decides when it exists: from 1024px with a fine pointer
- * and motion allowed, and only when there is something to show.
+ * Used by the index lists (ledger, Task 16 triage; the home conditions list
+ * gave its plate up for the travelling glow at the owner's request). The
+ * caller decides when it exists: from 1024px with a fine pointer and motion
+ * allowed, and only when there is something to show.
  */
 import { useLayoutEffect, useRef, type RefObject } from 'react'
 import './HoverPlate.css'

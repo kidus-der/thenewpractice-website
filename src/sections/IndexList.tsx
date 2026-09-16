@@ -6,10 +6,9 @@
  * the muted register, the title in the Didone, an optional line beneath in
  * the eyebrow register; the whole row is one link; a hairline between rows.
  *
- * One glow travels between rows on pointer and on focus — a single element,
- * so the movement reads as one gesture — and carries the brass tick in the
- * margin. It is GSAP (docs/04 §0 lists it there): `y` as a transform over
- * --d-base on the expo curve, instant under reduced motion.
+ * One glow travels between rows on pointer and on focus — the shared RowGlow,
+ * a single element, so the movement reads as one gesture — and carries the
+ * brass tick in the margin. This list owns the active row; the glow follows.
  *
  * Plates appear only where a row has a media key. On a fine pointer at
  * 1024px and above with motion allowed, one 3:4 plate follows the pointer
@@ -18,84 +17,39 @@
  * images anywhere — the three collections today — nothing is added.
  */
 import Link from 'next/link'
-import { useLayoutEffect, useRef, useState, type RefObject } from 'react'
+import { useRef, useState } from 'react'
 import './IndexList.css'
 import { Plate } from '@/components/Plate'
 import { hasRowImages, type IndexRow } from '@/lib/indexPage'
 import { numeral } from '@/lib/interior'
-import { gsap } from '@/motion/gsap'
+import { releaseRow } from '@/lib/rowGlow'
 import { Reveal } from '@/motion/Reveal'
-import { D, E } from '@/motion/tokens'
-import { DESKTOP, MOTION_OK, useMediaQuery, useRichPointer } from '@/motion/useMediaQuery'
+import { DESKTOP, useMediaQuery, useRichPointer } from '@/motion/useMediaQuery'
 import { HoverPlate } from '@/components/HoverPlate'
+import { RowGlow } from './RowGlow'
 
 /** The static thumbnail column is 96px wide at most (IndexList.css). */
 const THUMB_SIZES = '96px'
 
 type Props = { rows: readonly IndexRow[] }
 
-/** Moves the glow to the active row; hides it when there is none. */
-function useTravellingGlow(
-  glow: RefObject<HTMLSpanElement | null>,
-  wrap: RefObject<HTMLDivElement | null>,
-  active: number | null,
-  motionOk: boolean
-) {
-  useLayoutEffect(() => {
-    const el = glow.current
-    // Queried rather than ref'd: <Reveal> owns its ref and does not forward one.
-    const ol = wrap.current?.querySelector<HTMLOListElement>('.index-list__rows')
-    if (!el || !ol) return
-
-    // Under reduced motion the glow is placed, not moved: gsap.set lands in
-    // this same layout pass, where a zero-length tween would wait a tick.
-    if (active === null) {
-      if (!motionOk) gsap.set(el, { opacity: 0 })
-      else gsap.to(el, { opacity: 0, duration: D.fast, ease: E.outQuart, overwrite: 'auto' })
-      return
-    }
-    const row = ol.children[active]
-    if (!(row instanceof HTMLElement)) return
-
-    // The glow is out of flow; its height is set, never animated. The bleed
-    // past the row is the stylesheet's (padding and a negative top margin),
-    // so only the row's own box is measured here.
-    const target = { y: row.offsetTop, opacity: 1 }
-    gsap.set(el, { height: row.offsetHeight })
-    if (!motionOk) {
-      gsap.set(el, target)
-      return
-    }
-    gsap.to(el, { ...target, duration: D.base, ease: E.outExpo, overwrite: 'auto' })
-  }, [glow, wrap, active, motionOk])
-}
-
 export function IndexList({ rows }: Props) {
   const wrap = useRef<HTMLDivElement>(null)
-  const glow = useRef<HTMLSpanElement>(null)
   const [active, setActive] = useState<number | null>(null)
 
-  const motionOk = useMediaQuery(MOTION_OK)
   const richPointer = useRichPointer()
   const desktop = useMediaQuery(DESKTOP)
   const withImages = hasRowImages(rows)
   const followPlate = withImages && desktop && richPointer
   const staticThumbs = withImages && !followPlate
 
-  useTravellingGlow(glow, wrap, active, motionOk)
-
-  const clear = (index: number) => setActive((current) => (current === index ? null : current))
+  const clear = (index: number) => setActive((current) => releaseRow(current, index))
   const activeMedia = active === null ? null : (rows[active]?.media ?? null)
   const plates = rows.flatMap((row) => (row.media ? [row.media] : []))
 
   return (
     <div className="index-list" ref={wrap} onPointerLeave={() => setActive(null)}>
-      <span
-        className="index-list__glow"
-        ref={glow}
-        aria-hidden="true"
-        data-row={active ?? undefined}
-      />
+      <RowGlow within={wrap} rows=".index-list__row" active={active} />
 
       <Reveal as="ol" staggerChildren className="index-list__rows">
         {rows.map((row, i) => (

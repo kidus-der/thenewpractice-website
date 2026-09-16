@@ -1,12 +1,11 @@
 /**
  * / — T1 Home on `pages/home.ts` (docs/05 §T1). The route chooses the media:
  * the surf loop (ledger, Task 2b triage) with its own poster frame as the
- * LCP, and the four index frames for the conditions list's hover plate.
- * Everything else is the template's.
+ * LCP. Everything else is the template's.
  */
 import type { Metadata } from 'next'
 import { JsonLd } from '@/components/JsonLd'
-import type { MediaKey, VideoKey } from '@/content/media'
+import type { VideoKey } from '@/content/media'
 import { NAV, routes } from '@/content/nav'
 import { HOME } from '@/content/pages/home'
 import { ROUTE_SEO } from '@/content/seo'
@@ -23,14 +22,6 @@ export const metadata: Metadata = buildMetadata({ ...SEO, path: PATH })
 
 /** The client's brief opens on surf; canopy is held for a second beat. */
 const HERO_LOOP: VideoKey = 'hero-surf'
-
-/** Jungle, sea, stone, leaf — cycled behind the twelve conditions. */
-const CONDITION_PLATES = [
-  'index-01',
-  'index-02',
-  'index-03',
-  'index-04',
-] as const satisfies readonly MediaKey[]
 
 function enquireItem(): NavItem {
   const [item] = NAV.utility
@@ -50,7 +41,6 @@ export default function Page() {
       <HomeTemplate
         page={HOME}
         video={HERO_LOOP}
-        conditionPlates={CONDITION_PLATES}
         conditionsHref={routes.clinicalServices}
         enquire={enquireItem()}
         ui={{

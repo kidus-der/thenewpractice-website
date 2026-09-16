@@ -1,13 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { HOME } from '@/content/pages/home'
-import {
-  HOME_SECTION_IDS,
-  MANIFESTO_ID,
-  homeSections,
-  plateForRow,
-  splitPullLine,
-  triadLines,
-} from './home'
+import { HOME_SECTION_IDS, MANIFESTO_ID, homeSections, splitPullLine, triadLines } from './home'
 
 describe('homeSections', () => {
   it('resolves the five sections and the manifesto from the content module', () => {
@@ -87,20 +80,5 @@ describe('splitPullLine', () => {
     const { body, pull } = splitPullLine(last)
     expect(pull).toBe('Recovery succeeds when trust is never interrupted.')
     expect(`${body} ${pull}`).toBe(last)
-  })
-})
-
-describe('plateForRow', () => {
-  const plates = ['index-01', 'index-02', 'index-03', 'index-04'] as const
-
-  it('cycles the plates in order', () => {
-    expect(plateForRow(0, plates)).toBe('index-01')
-    expect(plateForRow(3, plates)).toBe('index-04')
-    expect(plateForRow(4, plates)).toBe('index-01')
-    expect(plateForRow(11, plates)).toBe('index-04')
-  })
-
-  it('throws with no plates', () => {
-    expect(() => plateForRow(0, [])).toThrow()
   })
 })

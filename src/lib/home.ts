@@ -4,7 +4,6 @@
  * sections by id and the tests can pin the behaviour without a DOM.
  */
 import type { HomePage, Section } from '@/content/schemas'
-import type { MediaKey } from '@/content/media'
 
 /** The five section ids the template composes against, in page order. */
 export const HOME_SECTION_IDS = {
@@ -79,11 +78,4 @@ export function splitPullLine(paragraph: string): PullLine {
   const pull = sentences.at(-1) ?? ''
   const body = sentences.slice(0, -1).join(' ')
   return { body, pull }
-}
-
-/** The plate for a list row: the given plates cycled in order. */
-export function plateForRow(index: number, plates: readonly MediaKey[]): MediaKey {
-  const plate = plates[index % plates.length]
-  if (!plate) throw new Error('plateForRow: no plates supplied')
-  return plate
 }

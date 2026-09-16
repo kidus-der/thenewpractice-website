@@ -11,60 +11,9 @@
   isolation: isolate;
 }
 
-/* — the glow: a radial gradient, not a shadow. Radial so the top and bottom
-     fall off too; a linear band read as a highlighted table row. Only
-     transform and opacity animate; the height is set once per row. The bleed
-     past the row — 10px above and below (docs/05 §T6), --s-6 each side
-     (docs/04 §6) — lives here so the script measures only the row. — */
-.index-list__glow {
-  position: absolute;
-  top: 0;
-  /* the side bleed is the page margin below 1024px, so the glow never widens
-     the document; from 1024px the list sits a column in and can take --s-6 */
-  left: calc(-1 * var(--margin));
-  right: calc(-1 * var(--margin));
-  z-index: 0;
-  box-sizing: content-box;
-  padding-block: 10px;
-  margin-top: -10px;
-  pointer-events: none;
-  opacity: 0;
-  background: radial-gradient(
-    ellipse 62% 128% at 50% 50%,
-    color-mix(in srgb, var(--c-canopy) 20%, transparent) 0%,
-    color-mix(in srgb, var(--c-canopy) 12%, transparent) 46%,
-    transparent 74%
-  );
-}
-/* the brass tick sits in the left margin, level with the row's centre; its
-   length steps with the margin so it never leaves the viewport */
-.index-list__glow::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: calc(var(--margin) - 16px);
-  width: 12px;
-  height: 1px;
-  background: var(--accent);
-  transform: translateY(-50%);
-}
-@media (min-width: 768px) {
-  .index-list__glow::after {
-    left: calc(var(--margin) - 20px - var(--s-2));
-    width: 20px;
-  }
-}
-@media (min-width: 1024px) {
-  .index-list__glow {
-    left: calc(-1 * var(--s-6));
-    right: calc(-1 * var(--s-6));
-  }
-  .index-list__glow::after {
-    /* the sticky index's 32px rule, in the same margin (StickyIndex.css) */
-    left: calc(var(--s-6) - 32px - var(--s-3));
-    width: 32px;
-  }
-}
+/* — the glow is the shared RowGlow (src/sections/RowGlow.css): its side
+     bleed is the page margin below 1024px and --s-6 from it, where this list
+     sits a column in and has the room — */
 
 /* — rows — */
 .index-list__rows {

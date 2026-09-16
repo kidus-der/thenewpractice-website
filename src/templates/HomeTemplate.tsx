@@ -10,7 +10,7 @@
  * Pins: §1 and §4's manifesto only, never active together. Line splits: the
  * hero title and the triad.
  */
-import type { MediaKey, VideoKey } from '@/content/media'
+import type { VideoKey } from '@/content/media'
 import type { HomePage, NavItem } from '@/content/schemas'
 import type { AudioLabels } from '@/lib/audioToggle'
 import { homeSections } from '@/lib/home'
@@ -26,8 +26,6 @@ export type HomeTemplateProps = Readonly<{
   page: HomePage
   /** The hero loop; its poster is the LCP. */
   video: VideoKey
-  /** The 3:4 frames the conditions list cycles through on hover. */
-  conditionPlates: readonly MediaKey[]
   /** Where every condition row leads. */
   conditionsHref: string
   /** The closing line action (the Enquire item from nav.ts). */
@@ -35,14 +33,7 @@ export type HomeTemplateProps = Readonly<{
   ui: Readonly<{ audio: AudioLabels; pillarsIndexLabel: string }>
 }>
 
-export function HomeTemplate({
-  page,
-  video,
-  conditionPlates,
-  conditionsHref,
-  enquire,
-  ui,
-}: HomeTemplateProps) {
+export function HomeTemplate({ page, video, conditionsHref, enquire, ui }: HomeTemplateProps) {
   const sections = homeSections(page)
 
   return (
@@ -56,12 +47,7 @@ export function HomeTemplate({
       />
       <Statement section={sections.statement} numeral={numeral(1)} />
       <LongRead section={sections.longRead} numeral={numeral(2)} />
-      <Conditions
-        section={sections.conditions}
-        numeral={numeral(3)}
-        href={conditionsHref}
-        plates={conditionPlates}
-      />
+      <Conditions section={sections.conditions} numeral={numeral(3)} href={conditionsHref} />
       <Philosophy
         section={sections.philosophy}
         manifesto={sections.manifesto}

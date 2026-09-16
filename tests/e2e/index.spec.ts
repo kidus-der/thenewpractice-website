@@ -21,10 +21,14 @@ import {
 } from '../../src/lib/indexPage'
 import { prevNextFor } from '../../src/lib/prevNext'
 import {
+  GLOW,
+  GLOW_SETTLE_MS,
   PROJECTS,
+  REDUCED_SETTLE_MS,
   expect,
   expectNoAxeViolations,
   expectNoConsoleErrors,
+  glowY,
   revealAll,
   screenshotRoute,
   settleMotion,
@@ -70,20 +74,7 @@ const FIXTURES: readonly Fixture[] = [
 ]
 
 const ROWS = '.index-list__row'
-const GLOW = '.index-list__glow'
 const RAIL = `nav[aria-label="${UI_INTERIOR.railLabel}"]`
-/** The glow tweens over --d-base; poll well past it. */
-const GLOW_SETTLE_MS = 2000
-/** Under reduced motion the glow is placed, not tweened; the computed style needs a few frames. */
-const REDUCED_SETTLE_MS = 500
-
-/** The glow's translateY, from its computed transform matrix. */
-const glowY = (el: Element): number => {
-  const transform = getComputedStyle(el).transform
-  if (transform === 'none') return 0
-  const parts = transform.match(/matrix\((.+)\)/)?.[1]?.split(',') ?? []
-  return Number(parts[5] ?? 0)
-}
 
 for (const fixture of FIXTURES) {
   test.describe(`index: ${fixture.name}`, () => {
@@ -152,7 +143,7 @@ for (const fixture of FIXTURES) {
     })
 
     test('moves the one glow to the row that holds keyboard focus', async ({ page }, info) => {
-      const glow = page.locator(GLOW)
+      const glow = page.locator(`.index-list ${GLOW}`)
       await expect(glow).toHaveCount(1)
       await expect(glow).toHaveAttribute('aria-hidden', 'true')
       await expect(glow).toHaveCSS('opacity', '0')

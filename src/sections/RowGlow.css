@@ -1,0 +1,66 @@
+/* ==========================================================================
+   ROW GLOW — co-located with RowGlow.tsx, imported once by it.
+   The travelling glow of docs/04 §6: a radial gradient, not a shadow. Radial
+   so the top and bottom fall off too; a linear band read as a highlighted
+   table row. Only transform and opacity animate; the size is set once per
+   row. Tokens for colour, space and motion; literal px only for geometry
+   (rule 4 as amended).
+
+   The host list is the positioning context (`position: relative;
+   isolation: isolate`) and keeps its rows above the glow on their own layer.
+   The script sets the glow to the row's own box; the bleed past the row —
+   10px above and below (docs/05 §T6), --glow-bleed each side (--s-6 in
+   docs/04 §6) — is padding on a content box with a matching negative margin,
+   so the script measures only the row. A list may retune the three custom
+   properties where its margin is narrower than the default.
+   ========================================================================== */
+
+.row-glow {
+  /* the side bleed is the page margin below 1024px, so the glow never widens
+     the document; from 1024px a list that sits a column in can take --s-6 */
+  --glow-bleed: var(--margin);
+  --glow-tick: 12px;
+  --glow-tick-gap: var(--s-1);
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  box-sizing: content-box;
+  padding: 10px var(--glow-bleed);
+  margin: -10px 0 0 calc(-1 * var(--glow-bleed));
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    ellipse 62% 128% at 50% 50%,
+    color-mix(in srgb, var(--c-canopy) 20%, transparent) 0%,
+    color-mix(in srgb, var(--c-canopy) 12%, transparent) 46%,
+    transparent 74%
+  );
+}
+/* the brass tick sits in the left margin, level with the row's centre; its
+   length steps with the margin so it never leaves the viewport */
+.row-glow::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc(var(--glow-bleed) - var(--glow-tick) - var(--glow-tick-gap));
+  width: var(--glow-tick);
+  height: 1px;
+  background: var(--accent);
+  transform: translateY(-50%);
+}
+@media (min-width: 768px) {
+  .row-glow {
+    --glow-tick: 20px;
+    --glow-tick-gap: var(--s-2);
+  }
+}
+@media (min-width: 1024px) {
+  .row-glow {
+    --glow-bleed: var(--s-6);
+    /* the sticky index's 32px rule, in the same margin (StickyIndex.css) */
+    --glow-tick: 32px;
+    --glow-tick-gap: var(--s-3);
+  }
+}
