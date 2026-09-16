@@ -5,6 +5,9 @@
  * Each check is a pure function of the content layer returning a verdict; the
  * two runners only differ in how they report it.
  */
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+
 import {
   ABOUT,
   ASSESSMENTS,
@@ -36,6 +39,7 @@ import {
   teamMemberSchema,
 } from './index'
 import { QUESTIONS_PER_ASSESSMENT } from './schemas'
+import { ROUTE_SEO, assessmentSeo, sentences, serviceSeo } from './seo'
 
 export type Check = { name: string; ok: boolean; detail: string }
 
@@ -248,6 +252,74 @@ function legalMarked(): Check {
   return check('every legal string is prefixed PLACEHOLDER', unmarked)
 }
 
+// ---------------------------------------------------------------------------
+// Provenance — every metadata description is the client's sentence
+// ---------------------------------------------------------------------------
+
+/** The client's document, at the repository root (the runners start there). */
+const SOURCE_DOCUMENT = 'Final Website Instructions_DRAFT Sept 1 2026 .docx.md'
+const PLACEHOLDER_PREFIX = 'PLACEHOLDER — '
+const MARKDOWN_MARKS = /[*_#>`\\]/g
+const SINGLE_QUOTES = /[‘’‚‛′]/g
+const DOUBLE_QUOTES = /[“”„‟″]/g
+const DASHES = /[‐‑‒–—―−]/g
+const TRAILING_PUNCTUATION = /[.!?…]+$/
+
+/** As docs/CONTENT-PROVENANCE-AUDIT.md normalised: no markdown, one space, one quote, one dash. */
+export function normaliseProse(text: string): string {
+  return text
+    .replace(MARKDOWN_MARKS, '')
+    .replace(SINGLE_QUOTES, "'")
+    .replace(DOUBLE_QUOTES, '"')
+    .replace(DASHES, '-')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+const readSourceDocument = (): string | undefined => {
+  try {
+    return normaliseProse(readFileSync(join(process.cwd(), SOURCE_DOCUMENT), 'utf8'))
+  } catch {
+    return undefined
+  }
+}
+
+/** The sentences of a description, each without its final stop or ellipsis. */
+const descriptionSentences = (description: string): readonly string[] =>
+  sentences(description).map((s) => normaliseProse(s).replace(TRAILING_PUNCTUATION, ''))
+
+/** Every sentence of `description` occurs in the document, or the whole is a marked placeholder. */
+function sourcedFrom(document: string, description: string): boolean {
+  if (description.startsWith(PLACEHOLDER_PREFIX)) return true
+  return descriptionSentences(description).every((sentence) => document.includes(sentence))
+}
+
+/**
+ * The static routes, the questionnaires and the services: each description
+ * is a sentence of the document or a marked placeholder. teamSeo() is not
+ * checked: its fallback frame, `<Name>, <Role> at The New Practice.`, sets the
+ * client's name and role in our sentence (audit, D7), which the owner accepted.
+ */
+function descriptionsSourced(): Check {
+  const document = readSourceDocument()
+  if (document === undefined) {
+    return check('every metadata description is a sentence of the client’s document', [
+      `${SOURCE_DOCUMENT} not found in ${process.cwd()}`,
+    ])
+  }
+  const candidates = [
+    ...Object.entries(ROUTE_SEO).map(([key, seo]) => [`seo.${key}`, seo.description] as const),
+    ...ASSESSMENTS.map((a) => [`assessment ${a.slug}`, assessmentSeo(a).description] as const),
+    ...SERVICES.map((s) => [`service ${s.slug}`, serviceSeo(s).description] as const),
+  ]
+  return check(
+    'every metadata description is a sentence of the client’s document',
+    candidates
+      .filter(([, description]) => !sourcedFrom(document, description))
+      .map(([name, description]) => `${name}: “${description}” is not in the document`)
+  )
+}
+
 function routesUnique(): Check {
   const routesList = allRoutes()
   const dupes = routesList.filter((r, i) => routesList.indexOf(r) !== i)
@@ -267,5 +339,6 @@ export function contentChecks(): readonly Check[] {
     residencesMarked(),
     legalMarked(),
     routesUnique(),
+    descriptionsSourced(),
   ]
 }
