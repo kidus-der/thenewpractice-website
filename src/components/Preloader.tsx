@@ -46,6 +46,14 @@ export function Preloader() {
 
     sessionStorage.setItem(SESSION_KEY, '1')
     stopScroll()
+    // The lock is reference-counted (SmoothScroll): one hold, one release,
+    // whether the veil completes or the component unmounts first.
+    let released = false
+    const release = () => {
+      if (released) return
+      released = true
+      startScroll()
+    }
 
     const ctx = gsap.context(() => {
       // A warm cache should not be made to wait.
@@ -55,7 +63,7 @@ export function Preloader() {
       const tl = gsap.timeline({
         onComplete: () => {
           setActive(false)
-          startScroll()
+          release()
           markVeilDone()
         },
       })
@@ -109,7 +117,7 @@ export function Preloader() {
 
     return () => {
       ctx.revert()
-      startScroll()
+      release()
     }
   }, [])
 

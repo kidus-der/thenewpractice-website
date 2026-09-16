@@ -8,9 +8,26 @@
 import { useEffect } from 'react'
 import Lenis from 'lenis'
 import { gsap, ScrollTrigger } from './gsap'
+import { createScrollLock } from './scrollLock'
 import { prefersReducedMotion } from './tokens'
 
 let lenis: Lenis | null = null
+
+/**
+ * The page-scroll lock, reference-counted (scrollLock.ts): the preloader, the
+ * nav overlay and the route curtain each stop and start it, and the page
+ * moves again only when the last of them has let go.
+ */
+const lock = createScrollLock({
+  onLock: () => {
+    lenis?.stop()
+    document.body.dataset.locked = 'true'
+  },
+  onRelease: () => {
+    lenis?.start()
+    document.body.dataset.locked = 'false'
+  },
+})
 
 export function scrollTo(target: string | number | HTMLElement, offset = 0) {
   if (lenis) {
@@ -88,12 +105,12 @@ export function resetScroll() {
   lenis?.scrollTo(0, { immediate: true, force: true })
 }
 
+/** Takes a hold on the page scroll; pair every call with one startScroll(). */
 export function stopScroll() {
-  lenis?.stop()
-  document.body.dataset.locked = 'true'
+  lock.stop()
 }
 
+/** Releases one hold; the page scrolls again when no holder remains. */
 export function startScroll() {
-  lenis?.start()
-  document.body.dataset.locked = 'false'
+  lock.start()
 }
