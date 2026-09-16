@@ -6,7 +6,7 @@
  * series' two lines, and wires metadata and structured data — a WebPage, the
  * breadcrumb home → Self-Assessment → title, and the organisation. No
  * MedicalTest or Quiz schema: the scorer is a screening aid in the client's
- * own words, and the description already says nothing is stored.
+ * own words, and the description is the client's scoring line.
  */
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
