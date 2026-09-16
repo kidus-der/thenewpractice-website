@@ -25,6 +25,7 @@ import {
   revealAll,
   screenshotRoute,
   settleMotion,
+  tabKey,
   test,
 } from './helpers'
 
@@ -83,7 +84,7 @@ async function answerSheet(page: Page, yeses: number) {
 
 async function tabUntilFocused(page: Page, target: Locator) {
   for (let i = 0; i < MAX_TABS; i += 1) {
-    await page.keyboard.press('Tab')
+    await page.keyboard.press(tabKey(page))
     if (await target.evaluate((el) => el === document.activeElement)) return
   }
   throw new Error(`Tab never reached the target within ${MAX_TABS} presses`)
@@ -194,7 +195,7 @@ for (const assessment of FIXTURES) {
       const firstYes = rows(page).first().getByRole('radio', { name: UI_ASSESSMENT.yes })
       await tabUntilFocused(page, firstYes)
       for (let i = 0; i < N; i += 1) {
-        if (i > 0) await page.keyboard.press('Tab')
+        if (i > 0) await page.keyboard.press(tabKey(page))
         // Focus lands on the row's first radio (Yes): Space keeps it, ArrowRight moves to No.
         await page.keyboard.press(i < YESES ? 'Space' : 'ArrowRight')
         await expect(
@@ -203,7 +204,7 @@ for (const assessment of FIXTURES) {
             .getByRole('radio', { name: i < YESES ? UI_ASSESSMENT.yes : UI_ASSESSMENT.no })
         ).toBeChecked()
       }
-      await page.keyboard.press('Tab')
+      await page.keyboard.press(tabKey(page))
       await expect(action(page, UI_ASSESSMENT.seeResult)).toBeFocused()
       await page.keyboard.press('Enter')
 

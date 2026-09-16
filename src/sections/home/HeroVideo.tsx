@@ -25,9 +25,6 @@ type Props = Readonly<{ loop: Loop; posterSrc: string; className?: string }>
 
 type NavigatorHints = Navigator & { connection?: { saveData?: boolean } }
 
-/** HAVE_FUTURE_DATA: enough buffered to start; the same bar `canplay` uses. */
-const CAN_PLAY_READY_STATE = 3
-
 function subscribe(onChange: () => void): () => void {
   const mql = window.matchMedia(MOTION_OK)
   mql.addEventListener('change', onChange)
@@ -72,13 +69,14 @@ export function HeroVideo({ loop, posterSrc, className }: Props) {
     }
 
     // `playing` as well as the play() promise: on a slow decode the promise can
-    // settle well after the first frame is on screen.
+    // settle well after the first frame is on screen. play() is called at once
+    // rather than on `canplay`: with preload="metadata" WebKit stops at the
+    // metadata and never fires it, so waiting left Safari on the poster
+    // (Task 19); play() itself asks the browser to buffer what it needs.
     video.addEventListener('playing', reveal, { once: true })
-    if (video.readyState >= CAN_PLAY_READY_STATE) start()
-    else video.addEventListener('canplay', start, { once: true })
+    start()
 
     return () => {
-      video.removeEventListener('canplay', start)
       video.removeEventListener('playing', reveal)
       gsap.killTweensOf(video)
       video.pause()
