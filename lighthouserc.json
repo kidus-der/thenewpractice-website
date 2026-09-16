@@ -1,22 +1,38 @@
 {
   "//": [
-    "Lighthouse CI budgets from docs/09 §1, mobile emulation (Lighthouse's default form factor).",
+    "Lighthouse CI budgets from docs/09 §1, mobile emulation, one URL per template plus home.",
     "Runs against a production build: `npm run build` first, then `npm run lighthouse`.",
-    "Add one URL per template as routes land: /about (T2), /clinical-services (T6),",
-    "/clinical-services/<slug> (T3), /team/<slug> (T4), /residences (T5), /contact (T7)."
+    "throttlingMethod is `devtools` (Task 20): real 4x CPU slowdown and slow-4G request throttling",
+    "on this machine, so LCP is a paint that happened. `simulate` (lantern) models a text LCP as",
+    "arriving only after every head-referenced script has been downloaded and scores this site's",
+    "chrome budget rather than its paint; both methods are recorded in docs/09 §Measured budgets.",
+    "Assertions read the median of the three runs per URL (aggregationMethod median)."
   ],
   "ci": {
     "collect": {
       "startServerCommand": "npm run start -- --port 3211",
       "startServerReadyPattern": "Ready in",
-      "url": ["http://localhost:3211/"],
-      "numberOfRuns": 3
+      "url": [
+        "http://localhost:3211/",
+        "http://localhost:3211/about",
+        "http://localhost:3211/clinical-services",
+        "http://localhost:3211/clinical-services/addiction-treatment",
+        "http://localhost:3211/team/lowell-monkhouse",
+        "http://localhost:3211/residences",
+        "http://localhost:3211/contact",
+        "http://localhost:3211/self-assessment/alcohol"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "throttlingMethod": "devtools",
+        "formFactor": "mobile"
+      }
     },
     "assert": {
       "assertions": {
-        "categories:performance": ["error", { "minScore": 0.9 }],
-        "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1 }],
-        "largest-contentful-paint": ["error", { "maxNumericValue": 2500 }]
+        "categories:performance": ["error", { "minScore": 0.9, "aggregationMethod": "median" }],
+        "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1, "aggregationMethod": "median" }],
+        "largest-contentful-paint": ["error", { "maxNumericValue": 2500, "aggregationMethod": "median" }]
       }
     },
     "upload": {
