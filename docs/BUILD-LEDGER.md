@@ -49,7 +49,7 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 19 | done | 13, 14, 15, 16, 17, 18, 18b | Cross-template hardening: viewports, 4× throttle traces, reduced motion, keyboard, axe, Safari |
 | 20 | done | 19 | Performance budgets: Lighthouse, image sizes, font preload, bundle audit |
 | 20b | done | 19 | Content provenance fixes from docs/CONTENT-PROVENANCE-AUDIT.md (no invented text ships) |
-| 21 | doing | 20, 20b, 6 | Staging deploy, live smoke test, `HANDOFF.md` |
+| 21 | done | 20, 20b, 6 | Staging deploy, live smoke test, `HANDOFF.md` |
 
 Deploy checkpoints: after 6, 12, 15, 16, 21.
 
@@ -615,3 +615,8 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **Residences title page at 1280 × 800 live:** eyebrow y 189, `h1` 240–624, lead 664–720 (read on the production-mode build in Phase 1; the live page is the same build) — fits, nothing clipped.
 - **Ship gate (docs/11 Gate 3) still by hand:** the real-device pass (iPhone, iPad, Mac Safari and Chrome, Windows Chrome and Edge, Firefox), Safari's timeline on the pinned sections, and the keyboard walk of the enquiry form and a questionnaire in Safari with the Tab preference both ways. Listed in `HANDOFF.md` §Before production.
 
+
+### Main session — triage of Task 21 (2026-09-15)
+
+- Accepted: deployed `e05545f` to https://thenewpractice-staging.kidusder.com; live Playwright 290/0, CSP clean with the gradient mounted, hero video playing, PRERENDER/HIT on every template. `HANDOFF.md` written.
+- Follow-up **Task 21b** (before the client review): fix the home hero's post-veil fade-in (`GSAP target .hero__eyebrow / .hero__cue not found` at `veil:done`; the timeline is built inside the event listener after the `gsap.context` callback returned). One file, then redeploy.
