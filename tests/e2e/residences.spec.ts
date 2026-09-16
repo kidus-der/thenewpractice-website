@@ -87,14 +87,13 @@ test.describe('residences', () => {
     await expect(page.locator('main a[href*="maps."], main a[href*="goo.gl/maps"]')).toHaveCount(0)
   })
 
-  test('shows the review flag off production and never on it', async ({ page }) => {
-    const flag = page.locator('main [data-notice]')
-    if (IS_PRODUCTION_SERVER) {
-      await expect(flag).toHaveCount(0)
-      return
-    }
-    await expect(flag).toHaveCount(1)
-    await expect(flag).toHaveText(UI_RESIDENCES.copyPending)
+  test('carries no review note in any environment; the PLACEHOLDER prefix is its only marker', async ({
+    page,
+  }) => {
+    // Owner decision (Task 21): nothing note-like renders on a stub page.
+    await expect(page.locator('main [data-notice]')).toHaveCount(0)
+    await expect(page.locator('main')).not.toContainText(/\b(pending|review)\b/i)
+    await expect(page.locator('main h1')).toHaveText(/^PLACEHOLDER — /)
   })
 
   test('renders six plates once for assistive tech and a hidden duplicate set', async ({

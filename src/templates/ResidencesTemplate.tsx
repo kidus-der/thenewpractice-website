@@ -44,8 +44,6 @@ export type ResidencesTemplateProps = {
   /** Section id → ground; anything unlisted is bone. */
   grounds?: Readonly<Record<string, Ground>>
   prevNext?: PrevNext
-  /** The review flag over the intro on non-production deployments. */
-  notice?: string
 }
 
 const FULL_BLEED = '100vw'
@@ -99,7 +97,6 @@ export function ResidencesTemplate({
   band,
   grounds,
   prevNext,
-  notice,
 }: ResidencesTemplateProps) {
   const plates = residencePlates(page.plates, carousel)
   // docs/02 §Ground rhythm: a sand section never directly follows another.
@@ -118,7 +115,6 @@ export function ResidencesTemplate({
         eyebrow={page.eyebrow}
         headline={page.title}
         lead={page.lead}
-        notice={notice}
       />
 
       <div className="residences__hero" data-ground="light">

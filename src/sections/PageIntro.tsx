@@ -18,12 +18,6 @@ type Props = {
   headline: string
   lead?: string
   plate?: MediaKey
-  /**
-   * A short interface line above the lockup — the residences page's
-   * "copy pending client review" flag on non-production deployments
-   * (Task 17). Interface copy from ui.ts, never page copy.
-   */
-  notice?: string
 }
 
 /** The intro sits at .p-offset from 1024px: roughly half the row. */
@@ -36,16 +30,11 @@ const PLATE_SIZES = '(min-width: 1024px) 50vw, 100vw'
  */
 const LEAD_REVEAL = 'mask'
 
-export function PageIntro({ id, numeral, eyebrow, headline, lead, plate, notice }: Props) {
+export function PageIntro({ id, numeral, eyebrow, headline, lead, plate }: Props) {
   return (
     <section className="page-intro" data-ground="light" data-n={numeral} aria-labelledby={id}>
       <div className="shell grid12 page-intro__grid">
         <div className="p-lead page-intro__copy">
-          {notice && (
-            <p className="t-small page-intro__notice" data-notice="">
-              {notice}
-            </p>
-          )}
           <p
             className="eyebrow t-eyebrow page-intro__eyebrow"
             aria-hidden={eyebrow ? undefined : true}

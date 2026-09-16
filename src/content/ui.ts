@@ -46,17 +46,6 @@ export const UI_INTERIOR = {
 } as const
 
 /**
- * STAGING FLAGS — Task 18. Shown only when the deployment is not the
- * production site (`isIndexable()` is false), so a reviewer on staging can
- * tell a PLACEHOLDER page from a finished one at a glance. Never rendered in
- * production; never client copy.
- */
-export const UI_STAGING = {
-  /** Eyebrow label over a page whose copy is still a PLACEHOLDER stub. */
-  copyPending: 'Copy pending client review',
-} as const
-
-/**
  * RESIDENCES TEMPLATE STRINGS — Task 17. Landmark names for the two blocks
  * that have no heading in the content (the plate carousel and the amenities
  * table), and the review flag rendered over the intro on every deployment
@@ -70,8 +59,6 @@ export const UI_RESIDENCES = {
   carouselLabel: 'Plates',
   /** aria-label on the amenities <section>. */
   amenitiesLabel: 'Amenities',
-  /** Shown above the intro when SITE_ENV is not production; one string, shared with UI_STAGING. */
-  copyPending: UI_STAGING.copyPending,
 } as const
 
 /**

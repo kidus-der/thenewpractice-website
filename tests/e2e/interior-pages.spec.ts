@@ -16,7 +16,7 @@ import { PRIVACY, TERMS } from '../../src/content/pages/legal'
 import { PERSONAL_MESSAGE } from '../../src/content/pages/personal-message'
 import { PROCESS } from '../../src/content/pages/process'
 import type { Page as PageContent } from '../../src/content/schemas'
-import { UI_INTERIOR, UI_STAGING } from '../../src/content/ui'
+import { UI_INTERIOR } from '../../src/content/ui'
 import { prevNextFor } from '../../src/lib/prevNext'
 import {
   PROJECTS,
@@ -28,7 +28,6 @@ import {
   settleMotion,
   test,
 } from './helpers'
-import { IS_PRODUCTION_SERVER } from './helpers/siteEnv'
 
 type Route = Readonly<{ path: string; name: string; content: PageContent }>
 
@@ -271,14 +270,15 @@ test.describe('fees', () => {
 
 for (const route of ROUTES.filter((r) => NOINDEX_ROUTES.has(r.path))) {
   test.describe(`${route.name} stub`, () => {
-    test('is flagged for review off production and kept out of the index', async ({ page }) => {
+    test('carries only the PLACEHOLDER prefix as its marker and is kept out of the index', async ({
+      page,
+    }) => {
       await page.goto(route.path)
       await settleMotion(page)
-      // The review flag renders only off production (helpers/siteEnv.ts); the
-      // stub, its noindex and its PLACEHOLDER headings are the same everywhere.
-      const opening = page.locator('main > :first-child')
-      if (IS_PRODUCTION_SERVER) await expect(opening).not.toContainText(UI_STAGING.copyPending)
-      else await expect(opening).toContainText(UI_STAGING.copyPending)
+      // Owner decision (Task 21): no review note in any environment; the stub,
+      // its noindex and its PLACEHOLDER headings are the same everywhere.
+      await expect(page.locator('main')).not.toContainText(/pending client review/i)
+      await expect(page.locator('main [data-notice]')).toHaveCount(0)
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
       const headings = await page.locator('main h1, main h2').allTextContents()
       const stub = headings.filter((h) => h.startsWith(PLACEHOLDER))
