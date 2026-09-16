@@ -46,8 +46,8 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 17 | done | 2b, 11 | T5 Residences template → `/residences` |
 | 18 | done | 11 | Remaining T2 pages: `/our-process`, `/a-personal-message`, `/fees`, `/privacy`, `/terms` |
 | 18b | done | 12 | Interactive self-assessment scorer → `/self-assessment/[slug]` × 10 |
-| 19 | doing | 13, 14, 15, 16, 17, 18, 18b | Cross-template hardening: viewports, 4× throttle traces, reduced motion, keyboard, axe, Safari |
-| 20 | todo | 19 | Performance budgets: Lighthouse, image sizes, font preload, bundle audit |
+| 19 | done | 13, 14, 15, 16, 17, 18, 18b | Cross-template hardening: viewports, 4× throttle traces, reduced motion, keyboard, axe, Safari |
+| 20 | doing | 19 | Performance budgets: Lighthouse, image sizes, font preload, bundle audit |
 | 21 | todo | 20, 6 | Staging deploy, live smoke test, `HANDOFF.md` |
 
 Deploy checkpoints: after 6, 12, 15, 16, 21.
@@ -545,3 +545,10 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **For Task 20:** the `React does not recognize the staggerChildren prop` warning in the unit run came from the assessment test's `Reveal` mock spreading props onto a `div`, fixed here; `src/lib/tokens.test.ts` still says it runs "in a node environment" (comment drift, Task 4's note). The hover plate holds `will-change: transform` for its lifetime (one element, docs/04 §8 tolerates it; documented in `HoverPlate.css`).
 - **For Task 21:** re-run `scratchpad`-style CSP capture on the live URL once the home template is deployed (the gradient is the only thing that could fetch cross-origin); confirm the hero loop starts in real Safari (macOS and iOS Low Power Mode leaves the poster, by design); the `webkit` project is `npm run e2e:webkit`, not part of `npm run e2e`.
 - **Open questions for the owner:** the enquiry sheet's labels and unchosen option words are back in stone as docs/03 §5 specifies — say if the ink version read better; the reading order now leads Our Process → A Personal Message → Fees → Clinical Services (docs/05 updated) — the alternative is a rail only on the two letter pages without changing the primary route's neighbours; the residences discretion hairline that crosses the full viewport mid-pin on the home "One" stage is the designed hairline between lines two and three (docs/05 §T1), read in the mid-pin frames.
+
+### Main session — triage of Task 19 (2026-09-15)
+
+- Accepted and merged (`task/19-hardening` → `main`, no conflicts); verify green after a `.next` cache clear (311 tests, 96.0% statements, 52 pages prerendered). The stale cache still referenced the deleted `/dev/curtain` route; worktree builds after this merge should start clean.
+- Decisions: enquiry sheet labels stay in stone per docs/03; the woven reading order stays; the full `npm run e2e` is re-run by Task 20 on the merged tree rather than by Task 19 again.
+- A content-provenance audit is running in parallel (read-only, writes `docs/CONTENT-PROVENANCE-AUDIT.md`); its UNSOURCED findings are fixed by a follow-up task before Task 21 deploys.
+- Task 20 starts in worktree `task/20-performance` on :3313/:3314.
