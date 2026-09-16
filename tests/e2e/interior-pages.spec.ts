@@ -28,6 +28,7 @@ import {
   settleMotion,
   test,
 } from './helpers'
+import { IS_PRODUCTION_SERVER } from './helpers/siteEnv'
 
 type Route = Readonly<{ path: string; name: string; content: PageContent }>
 
@@ -273,7 +274,11 @@ for (const route of ROUTES.filter((r) => NOINDEX_ROUTES.has(r.path))) {
     test('is flagged for review off production and kept out of the index', async ({ page }) => {
       await page.goto(route.path)
       await settleMotion(page)
-      await expect(page.locator('main > :first-child')).toContainText(UI_STAGING.copyPending)
+      // The review flag renders only off production (helpers/siteEnv.ts); the
+      // stub, its noindex and its PLACEHOLDER headings are the same everywhere.
+      const opening = page.locator('main > :first-child')
+      if (IS_PRODUCTION_SERVER) await expect(opening).not.toContainText(UI_STAGING.copyPending)
+      else await expect(opening).toContainText(UI_STAGING.copyPending)
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
       const headings = await page.locator('main h1, main h2').allTextContents()
       const stub = headings.filter((h) => h.startsWith(PLACEHOLDER))

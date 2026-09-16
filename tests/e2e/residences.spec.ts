@@ -13,7 +13,7 @@ import { MEDIA } from '../../src/content/media'
 import { routes } from '../../src/content/nav'
 import { RESIDENCES } from '../../src/content/pages/residences'
 import { UI_INTERIOR, UI_RESIDENCES } from '../../src/content/ui'
-import { prevNextFor } from '../../src/lib/prevNext'
+import { prevNextFor, readingOrder } from '../../src/lib/prevNext'
 import { discretionStatement } from '../../src/lib/residences'
 import {
   PROJECTS,
@@ -25,6 +25,7 @@ import {
   settleMotion,
   test,
 } from './helpers'
+import { EXPECTED_NAV, IS_PRODUCTION_SERVER } from './helpers/siteEnv'
 
 const ROUTE = routes.residences
 const CAROUSEL = `section[aria-label="${UI_RESIDENCES.carouselLabel}"]`
@@ -86,8 +87,12 @@ test.describe('residences', () => {
     await expect(page.locator('main a[href*="maps."], main a[href*="goo.gl/maps"]')).toHaveCount(0)
   })
 
-  test('shows the review flag because this deployment is not production', async ({ page }) => {
+  test('shows the review flag off production and never on it', async ({ page }) => {
     const flag = page.locator('main [data-notice]')
+    if (IS_PRODUCTION_SERVER) {
+      await expect(flag).toHaveCount(0)
+      return
+    }
     await expect(flag).toHaveCount(1)
     await expect(flag).toHaveText(UI_RESIDENCES.copyPending)
   })
@@ -172,9 +177,16 @@ test.describe('residences', () => {
   })
 
   test('links to the previous and next pages in reading order', async ({ page }) => {
-    const { prev, next } = prevNextFor(ROUTE)
-    if (!prev || !next) throw new Error('Residences should sit between two pages')
+    // On production the placeholder route is not in the reading order, so the
+    // rail carries no neighbours (src/lib/prevNext.ts; helpers/siteEnv.ts).
+    const { prev, next } = prevNextFor(ROUTE, readingOrder(EXPECTED_NAV))
     const rail = page.locator(RAIL)
+    if (IS_PRODUCTION_SERVER) {
+      expect(prev ?? next).toBeUndefined()
+      await expect(rail.getByRole('link')).toHaveCount(0)
+      return
+    }
+    if (!prev || !next) throw new Error('Residences should sit between two pages')
     await expect(rail.getByRole('link', { name: prev.label, exact: true })).toHaveAttribute(
       'href',
       prev.href
