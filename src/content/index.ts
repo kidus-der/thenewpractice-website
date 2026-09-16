@@ -28,7 +28,9 @@ export { SERVICES, SERVICES_PAGE } from './services'
 export { TEAM, TEAM_PAGE } from './team'
 export { ASSESSMENTS, ASSESSMENTS_PAGE, ASSESSMENT_SERIES } from './assessments'
 
-export * from './schemas'
+// Types only: the Zod schemas stay out of every bundle that imports the content
+// layer. Runtime validation imports them from './schemas' directly (content.checks.ts).
+export type * from './schemas'
 
 /** Every route the site serves, static and generated. */
 export function allRoutes(): readonly string[] {

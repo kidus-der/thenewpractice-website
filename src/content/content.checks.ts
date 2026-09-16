@@ -1,9 +1,13 @@
 /**
  * CONTENT CHECKS — shared by content.test.ts (Vitest) and scripts/check-content.ts
- * (plain Node, until Task 4 installs Vitest).
+ * (plain Node).
  *
  * Each check is a pure function of the content layer returning a verdict; the
- * two runners only differ in how they report it.
+ * two runners only differ in how they report it. Since Task 20 this is the
+ * only place the content is parsed against its Zod schemas: the modules
+ * export plain objects annotated with the inferred types, so a bad edit
+ * fails `tsc` for shape and this check for the string rules (trim, residue,
+ * lengths, counts) rather than throwing at import time in a browser.
  */
 import {
   ABOUT,
@@ -24,6 +28,9 @@ import {
   TEAM_PAGE,
   TERMS,
   allRoutes,
+} from './index'
+import {
+  QUESTIONS_PER_ASSESSMENT,
   assessmentSchema,
   assessmentSeriesSchema,
   contactPageSchema,
@@ -34,8 +41,7 @@ import {
   residencesPageSchema,
   serviceSchema,
   teamMemberSchema,
-} from './index'
-import { QUESTIONS_PER_ASSESSMENT } from './schemas'
+} from './schemas'
 
 export type Check = { name: string; ok: boolean; detail: string }
 

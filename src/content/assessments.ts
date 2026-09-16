@@ -2,10 +2,9 @@
 // Source: «Final Website Instructions_DRAFT Sept 1 2026 .docx.md», lines 951–1196.
 // ASSESSMENT_SERIES.supersededScale is the 0–3 scale from the how-to section; the owner chose the per-questionnaire yes/no scoring. Do not render it. See docs/CONTENT-GAPS.md.
 
-import { z } from 'zod'
-import { pageSchema, assessmentSeriesSchema, assessmentSchema } from './schemas'
+import type { Page, AssessmentSeries, Assessment } from './schemas'
 
-export const ASSESSMENTS_PAGE = pageSchema.parse({
+export const ASSESSMENTS_PAGE: Page = {
   slug: 'self-assessment',
   title: 'Self-Assessment',
   sections: [
@@ -63,9 +62,9 @@ export const ASSESSMENTS_PAGE = pageSchema.parse({
       ],
     },
   ],
-})
+}
 
-export const ASSESSMENT_SERIES = assessmentSeriesSchema.parse({
+export const ASSESSMENT_SERIES: AssessmentSeries = {
   toolLabel: 'Self Assessment Tool',
   seriesTitle: 'THE NEW PRACTICE™ SELF-ASSESSMENT SERIES',
   scoringText: 'Scoring: Give yourself 1 point for each “yes” answer. Total score: 0–15.',
@@ -119,9 +118,9 @@ export const ASSESSMENT_SERIES = assessmentSeriesSchema.parse({
       },
     ],
   },
-})
+}
 
-export const ASSESSMENTS = z.array(assessmentSchema).parse([
+export const ASSESSMENTS: readonly Assessment[] = [
   {
     slug: 'alcohol',
     order: 1,
@@ -602,4 +601,4 @@ export const ASSESSMENTS = z.array(assessmentSchema).parse([
     interpretation:
       'Moderate or severe scores indicate it may be helpful to seek professional support.',
   },
-])
+]
