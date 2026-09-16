@@ -76,19 +76,27 @@ export function Hero({ hero, video, audioLabels, titleId, numeral }: Props) {
           onComplete: () => gsap.set('.hero__media', { willChange: 'auto' }),
         })
 
-        const words = () => {
-          gsap
-            .timeline()
-            .from('.hero__eyebrow', { opacity: 0, duration: D.slow, ease: E.outExpo }, 0.2)
-            .from(
-              '.hero__toggle',
-              { opacity: 0, duration: D.slow, ease: E.outExpo },
-              D.base + STAGGER.large
-            )
-            .from('.hero__cue', { opacity: 0, duration: D.slow, ease: E.outExpo }, D.slow)
+        // The words. `veil:done` is dispatched from inside the preloader's
+        // timeline onComplete, and GSAP makes the calling animation's context
+        // current while a callback runs, so a timeline built in the listener
+        // with string selectors resolved them against the preloader's root and
+        // found nothing (ledger, Task 21). The targets are resolved against the
+        // hero here, while this context is live, and the timeline is kept so
+        // the matchMedia cleanup reverts it with everything else.
+        const q = gsap.utils.selector(el)
+        const eyebrow = q('.hero__eyebrow')
+        const toggle = q('.hero__toggle')
+        const cue = q('.hero__cue')
+        let words: gsap.core.Timeline | undefined
+        const fadeWordsIn = () => {
+          const fade = { opacity: 0, duration: D.slow, ease: E.outExpo }
+          words = gsap.timeline().from(eyebrow, fade, 0.2)
+          // No recording, no toggle (HOME.hero.audioSrc is null): GSAP warns on an empty target.
+          if (toggle.length) words.from(toggle, fade, D.base + STAGGER.large)
+          words.from(cue, fade, D.slow)
         }
-        if (document.documentElement.dataset.veil === 'done') words()
-        else window.addEventListener('veil:done', words, { once: true })
+        if (document.documentElement.dataset.veil === 'done') fadeWordsIn()
+        else window.addEventListener('veil:done', fadeWordsIn, { once: true })
 
         // Scroll: the media parallaxes, the words lift away. Never parallax text.
         gsap.to('.hero__media', {
@@ -103,7 +111,10 @@ export function Hero({ hero, video, audioLabels, titleId, numeral }: Props) {
           scrollTrigger: { trigger: el, start: 'top top', end: CONTENT_FADE_END, scrub: true },
         })
 
-        return () => window.removeEventListener('veil:done', words)
+        return () => {
+          window.removeEventListener('veil:done', fadeWordsIn)
+          words?.revert()
+        }
       })
 
       return () => mm.revert()
