@@ -48,7 +48,7 @@ const PLACEHOLDER = 'PLACEHOLDER'
 
 const WIDE_PROJECTS: readonly string[] = [PROJECTS.desktop, PROJECTS.wide, PROJECTS.reducedMotion]
 /** The projects where the timeline scrubs: at least 1024px wide, motion allowed. */
-const SCRUB_PROJECTS: readonly string[] = [PROJECTS.desktop, PROJECTS.wide]
+const SCRUB_PROJECTS: readonly string[] = [PROJECTS.desktop, PROJECTS.wide, PROJECTS.webkit]
 /** The rule follows the reading line at 70% of the viewport (DayTimeline.tsx). */
 const READING_LINE = 0.7
 const SCRUB_SETTLE_MS = 400
@@ -194,7 +194,7 @@ test.describe('our-process', () => {
     await expect(images).toHaveAttribute('alt', MEDIA['hero-cenote-poster'].alt)
   })
 
-  test('links to About and Clinical Services in reading order', async ({ page }) => {
+  test('links to its neighbours in reading order', async ({ page }) => {
     const { prev, next } = prevNextFor(routes.process)
     if (!prev || !next) throw new Error('Our Process should sit between two pages')
     const rail = page.locator(RAIL)
@@ -231,9 +231,21 @@ test.describe('a-personal-message', () => {
     await expect(page.locator('main > :first-child')).toContainText(PERSONAL_MESSAGE.eyebrow ?? '')
   })
 
-  test('carries no rail: the route is outside the primary reading order', async ({ page }) => {
-    expect(prevNextFor(routes.personalMessage)).toEqual({})
-    await expect(page.locator(RAIL)).toHaveCount(0)
+  test('carries a rail: Our Process before it, Fees after (the footer Practice order)', async ({
+    page,
+  }) => {
+    const { prev, next } = prevNextFor(routes.personalMessage)
+    expect(prev?.href).toBe(routes.process)
+    expect(next?.href).toBe(routes.fees)
+    const rail = page.locator(RAIL)
+    await expect(rail.getByRole('link', { name: prev?.label ?? '', exact: true })).toHaveAttribute(
+      'href',
+      routes.process
+    )
+    await expect(rail.getByRole('link', { name: next?.label ?? '', exact: true })).toHaveAttribute(
+      'href',
+      routes.fees
+    )
   })
 })
 
@@ -248,7 +260,11 @@ test.describe('fees', () => {
     await expect(prose).toHaveCount(1)
     await expect(prose).toHaveText(statement)
     await expect(page.locator('main img')).toHaveCount(0)
-    await expect(page.locator(RAIL)).toHaveCount(0)
+    // The rail leads back to the letter and on to the services (ledger, Task 18 triage).
+    const { prev, next } = prevNextFor(routes.fees)
+    expect(prev?.href).toBe(routes.personalMessage)
+    expect(next?.href).toBe(routes.clinicalServices)
+    await expect(page.locator(RAIL).getByRole('link')).toHaveCount(2)
   })
 })
 

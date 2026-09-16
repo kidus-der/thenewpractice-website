@@ -290,8 +290,8 @@ describe('buildLlmsText', () => {
     expect(text).toContain('Recovery succeeds when trust is never interrupted.')
   })
 
-  it('lists every route, service, team member and assessment with absolute links', () => {
-    for (const path of allRoutes()) {
+  it('lists every indexable route, service, team member and assessment with absolute links', () => {
+    for (const path of allRoutes().filter((p) => !NOINDEX_ROUTES.has(p))) {
       expect(text).toContain(`](${canonicalUrl(production.siteUrl, path)})`)
     }
     for (const heading of ['Pages', 'Clinical services', 'Team', 'Self-assessments', 'Contact']) {
@@ -299,5 +299,11 @@ describe('buildLlmsText', () => {
     }
     expect(text).toContain(BRAND.phone)
     expect(text).toContain(BRAND.email)
+  })
+
+  it('leaves the noindex routes out, as the sitemap does', () => {
+    for (const path of NOINDEX_ROUTES) {
+      expect(text).not.toContain(`](${canonicalUrl(production.siteUrl, path)})`)
+    }
   })
 })
