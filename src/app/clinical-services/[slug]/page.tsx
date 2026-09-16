@@ -19,6 +19,9 @@ import { TreatmentTemplate } from '@/templates/TreatmentTemplate'
 
 type Params = Promise<{ slug: string }>
 
+/** Only the eleven services exist; an unknown slug is a 404 at the edge, never a render. */
+export const dynamicParams = false
+
 export function generateStaticParams(): { slug: string }[] {
   return SERVICES.map((service) => ({ slug: service.slug }))
 }
