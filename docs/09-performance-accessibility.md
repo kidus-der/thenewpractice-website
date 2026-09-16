@@ -123,6 +123,21 @@ simulated throttling (lantern; recorded, not asserted):
 
 Task 21 should re-run `npm run lighthouse` against the live URL (`--collect.url=`) and expect the same shape: the deployed edge removes nothing from these two causes.
 
+**After the lead reveal fix (Task 21).** The title-page lead in `PageIntro` and the enquiry opening's lead and first paragraphs now reveal with the `mask` variant (a clip; `[data-reveal='mask']` and `[data-reveal-children='mask'] > *`), so Chromium credits them at first paint as it does the `h1`'s line masks; reduced motion and the no-JS safety net already neutralise `clip-path`. Same method as the table above (`npm run lighthouse`, devtools throttling, mobile, median of three, this branch's production build, same laptop); _before_ is the _after_ column above.
+
+| Route | Perf before → after | FCP | LCP before → after | LCP element | CLS | TBT | SI |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `/` | 82 → 81 | 2118 | 2117 → 2118 | `h1#home-title` | 0.005 | 343 | 8003 |
+| `/about` | 87 → 86 | 2040 | 2045 → 2040 | preloader wordmark | 0.005 | 223 | 7818 |
+| `/clinical-services` | 90 → **90** | 2012 | 2029 → 2012 | `h1` | 0.005 | 74 | 7836 |
+| `/clinical-services/addiction-treatment` | 75 → 89 | 2029 | **4428 → 2029** | `h1` (was `p.t-lead`) | 0.005 | 98 | 7788 |
+| `/team/lowell-monkhouse` | 90 → **90** | 2000 | 2007 → 2000 | `h1` | 0.005 | 99 | 7792 |
+| `/residences` | 87 → 85 | 2026 | 2131 → 2026 | `h1` | 0.005 | 211 | 9162 |
+| `/contact` | 74 → **90** | 1820 | **4742 → 1824** | `h1` / `p.t-body` (masked, credited at first paint) | 0.005 | 72 | 7811 |
+| `/self-assessment/alcohol` | 90 → **90** | 2016 | 2015 → 2016 | `h1` | 0.004 | 79 | 7739 |
+
+Both LCP assertions pass: the treatment route's LCP fell from 4.43 s to 2.03 s and `/contact`'s from 4.74 s to 1.82 s, and on every route LCP now equals FCP. Performance moved 75 → 89 on the treatment route and 74 → 90 on `/contact`. Five routes are at or over 90; `/` (81), `/about` (86), the treatment route (89) and `/residences` (85) miss the score assertion by the Speed Index cost of the preloader veil described in cause 2, which is unchanged and is the owner's decision (`HANDOFF.md` §Performance state). Run-to-run spread on the sub-90 routes is one point (`/` 0.80–0.82, treatment 0.89 × 3). Thresholds are unchanged. Cause 1 above is closed; cause 2 stands.
+
 **4× CPU scroll traces (docs/09 §1, the gate that matters).** Playwright Chromium, 1280 × 800, `Emulation.setCPUThrottlingRate 4`, a scripted 12 px-per-frame scroll from top to foot after the preloader settled, a `PerformanceObserver` on `longtask`, two runs per route on the production build:
 
 | Route | Scroll length | Frames per second | Worst frame | Long tasks > 50 ms during scroll |

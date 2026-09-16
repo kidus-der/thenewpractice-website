@@ -37,7 +37,8 @@ const FIXTURES = FIXTURE_SLUGS.map((slug) => {
 })
 
 const RAIL = `nav[aria-label="${UI_INTERIOR.railLabel}"]`
-const PLACEHOLDER = `[role="img"][aria-label="${UI_PROFILE.portraitPending}"]`
+/** Decorative: hidden from assistive technology, no label (owner decision, Task 21). */
+const PLACEHOLDER = 'svg.portrait-placeholder[aria-hidden="true"]'
 const ROWS = '.index-list__row'
 const BIOGRAPHY = 'section#biography'
 const JSON_LD = 'script[type="application/ld+json"]'
@@ -98,10 +99,15 @@ for (const member of FIXTURES) {
       await expect(page.locator(`${BIOGRAPHY} .eyebrow`)).toHaveCount(0)
     })
 
-    test('shows the placeholder plate with its label and no photograph', async ({ page }) => {
+    test('shows the decorative placeholder plate, unlabelled, and no photograph', async ({
+      page,
+    }) => {
       const plate = page.locator(`main > :first-child ${PLACEHOLDER}`)
       await expect(plate).toHaveCount(1)
       await expect(plate).toBeVisible()
+      await expect(plate).not.toHaveAttribute('role', /.+/)
+      await expect(plate).not.toHaveAttribute('aria-label', /.+/)
+      await expect(page.locator('main > :first-child [role="img"]')).toHaveCount(0)
       const box = await plate.boundingBox()
       if (!box) throw new Error('placeholder has no box')
       expect(box.height / box.width).toBeCloseTo(4 / 3, 1)

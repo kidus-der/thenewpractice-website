@@ -231,7 +231,7 @@ async function buildPosterEntries(videos, log) {
       continue
     }
     log(`  ${key} (ev ${video.posterEv}) … `)
-    const alt = `Poster frame: ${video.alt}`
+    const alt = video.alt
     const options = { aspect: POSTER_ASPECT, ev: video.posterEv, focus: video.posterFocus }
     entries[key] = await processStill(key, frame, options, { ...video, alt })
     log('done\n')

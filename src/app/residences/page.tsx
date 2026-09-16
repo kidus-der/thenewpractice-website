@@ -17,8 +17,6 @@ import type { MediaKey } from '@/content/media'
 import { routes } from '@/content/nav'
 import { RESIDENCES } from '@/content/pages/residences'
 import { ROUTE_SEO } from '@/content/seo'
-import { UI_RESIDENCES } from '@/content/ui'
-import { env } from '@/lib/env'
 import { assertSectionIds } from '@/lib/interior'
 import { breadcrumb, organization, webPage } from '@/lib/jsonld'
 import { prevNextFor } from '@/lib/prevNext'
@@ -56,10 +54,6 @@ const TRAIL = [
   { name: SEO.name, path: PATH },
 ] as const
 
-/** Staging and development see the flag; production cannot. */
-const copyPendingNotice = (): string | undefined =>
-  env().SITE_ENV === 'production' ? undefined : UI_RESIDENCES.copyPending
-
 export default function Page() {
   return (
     <>
@@ -78,7 +72,6 @@ export default function Page() {
         band={BAND}
         grounds={{ [SAND_SECTION]: 'mid' }}
         prevNext={prevNextFor(PATH)}
-        notice={copyPendingNotice()}
       />
     </>
   )

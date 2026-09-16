@@ -16,7 +16,7 @@ import { PRIVACY, TERMS } from '../../src/content/pages/legal'
 import { PERSONAL_MESSAGE } from '../../src/content/pages/personal-message'
 import { PROCESS } from '../../src/content/pages/process'
 import type { Page as PageContent } from '../../src/content/schemas'
-import { UI_INTERIOR, UI_STAGING } from '../../src/content/ui'
+import { UI_INTERIOR } from '../../src/content/ui'
 import { prevNextFor } from '../../src/lib/prevNext'
 import {
   PROJECTS,
@@ -270,14 +270,22 @@ test.describe('fees', () => {
 
 for (const route of ROUTES.filter((r) => NOINDEX_ROUTES.has(r.path))) {
   test.describe(`${route.name} stub`, () => {
-    test('is flagged for review off production and kept out of the index', async ({ page }) => {
+    test('carries only the PLACEHOLDER prefix as its marker and is kept out of the index', async ({
+      page,
+    }) => {
       await page.goto(route.path)
       await settleMotion(page)
-      await expect(page.locator('main > :first-child')).toContainText(UI_STAGING.copyPending)
+      // Owner decision (Task 21): no review note in any environment; the stub,
+      // its noindex and its PLACEHOLDER headings are the same everywhere.
+      await expect(page.locator('main')).not.toContainText(/pending client review/i)
+      await expect(page.locator('main [data-notice]')).toHaveCount(0)
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
       const headings = await page.locator('main h1, main h2').allTextContents()
       const stub = headings.filter((h) => h.startsWith(PLACEHOLDER))
       expect(stub).toHaveLength(route.content.sections.length + 1)
+      // Headings only: no body sentence, no lead (owner decision, Task 21).
+      await expect(page.locator('main p.t-body, main .content-section__prose p')).toHaveCount(0)
+      await expect(page.locator('main')).not.toContainText(/\b(pending|counsel|in force)\b/i)
     })
   })
 }

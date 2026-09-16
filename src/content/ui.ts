@@ -46,32 +46,17 @@ export const UI_INTERIOR = {
 } as const
 
 /**
- * STAGING FLAGS — Task 18. Shown only when the deployment is not the
- * production site (`isIndexable()` is false), so a reviewer on staging can
- * tell a PLACEHOLDER page from a finished one at a glance. Never rendered in
- * production; never client copy.
- */
-export const UI_STAGING = {
-  /** Eyebrow label over a page whose copy is still a PLACEHOLDER stub. */
-  copyPending: 'Copy pending client review',
-} as const
-
-/**
  * RESIDENCES TEMPLATE STRINGS — Task 17. Landmark names for the two blocks
  * that have no heading in the content (the plate carousel and the amenities
- * table), and the review flag rendered over the intro on every deployment
- * that is not production, because the page's copy is structural PLACEHOLDER
- * (docs/CONTENT-GAPS.md G1). The flag is interface copy, not page copy, and
- * deliberately does not carry the PLACEHOLDER marker: content.checks.ts
- * confines that marker to the modules where content is known to be missing.
+ * table). The page's copy is structural PLACEHOLDER (docs/CONTENT-GAPS.md
+ * G1); the prefix on its headings is the only marker it carries, in every
+ * environment (owner decision, Task 21).
  */
 export const UI_RESIDENCES = {
   /** aria-label on the carousel <section>. */
   carouselLabel: 'Plates',
   /** aria-label on the amenities <section>. */
   amenitiesLabel: 'Amenities',
-  /** Shown above the intro when SITE_ENV is not production; one string, shared with UI_STAGING. */
-  copyPending: UI_STAGING.copyPending,
 } as const
 
 /**
@@ -117,15 +102,13 @@ export const UI_TREATMENT = {
 
 /**
  * PROFILE TEMPLATE STRINGS — Task 14. The label the portrait plate carries
- * while it is a placeholder (docs/CONTENT-GAPS.md G4: no portraits yet), and
- * the heading over the three other members each profile points to (the next
- * three in the client's list, so the heading claims no pairing). Structural,
- * ours, promising nothing; the eyebrow label is the collection's own name
- * from seo.ts, not repeated here.
+ * (docs/CONTENT-GAPS.md G4: no portraits yet; the placeholder plate is
+ * decorative and carries no label): the heading over the three other members
+ * each profile points to (the next three in the client's list, so the
+ * heading claims no pairing). Structural, ours, promising nothing; the
+ * eyebrow label is the collection's own name from seo.ts, not repeated here.
  */
 export const UI_PROFILE = {
-  /** aria-label on the placeholder plate; replaced by the portrait's alt when one exists. */
-  portraitPending: 'Portrait placeholder',
   /** Heading over the three cross-links beneath the biography. */
   worksAlongside: 'Also on the team',
 } as const

@@ -4,12 +4,12 @@
  * vertical hairline and the ceiba's gold point at the golden section: the
  * human presence only obliquely — never a face, not even an outline of one.
  * Server-rendered SVG; every colour is a token read from the ground it sits
- * on, so the same markup would grade correctly on sand or canopy. The label
- * is interface copy from ui.ts and is replaced by the portrait's own alt
- * text when `media.ts` gains a key for the member.
+ * on, so the same markup would grade correctly on sand or canopy. It is
+ * decorative and hidden from assistive technology (owner decision, Task 21:
+ * no note-like label anywhere); the portrait's own alt text takes its place
+ * when `media.ts` gains a key for the member.
  */
 import './PortraitPlaceholder.css'
-import { UI_PROFILE } from '@/content/ui'
 import { cn } from '@/lib/cn'
 
 /** The point sits at the upper golden section of the frame, not its centre. */
@@ -25,8 +25,7 @@ export function PortraitPlaceholder({ className }: Props) {
   return (
     <svg
       className={cn('portrait-placeholder', className)}
-      role="img"
-      aria-label={UI_PROFILE.portraitPending}
+      aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
