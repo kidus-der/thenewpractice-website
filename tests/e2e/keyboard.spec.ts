@@ -31,8 +31,9 @@ const ROUTES: readonly { name: string; path: string }[] = [
   { name: 'assessment', path: assessmentHref(first(ASSESSMENTS, 'assessments').slug) },
 ]
 
+/** Links, controls and the one deliberate tab stop: the carousel's scroller under reduced motion. */
 const FOCUSABLE_IN_MAIN =
-  'main a[href], main button:not([disabled]), main input:not([disabled]):not([tabindex="-1"]), main select:not([disabled]), main textarea:not([disabled])'
+  'main a[href], main button:not([disabled]), main input:not([disabled]):not([tabindex="-1"]), main select:not([disabled]), main textarea:not([disabled]), main [tabindex="0"]'
 const NARROW_PROJECTS: readonly string[] = [PROJECTS.mobile, PROJECTS.tablet]
 /** Tabbing every control on the longest page (54 rows on a treatment page) needs headroom. */
 const MAX_TAB_STOPS = 200
@@ -52,7 +53,13 @@ type FocusSnapshot = Readonly<{
  * the option label that carries its ring (`.choice__option:has(:focus-visible)`).
  */
 const activeSnapshot = (page: import('@playwright/test').Page) =>
-  page.evaluate((): FocusSnapshot => {
+  page.evaluate(async (): Promise<FocusSnapshot> => {
+    // Under reduced motion the safety net's 0.01ms transition on `all` makes
+    // the computed outline report the browser's default ring for a few
+    // frames after focus moves (ledger, Task 12 findings); read after a short
+    // settle. The ring itself is 1px brass on both grounds (Task 19 read it
+    // at 600ms with and without reduced motion).
+    await new Promise<void>((r) => setTimeout(r, 80))
     const focused = document.activeElement as HTMLElement | null
     const el = focused?.closest<HTMLElement>('.choice__option') ?? focused
     const style = el ? getComputedStyle(el) : null
