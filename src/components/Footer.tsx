@@ -6,7 +6,8 @@
  * permitted marquee, the only client code here), the sitemap from nav.ts,
  * the founder contact from brand.ts, the legal line (copyright and the
  * confidentiality sentence; privacy and terms belong to the Legal column,
- * ledger Task 8 triage), and the lockup — mark,
+ * ledger Task 8 triage — a column production does not show while the pages
+ * are PLACEHOLDER stubs, src/lib/placeholderRoutes.ts), and the lockup — mark,
  * wordmark with the ™, tagline — alone at the very bottom, the way a
  * monograph ends on the publisher's device. Every string comes from the
  * content layer; the confidentiality line is the client's own sentence.
@@ -14,12 +15,12 @@
 import Link from 'next/link'
 import './Footer.css'
 import { BRAND } from '@/content/brand'
-import { NAV } from '@/content/nav'
 import { HOME } from '@/content/pages/home'
 import { UI_FOOTER } from '@/content/ui'
 import { Mark } from '@/components/Mark'
 import { Marquee } from '@/components/Marquee'
 import { mailHref, telHref } from '@/lib/contact'
+import { liveNav } from '@/lib/placeholderRoutes'
 
 /**
  * "Every enquiry is handled with complete confidentiality." — the second
@@ -40,7 +41,7 @@ function Sitemap() {
     <nav className="site-footer__nav" aria-label={UI_FOOTER.navLabel}>
       <h2 className="sr-only">{UI_FOOTER.sitemapHeading}</h2>
       <ul className="site-footer__groups">
-        {NAV.footer.map((group) => (
+        {liveNav().footer.map((group) => (
           <li className="site-footer__group" key={group.heading}>
             <h3 className="site-footer__heading t-eyebrow">{group.heading}</h3>
             <ul className="site-footer__links t-small">

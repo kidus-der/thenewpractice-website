@@ -16,6 +16,7 @@ import { Footer } from '@/components/Footer'
 import { SmoothScroll } from '@/motion/SmoothScroll'
 import { MotionProvider } from '@/motion/motion-config'
 import { env } from '@/lib/env'
+import { liveNav } from '@/lib/placeholderRoutes'
 import { buildMetadata } from '@/lib/seo'
 import { routes } from '@/content/nav'
 import { ROUTE_SEO } from '@/content/seo'
@@ -99,7 +100,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             Header sits at --z-nav and reads --ground / --ground-fg from
             <html>; the overlay sits at --z-overlay, beneath the texture layer
             so the grain stays continuous across it (docs/03 §8). */}
-        <Header />
+        <Header nav={liveNav()} />
 
         <ScrollRail />
         <Cursor />

@@ -32,7 +32,8 @@ import { useEffect, useLayoutEffect, useRef, type RefObject } from 'react'
 import Link from 'next/link'
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react'
 import { BRAND } from '@/content/brand'
-import { NAV, UI_NAV, isActiveRoute } from '@/content/nav'
+import { UI_NAV, isActiveRoute } from '@/content/nav'
+import type { Nav } from '@/content/schemas'
 import { mailHref, telHref } from '@/lib/contact'
 import { gsap } from '@/motion/gsap'
 import { fadeVariants, identityEase, overlayVariants } from '@/motion/motion-config'
@@ -77,6 +78,8 @@ function focusableWithin(roots: readonly (HTMLElement | null)[]): HTMLElement[] 
 
 type Props = Readonly<{
   id: string
+  /** The deployment's navigation, from the layout (src/lib/placeholderRoutes.ts). */
+  nav: Nav
   open: boolean
   pathname: string
   headerRef: RefObject<HTMLElement | null>
@@ -148,7 +151,7 @@ function useMarkDraw(panel: RefObject<HTMLDivElement | null>, reduced: boolean) 
   }, [panel, reduced])
 }
 
-function Panel({ id, pathname, reduced, headerRef, onClose, onNavigate }: PanelProps) {
+function Panel({ id, nav, pathname, reduced, headerRef, onClose, onNavigate }: PanelProps) {
   const panel = useRef<HTMLDivElement>(null)
   const firstLink = useRef<HTMLAnchorElement>(null)
 
@@ -179,7 +182,7 @@ function Panel({ id, pathname, reduced, headerRef, onClose, onNavigate }: PanelP
       <div className="nav-overlay__inner shell">
         <nav className="nav-overlay__primary" aria-label={UI_NAV.ariaLabels.primary}>
           <ul className="nav-overlay__list">
-            {NAV.primary.map((item, index) => (
+            {nav.primary.map((item, index) => (
               <li key={item.href} className="nav-overlay__mask">
                 <motion.div className="nav-overlay__line" variants={itemVariants}>
                   <Link
@@ -200,7 +203,7 @@ function Panel({ id, pathname, reduced, headerRef, onClose, onNavigate }: PanelP
 
         <motion.div className="nav-overlay__aside" variants={reduced ? undefined : asideVariants}>
           <nav className="nav-overlay__utility" aria-label={UI_NAV.ariaLabels.contact}>
-            {NAV.utility.map((item) => (
+            {nav.utility.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}

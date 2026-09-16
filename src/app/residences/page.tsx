@@ -8,7 +8,8 @@
  *
  * Every string in the page module is structural PLACEHOLDER (CONTENT-GAPS
  * G1), so on any deployment that is not production the intro carries a
- * review flag the client can see; in production the flag cannot render.
+ * review flag the client can see; in production the flag cannot render, the
+ * page is noindex and nothing links to it.
  */
 import type { Metadata } from 'next'
 import { JsonLd } from '@/components/JsonLd'
@@ -28,7 +29,9 @@ import { ResidencesTemplate } from '@/templates/ResidencesTemplate'
 const SEO = ROUTE_SEO.residences
 const PATH = routes.residences
 
-export const metadata: Metadata = buildMetadata({ ...SEO, path: PATH })
+// noIndex while the copy is PLACEHOLDER (nav.ts NOINDEX_ROUTES); production
+// also leaves the route out of the navigation (src/lib/placeholderRoutes.ts).
+export const metadata: Metadata = buildMetadata({ ...SEO, path: PATH, noIndex: true })
 
 const HERO: MediaKey = 'hero-canopy-poster'
 const BAND: MediaKey = 'band-discretion'
