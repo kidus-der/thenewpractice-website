@@ -225,8 +225,11 @@ main > section.one {
     display: flex;
   }
 }
+/* held back, but not below the contrast floor: 72% of the ground's ink clears
+   4.5:1 on bone, sand and canopy (docs/03 §1; axe measures the numeral even
+   though it is aria-hidden — ledger, Task 8 triage) */
 .scroll-rail__n {
-  color: color-mix(in srgb, currentColor 45%, transparent);
+  color: color-mix(in srgb, currentColor 72%, transparent);
 }
 .scroll-rail__track {
   position: relative;
@@ -276,6 +279,10 @@ html[data-cursor='custom'] * {
     height var(--d-fast) var(--e-out-expo),
     margin var(--d-fast) var(--e-out-expo),
     opacity var(--d-fast) var(--e-out-expo);
+}
+/* nothing is painted until a mouse has moved (Cursor.tsx) */
+.cursor:not([data-seen='true']) {
+  opacity: 0;
 }
 .cursor[data-state='active'] {
   width: 36px;

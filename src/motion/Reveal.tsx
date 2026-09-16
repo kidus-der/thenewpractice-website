@@ -20,6 +20,9 @@ import { D, E, REVEAL_START, STAGGER } from './tokens'
 
 export type RevealVariant = 'fade' | 'rise' | 'mask' | 'lines' | 'chars'
 
+const HEADING = /^H[1-6]$/
+const isHeading = (el: Element): boolean => HEADING.test(el.tagName)
+
 /**
  * The props a reveal element actually receives. @react-three/fiber (task 3)
  * augments JSX.IntrinsicElements with three.js elements, and a JSX tag typed
@@ -82,6 +85,11 @@ export function Reveal({
               mask: variant === 'lines' ? 'lines' : undefined,
               autoSplit: true,
               linesClass: 'split-line-inner',
+              // SplitText's default names the element with an aria-label of
+              // its text. A heading may carry one; on a <p> or a list item axe
+              // forbids it (aria-prohibited-attr, serious; ledger Task 16), so
+              // there the lines simply read in order.
+              aria: isHeading(el) ? 'auto' : 'none',
             })
             const targets = variant === 'lines' ? split.lines : split.chars
             gsap.set(el, { opacity: 1 })

@@ -22,6 +22,7 @@ import {
   expectNoAxeViolations,
   expectNoConsoleErrors,
   isProjectName,
+  revealAll,
   screenshotRoute,
   settleMotion,
   test,
@@ -35,12 +36,14 @@ const TRIAD = triadLines(SECTIONS.statement.subtitle ?? '')
 const CONDITIONS = SECTIONS.conditions.list ?? []
 const PILLARS = (SECTIONS.philosophy.definitions ?? []).map((d) => d.term)
 const H2_TITLES = HOME.sections.map((s) => s.title).filter((t): t is string => Boolean(t))
-const PLATE_PROJECTS: readonly string[] = [PROJECTS.desktop, PROJECTS.wide]
-const INDEX_PROJECTS: readonly string[] = [PROJECTS.desktop, PROJECTS.wide, PROJECTS.reducedMotion]
+const PLATE_PROJECTS: readonly string[] = [PROJECTS.desktop, PROJECTS.wide, PROJECTS.webkit]
+const INDEX_PROJECTS: readonly string[] = [
+  PROJECTS.desktop,
+  PROJECTS.wide,
+  PROJECTS.reducedMotion,
+  PROJECTS.webkit,
+]
 const INDEX = `nav[aria-label="${UI_HOME.pillarsIndexLabel}"]`
-/** Reveals run at --d-slow with a stagger; generous headroom after the last scroll step. */
-const REVEAL_SETTLE_MS = 2500
-const SCROLL_STEP_VH = 0.6
 /** Long enough for the buffered LCP entries to be delivered to the observer. */
 const LCP_SETTLE_MS = 300
 /** docs/09 §1: the CI gate for the largest contentful paint. */
@@ -49,29 +52,6 @@ const LCP_BUDGET_MS = 2500
 const LCP_AFTER_FCP_MAX_MS = 250
 
 type LcpSummary = Readonly<{ tag: string | null; url: string; size: number; time: number }>
-
-/**
- * Scroll the whole page once so every once:true reveal has fired, then
- * return to the top and wait for the tweens to land (local copy of the
- * about spec's helper until it moves into tests/e2e/helpers).
- */
-async function revealAll(page: import('@playwright/test').Page): Promise<void> {
-  await page.evaluate(async (stepVh) => {
-    const step = window.innerHeight * stepVh
-    const frame = () => new Promise<void>((r) => requestAnimationFrame(() => r()))
-    const max = () => document.documentElement.scrollHeight - window.innerHeight
-    for (let y = 0; y <= max(); y += step) {
-      window.scrollTo(0, y)
-      await frame()
-      await frame()
-    }
-    window.scrollTo(0, max())
-    await frame()
-    window.scrollTo(0, 0)
-    await frame()
-  }, SCROLL_STEP_VH)
-  await page.waitForTimeout(REVEAL_SETTLE_MS)
-}
 
 /** The last buffered largest-contentful-paint entry, or null when none was recorded. */
 async function readLcp(page: import('@playwright/test').Page): Promise<LcpSummary | null> {
@@ -250,7 +230,7 @@ test.describe('home', () => {
   })
 
   test('shows the hover plate on a fine-pointer desktop only', async ({ page }, info) => {
-    const plate = page.locator('.conditions__plate')
+    const plate = page.locator('.conditions__wrap .hover-plate')
     if (!PLATE_PROJECTS.includes(info.project.name)) {
       await expect(plate).toHaveCount(0)
       return
@@ -259,7 +239,7 @@ test.describe('home', () => {
     await row.scrollIntoViewIfNeeded()
     await row.hover()
     await expect(plate).toHaveAttribute('data-shown', 'true')
-    await expect(plate.locator('.conditions__frame.is-active img')).toHaveCount(1)
+    await expect(plate.locator('.hover-plate__frame.is-active img')).toHaveCount(1)
     await page.mouse.move(0, 0)
     await expect(plate).toHaveAttribute('data-shown', 'false')
   })
@@ -318,9 +298,8 @@ test.describe('home', () => {
 
   test('has no serious axe violations in the page', async ({ page }) => {
     await revealAll(page)
-    // Scoped to <main>: the whole-document run fails on chrome that is not this
-    // route's — the scroll rail numeral and the footer marquee (ledger, Tasks 8 and 11).
-    await expectNoAxeViolations(page, { impactAtLeast: 'serious', include: 'main' })
+    // The whole document: page, header, scroll rail and footer (Task 19).
+    await expectNoAxeViolations(page, { impactAtLeast: 'serious' })
   })
 
   test('captures the settled page', async ({ page }) => {

@@ -7,22 +7,17 @@
  * under reduced motion (Footer.css hides everything after the first item).
  *
  * Decorative: the wordmark exists as real text in the footer lockup, so the
- * whole band is hidden from assistive technology. The set is rendered twice
- * and the track travels -50%, so the second set exists only to make the loop
- * seamless.
+ * whole band is hidden from assistive technology and its letters are drawn
+ * by CSS from data attributes rather than as text nodes. The set is rendered
+ * twice and the track travels -50%, so the second set exists only to make
+ * the loop seamless.
  */
 import { useLayoutEffect, useRef } from 'react'
 import { cn } from '@/lib/cn'
 import { gsap, ScrollTrigger } from '@/motion/gsap'
-import { E } from '@/motion/tokens'
+import { D, E } from '@/motion/tokens'
 import { MOTION_OK } from '@/motion/useMediaQuery'
 
-/**
- * Seconds per cycle — docs/04 §4 specifies 40s. The motion tokens top out at
- * --d-glacial (1.4s); this is the site's one continuous loop, so it is named
- * here rather than invented at the call site.
- */
-const CYCLE_SECONDS = 40
 /** Repetitions per set: one set must be wider than any viewport. */
 const REPEATS = 3
 
@@ -46,7 +41,7 @@ export function Marquee({ text, separator, className }: Props) {
         gsap.set(el, { willChange: 'transform' })
         const loop = gsap.to(el, {
           xPercent: -50,
-          duration: CYCLE_SECONDS,
+          duration: D.marquee,
           ease: E.linear,
           repeat: -1,
           paused: true,
@@ -72,11 +67,13 @@ export function Marquee({ text, separator, className }: Props) {
     return () => ctx.revert()
   }, [])
 
+  // The wordmark and the separator are painted by the stylesheet from these
+  // attributes (Footer.css `::before` / `::after`), not written as text nodes:
+  // axe measures visible text for contrast whether or not it is aria-hidden,
+  // and a ghost at 0.06 alpha can never clear the floor. The real wordmark is
+  // in the lockup below (ledger, Task 11 / 15 findings; Task 19).
   const items = Array.from({ length: REPEATS }, (_, i) => (
-    <span className="marquee__item" key={i}>
-      {text}
-      <span className="marquee__sep">{separator}</span>
-    </span>
+    <span className="marquee__item" key={i} data-text={text} data-sep={separator} />
   ))
 
   return (
