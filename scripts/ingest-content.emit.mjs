@@ -80,16 +80,28 @@ export function compact(value) {
   return value
 }
 
+/** `homePageSchema` → `HomePage`: the inferred type exported beside each schema. */
+export function typeNameOf(schema) {
+  const base = schema.replace(/Schema$/, '')
+  return base.charAt(0).toUpperCase() + base.slice(1)
+}
+
 /**
  * A module: header, source line range, imports, then one `export const` per
- * entry parsed through its schema so a bad edit fails at import time.
+ * entry as a plain object annotated with its schema's inferred type (an
+ * annotation, not `satisfies`, so the exported type is exactly what
+ * `schema.parse()` used to return and no literal narrows downstream). The
+ * schema import is type-only, so Zod never reaches a client bundle through a
+ * content module (Task 20); the runtime parse lives in content.checks.ts,
+ * which `npm test` and `npm run content:check` both run.
  */
 export function renderModule({ range, imports, exports, note }) {
   const importLines = imports.map(
-    ({ names, from }) => `import { ${names.join(', ')} } from '${from}'`
+    ({ names, from, typeOnly }) =>
+      `import ${typeOnly ? 'type ' : ''}{ ${names.join(', ')} } from '${from}'`
   )
   const body = exports.map(
-    ({ name, schema, value }) => `export const ${name} = ${schema}.parse(${emit(value)})`
+    ({ name, type, value }) => `export const ${name}: ${type} = ${emit(value)}`
   )
   const source = `// Source: «${SOURCE_FILE}», lines ${range.from}–${range.to}.`
   const head = [GENERATED_HEADER, source, ...(note ? [note] : []), '', ...importLines, ''].join(

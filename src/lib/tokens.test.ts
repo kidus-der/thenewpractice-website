@@ -38,7 +38,8 @@ describe('readToken', () => {
   })
 
   it('returns the fallback on the server without a reader injected', () => {
-    // Vitest runs this file in a node environment: no window, no document.
+    // Vitest runs this file in jsdom, whose getComputedStyle yields no custom
+    // property values, so readToken() must fall back exactly as on the server.
     const value = readToken('--c-canopy', PALETTE.canopy)
 
     expect(value).toBe(PALETTE.canopy)

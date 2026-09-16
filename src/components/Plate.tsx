@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { MEDIA, type MediaKey } from '@/content/media'
 import { cn } from '@/lib/cn'
+import { plateQuality } from '@/lib/plates'
 
 type Props = {
   media: MediaKey
@@ -31,6 +32,7 @@ export function Plate({ media, alt, sizes, className, priority, loading }: Props
         width={m.width}
         height={m.height}
         sizes={sizes}
+        quality={plateQuality(media)}
         placeholder="blur"
         blurDataURL={m.blurDataURL}
         priority={priority}

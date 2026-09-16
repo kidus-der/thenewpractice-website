@@ -117,7 +117,7 @@ Commissioned photography replaces a stock frame by changing its `url` (a local `
 | Team plates   | SVG silhouettes (generated)                                | ≤ 4kB each                          |
 | Grain texture | inline SVG `feTurbulence`                                  | ≤ 2kB                               |
 
-Initial-viewport media weight (poster + fonts) must stay under **1.6MB**. The video loads after the poster paints; the LCP is the poster, never the video. `next/image` re-encodes the WebP source per device width, so the on-disk plate size is the ceiling, not what ships; the high-frequency plates (canopy from below, travertine, steps) exceed their on-disk budget and task 20 reads the served sizes.
+Initial-viewport media weight (poster + fonts) must stay under **1.6MB**. The video loads after the poster paints; the LCP is the poster, never the video. `next/image` re-encodes the WebP source per device width, so the on-disk plate size is the ceiling, not what ships; the served sizes are what the budget above is measured against (Task 20's Playwright audit, docs/09 §Measured budgets). Per-frame quality lives in `src/lib/plates.ts` (`plateQuality()`), with every value it uses listed in `images.qualities` in `next.config.ts`; today only `index-01`, the canopy silhouette, ships at 60 rather than 75, and it still exceeds 120 kB above 640 px served (see the ledger). Add a key there, with the measured reason beside it, rather than lowering the pipeline's global WebP quality.
 
 **LQIP:** every `next/image` gets a `blurDataURL`. The blur-up is part of the art direction — images develop rather than pop in.
 
@@ -133,12 +133,12 @@ Initial-viewport media weight (poster + fonts) must stay under **1.6MB**. The vi
 
 Self-hosted via `next/font/google`. No external requests.
 
-| Face        | Weights             | Subset           | Preload |
-| ----------- | ------------------- | ---------------- | ------- |
-| Bodoni Moda | 400, 500, + italics | latin, latin-ext | yes     |
-| Jost        | variable            | latin, latin-ext | no      |
+| Face        | Weights          | Subset           | Preload |
+| ----------- | ---------------- | ---------------- | ------- |
+| Bodoni Moda | 400 + 400 italic | latin, latin-ext | yes     |
+| Jost        | variable         | latin, latin-ext | no      |
 
-Typeface licensing is the client's (contract §3). The swap point is `src/app/layout.tsx`.
+Typeface licensing is the client's (contract §3). The swap point is `src/app/layout.tsx`. Every display setting in the stylesheets is weight 400 (upright for titles, italic for the single emphasis voice), so the 500s were dropped in Task 20: two fewer preloaded files and eight fewer `@font-face` rules. Add a weight only with a rule that uses it.
 
 ## Audio
 

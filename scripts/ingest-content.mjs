@@ -20,7 +20,7 @@ import { fileURLToPath } from 'node:url'
 import { BRAND } from '../src/content/brand.ts'
 import { UI } from '../src/content/ui.ts'
 import * as cfg from './ingest-content.config.mjs'
-import { compact, raw, renderModule, writeModule } from './ingest-content.emit.mjs'
+import { compact, raw, renderModule, typeNameOf, writeModule } from './ingest-content.emit.mjs'
 import {
   assert,
   lineRange,
@@ -500,28 +500,27 @@ function pageModule(meta, page, { schema, imports = [], note }) {
     content: renderModule({
       range: page.range,
       note,
-      imports: [{ names: [schema], from: `${relative}schemas` }, ...imports],
-      exports: [{ name: meta.constName, schema, value: compact(page.value) }],
+      imports: [
+        { names: [typeNameOf(schema)], from: `${relative}schemas`, typeOnly: true },
+        ...imports,
+      ],
+      exports: [{ name: meta.constName, type: typeNameOf(schema), value: compact(page.value) }],
     }),
   }
 }
 
-/** Collections parse through `z.array(schema)`; single values through the schema itself. */
+/** Collections are typed `readonly Type[]`; single values the type itself. */
 function collectionModule(meta, range, exports, note) {
-  const schemaNames = [...new Set(exports.map((e) => e.schema))]
-  const usesArray = exports.some((e) => e.collection)
+  const typeNames = [...new Set(exports.map((e) => typeNameOf(e.schema)))]
   return {
     path: join(ROOT, cfg.OUT_DIR, meta.file),
     content: renderModule({
       range,
       note,
-      imports: [
-        ...(usesArray ? [{ names: ['z'], from: 'zod' }] : []),
-        { names: schemaNames, from: './schemas' },
-      ],
+      imports: [{ names: typeNames, from: './schemas', typeOnly: true }],
       exports: exports.map((e) => ({
         name: e.name,
-        schema: e.collection ? `z.array(${e.schema})` : e.schema,
+        type: e.collection ? `readonly ${typeNameOf(e.schema)}[]` : typeNameOf(e.schema),
         value: compact(e.value),
       })),
     }),

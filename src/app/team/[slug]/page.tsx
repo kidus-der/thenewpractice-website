@@ -28,6 +28,9 @@ import { ProfileTemplate } from '@/templates/ProfileTemplate'
 type Params = Readonly<{ slug: string }>
 type Props = Readonly<{ params: Promise<Params> }>
 
+/** Only the eleven profiles exist; an unknown slug is a 404 at the edge, never a render. */
+export const dynamicParams = false
+
 export function generateStaticParams(): Params[] {
   return TEAM.map((member) => ({ slug: member.slug }))
 }

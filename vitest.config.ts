@@ -13,7 +13,8 @@ const COVERAGE_FLOOR = 80
 const src = fileURLToPath(new URL('./src', import.meta.url))
 
 export default defineConfig({
-  esbuild: { jsx: 'automatic' },
+  // Vitest 5 runs on Vite 8, whose transformer is oxc rather than esbuild.
+  oxc: { jsx: { runtime: 'automatic' } },
   resolve: { alias: { '@': src } },
   test: {
     environment: 'jsdom',

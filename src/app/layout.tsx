@@ -29,9 +29,12 @@ import { ROUTE_SEO } from '@/content/seo'
  * Both are stand-ins. Typeface licensing is the client's (contract §3), and
  * this file is the single swap point when the foundry originals arrive.
  */
+// One weight: every display setting in the stylesheets is 400 (upright for
+// titles, italic for the site's single emphasis voice), so the 500s were two
+// preloaded files (~56 kB) and eight @font-face rules no glyph ever used.
 const display = Bodoni_Moda({
   subsets: ['latin', 'latin-ext'],
-  weight: ['400', '500'],
+  weight: ['400'],
   style: ['normal', 'italic'],
   variable: '--font-bodoni-moda',
   display: 'swap',

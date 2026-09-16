@@ -6,7 +6,7 @@
  * (docs/01). Routes are the single place a path is spelled out; templates,
  * the sitemap and the footer all read from here.
  */
-import { navSchema } from './schemas'
+import type { Nav } from './schemas'
 
 export const routes = {
   home: '/',
@@ -38,7 +38,7 @@ export const serviceHref = (slug: string): string => `${routes.clinicalServices}
 export const teamHref = (slug: string): string => `${routes.team}/${slug}`
 export const assessmentHref = (slug: string): string => `${routes.selfAssessment}/${slug}`
 
-export const NAV = navSchema.parse({
+export const NAV: Nav = {
   primary: [
     { label: 'About', href: routes.about },
     { label: 'Our Process', href: routes.process },
@@ -79,7 +79,7 @@ export const NAV = navSchema.parse({
       ],
     },
   ],
-})
+}
 
 /**
  * HEADER AND MENU STRINGS — Task 7. The trigger's two labels and the

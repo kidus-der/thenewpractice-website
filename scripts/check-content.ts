@@ -12,14 +12,7 @@ import { existsSync } from 'node:fs'
 import * as nodeModule from 'node:module'
 import { fileURLToPath } from 'node:url'
 
-type ResolveContext = { parentURL?: string }
-type ResolveResult = { url: string }
-type NextResolve = (specifier: string, context: ResolveContext) => ResolveResult
-type Hooks = {
-  resolve: (specifier: string, context: ResolveContext, next: NextResolve) => ResolveResult
-}
-// @types/node 20 predates module.registerHooks (Node ≥ 22.15); the runtime has it.
-const { registerHooks } = nodeModule as unknown as { registerHooks: (hooks: Hooks) => void }
+const { registerHooks } = nodeModule
 
 const HAS_EXTENSION = /\.[cm]?[jt]sx?$/
 

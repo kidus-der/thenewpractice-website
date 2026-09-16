@@ -20,6 +20,7 @@ import type { ReactNode } from 'react'
 import './ContentSection.css'
 import type { MediaKey } from '@/content/media'
 import type { Section, Signature } from '@/content/schemas'
+import { isPortrait } from '@/lib/plates'
 import { capitaliseFirst } from '@/lib/interior'
 import { Reveal } from '@/motion/Reveal'
 import { HairlineList } from './HairlineList'
@@ -35,8 +36,14 @@ const PROSE_CLASS: Readonly<Record<Register, string>> = {
   lead: 't-lead content-section__prose-lead',
 }
 
-/** The body column is seven of twelve from 1024px (InteriorTemplate.css). */
-const PLATE_SIZES = '(min-width: 1024px) 58vw, 100vw'
+/**
+ * `sizes` for next/image, measured at 390 / 768 / 1280 / 1920 (Task 20): the
+ * body column is seven of twelve from 1024px (InteriorTemplate.css) and a 3:4
+ * plate keeps to 62% of it (ContentSection.css), so a portrait plate is asked
+ * for at roughly a third of the viewport on desktop and half of it below.
+ */
+const PLATE_SIZES = '(min-width: 1024px) 52vw, 90vw'
+const PORTRAIT_PLATE_SIZES = '(min-width: 1024px) 36vw, 56vw'
 
 type Props = {
   section: Section
@@ -109,7 +116,11 @@ function SectionBody({ section, plates, register }: BodyProps) {
   return (
     <>
       {plate && (
-        <PlateFigure media={plate} sizes={PLATE_SIZES} className="content-section__plate" />
+        <PlateFigure
+          media={plate}
+          sizes={isPortrait(plate) ? PORTRAIT_PLATE_SIZES : PLATE_SIZES}
+          className="content-section__plate"
+        />
       )}
       <Paragraphs items={section.paragraphs} register={register} />
       {section.list?.length ? (

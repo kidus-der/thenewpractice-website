@@ -1,9 +1,13 @@
 /**
  * CONTENT SCHEMAS — docs/06-copy-deck.md
  *
- * Every content module parses its data through one of these schemas at import
- * time, so a bad edit to a generated file fails the build rather than reaching
- * a template. Shapes follow the structure of the client document: pages hold
+ * Every content module exports a plain object annotated with the inferred
+ * type of one of these schemas, and content.checks.ts parses every module
+ * against its schema in `npm test` and `npm run content:check`, so a bad edit
+ * fails the build rather than reaching a template. Content modules import
+ * only the types from here (`import type`), never the schema values: Zod must
+ * not ship in a client bundle through the content layer (docs/09 §1, Task 20).
+ * Shapes follow the structure of the client document: pages hold
  * sections, sections hold paragraphs, an optional list, optional definitions
  * (term + description pairs) and optional subtitled subsections.
  *

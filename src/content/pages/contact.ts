@@ -2,10 +2,10 @@
 // Source: «Final Website Instructions_DRAFT Sept 1 2026 .docx.md», lines 1198–1250.
 // contact.website is a PLACEHOLDER: the document leaves Direct Telephone / Email / Website blank; phone and email resolve to brand.ts. See docs/CONTENT-GAPS.md.
 
-import { contactPageSchema } from '../schemas'
+import type { ContactPage } from '../schemas'
 import { BRAND } from '../brand'
 
-export const CONTACT = contactPageSchema.parse({
+export const CONTACT: ContactPage = {
   slug: 'contact',
   title: 'Contact',
   lead: 'Seeking help for yourself or someone you care about can feel overwhelming.',
@@ -65,4 +65,4 @@ export const CONTACT = contactPageSchema.parse({
     organisation: BRAND.name,
     website: 'thenewpractice.health',
   },
-})
+}
