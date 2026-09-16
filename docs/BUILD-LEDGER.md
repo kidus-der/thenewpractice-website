@@ -48,8 +48,8 @@ Source plan: `.claude/plans/two-week-templates.plan.md` (approved 2026-09-14). T
 | 18b | done | 12 | Interactive self-assessment scorer → `/self-assessment/[slug]` × 10 |
 | 19 | done | 13, 14, 15, 16, 17, 18, 18b | Cross-template hardening: viewports, 4× throttle traces, reduced motion, keyboard, axe, Safari |
 | 20 | done | 19 | Performance budgets: Lighthouse, image sizes, font preload, bundle audit |
-| 20b | doing | 19 | Content provenance fixes from docs/CONTENT-PROVENANCE-AUDIT.md (no invented text ships) |
-| 21 | todo | 20, 20b, 6 | Staging deploy, live smoke test, `HANDOFF.md` |
+| 20b | done | 19 | Content provenance fixes from docs/CONTENT-PROVENANCE-AUDIT.md (no invented text ships) |
+| 21 | doing | 20, 20b, 6 | Staging deploy, live smoke test, `HANDOFF.md` |
 
 Deploy checkpoints: after 6, 12, 15, 16, 21.
 
@@ -585,3 +585,9 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **Deviations.** (1) `llms.txt` and the sitemap drop residences in every environment, not only production, because the brief routed the exclusion through `NOINDEX_ROUTES`; staging's `llms.txt` is not client-facing. (2) A5: the `Amenities` landmark name stays (decision: no separate change); the rows beneath it are document roles. (3) The residences privacy paragraph restates l.752 + l.771–772 (_your team may include concierge and client services, and transportation and security_) rather than dropping the roles. (4) The unrendered `alt` strings in `pages/residences.ts` stay (the manifest's alt renders; the schema requires the field). (5) `Header` and `NavOverlay` take `nav` as a prop — a signature change, not a content change, forced by the client boundary. (6) The provenance guard excludes `teamSeo()`: its fallback frame is our sentence around the client's name and role (D7), accepted by the owner.
 - **Still ours, visible, by decision:** the seven team fallback descriptions (D7), the home description's join (D5), the nine generic interpretation lines (D9/G6), `Amenities`, the copyright line, the Section B interface labels.
 - **For the main session:** the status table's rows for 20 and 20b are one broken line (a merge artefact: `| 20 | doing |` runs into the 20b row); left for the owner of the table. `tests/e2e/footer.spec.ts` still asserts the _Legal_ links on the dev server, which is correct off production; a production-server e2e run would need that assertion gated on `SITE_ENV`. Task 21 should re-read the residences title page at 1280 × 800 (the shorter title fits with room; the Task 19 padding step could loosen).
+
+### Main session — triage of Task 20b (2026-09-15)
+
+- Accepted and merged (`task/20b-provenance` → `main`); verify green after merge (333 tests, 52 pages). The `content.checks.ts` import conflict (Task 20 moved validation here; Task 20b added the provenance guard) was resolved by keeping the schema imports and adding the seo imports. The provenance guard now runs in `verify`.
+- Every Section A item is closed as reported; the accepted residue (team fallback description frame, generic interpretation lines pending the client's nine sentences, interface labels) is listed in `docs/CONTENT-PROVENANCE-AUDIT.md` §8 for the owner.
+- Task 21 starts in worktree `task/21-deliver` on :3317/:3318. `footer.spec.ts` asserts the Legal links, which only exist off production; Task 21 gates that assertion on `SITE_ENV` before running the suite against a production server.
