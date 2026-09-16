@@ -283,6 +283,9 @@ for (const route of ROUTES.filter((r) => NOINDEX_ROUTES.has(r.path))) {
       const headings = await page.locator('main h1, main h2').allTextContents()
       const stub = headings.filter((h) => h.startsWith(PLACEHOLDER))
       expect(stub).toHaveLength(route.content.sections.length + 1)
+      // Headings only: no body sentence, no lead (owner decision, Task 21).
+      await expect(page.locator('main p.t-body, main .content-section__prose p')).toHaveCount(0)
+      await expect(page.locator('main')).not.toContainText(/\b(pending|counsel|in force)\b/i)
     })
   })
 }

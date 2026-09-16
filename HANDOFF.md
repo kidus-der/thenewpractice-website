@@ -148,7 +148,7 @@ The authoritative list, with line references into the document, is
    loop with a graded poster; the _Listen_ toggle does not render until an audio
    file exists (`HOME.hero.audioSrc` is `null`). The document's 15-second
    surf-to-jungle brief and the voice-over script are in the content module.
-4. **No legal pages** (G3). `/privacy` and `/terms` are four-heading stubs, every
+4. **No legal pages** (G3). `/privacy` and `/terms` are title-and-headings stubs with no body text, every
    string a marked placeholder, `noindex`, unlinked on production. Counsel replaces
    them wholesale.
 5. **Nine questionnaires share one interpretation line** (G6). Only the alcohol

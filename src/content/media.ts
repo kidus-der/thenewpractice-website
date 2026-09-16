@@ -115,7 +115,7 @@ export const MEDIA = {
     "width": 2400,
     "height": 1350,
     "blurDataURL": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAACQAwCdASoUAAsAPu1iqk2ppaQiMAgBMB2JZwDA3B0h/CT5aOCAAOzvupiMFAnt0YbBjd6sCKSUX0AAAAA=",
-    "alt": "Poster frame: Surf washing over a shingle shore under an overcast sky",
+    "alt": "Surf washing over a shingle shore under an overcast sky",
     "credit": "Engin Akyurt",
     "licence": "Pexels License"
   },
@@ -124,7 +124,7 @@ export const MEDIA = {
     "width": 2400,
     "height": 1350,
     "blurDataURL": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAwBACdASoUAAsAPu1iqU2ppaOiMAgBMB2JZwDG9BxIp/DLvO9/UKMB0AAA/R2hg29cgVnTDSduG6hr64JjhIjEc5ppir8vCMtzwAAA",
-    "alt": "Poster frame: Broad leaves in a misty jungle understory",
+    "alt": "Broad leaves in a misty jungle understory",
     "credit": "Florian Delée",
     "licence": "Pexels License"
   },
@@ -133,7 +133,7 @@ export const MEDIA = {
     "width": 2400,
     "height": 1350,
     "blurDataURL": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADQAwCdASoUAAsAPu1iqU2ppaOiMAgBMB2JZwAAXjQXkVomiXQkrAAA/stmZjBCEcnJh/s57ITPrnpc+ozIKnjHer77bBbNqJi7zMunJWoAAA==",
-    "alt": "Poster frame: Still water and stalactites inside a limestone cave lit by a single light",
+    "alt": "Still water and stalactites inside a limestone cave lit by a single light",
     "credit": "Florian Delée",
     "licence": "Pexels License"
   }
