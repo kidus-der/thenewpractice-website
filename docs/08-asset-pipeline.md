@@ -6,14 +6,14 @@ The client has not yet supplied photography, video, voice-over or team portraits
 
 ## Hard rules
 
-| Rule | |
-| --- | --- |
-| **Never** use an image from Küsnacht Practice, Paracelsus, Clinic Les Alpes, or any competing practice | Instantly recognisable to this client. Fatal. |
-| **Never** use an image of an identifiable real hotel, resort or private residence | Implies a claim about a place, and the residences page is privacy-first |
-| **Never** use an image with an identifiable face | Violates the premise and creates a model-release problem |
-| **Never** use AI-generated imagery of people or places | Uncanny at this tier, and dishonest in a medical context. Generated **silhouettes** for team placeholders are the one exception: abstract, faceless, unmistakably placeholders. |
-| **Always** record source URL, licence name and licence URL for every asset in `design/ASSETS.md` | If it is not in the manifest it is not on the site |
-| **Always** normalise every still through the same grade | Consistency is what makes sourced photography read as commissioned |
+| Rule                                                                                                   |                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Never** use an image from Küsnacht Practice, Paracelsus, Clinic Les Alpes, or any competing practice | Instantly recognisable to this client. Fatal.                                                                                                                                   |
+| **Never** use an image of an identifiable real hotel, resort or private residence                      | Implies a claim about a place, and the residences page is privacy-first                                                                                                         |
+| **Never** use an image with an identifiable face                                                       | Violates the premise and creates a model-release problem                                                                                                                        |
+| **Never** use AI-generated imagery of people or places                                                 | Uncanny at this tier, and dishonest in a medical context. Generated **silhouettes** for team placeholders are the one exception: abstract, faceless, unmistakably placeholders. |
+| **Always** record source URL, licence name and licence URL for every asset in `design/ASSETS.md`       | If it is not in the manifest it is not on the site                                                                                                                              |
+| **Always** normalise every still through the same grade                                                | Consistency is what makes sourced photography read as commissioned                                                                                                              |
 
 ## Sourcing
 
@@ -21,16 +21,16 @@ The client has not yet supplied photography, video, voice-over or team portraits
 
 **Slots:**
 
-| Slot | Ratio | Subject |
-| --- | --- | --- |
-| Hero video | 16:9, ≥ 1080p, 10–30s, loopable | (a) gentle Caribbean surf at dawn, no people; (b) dense jungle canopy with slow movement or mist; (c) cenote or still water with light. The client's brief: *surf, jungle beginning to emerge* — a surf clip and a canopy clip, each trimmed to one seamless loop. |
-| Hero poster | 16:9 | A frame from the chosen clip, through the still pipeline; plus one photographed alternative |
-| Residence plates × 6 | 3:4 | Corridor or doorway with light · linen bed unoccupied · limestone or plaster close-up · terrace to canopy · still water · shaded stone steps |
-| Index plates × 4 | 3:4 | Jungle · sea · stone · leaf with rain |
-| Discretion band | 21:9 | Figure turned away, or an empty room |
-| Team portraits × 11 | 3:4 | **Not sourced.** Generated silhouette placeholders until the client's portraits arrive. |
+| Slot                 | Ratio                           | Subject                                                                                                                                                                                                                                                            |
+| -------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Hero video           | 16:9, ≥ 1080p, 10–30s, loopable | (a) gentle Caribbean surf at dawn, no people; (b) dense jungle canopy with slow movement or mist; (c) cenote or still water with light. The client's brief: _surf, jungle beginning to emerge_ — a surf clip and a canopy clip, each trimmed to one seamless loop. |
+| Hero poster          | 16:9                            | A frame from the chosen clip, through the still pipeline; plus one photographed alternative                                                                                                                                                                        |
+| Residence plates × 6 | 3:4                             | Corridor or doorway with light · linen bed unoccupied · limestone or plaster close-up · terrace to canopy · still water · shaded stone steps                                                                                                                       |
+| Index plates × 4     | 3:4                             | Jungle · sea · stone · leaf with rain                                                                                                                                                                                                                              |
+| Discretion band      | 21:9                            | Figure turned away, or an empty room                                                                                                                                                                                                                               |
+| Team portraits × 11  | 3:4                             | **Not sourced.** Generated silhouette placeholders until the client's portraits arrive.                                                                                                                                                                            |
 
-Search for the *materials and weather* of the place — `rain on tropical leaf`, `jungle canopy from below`, `cenote`, `limestone wall`, `linen bed morning light`, `tropical modernism interior` — never for the destination. `tulum`, `riviera maya`, `cancun` return resort photography, which is the exact wrong register.
+Search for the _materials and weather_ of the place — `rain on tropical leaf`, `jungle canopy from below`, `cenote`, `limestone wall`, `linen bed morning light`, `tropical modernism interior` — never for the destination. `tulum`, `riviera maya`, `cancun` return resort photography, which is the exact wrong register.
 
 **Reject on sight:** anything alpine or temperate, resort-branded, with faces, lotus, candles, hot stones, lens flare, turquoise-water clichés, ruins as backdrop.
 
@@ -95,7 +95,7 @@ Downloads are cached under `node_modules/.cache/tnp-media/` (ignored with `node_
 5. Poster frames found in the cache go through the same grade as `<key>-poster`, 16:9, with the video entry's `posterEv`
 6. Regenerate `src/content/media.ts`: `MEDIA` (`as const`, keyed by frame: `src`, `width`, `height`, `blurDataURL`, `alt`, `credit`, `licence`) and `VIDEO` (keyed by clip: `mp4`, `webm`, `poster` MediaKey, `width`, `height`, `seconds`, `alt`, `credit`, `licence`). `<Plate>` reads `MEDIA` and fails loudly on an unknown key; a video entry is written only when both encodes and the poster exist.
 
-`scripts/make-og.mjs` (`npm run og`) renders the static lockup card to `public/og.png` and `design/og-card.svg`; task 10's `opengraph-image.tsx` supersedes it per page.
+The Open Graph card is rendered at request time by `src/lib/og.tsx` through `src/app/opengraph-image.tsx` and `src/app/og/route.tsx` (docs/09 §5); there is no static card file or script.
 
 ### Adding or replacing an asset
 
@@ -108,14 +108,14 @@ Commissioned photography replaces a stock frame by changing its `url` (a local `
 
 ## Formats and sizes
 
-| Asset | Format | Budget |
-| --- | --- | --- |
-| Hero poster | AVIF + WebP, 2400 wide | ≤ 180kB |
-| Hero video | MP4 (H.264) + WebM (VP9), 1920×1080, 10–30s loop, no audio | **≤ 4MB** mp4, `preload="metadata"` |
-| Plates (3:4) | AVIF + WebP, 1040 wide | ≤ 120kB each |
-| Band (21:9) | AVIF + WebP, 2100 wide | ≤ 150kB |
-| Team plates | SVG silhouettes (generated) | ≤ 4kB each |
-| Grain texture | inline SVG `feTurbulence` | ≤ 2kB |
+| Asset         | Format                                                     | Budget                              |
+| ------------- | ---------------------------------------------------------- | ----------------------------------- |
+| Hero poster   | AVIF + WebP, 2400 wide                                     | ≤ 180kB                             |
+| Hero video    | MP4 (H.264) + WebM (VP9), 1920×1080, 10–30s loop, no audio | **≤ 4MB** mp4, `preload="metadata"` |
+| Plates (3:4)  | AVIF + WebP, 1040 wide                                     | ≤ 120kB each                        |
+| Band (21:9)   | AVIF + WebP, 2100 wide                                     | ≤ 150kB                             |
+| Team plates   | SVG silhouettes (generated)                                | ≤ 4kB each                          |
+| Grain texture | inline SVG `feTurbulence`                                  | ≤ 2kB                               |
 
 Initial-viewport media weight (poster + fonts) must stay under **1.6MB**. The video loads after the poster paints; the LCP is the poster, never the video. `next/image` re-encodes the WebP source per device width, so the on-disk plate size is the ceiling, not what ships; the high-frequency plates (canopy from below, travertine, steps) exceed their on-disk budget and task 20 reads the served sizes.
 
@@ -133,16 +133,16 @@ Initial-viewport media weight (poster + fonts) must stay under **1.6MB**. The vi
 
 Self-hosted via `next/font/google`. No external requests.
 
-| Face | Weights | Subset | Preload |
-| --- | --- | --- | --- |
-| Bodoni Moda | 400, 500, + italics | latin, latin-ext | yes |
-| Jost | variable | latin, latin-ext | no |
+| Face        | Weights             | Subset           | Preload |
+| ----------- | ------------------- | ---------------- | ------- |
+| Bodoni Moda | 400, 500, + italics | latin, latin-ext | yes     |
+| Jost        | variable            | latin, latin-ext | no      |
 
 Typeface licensing is the client's (contract §3). The swap point is `src/app/layout.tsx`.
 
 ## Audio
 
-The client specifies a warm voice-over over the hero video (script in `pages/home.ts`). Until the recording exists, `pages/home.ts` has no `audioSrc` and the *Listen* toggle does not render. When it arrives: `/public/audio/`, mono, ≤ 300kB, loaded **only** on first activation, fades in over 1.2s and out over 0.6s, default off, `aria-pressed` on the button. Never autoplays.
+The client specifies a warm voice-over over the hero video (script in `pages/home.ts`). Until the recording exists, `pages/home.ts` has no `audioSrc` and the _Listen_ toggle does not render. When it arrives: `/public/audio/`, mono, ≤ 300kB, loaded **only** on first activation, fades in over 1.2s and out over 0.6s, default off, `aria-pressed` on the button. Never autoplays.
 
 ## Asset manifest
 
@@ -152,7 +152,7 @@ The client specifies a warm voice-over over the hero video (script in `pages/hom
 | File | Source page | Author | Licence | Stands in for | Aspect | Focus | ev |
 ```
 
-Plus a *Rejected* table with the reason, and a *Known gaps* list (voice-over, portraits, commissioned photography). This is not bureaucracy: the moment the site is live, unlicensed assets are a legal problem, and by then no one remembers where anything came from.
+Plus a _Rejected_ table with the reason, and a _Known gaps_ list (voice-over, portraits, commissioned photography). This is not bureaucracy: the moment the site is live, unlicensed assets are a legal problem, and by then no one remembers where anything came from.
 
 ## Placeholder discipline
 
