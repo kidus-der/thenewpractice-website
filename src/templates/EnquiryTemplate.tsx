@@ -17,7 +17,7 @@ import { SectionHeader } from '@/components/SectionHeader'
 import { ENQUIRY } from '@/content/enquiry'
 import type { ContactBlock, ContactPage, Section } from '@/content/schemas'
 import { mailHref, telHref } from '@/lib/contact'
-import { Reveal } from '@/motion/Reveal'
+import { Reveal, type RevealVariant } from '@/motion/Reveal'
 import { EnquiryForm } from './EnquiryForm'
 
 const OPENING_ID = 'begin-the-conversation'
@@ -25,12 +25,20 @@ const CONSULTATION_ID = 'confidential-consultation'
 const TITLE_ID = 'contact-title'
 const FORM_HEADING_ID = 'contact-form-heading'
 
+/**
+ * The opening's lead and first paragraph are the LCP on this route (docs/09
+ * §Measured budgets): a clip reveal is credited at first paint, as the h1's
+ * line masks are; the default rise is credited only after its tween, past
+ * the veil. The letter below the fold keeps the rise (Task 20, Task 21).
+ */
+const OPENING_REVEAL: RevealVariant = 'mask'
+
 const numeral = (index: number): string => String(index + 1).padStart(2, '0')
 
-function Paragraphs({ text }: { text: readonly string[] }) {
+function Paragraphs({ text, variant }: { text: readonly string[]; variant?: RevealVariant }) {
   if (text.length === 0) return null
   return (
-    <Reveal staggerChildren className="contact__prose">
+    <Reveal staggerChildren variant={variant} className="contact__prose">
       {text.map((paragraph) => (
         <p className="t-body" key={paragraph}>
           {paragraph}
@@ -105,10 +113,10 @@ export function EnquiryTemplate({ page }: { page: ContactPage }) {
             <Reveal as="h1" variant="lines" id={TITLE_ID} className="t-d1 contact-open__title">
               {opening?.title ?? page.title}
             </Reveal>
-            <Reveal as="p" className="t-lead contact-open__lead">
+            <Reveal as="p" variant={OPENING_REVEAL} className="t-lead contact-open__lead">
               {page.lead}
             </Reveal>
-            {opening && <Paragraphs text={opening.paragraphs} />}
+            {opening && <Paragraphs text={opening.paragraphs} variant={OPENING_REVEAL} />}
           </div>
         </div>
       </section>

@@ -28,6 +28,13 @@ type Props = {
 
 /** The intro sits at .p-offset from 1024px: roughly half the row. */
 const PLATE_SIZES = '(min-width: 1024px) 50vw, 100vw'
+/**
+ * The lead is the LCP element wherever it is set larger than the title's
+ * lines (the treatment pages, docs/09 §Measured budgets). A clip reveal is
+ * credited at first paint, as the h1's line masks are; an opacity reveal is
+ * credited only when its tween ends, after the veil (Task 20, Task 21).
+ */
+const LEAD_REVEAL = 'mask'
 
 export function PageIntro({ id, numeral, eyebrow, headline, lead, plate, notice }: Props) {
   return (
@@ -51,7 +58,7 @@ export function PageIntro({ id, numeral, eyebrow, headline, lead, plate, notice 
             {headline}
           </Reveal>
           {lead && (
-            <Reveal as="p" className="t-lead page-intro__lead">
+            <Reveal as="p" variant={LEAD_REVEAL} className="t-lead page-intro__lead">
               {lead}
             </Reveal>
           )}
