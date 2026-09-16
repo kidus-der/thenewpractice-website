@@ -17,9 +17,9 @@ Two tiers: **CI gates** fail the build; **intent** is what we design to.
 | CLS | **< 0.1** | < 0.02 |
 | INP | — | < 150ms throughout scroll |
 | TBT | — | < 200ms |
-| Initial JS (gzipped), any route | — | < 160kB; the gradient chunk excluded and loaded only on `/` at desktop |
+| Initial JS (gzipped), any route | — | < 160kB; the gradient chunk excluded and loaded only on `/` at desktop. Measured 251–259 kB after Task 20 (`/contact` 347 kB with its route-scoped form chunk); the floor set by React, the router, GSAP and Motion — see _Measured budgets_ |
 | Initial media, above the fold | — | < 1.6MB including fonts |
-| Sustained scroll FPS at 4× CPU throttle | — | **60**, zero long tasks > 50ms (task 19 records traces on `/`, `/our-process`, `/clinical-services`) |
+| Sustained scroll FPS at 4× CPU throttle | — | **60**, zero long tasks > 50ms (Task 20 recorded the traces on `/`, `/our-process`, `/clinical-services`; see _Measured budgets_) |
 | Lighthouse Accessibility / Best Practices | — | 100 / 100 |
 
 ### The 4× throttle test is the real gate
@@ -49,11 +49,89 @@ Lighthouse scores are easy to game with a light page. What decides whether this 
 ### Rendering rules
 
 - Compositor-only properties in animation: `transform`, `opacity`, `clip-path`, `filter`
-- `will-change` applied immediately before a tween, removed on complete
+- `will-change` applied immediately before a tween, removed on complete. One standing exception: `HoverPlate` (the pointer-following plate on the home conditions list) holds `will-change: transform` for its lifetime. It is a single element per page, exists only on desktop with a fine pointer, and is written by GSAP `quickTo` on every pointer move, so promoting it once is cheaper than promoting and demoting it around every move; docs/04 §8 tolerates that class of element. Do not extend the exception to anything that scrolls.
 - `content-visibility: auto` with `contain-intrinsic-size` on below-fold sections of the long interior pages
 - Every `<img>`, `<video>` and plate frame has explicit dimensions or an aspect-ratio box
 - Fonts: `display: swap`, display face preloaded, fallback metrics adjusted so the swap does not shift layout
 - Static generation for every content route; the only server work is the enquiry action
+
+### Measured budgets (Task 20)
+
+Measured on the merged tree at the end of the template milestone, production build (`next build`, Turbopack), Playwright's Chromium 151 as Lighthouse's browser (`tests/lighthouse/run.mjs`), on an Apple-silicon laptop. Every number below is reproducible with the commands named; the scratch scripts that produced the tables are described in the Task 20 ledger entry.
+
+**Method.** Lighthouse CI runs with `throttlingMethod: "devtools"` (`lighthouserc.json`): a real 4× CPU slowdown and slow-4G request throttling applied to the page, so FCP and LCP are paints that happened. The default `simulate` (lantern) was recorded alongside and is kept out of the gate on purpose: lantern credits a text LCP only after every head-referenced script has downloaded on its modelled slow 4G, so it reports LCP ≈ 4 s on every route of this site while the trace's observed paint is under 100 ms (Task 16 finding). Both methods are in the tables so Task 21 can compare live numbers with either. Assertions use the median of three runs per URL.
+
+**JavaScript.** First-load JS is measured from the prerendered HTML: every `<script src>` a route's document carries (the `noModule` legacy polyfill excluded, since no supported browser fetches it), gzip −9. Attribution comes from `next experimental-analyze` (Next 16's Turbopack analyser; `.next/diagnostics/analyze/data/<route>/analyze.data`).
+
+| Route | Before (gzip) | After (gzip) | Change |
+| --- | --- | --- | --- |
+| `/` | 347.0 kB | 258.8 kB | −25% |
+| `/about` (T2) | 339.7 kB | 251.4 kB | −26% |
+| `/clinical-services` (T6) | 342.9 kB | 254.7 kB | −26% |
+| `/clinical-services/addiction-treatment` (T3) | 342.9 kB | 254.7 kB | −26% |
+| `/team/lowell-monkhouse` (T4) | 342.9 kB | 254.7 kB | −26% |
+| `/residences` (T5) | 346.8 kB | 254.5 kB | −27% |
+| `/self-assessment/alcohol` | 344.7 kB | 252.6 kB | −27% |
+| `/contact` (T7) | 348.1 kB | 347.1 kB | 0% (see below) |
+
+What moved: Zod v4 (87 kB gzip as a real chunk; 131 kB by the analyser's per-module count) left every route. The content modules used to call `schema.parse()` at module scope, and because `Header`, `NavOverlay`, `Preloader` and `Footer` import `NAV`, `BRAND` and `HOME`, the schemas rode along on every page. The modules now export plain objects annotated with the schemas' inferred types; `content.checks.ts` parses each one in `npm test` and `npm run content:check`; `src/content/index.ts` re-exports the schema *types* only. `/contact` keeps Zod deliberately: `enquiryFormSchema` is the React Hook Form resolver, and it is route-scoped (a 100.9 kB gzip chunk that only `/contact` references, holding Zod, react-hook-form and the form).
+
+Top of the shared client bundle after the pass (analyser, gzip, `/about`): `next` 210 kB (react-dom 62 kB of it, the app router and segment cache the rest), `motion-dom` 53 kB + `framer-motion` 19 kB (the `motion/react` runtime behind the curtain, the overlay, the form and the scorer), `gsap` 48 kB (core 19, ScrollTrigger 14, CSSPlugin 8, Observer 4, SplitText 3), `lenis` 5 kB; everything of ours is under 2 kB per file. The 160 kB gzip intent in §1 is therefore not met: the floor set by React, the router, GSAP and Motion is about 250 kB on this stack. `experimental.optimizePackageImports` for `gsap`, `motion`, `motion-dom` and `lenis` was built and measured: byte-identical output (GSAP is imported by deep path and Motion is already tree-shaken by Turbopack), so it is not enabled. The remaining lever is Motion's `LazyMotion` + `m` components (drops the drag, pan and layout-projection features that `motion.div` bundles, roughly 25–30 kB gzip); it touches the curtain, the overlay, the enquiry form and the scorer and is left for the owner to schedule.
+
+**Gradient chunk.** three + R3F + shadergradient + `AmbientGradient` remain one lazy chunk of 1,139,875 bytes raw / 276,974 bytes gzip, referenced by no route's HTML and requested only when `useAmbientEligible()` is true, which is `/` on a desktop with a fine pointer, motion allowed, WebGL2, no `saveData`. Unchanged since Task 3; the decision to keep it stands (docs/07).
+
+**Client components.** Every `'use client'` file owns motion or state (checked file by file; the list is in the Task 20 ledger entry). `HoverPlate`, `IndexList`, `Header`, `Footer`'s `Marquee` import nothing server-only; `Plate` imports the `MEDIA` manifest (15 frames with their 20 px LQIPs) into any client component that renders a plate, which is the design.
+
+**Images.** Every `<Image>` was read in the browser at 390 (3×), 768 (2×), 1280 (1×) and 1920 (1×) — rendered width, `sizes`, the width `next/image` served and the bytes on the wire — on ten routes. Fixed: `ContentSection` plates now carry `sizes` per ratio (`(min-width: 1024px) 52vw, 90vw` for wide plates, `(min-width: 1024px) 36vw, 56vw` for the 3:4 plate that keeps to 62% of the column), and `HoverPlate` mirrors its `clamp(160px, 14vw, 240px)`; before, the About page's canopy plate was fetched at 1200–1920 px for a 217–570 px box. Only the hero poster carries `priority` / `fetchpriority="high"`. Per-frame quality lives in `src/lib/plates.ts` (`index-01` at 60, everything else 75; `images.qualities: [60, 75]`). Served sizes after the pass, worst case per frame: hero poster 60.7 kB at 1920; residences band 87.1 kB at 1920; About sea plate 49 kB at 1200; carousel plates 9–12 kB; the canopy silhouette `index-01` 46 kB at 384, 136 kB at 640 and 372 kB at 1080 wide, the one frame still over the 120 kB plate budget wherever it is served above 640 px (a high-frequency image; the honest fix is a different frame, an owner decision).
+
+**Fonts.** The display face is preloaded and Jost is not; Bodoni Moda now ships one weight (400 upright and italic, the only settings the stylesheets use) instead of 400 + 500: four preloaded files at 48.8 kB instead of 86 kB, eight `@font-face` rules instead of sixteen. `font-display: swap` on every face, with `next/font`'s metric-adjusted fallbacks (`Bodoni Moda Fallback` on Times New Roman, `Jost Fallback` on Arial), which is why CLS is 0.004–0.010 on every title page under both methods.
+
+**Rendering.** `next build` prerenders all 52 pages (`○`/`●`); `/og` is the only function (`ƒ`), by design (docs/09 §5). `dynamicParams = false` on the three `[slug]` routes, so an unknown slug is a 404 at the edge rather than a render. For Task 21 on the live URL: `curl -sI https://<host>/ | grep -i x-vercel-cache` should read `HIT` (or `PRERENDER` on the first request after deploy), never `MISS` on repeat, and `x-matched-path: /`; the same for one route per template. `vercel inspect` listing a function per route is not evidence either way (Task 6 finding).
+
+**Lighthouse, before and after (mobile, median of three runs per route; ms).** *Before* is commit `eb7cbd7` (the merged tree before this task), *after* is this branch. Every route scores Accessibility 100 and Best Practices 100 under both methods. Chromium leaves a full-viewport image out of the LCP candidates, so the reported LCP element is text on every route.
+
+devtools throttling (the CI method):
+
+| Route | Perf before → after | FCP | LCP before → after | LCP element | CLS | TBT before → after | SI |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `/` | 80 → 82 | 2117 | 2313 → 2117 | `h1#home-title` | 0.005 | 316 → 322 | 8033 |
+| `/about` | 85 → 87 | 2045 | 2135 → 2045 | preloader wordmark | 0.005 | 213 → 199 | 7852 |
+| `/clinical-services` | 88 → **90** | 2029 | 2115 → 2029 | `h1` | 0.005 | 74 → 66 | 7846 |
+| `/clinical-services/addiction-treatment` | 68 → 75 | 2047 | 5218 → **4428** | `p.t-lead` | 0.005 | 176 → 97 | 7815 |
+| `/team/lowell-monkhouse` | 87 → **90** | 2007 | 2159 → 2007 | `h1` | 0.005 | 138 → 57 | 7815 |
+| `/residences` | 84 → 87 | 2131 | 2110 → 2131 | `h1` | 0.005 | 230 → 146 | 9226 |
+| `/contact` | 73 → 74 | 1821 | 4916 → **4742** | `p.t-body` (the letter) | 0.005 | 87 → 58 | 7798 |
+| `/self-assessment/alcohol` | 87 → **90** | 2015 | 2132 → 2015 | `h1` | 0.004 | 144 → 73 | 7745 |
+
+simulated throttling (lantern; recorded, not asserted):
+
+| Route | Perf before → after | FCP | LCP before → after | CLS | TBT | SI |
+| --- | --- | --- | --- | --- | --- | --- |
+| `/` | 82 → 87 | 1657 | 4367 → 3676 | 0.009 | 63 | 3852 |
+| `/about` | 83 → 88 | 1655 | 4286 → 3597 | 0.009 | 33 | 3766 |
+| `/clinical-services` | 85 → 90 | 1505 | 4062 → 3372 | 0.009 | 7 | 3624 |
+| `/clinical-services/addiction-treatment` | 85 → 90 | 1505 | 4061 → 3415 | 0.009 | 20 | 3560 |
+| `/team/lowell-monkhouse` | 85 → 91 | 1506 | 4061 → 3225 | 0.009 | 12 | 3589 |
+| `/residences` | 78 → 83 | 1657 | 5110 → 4319 | 0.009 | 20 | 4046 |
+| `/contact` | 82 → 85 | 1355 | 4656 → 4212 | 0.009 | 18 | 3434 |
+| `/self-assessment/alcohol` | 85 → 91 | 1505 | 4061 → 3222 | 0.009 | 18 | 3571 |
+
+**What the gate says now.** Three of the eight routes reach Performance ≥ 90 under the CI method; `/about`, `/residences` and `/` sit at 87 / 87 / 82, and `/clinical-services/addiction-treatment` and `/contact` fail both the score and the LCP assertion. The thresholds were not lowered (`lighthouserc.json`; the two LCP failures and five score failures are the known state for Task 21 to decide on). Two causes, both outside the bundle:
+
+1. **The lead paragraph is the LCP on the treatment and contact routes, and it reveals through opacity.** `Reveal`'s default `rise` variant starts at `opacity: 0`, and Chromium credits an element's LCP only when it is painted opaque, so on a page where the lead runs longer than the `h1` the LCP is the moment the lead's tween ends: after the veil at 4× CPU, about 4.4–4.7 s. The `h1` reveals through SplitText line masks (clip, not opacity) and is credited at first paint, which is why every other route's LCP equals its FCP. The one-line fix is to reveal the lead with the `mask` variant (or lift its starting opacity) in `PageIntro` and the enquiry letter; it changes a motion decision from Tasks 11 and 15, so it is reported rather than made here.
+2. **Speed Index of 7.8–9.2 s everywhere is the preloader veil at 4× CPU** (`D.glacial` timeline; SI is 10% of the score and costs each route roughly 5–8 points). TBT is the hydration long task and is now under 200 ms on seven routes (`/` at 322 ms, the hero's pinned stages).
+
+Task 21 should re-run `npm run lighthouse` against the live URL (`--collect.url=`) and expect the same shape: the deployed edge removes nothing from these two causes.
+
+**4× CPU scroll traces (docs/09 §1, the gate that matters).** Playwright Chromium, 1280 × 800, `Emulation.setCPUThrottlingRate 4`, a scripted 12 px-per-frame scroll from top to foot after the preloader settled, a `PerformanceObserver` on `longtask`, two runs per route on the production build:
+
+| Route | Scroll length | Frames per second | Worst frame | Long tasks > 50 ms during scroll |
+| --- | --- | --- | --- | --- |
+| `/` | 14,346 px | 57.2 | 43 ms | **0** |
+| `/our-process` | 16,928 px | 60.0 | 25 ms | **0** |
+| `/clinical-services` | 5,998 px | 60.0 | 21 ms | **0** |
+
+The home page's worst frame lands in the pinned hero stages (two SplitText line sets and the poster's scrub); it stays under a long task but is the one place the 60 fps test is not clean at 4×. Safari's timeline (docs/09 §1 step 4) remains a hand check for Task 21.
 
 ---
 
