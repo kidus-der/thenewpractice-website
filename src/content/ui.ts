@@ -48,11 +48,9 @@ export const UI_INTERIOR = {
 /**
  * RESIDENCES TEMPLATE STRINGS — Task 17. Landmark names for the two blocks
  * that have no heading in the content (the plate carousel and the amenities
- * table), and the review flag rendered over the intro on every deployment
- * that is not production, because the page's copy is structural PLACEHOLDER
- * (docs/CONTENT-GAPS.md G1). The flag is interface copy, not page copy, and
- * deliberately does not carry the PLACEHOLDER marker: content.checks.ts
- * confines that marker to the modules where content is known to be missing.
+ * table). The page's copy is structural PLACEHOLDER (docs/CONTENT-GAPS.md
+ * G1); the prefix on its headings is the only marker it carries, in every
+ * environment (owner decision, Task 21).
  */
 export const UI_RESIDENCES = {
   /** aria-label on the carousel <section>. */
