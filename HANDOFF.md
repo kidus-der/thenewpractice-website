@@ -71,7 +71,8 @@ This distinction matters for every conversation about the work.
   for is in [`design/ASSETS.md`](./design/ASSETS.md). None of it was shot for the
   practice. Team pages show a generated placeholder frame, not a portrait.
 - The interface copy: navigation labels, form labels and errors, the confirmation's
-  first and third lines, the _Copy pending client review_ flag, the scroll cue.
+  first and third lines, the scroll cue. No review note renders anywhere: the
+  `PLACEHOLDER — ` prefix on a stub page's headings is the only marker.
   Listed and accepted in `docs/CONTENT-PROVENANCE-AUDIT.md` §8.
 - The fonts as stand-ins: Bodoni Moda and Jost for the Didone and geometric-sans
   pairing their identity specifies. One swap point in `src/app/layout.tsx`.
@@ -167,9 +168,10 @@ The authoritative list, with line references into the document, is
    written. The owner confirms the once-per-page rule or exempts client copy.
 10. **Placeholder gating on production.** With `SITE_ENV=production` the three
     placeholder routes vanish from every navigation surface, the footer's _Legal_
-    column disappears with them, and the _Copy pending client review_ flag stops
-    rendering. Staging shows all of it on purpose, so the client is reviewing more
-    than a production visitor would see.
+    column disappears with them. Staging shows all of it on purpose, so the client
+    is reviewing more than a production visitor would see. In both environments
+    the `PLACEHOLDER — ` prefix is the only marker on a stub page; no review note
+    renders anywhere.
 11. **Also noted while walking every page** (`CONTENT-GAPS.md` §6): mixed title
     casing between pages (_ABOUT THE NEW PRACTICE_ beside _Our principles_), the
     hyphen in _Our Logo - The Ceiba_, role lines up to ten words long, _Cost_ on the
@@ -229,7 +231,7 @@ None of this is code. Every item is an account or a value on the Vercel project.
 2. **Environment.** `SITE_ENV=production` and `NEXT_PUBLIC_SITE_URL=https://<the
 real domain>` on the production target. That alone flips `robots.txt` to allow,
    fills the sitemap, removes `noindex`, hides the placeholder routes from the
-   navigation and stops the review flag rendering. If preview deployments will be
+   navigation. If preview deployments will be
    used for review, set both variables on the preview target as well.
 3. **Domain.** The client's domain on the client's account (contract §8), pointed at
    the Vercel project; the staging hostname stays or goes as the owner prefers.
