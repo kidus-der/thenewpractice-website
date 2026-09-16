@@ -4,8 +4,8 @@
  * The one place the mark is looked at rather than felt (docs/01 §The mark):
  * the ceiba at ~150px on sand, small, sharp, gold-pointed, drawing itself
  * outward from the point once as the section enters (docs/04 §6 "Mark draw
- * on entry"). Ported from the concept site's §03. The caption names the tree
- * and stops; the client's own paragraphs beside it do the explaining.
+ * on entry"). Ported from the concept site's §03. No caption: the client's
+ * own paragraphs beside it do the explaining (provenance audit, A1).
  *
  * Client component because it owns the draw; everything else in the section
  * is server-rendered. Under reduced motion the strokes render complete
@@ -21,9 +21,7 @@ import { D, E, REVEAL_START } from '@/motion/tokens'
 const STROKE_STAGGER = 0.09
 const POINT_OVERLAP = '-=0.4'
 
-type Props = { caption: string }
-
-export function CeibaFigure({ caption }: Props) {
+export function CeibaFigure() {
   const root = useRef<HTMLElement>(null)
 
   useLayoutEffect(() => {
@@ -59,7 +57,6 @@ export function CeibaFigure({ caption }: Props) {
   return (
     <figure className="ceiba-figure" ref={root}>
       <Mark className="ceiba-figure__mark" animated />
-      <figcaption className="ceiba-figure__caption t-eyebrow">{caption}</figcaption>
     </figure>
   )
 }

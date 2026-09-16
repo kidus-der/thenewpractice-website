@@ -32,6 +32,13 @@ describe('enquirySchema', () => {
     expect(result.data.telephone).toBe('+44 20 7946 0958')
   })
 
+  it.each(['+44 20 7946 0958', '+1 (778) 679-3369', '+52 984 123 4567'])(
+    'accepts %s, a number with its country code',
+    (telephone) => {
+      expect(enquirySchema.safeParse({ ...VALID, telephone }).success).toBe(true)
+    }
+  )
+
   it('treats an empty telephone as absent', () => {
     const result = enquirySchema.safeParse({ ...VALID, telephone: '' })
 
@@ -59,6 +66,8 @@ describe('enquirySchema', () => {
     ['name', 'x'.repeat(ENQUIRY_LIMITS.nameMax + 1), ENQUIRY.errors.nameLength],
     ['email', 'not-an-address', ENQUIRY.errors.email],
     ['telephone', 'call me', ENQUIRY.errors.telephone],
+    ['telephone', '020 7946 0958', ENQUIRY.errors.telephone],
+    ['telephone', '+', ENQUIRY.errors.telephone],
     ['enquiringFor', 'employer', ENQUIRY.errors.enquiringFor],
     ['message', '   ', ENQUIRY.errors.message],
     ['message', 'x'.repeat(ENQUIRY_LIMITS.messageMax + 1), ENQUIRY.errors.messageLength],

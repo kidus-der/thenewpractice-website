@@ -4,7 +4,7 @@
  * placement so its numerals align with the eyebrow numerals above. Two
  * heading registers: `display` sets the document's own introducing sentence
  * ("We provide treatment for:") in the Didone at --t-d3 with a `lines`
- * reveal; `eyebrow` sets a short interface label ("Related services") the
+ * reveal; `eyebrow` sets a short interface label ("Other services") the
  * way the index template's list section does. Server component.
  */
 import type { ReactNode } from 'react'

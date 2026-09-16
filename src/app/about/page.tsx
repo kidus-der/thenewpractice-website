@@ -10,7 +10,6 @@ import type { MediaKey } from '@/content/media'
 import { routes } from '@/content/nav'
 import { ABOUT } from '@/content/pages/about'
 import { ROUTE_SEO } from '@/content/seo'
-import { UI_INTERIOR } from '@/content/ui'
 import { assertSectionIds } from '@/lib/interior'
 import { breadcrumb, organization, webPage } from '@/lib/jsonld'
 import { prevNextFor } from '@/lib/prevNext'
@@ -54,7 +53,7 @@ export default function Page() {
         page={ABOUT}
         plates={PLATES}
         grounds={{ [CEIBA_SECTION]: 'mid' }}
-        figures={{ [CEIBA_SECTION]: <CeibaFigure caption={UI_INTERIOR.ceibaCaption} /> }}
+        figures={{ [CEIBA_SECTION]: <CeibaFigure /> }}
         prevNext={prevNextFor(PATH)}
       />
     </>

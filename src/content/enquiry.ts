@@ -64,10 +64,15 @@ export const ENQUIRY = {
   submit: 'Send',
   sending: 'Sending',
 
-  /** Revealed line by line once the enquiry has been sent. */
+  /**
+   * Revealed line by line once the action has accepted the enquiry. The
+   * second line is the client's own sentence (document l.1206); nothing here
+   * claims delivery, which the mail adapter cannot promise on every deployment
+   * (docs/CONTENT-PROVENANCE-AUDIT.md B2).
+   */
   confirmation: [
-    'Thank you. Your enquiry has reached us.',
-    'It will be read personally and answered in confidence.',
+    'Thank you.',
+    'At The New Practice, every enquiry is handled personally, professionally, and with complete confidentiality.',
     'If the matter is urgent, please telephone.',
   ],
 

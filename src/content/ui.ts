@@ -32,9 +32,9 @@ export const UI_FOOTER = {
 
 /**
  * INTERIOR TEMPLATE STRINGS — Task 11. Landmark names for the sticky section
- * index and the previous/next rail, and the ceiba figure's caption. The
- * caption is factual — the species and the Yucatec Maya name of the tree the
- * mark is drawn from — and makes no claim (docs/01 §On the Maya material).
+ * index and the previous/next rail. The ceiba figure carries no caption: the
+ * client's own paragraphs beside it name the tree (docs/01 §On the Maya
+ * material; docs/CONTENT-PROVENANCE-AUDIT.md A1).
  */
 export const UI_INTERIOR = {
   /** aria-label on the sticky index <nav>. */
@@ -43,7 +43,6 @@ export const UI_INTERIOR = {
   railLabel: 'Adjacent pages',
   previous: 'Previous',
   next: 'Next',
-  ceibaCaption: 'Ceiba pentandra · Ya’axché',
 } as const
 
 /**
@@ -100,15 +99,16 @@ export const UI_HOME = {
 } as const
 
 /**
- * TREATMENT TEMPLATE STRINGS — Task 13. The heading over the related-services
- * rows, which the document does not write, and the two list headings the
+ * TREATMENT TEMPLATE STRINGS — Task 13. The heading over the three other
+ * services each page points to (they are the next three in the client's
+ * list, so the heading claims no relationship), and the two list headings the
  * template falls back to when a service carries a list without its own
  * introducing line (today every service that has a list also has its
  * heading, so the fallbacks never render). Structural, ours.
  */
 export const UI_TREATMENT = {
-  /** Over the three related-service rows, in the eyebrow register. */
-  relatedHeading: 'Related services',
+  /** Over the three other-service rows, in the eyebrow register. */
+  relatedHeading: 'Other services',
   /** Fallback over `treats` when a service has no `treatsHeading`. */
   treatsHeading: 'We provide treatment for',
   /** Fallback over `mayInclude` when a service has no `mayIncludeHeading`. */
@@ -118,15 +118,16 @@ export const UI_TREATMENT = {
 /**
  * PROFILE TEMPLATE STRINGS — Task 14. The label the portrait plate carries
  * while it is a placeholder (docs/CONTENT-GAPS.md G4: no portraits yet), and
- * the heading over the three other members each profile points to.
- * Structural, ours; the eyebrow label is the collection's own name from
- * seo.ts, not repeated here.
+ * the heading over the three other members each profile points to (the next
+ * three in the client's list, so the heading claims no pairing). Structural,
+ * ours, promising nothing; the eyebrow label is the collection's own name
+ * from seo.ts, not repeated here.
  */
 export const UI_PROFILE = {
   /** aria-label on the placeholder plate; replaced by the portrait's alt when one exists. */
-  portraitPending: 'Portrait to follow',
+  portraitPending: 'Portrait placeholder',
   /** Heading over the three cross-links beneath the biography. */
-  worksAlongside: 'Works alongside',
+  worksAlongside: 'Also on the team',
 } as const
 
 /**
