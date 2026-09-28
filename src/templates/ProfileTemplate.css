@@ -5,17 +5,14 @@
    imported once by it. Tokens only; px for geometry per rule 4 as amended.
    ========================================================================== */
 
-/* — title page: a tall frame, the plate and the lockup hanging from one
-     baseline low in it, as PageIntro does (docs/02 §Composition) — */
-.profile-intro {
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+/* — title page: short, as PageIntro is (round 1): the plate and the lockup
+     hang from one baseline in the upper part of the first viewport — */
+main > section.profile-intro {
+  padding-block: var(--s-8) var(--s-6);
 }
 .profile-intro__grid {
-  flex: 1;
   align-items: end;
-  row-gap: var(--s-7);
+  row-gap: var(--s-6);
 }
 /* the plate keeps to part of its column so the page stays 60–70% empty and
    the name is in the first viewport at every width: half the column while
@@ -32,10 +29,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-bottom: var(--s-7);
 }
 .profile-intro__eyebrow {
-  margin-bottom: var(--s-6);
+  margin-bottom: var(--s-5);
 }
 .profile-intro__index {
   color: inherit;
@@ -58,7 +54,7 @@
   margin-top: var(--s-4);
 }
 .profile-intro__lead {
-  margin-top: var(--s-6);
+  margin-top: var(--s-5);
 }
 @media (min-width: 1024px) {
   .profile-intro__plate {
