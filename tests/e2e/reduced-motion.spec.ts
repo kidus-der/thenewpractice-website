@@ -1,7 +1,7 @@
 /**
  * Reduced-motion walkthrough (docs/04 §7, docs/09 §2; Task 19), on the
  * reduced-motion project only: one route per template renders with nothing
- * invisible, no pinned section, no video and no gradient, the marquee static,
+ * invisible, no pinned section, no video and no gradient, no marquee,
  * and the residences carousel a focusable native scroller.
  */
 import { routes, serviceHref, teamHref, assessmentHref } from '../../src/content/nav'
@@ -78,10 +78,8 @@ test.describe('reduced motion', () => {
       await expect(page.locator('video')).toHaveCount(0)
       await expect(page.locator('canvas')).toHaveCount(0)
       await expect(page.locator('.cursor')).toHaveCount(0)
-      // the one permitted marquee stands still
-      expect(
-        await page.locator('.marquee__track').evaluate((el) => getComputedStyle(el).transform)
-      ).toBe('none')
+      // the footer marquee is gone (round 1, R2); no loop may come back in its place
+      await expect(page.locator('.marquee')).toHaveCount(0)
       expectNoConsoleErrors(page)
     })
   }

@@ -15,19 +15,16 @@ export const UI = {
 } as const
 
 /**
- * FOOTER STRINGS — Task 8. Landmark names and the two decorative glyphs the
- * footer needs. The confidentiality line is not here: it is the client's own
- * sentence and the footer reads it from pages/home.ts.
+ * FOOTER STRINGS — Task 8, trimmed in round 1 (R2). The sitemap's landmark
+ * names and the copyright sign; the practice name is BRAND's.
  */
 export const UI_FOOTER = {
   /** aria-label on the footer <nav>. */
   navLabel: 'Footer',
   /** Visually hidden heading over the sitemap columns. */
   sitemapHeading: 'Sitemap',
-  /** Precedes the year and the practice name in the legal line. */
+  /** Precedes the year and the practice name on the footer's base line. */
   copyright: '©',
-  /** Decorative separator between marquee repetitions; never read aloud. */
-  marqueeSeparator: '·',
 } as const
 
 /**

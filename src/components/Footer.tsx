@@ -1,40 +1,20 @@
 /**
  * The footer — global chrome, rendered by app/layout.tsx after every page.
- * docs/05 §Global chrome › Footer; plan §3.3.
+ * docs/05 §Global chrome › Footer.
  *
- * Server component on canopy ground. Reads: the marquee (the site's one
- * permitted marquee, the only client code here), the sitemap from nav.ts,
- * the founder contact from brand.ts, the legal line (copyright and the
- * confidentiality sentence; privacy and terms belong to the Legal column,
- * ledger Task 8 triage — a column production does not show while the pages
- * are PLACEHOLDER stubs, src/lib/placeholderRoutes.ts), and the lockup — mark,
- * wordmark with the ™, tagline — alone at the very bottom, the way a
- * monograph ends on the publisher's device. Every string comes from the
- * content layer; the confidentiality line is the client's own sentence.
+ * Server component on canopy ground, and deliberately small (round 1, R2):
+ * the sitemap in its link groups from nav.ts, then one hairline and one base
+ * line carrying the copyright and the ceiba mark with its brass point. The
+ * Legal group is a column production does not show while its pages are
+ * PLACEHOLDER stubs (src/lib/placeholderRoutes.ts). Every string comes from
+ * the content layer.
  */
 import Link from 'next/link'
 import './Footer.css'
 import { BRAND } from '@/content/brand'
-import { HOME } from '@/content/pages/home'
 import { UI_FOOTER } from '@/content/ui'
 import { Mark } from '@/components/Mark'
-import { Marquee } from '@/components/Marquee'
-import { mailHref, telHref } from '@/lib/contact'
 import { liveNav } from '@/lib/placeholderRoutes'
-
-/**
- * "Every enquiry is handled with complete confidentiality." — the second
- * paragraph of the home page's closing section, in the client's words.
- * Looked up rather than copied so the document stays the single source; if
- * the section moves, the line is omitted rather than invented.
- */
-const CONFIDENTIALITY_SECTION = 'begin-the-conversation'
-const CONFIDENTIALITY_PARAGRAPH = 1
-
-function confidentialityLine(): string | undefined {
-  const section = HOME.sections.find((s) => s.id === CONFIDENTIALITY_SECTION)
-  return section?.paragraphs[CONFIDENTIALITY_PARAGRAPH]
-}
 
 function Sitemap() {
   return (
@@ -60,59 +40,13 @@ function Sitemap() {
   )
 }
 
-function Contact() {
-  const { founder, phone, email, locale } = BRAND
-  const locationLines = locale.split(', ')
+function Base({ year }: { year: number }) {
   return (
-    <div className="grid12 site-footer__colophon">
-      <address className="site-footer__contact p-offset t-small">
-        <p>
-          {founder.name}, {founder.credentials}
-        </p>
-        <p className="muted">{founder.role}</p>
-        <p className="site-footer__line">
-          <a className="link" href={telHref(phone)}>
-            {phone}
-          </a>
-        </p>
-        <p>
-          <a className="link" href={mailHref(email)}>
-            {email}
-          </a>
-        </p>
-        <p className="site-footer__location muted">
-          {locationLines.map((line) => (
-            <span key={line}>{line}</span>
-          ))}
-        </p>
-      </address>
-    </div>
-  )
-}
-
-function Legal({ year }: { year: number }) {
-  const note = confidentialityLine()
-  return (
-    <div className="site-footer__legal t-small muted">
-      <p className="site-footer__copyright">
-        <span>
-          {UI_FOOTER.copyright} {year} {BRAND.name}
-        </span>
+    <div className="site-footer__base">
+      <p className="site-footer__copyright t-small muted">
+        {UI_FOOTER.copyright} {year} {BRAND.name}
       </p>
-      {note && <p className="site-footer__note">{note}</p>}
-    </div>
-  )
-}
-
-function Lockup() {
-  return (
-    <div className="site-footer__lockup">
       <Mark className="site-footer__mark" />
-      <p className="site-footer__wordmark">
-        {BRAND.nameUpper}
-        <sup className="site-footer__tm">{BRAND.trademark}</sup>
-      </p>
-      <p className="site-footer__tagline t-eyebrow muted">{BRAND.tagline}</p>
     </div>
   )
 }
@@ -123,16 +57,9 @@ export function Footer() {
 
   return (
     <footer className="site-footer" data-ground="dark" role="contentinfo">
-      <Marquee
-        className="site-footer__marquee"
-        text={BRAND.nameUpper}
-        separator={UI_FOOTER.marqueeSeparator}
-      />
       <div className="shell">
         <Sitemap />
-        <Contact />
-        <Legal year={year} />
-        <Lockup />
+        <Base year={year} />
       </div>
     </footer>
   )
