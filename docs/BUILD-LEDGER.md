@@ -637,3 +637,73 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **Shipped** on `fix/conditions-glow` (worktree, dev :3320): the home §3 hover plate is replaced by the travelling glow, one implementation now — `src/sections/RowGlow.tsx` + `.css` (the glow, the brass tick, `x`/`y` over `--d-base` `--e-out-expo`, `gsap.set` under reduced motion, pointer and focus) used by `IndexList` and `ConditionsList`; the pure `glowBox()` / `releaseRow()` in `src/lib/rowGlow.ts` are unit-tested; `plateForRow()`, the `conditionPlates` prop and the route's `CONDITION_PLATES` are gone; `HoverPlate` stays for the index lists; `index-01..04` untouched in `media.ts`.
 - **Evidence.** `npm run verify` green; `home` on desktop-1280, mobile-390 and reduced-motion and `index` on desktop-1280 against :3320 green (the new home test: one `.row-glow` in the list, no image, focus and Tab move it on every project, hover row 3 → row 7 moves its transform and the tick is `--accent`, reduced motion places it with no transition); a 1280 capture with the pointer over row 07 shows one soft canopy glow with the brass tick and no image.
 - **Deviations.** From 1024px the conditions glow bleeds the gutter (24px) each side rather than `--s-6`, with a 16px tick: the list fills the shell, so a second-column row has only the gutter to its left and a first-column row only the page margin (40px at 1024). docs/04 §6, docs/05 §T1 and CLAUDE.md §6a updated.
+
+---
+
+# Round 1 — Client feedback (from 2026-09-28)
+
+Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its own worktree on `round1/<id>-<slug>`; the main session reviews and merges task branches into `improvements/round-1`. **Nothing merges to `main` until the owner has reviewed it visually and approved.** Client review URL at the end: https://thenewpractice-staging.kidusder.com (the production target).
+
+## The client's feedback
+
+1. Too much text across the site. Read less, see more pictures (Kusnacht Practice as the model for brevity).
+2. Remove the footer's large wordmark. The footer takes less space and keeps only its link categories. The home page is shorter.
+3. Home §3 *Who We Help*: the twelve items on the left, a picture on the right.
+4. Self-assessment has too much friction: the tests should be right there on the tab page under a short description with a picture; questions near the top; answers on a 1–10 severity scale where that is meaningful.
+5. Every submission on the site (enquiries, assessment responses) reaches the client by email, cleanly structured and branded.
+6. A catalogue of lighter colour palettes shown as renders of the real site, as an artifact, for the client to choose from. No palette change on the site this round.
+
+## Owner decisions (override the older rules where they conflict; each override gets a CLAUDE.md §6a row)
+
+- **Copy.** Curate the client's sentences; write summaries where needed. Language is plain, human and professional, British spelling. **No em or en dashes** in anything we write unless grammar strictly requires one. Still never invent a clinical claim, statistic, credential, outcome or named person; summaries restate only what the client's document says. The forbidden-words list (docs/01) and "no exclamation marks" still apply to what we write. The full client text stays in the generated modules; what renders is chosen by the curation layer (R0).
+- **Images.** People are allowed (Kusnacht style: calm, adult, candid, never posed stock smiles). Rule of thumb: every picture matches the text it sits with and the site's look, and means something. No resort clichés, no alpine imagery, no spa clichés (docs/02 forbidden list otherwise stands).
+- **Footer.** Link columns in their categories, the © line, the small mark. No marquee, no contact block.
+- **Who We Help.** One fixed image beside the list.
+- **Self-assessment.** Least possible friction to reach and to complete. Per question, the answer type is whichever is most meaningful: a 1–10 severity scale, or yes / no / maybe. Result: the average severity places the respondent in the client's own three band labels, split evenly (flagged in CONTENT-GAPS for the client to confirm). Emailing a result is **opt-in**, with contact details and a one-line consent.
+- **Email.** Resend (Vercel Marketplace, the existing adapter). The client has no domain yet; they will buy one on their own Vercel account. **Nothing may be tied to `kidusder.com` as a sending domain.** Build everything short of provisioning: when the recipient address and domain arrive, it is env vars only.
+- **Title pages.** Shorter on every page (less scrolling); the route curtain, preloader and reveals stay as they are. The home hero stays a full viewport.
+- **Palettes.** Ten lighter palettes, in different directions, rendered from the real site with colour the only variable.
+- **Commits.** Small commits after every logical step, pushed after each (`git push -u origin <branch>`). Never a batch commit. Conventional messages, no co-author trailer.
+
+## Rules for round-1 agents (in addition to the ten above)
+
+- Work only in your worktree; run `npm ci` there first (Node 24 on this machine). Start your dev server on your assigned port (`npx next dev -p <port>`), detached, and stop it when done.
+- Do **not** edit this ledger. Report deviations and findings in your final message; the main session records them and adds CLAUDE.md §6a rows (R0 is the exception and edits §3/§6a directly).
+- Update the governing doc for what you change (docs/05 for templates, docs/04 for motion, docs/02 for imagery, docs/06 for content) in the same commit as the change.
+- Update the Playwright specs your change breaks so they assert the new design; never delete an assertion without replacing it.
+- Before reporting: `npm run verify` green; `E2E_BASE_URL=http://localhost:<port> npm run e2e:route -- <spec>` green for touched routes on all five projects; screenshots at 390 / 768 / 1280 / 1920 and reduced motion **read by you**; paths in the report. Push your final commit and report the branch head SHA.
+
+## Round-1 status
+
+| id | status | depends_on | task | branch | port |
+|---|---|---|---|---|---|
+| R0 | doing | — | Foundation: shorter title pages, curation layer, rule and doc updates | round1/r0-foundation | 3401 |
+| R1 | doing | — | Images: source, grade and log pictures matched to their text | round1/r1-images | 3402 |
+| R2 | doing | — | Footer: links, © line, small mark | round1/r2-footer | 3403 |
+| R7 | doing | — | Palettes: ten lighter palettes + capture tooling | round1/r7-palettes | 3407 |
+| R3 | todo | R0, R1 | Home: shorter; Who We Help list left, fixed image right | round1/r3-home | 3404 |
+| R4a | todo | R0, R1 | About, Our Process, A Personal Message, Fees: curate, images | round1/r4a-interior | 3411 |
+| R4b | todo | R0, R1 | Clinical Services index + 11 service pages: curate, images | round1/r4b-services | 3412 |
+| R4c | todo | R0, R1 | Team index + 11 profiles: curate, images | round1/r4c-team | 3413 |
+| R4d | todo | R0, R1 | Contact and Residences: curate, images | round1/r4d-contact | 3414 |
+| R5 | todo | R0, R1 | Self-assessment: tests on the tab page, questions at the top, per-question answer types | round1/r5-assessment | 3405 |
+| R6 | todo | R5 | Email: branded HTML emails, opt-in assessment send, previews, provisioning-ready | round1/r6-email | 3406 |
+| R8 | todo | R3, R4a–d, R5, R7 | Palette artifact from real renders | — (main session) | — |
+
+## Round-1 briefs
+
+### R0 — Foundation
+1. **Title pages.** `PageIntro` (and the title pages of T4 profile, T7 enquiry opening, the assessment page) stop being a full viewport. Target: at 1280×800 and 390×844 the eyebrow, `h1`, lead (and plate, where one exists) sit in the upper part of the first viewport and the start of the next block is visible. Keep the reveals, the `lines` h1 and the `mask` lead exactly (LCP credit, docs/09 §1). Home hero unchanged. Remove the Task 19 short-viewport padding step if it becomes redundant.
+2. **Curation layer.** One mechanism every later task uses to decide what renders, without editing generated modules: e.g. `src/content/curated/` with a helper that picks client paragraphs/sections/list items by id and index, and a way to add our own summary strings. Our strings are checked in `content.checks.ts`: no em/en dash (the `PLACEHOLDER — ` prefix excepted), no exclamation mark, none of the docs/01 forbidden words, trimmed. A reference to a client paragraph that no longer exists fails the check. Unit-test the helper. Prove it on nothing user-visible (no page curation in R0; R3/R4/R5 do the pages).
+3. **Rules and docs.** CLAUDE.md §1/§3/§5 and docs/01, docs/06 rewritten for the new copy rule (curated client text plus our summaries, no dashes, no invented claims); docs/02 for people in pictures; docs/03/05 for the shorter title page; §6a rows for each override. Do not touch the footer, home sections, assessment or palette.
+
+### R1 — Images
+Source roughly 25–35 new licence-free photographs (Pexels, Unsplash, Pixabay; record source URL, author, licence) for these slots, **reading the text each will sit with in `src/content/**` first**: home §2 long read, §3 Who We Help (one strong image), §4 philosophy, §5 begin the conversation; About (its main sections), Our Process (four to five of its key sections), A Personal Message, Fees; Clinical Services index and one per service (11); Team index; Self-Assessment index; Contact. People allowed per the decisions above. Match the Riviera Maya setting where a place shows. Grade through the existing pipeline (`design/media.manifest.json` → `npm run assets` → `public/media`, `src/content/media.ts`); key names by slot (`service-addiction-treatment`, `home-who-we-help`, …). Update `design/ASSETS.md`, `design/STOCK-SOURCES.md` (a round-1 section) and write `design/ROUND1-IMAGE-SLOTS.md`: key → page/section → the sentence it illustrates → why it fits. Look at every candidate yourself (download and view) before choosing. Produce a contact sheet PNG of all chosen, graded frames with their keys (scratch path in the report, not committed). No template wiring; R3/R4/R5 place them. Commit per batch of slots.
+
+### R2 — Footer
+Remove the marquee (`Marquee.tsx`, its CSS, `D.marquee` and its docs rows), the founder `<address>` and the confidentiality line. Keep the four link groups exactly as they gate today (production hides the placeholder routes and the Legal group), then one thin bottom line: `© <year> The New Practice` and the small ceiba mark with its gold point. Much less vertical space at every width. Server component. Update `footer.spec.ts`, docs/05 §Footer, docs/04 §4 (marquee), docs/02 anti-patterns row, docs/03 §9, docs/09 if it mentions the marquee.
+
+### R7 — Palettes and capture tooling
+1. Design ten lighter palettes in distinct directions (the client only said "lighter"; e.g. limestone, sage, sea glass, clay, sand dune, mist, cenote, jungle shade, shell, linen). Each defines the seven core tokens (`--c-canopy`, `--c-canopy-soft`, `--c-bone`, `--c-sand`, `--c-clay`, `--c-stone`, `--c-brass`) plus any alias values the dark ground needs, so the site's structure (grounds, one accent) holds. Every text/ground pair the site uses must clear AA (4.5:1 body, 3:1 ≥ 24px); no pure black or white, no neutral grey; exactly one accent. Store them in `design/palettes/palettes.json` with names and a one-line character note each.
+2. Capture tooling in `scripts/palettes/`: builds nothing on the site; drives Playwright against a running production build, injects each palette's tokens (`:root`, `[data-ground]`, `[data-surface]`, chrome `--ground`), regrades the stills and video posters to that palette's duotone (reuse `prepare-assets.mjs`'s grade; serve regraded files by request interception, never overwrite `public/`), reveals the page (preloader skipped, `revealAll`-style pass), and writes full-page captures for Home, About, one service, one profile, Self-Assessment index, one questionnaire, Contact at 1440 wide, plus Home at 390, to a gitignored output folder. Current palette included as "Current".
+3. A contrast report per palette (`design/palettes/CONTRAST.md`). Prove the tooling on today's pages with two palettes and read the captures. The artifact itself is R8, after the layout tasks land.
