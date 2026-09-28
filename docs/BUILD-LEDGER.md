@@ -677,10 +677,10 @@ Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its 
 
 | id | status | depends_on | task | branch | port |
 |---|---|---|---|---|---|
-| R0 | doing | — | Foundation: shorter title pages, curation layer, rule and doc updates | round1/r0-foundation | 3401 |
-| R1 | doing | — | Images: source, grade and log pictures matched to their text | round1/r1-images | 3402 |
-| R2 | doing | — | Footer: links, © line, small mark | round1/r2-footer | 3403 |
-| R7 | doing | — | Palettes: ten lighter palettes + capture tooling | round1/r7-palettes | 3407 |
+| R0 | paused — `ed2f7cf`: title pages shortened; curation layer, docs, specs, verify remain | — | Foundation: shorter title pages, curation layer, rule and doc updates | round1/r0-foundation | 3401 |
+| R1 | paused — no commits; 31-slot plan and search results in notes | — | Images: source, grade and log pictures matched to their text | round1/r1-images | 3402 |
+| R2 | paused — `016d855`: footer built, verify green; 3 e2e timeouts, docs remain | — | Footer: links, © line, small mark | round1/r2-footer | 3403 |
+| R7 | paused — no commits; design plan and findings in notes | — | Palettes: ten lighter palettes + capture tooling | round1/r7-palettes | 3407 |
 | R3 | todo | R0, R1 | Home: shorter; Who We Help list left, fixed image right | round1/r3-home | 3404 |
 | R4a | todo | R0, R1 | About, Our Process, A Personal Message, Fees: curate, images | round1/r4a-interior | 3411 |
 | R4b | todo | R0, R1 | Clinical Services index + 11 service pages: curate, images | round1/r4b-services | 3412 |
@@ -725,3 +725,8 @@ For each page in the group: cut the reading load to roughly the Kusnacht shape (
 1. **Templates.** Branded HTML emails plus a plain-text part for (a) an enquiry and (b) an assessment result: the site's palette, a Didone-style serif with safe fallbacks, the ceiba mark as an inline image or table-safe SVG fallback, hairlines, no tracking pixels, no external fonts or images that need a network. Enquiry: every field, labelled, reply-to the enquirer. Assessment: questionnaire title, each question with its answer, total, band, the respondent's contact details and preferred contact, submitted time in the practice's timezone.
 2. **Opt-in send on the result.** Beneath the result: *Send my answers to the practice* reveals name, email or telephone, preferred contact, and a one-line consent; submits through a new server action with the same honeypot and timing trap as the enquiry; the result stays on screen; confirmation and failure states in the site's voice. Nothing stored; logs carry no personal data.
 3. **Provisioning-ready.** Adapter sends HTML + text via Resend when configured, logs otherwise. Env: `RESEND_API_KEY`, `ENQUIRY_TO_EMAIL`, `ENQUIRY_FROM_EMAIL` (and an assessment recipient only if a second address is needed). `npm run email:preview` renders every template with sample data to a gitignored folder for review. A short `docs/EMAIL-SETUP.md`: the exact steps once the client's domain exists (Marketplace Resend install on their Vercel account, domain verification records, env vars). **No `kidusder.com` sending domain.** Update docs/09 §3 (data handling now includes opt-in sending) and the unit tests (handler, adapter, templates).
+
+
+## Round-1 pause (2026-09-28)
+
+Owner paused the run. Each task's resume notes (done, remaining, decisions, gotchas, next steps) are in `docs/round1-progress/<id>-progress.md`. Resume: a fresh agent per task in the same worktree (`../tnp-wt/<branch-suffix>`), told to read its notes first and continue from the pushed branch head.
