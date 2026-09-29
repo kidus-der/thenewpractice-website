@@ -142,6 +142,8 @@ An 8px base with a non-linear scale. Larger steps grow faster because luxury lay
 
 **Section rhythm:** every section is `padding-block: var(--s-8)` on mobile, `var(--s-9)` on desktop. `sections.css` applies this to `main > section` so it cannot silently stop being true. Sections that size an inner element to the viewport (the hero, pinned statements) opt out with `padding-block: 0`.
 
+**Title pages (round 1, owner decision: less scrolling).** Every title page but the home hero (`PageIntro`, the profile's, the contact opening) is short: `padding-block: var(--s-8) var(--s-6)` at every width, no minimum height, the eyebrow and lead `--s-5` from the `h1`. The block after a title page opens at `--s-7` instead of the section rhythm (`sections.css`), so title and first block sit `--s-8` apart and the next block starts inside the first viewport at 390 × 844 and 1280 × 800. Where that block is on another ground (sand after the title page on `/clinical-services` and `/team`), the band reads `--s-7` above its content and the full rhythm below; that is intended: the band is entered from the title page, not from a void. The Task 19 short-viewport step (`max-height: 900px`) is gone; the short title page is shorter than its result at every height.
+
 ---
 
 ## 4. Grid
