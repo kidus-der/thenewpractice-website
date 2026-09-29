@@ -50,7 +50,7 @@ function lines(enquiry: EnquiryEmailInput, received: string): readonly Line[] {
     [ENQUIRY.fields.email, enquiry.email, actionLink(`mailto:${enquiry.email}`, enquiry.email)],
     enquiry.telephone
       ? [
-          ENQUIRY.fields.telephone,
+          ASSESSMENT_SEND.fields.telephone,
           enquiry.telephone,
           actionLink(`tel:${enquiry.telephone.replace(/[^\d+]/g, '')}`, enquiry.telephone),
         ]
