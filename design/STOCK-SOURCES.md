@@ -420,3 +420,84 @@ Notes for Task 2b:
 - `https://www.pexels.com/download/video/<id>/` is a stable alias that 302-redirects to the same `videos.pexels.com` file; the manifest uses the resolved file URL so no redirect handling is needed.
 - The Pexels HTML pages block plain curl (403); the CDN hosts do not. Fetch with a browser-like `User-Agent` regardless.
 - Team silhouettes are not sourced here; they are generated placeholders per the ledger.
+
+---
+
+## Round 1 — pictures matched to their text
+
+Research date: 2026-09-28 (task R1). Governing brief: `docs/BUILD-LEDGER.md`, Round 1, brief R1. Unlike task 2a, the search here started from the **sentence** each picture will sit beside, read in `src/content/**`, and people were allowed (owner decision).
+
+**Method.** Pexels search pages were rendered in a headless browser (the HTML answers 403 to curl), one fresh browser context per query; thirty-odd queries across the slots, the results laid out as numbered thumbnail sheets and read. For each slot two to four candidates were then downloaded at 900 px and read full-frame before one was chosen; the chosen frame was graded through the pipeline and read again at its crop. Four first choices were replaced where the full frame or the graded crop failed: a probable minor (mental health), a second consultation image (founder), a knife close-up (nutrition), a crop that lost the team (team index). Photographer names were read from each photo page's structured data. Unsplash and Pixabay were not needed; every pick is Pexels.
+
+**Licence.** Pexels License (https://www.pexels.com/license/): free for commercial use, attribution not required (recorded anyway), identifiable people must not be shown in a bad light. The crisis, trauma, addiction and mental-health slots therefore show no identifiable face.
+
+**Place.** The Riviera Maya coast is flat: sea frames with hills or headlands behind were rejected. `about-place` is the only destination photograph, of the real marina at Puerto Aventuras; the docs/08 advice against destination searches still holds for everything else (the `riviera maya` and `puerto aventuras` searches returned resorts, as warned).
+
+### Home
+
+| Slot | Chosen | Alternates considered |
+| --- | --- | --- |
+| `home-recovery` | Pexels 30195618, Marius Gabriel (https://www.pexels.com/photo/two-people-walking-on-a-tranquil-beach-30195618/) | Pexels 37100933 (two figures far down a beach; too small at 3:4), 13521149 (two walkers on a pale beach; tree in the foreground) |
+| `home-who-we-help` | Pexels 7272595, Kaboompics.com (https://www.pexels.com/photo/photo-of-a-woman-looking-outside-a-window-while-sitting-on-a-table-7272595/) | Pexels 20152432 (woman seated in a tropical garden; a red ribbon and cap pull the eye), 10266092 (used for Mental Health) |
+| `home-philosophy` | Pexels 38729727, Joaquin Reyes Ramos (https://www.pexels.com/photo/majestic-kapok-tree-with-massive-buttress-roots-38729727/) | Pexels 7292924 (kapok bark in tropical woods; texture only), 3191101 (tall kapok in rainforest; the roots are out of frame) |
+| `home-begin-conversation` | Pexels 6951776, Artem Podrez (https://www.pexels.com/photo/a-woman-sitting-on-a-window-bench-talking-on-the-phone-6951776/) | Pexels 6612273 (similar scene; a posed smile and gesture), 7653765 (used for Our Process) |
+
+### About
+
+| Slot | Chosen | Alternates considered |
+| --- | --- | --- |
+| `about-ceiba` | Pexels 36252725, miguel negrao (https://www.pexels.com/photo/majestic-amazon-ceiba-tree-in-belem-brazil-36252725/) | Pexels 36252724 (same tree, same angle; flatter light), 34041295 and 30272168 (spined ceiba trunk close-ups; a texture, not the tree) |
+| `about-practice` | Pexels 4946931, Maria Orlova (https://www.pexels.com/photo/high-windows-located-in-spacious-interior-decorated-with-pictures-on-shelves-4946931/) | Pexels 13600515 (open terrace with sheer curtains; a wide-angle lean), 5105918 (living room onto misty forest; dark sofa dominates) |
+| `about-founder` | Pexels 38325418, Ayşegül Aytören (https://www.pexels.com/photo/two-men-having-a-conversation-on-a-bench-overlooking-the-ocean-38325418/) | Pexels 17804944 (two men on a bench by the sea; rubble foreground), 6255868 (a hand on a client's hands; repeats the consultation motif of Clinical Services) |
+| `about-place` | Pexels 36734777, Steve Hodder (https://www.pexels.com/photo/pelican-in-flight-over-puerto-aventuras-marina-36734777/) | Pexels 30618150 (pelican on a Quintana Roo fishing boat; a beach, not the marina), 36734715 (green heron in Puerto Aventuras; chain-link fence) |
+| `about-sea` | Pexels 20703791, Diogo Miranda (https://www.pexels.com/photo/man-on-beach-at-dawn-20703791/) | Pexels 35120407 (lone walker at dawn; hills behind, which the Riviera Maya does not have), 36068262 (similar; figure too small) |
+| `about-jungle` | Pexels 38996760, Iván Hernández-Cuevas (https://www.pexels.com/photo/mystical-hanging-roots-in-yucatan-cenote-38996760/) | Pexels 34855022 (hidden jungle cenote; wide and busy), 14440966 (low-angle forest with light shafts; could be anywhere) |
+
+### Our Process, A Personal Message, Fees
+
+| Slot | Chosen | Alternates considered |
+| --- | --- | --- |
+| `process-first-conversation` | Pexels 7653765, Thirdman (https://www.pexels.com/photo/person-talking-on-the-phone-7653765/) | Pexels 10308472 (silhouette on the phone in an empty room; almost black), 7255320 (close profile; too much face for a first call) |
+| `process-lead-clinician` | Pexels 33490052, Javid M (https://www.pexels.com/photo/two-people-walking-in-a-sunlit-forest-path-33490052/) | Pexels 38029660 (two adults at an outdoor table; the 3:4 crop left one identifiable man with a brand name on his jacket), 32233857 (two men on a waterfront; tower blocks behind) |
+| `process-typical-day` | Pexels 31145148, Letícia Alvares (https://www.pexels.com/photo/warm-morning-coffee-scene-with-teacups-31145148/) | Pexels 2930966 (croissant and fruit on a round table; the papaya repeats Biochemical Restoration), 984860 (mug and plate; a café register) |
+| `process-family` | Pexels 8841344, Julia M Cameron (https://www.pexels.com/photo/a-man-and-woman-talking-together-8841344/) | Pexels 8848794 (mother and son over a photo album; busy wallpaper), 7317736 (mother and son, emotional; too theatrical) |
+| `process-nutrition` | Pexels 32069861, damla selen demir (https://www.pexels.com/photo/chef-preparing-gourmet-vegetable-tart-close-up-32069861/) | Pexels 37923422 (hands slicing onion; a knife close-up at 3:4), 8629083 (herbs over a board; a professional kitchen) |
+| `personal-message` | Pexels 6918482, cottonbro studio (https://www.pexels.com/photo/person-writing-on-white-paper-6918482/) | Pexels 5425602 (a hand writing on deckled paper; closer, less context), 6918490 (same series; a stack of books in frame) |
+| `fees` | Pexels 11145310, Ali Alcántara (https://www.pexels.com/photo/wood-framed-sofa-chair-11145310/) | Pexels 18129811 (timber deck with loungers under palms; reads holiday), 4917109 (already residence-04) |
+
+### Clinical Services
+
+| Slot | Chosen | Alternates considered |
+| --- | --- | --- |
+| `services-index` | Pexels 7176322, SHVETS production (https://www.pexels.com/photo/crop-psychologist-writing-in-notebook-against-patient-7176322/) | Pexels 3958372 (therapist with notebook; the client out of focus), 6255629 (a supportive hand on a knee; closer to comfort than assessment) |
+| `service-addiction-treatment` | Pexels 34199673, Ela F. Yegen Koumpos (https://www.pexels.com/photo/glass-of-water-by-the-turquoise-sea-34199673/) | Pexels 10994408 (glass casting a shadow on wood; interior only), 5853213 (minimal glass and shadow; studio feel) |
+| `service-trauma-and-complex-trauma` | Pexels 8862272, cottonbro studio (https://www.pexels.com/photo/back-view-of-a-woman-sitting-on-a-bed-8862272/) | Pexels 4265386 (silhouette on a bed; too dark to read), 6382592 (hands around knees on a sill; tighter, more anxious) |
+| `service-mental-health` | Pexels 10266092, Xeniya Kovaleva (https://www.pexels.com/photo/monochrome-photo-of-a-woman-sitting-by-the-window-10266092/) | Pexels 6251367 (figure by a window onto palms; appears to be a minor), 36156782 (man in deep shadow; closer to despair than the copy) |
+| `service-eating-disorders` | Pexels 29230296, Esra Afşar (https://www.pexels.com/photo/person-holding-handmade-ceramic-bowl-29230296/) | Pexels 8054775 (hands around a bowl of soup; more about the food), 7578299 (hands with an uneven ceramic bowl; a pottery shoot) |
+| `service-executive-health-and-burnout` | Pexels 16586208, Lucas Mota (https://www.pexels.com/photo/a-man-in-a-suit-sitting-on-bench-by-the-sea-16586208/) | Pexels 14654924 (man in coat facing the sea; an urban harbour), 7927534 (head in hands in a suit; a stock burnout pose) |
+| `service-biochemical-restoration` | Pexels 4113802, alleksana (https://www.pexels.com/photo/photo-of-papaya-beside-sliced-lime-4113802/) | Pexels 1590152 (sliced limes and mint; less legible in duotone), 4113831 (papaya flat lay on white; too bright) |
+| `service-somatic-therapies-and-nervous-system-regulation` | Pexels 8795387, Anastasia Shuraeva (https://www.pexels.com/photo/man-holding-his-stomach-and-chest-8795387/) | Pexels 8795388 (same model on a deck; railing in frame), 5340282 (hands crossed on a pink sweater; the colour fights the grade) |
+| `service-inner-child-work` | Pexels 21787638, Natalie Bond (https://www.pexels.com/photo/mother-and-child-holding-hands-21787638/) | Pexels 7475804 (an adult thumb in an infant's grip; too young for the copy), 6338761 (hands in warm close-up; sentimental) |
+| `service-recovery-management-and-after-care` | Pexels 6050133, Gustavo Fring (https://www.pexels.com/photo/back-view-of-a-man-in-a-gray-suit-walking-with-his-luggage-6050133/) | Pexels 4246096 (suitcases and boxes on a bed; no person), 11045296 (woman with luggage; an airport advertisement register) |
+| `service-interventions-and-crisis-response` | Pexels 13517400, The Humantra (https://www.pexels.com/photo/a-grayscale-photo-of-a-man-sitting-beside-the-window-13517400/) | Pexels 6756553 (man at a sliding door at night; face in profile), crisis search results (4584397 and similar: posed alarm, faces) |
+| `service-family-program` | Pexels 34626729, DIBLACL . (https://www.pexels.com/photo/two-women-enjoying-ocean-view-on-a-cloudy-day-34626729/) | Pexels 8841344 (used for Our Process), 8497678 (mother and son on a bench; smiling to each other, more lifestyle) |
+
+### Team, Self-Assessment, Contact
+
+| Slot | Chosen | Alternates considered |
+| --- | --- | --- |
+| `team-index` | Pexels 6340672, Pavel Danilyuk (https://www.pexels.com/photo/a-group-of-people-having-a-meeting-6340672/) | Pexels 7888816 (people around a table; the 3:4 crop leaves one person's hands), white-coat team photographs (read hospital; rejected) |
+| `assessment-index` | Pexels 33359322, Letícia Alvares (https://www.pexels.com/photo/woman-journaling-in-a-cozy-chair-at-home-33359322/) | Pexels 5357185 (hands writing on the knee; darker, less context), 3363111 (journal and cup; a lifestyle flat lay) |
+| `contact` | Pexels 36962663, Luk Sauvage (https://www.pexels.com/photo/cozy-minimalist-interior-with-natural-light-36962663/) | Pexels 16625884 (two chairs and a table against brick; colder), 30065112 (vintage armchairs by blinds; too dark) |
+
+### Considered and rejected across round 1
+
+| Candidate | Why |
+| --- | --- |
+| Flowering silk-cotton and *Bombax* trees (India, Bangladesh, Vietnam results for "ceiba") | Not the Maya ceiba; red blossom reads postcard. |
+| White-coat and scrubs team photographs (the "medical team" search) | Read hospital; docs/02 forbids anything clinical-institutional. |
+| The "worried woman on phone" set (Pexels 4584397, 6382646 and neighbours) | Posed alarm with faces in focus; the licence forbids showing identifiable people in a bad light. |
+| Head-in-hands burnout portraits (Pexels 7927534, 7984780 and neighbours) | A stock burnout pose; the chosen frame says the same thing by stopping, not collapsing. |
+| Yoga and meditation poses from the breathwork search | Forbidden by docs/02 (*Yoga poses*). |
+| Marina sunrises (Pexels 28834345, 10341944 and neighbours) | Temperate harbours with mountains; not the Riviera Maya. |
+| Beach couples holding hands (Pexels 14992496, 33530668 and neighbours) | Romantic register, swimwear or resort. |

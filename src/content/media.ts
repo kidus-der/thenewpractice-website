@@ -110,6 +110,294 @@ export const MEDIA = {
     "credit": "Wavy. revolution",
     "licence": "Pexels License"
   },
+  "home-recovery": {
+    "src": "/media/home-recovery.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAQBACdASoUABsAPuFep02opSOiMAwBEBwJZwAAW8FEqPz0snnvOv3xoAD9zBx7nBxTiY/XF9BmoqxBPUdDws1K/iprbddrPvYlsL7/uWxN9wIeHP5nnphl38BtLjqWgAA=",
+    "alt": "Two people seen from behind standing side by side on a beach facing the sea",
+    "credit": "Marius Gabriel",
+    "licence": "Pexels License"
+  },
+  "home-who-we-help": {
+    "src": "/media/home-who-we-help.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAACwBACdASoUABsAPu1osFAppaUiqAqpMB2JZwDJEDBim9x2z19K4HES7TiAVGUAAPyjIAfMQJ+f4PDZG2l2OHKUIa9GhMR3zh0CGziiuAgoOhI2VDoQZNfLuh9qYvT9Y43zopYVF/KRU8/HXomAfpQfeP2ji8G1gAA=",
+    "alt": "A woman seated on a small table by a window with a sheer curtain, looking out",
+    "credit": "Kaboompics.com",
+    "licence": "Pexels License"
+  },
+  "home-philosophy": {
+    "src": "/media/home-philosophy.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAABQBQCdASoUABsAPu1qq1EppaOiqAqpMB2JaQDG+bHAPf8SLIb6RU9FDOUE2lJP3g3HjIAA/h5PgDVTWHDL9JWfGsLXBpHujqQrQNHs7DGo4+gkiR8hzHr9hdxsyYW+mS8pGdDYtS7Avne+tAvbiOd2QkOYuaracc6h6mmzS8M9HJeetDa1/2ZL/4J9wDnf/SZr7605mRoaIEV6gblG/HAA",
+    "alt": "Buttress roots of a large kapok tree on a forest floor, a vine wound around the trunk",
+    "credit": "Joaquin Reyes Ramos",
+    "licence": "Pexels License"
+  },
+  "home-begin-conversation": {
+    "src": "/media/home-begin-conversation.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAABQBQCdASoUABsAPu1krE+ppSQiMBgIATAdiWcAzfwxUadiTDaNxHvPWxiCFmMsSc4gRAAA9oFbipwYBNB7K6iVGibtAW8+YtARLIZ0CsjfVy0+aknbnGx4K+XEdFa96Cnnn34+wY4+jC3877diLQQkzAzkd4H5TVGfLBn3PjNzkBNU/QAAAA==",
+    "alt": "A woman sitting on a window seat talking on a mobile phone",
+    "credit": "Artem Podrez",
+    "licence": "Pexels License"
+  },
+  "about-ceiba": {
+    "src": "/media/about-ceiba.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAAAwBQCdASoUABsAPu1qrVCppaQiqAqpMB2JZwDE3avSBQQKttbaJQJYSVUqbA/Sg2SAAAD9Upki8lX7t8hYsUrU3Kk5aj/GpYKK9ryJI9HxUp00tO9G8DTeWoRh8s8EbDxImkK2MwYO3ebRVYEyekE9Onkl0g5XaFmmyMjqva2RS2MKupBN2Syqu3jMX53W/QC0mxLprx9URxhW7wDI0bsRESM3RDO4RBncAAAA",
+    "alt": "A ceiba tree seen from the base of its trunk, branches spreading against cloud",
+    "credit": "miguel negrao",
+    "licence": "Pexels License"
+  },
+  "about-practice": {
+    "src": "/media/about-practice.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAACwBACdASoUABsAPu1mqk2ppaQiMAgBMB2JZwAAJSv/cIBsSIOc/7Dsxp1WRjwgANnET9mVXgqVZISJK+MoA6/poLUZJ2gqpHNda/YVackscVTPwqCQGivVl6TR83KrJ1BmAr15jXPkarCEXH6GGKppGTlLoH1kMeEB6PwQB2UF36qNrPnza2esIyw1DC7svIHq5QAA",
+    "alt": "A room with a wooden floor, a bench and tall glazed doors onto palm trees",
+    "credit": "Maria Orlova",
+    "licence": "Pexels License"
+  },
+  "about-founder": {
+    "src": "/media/about-founder.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAACwBACdASoUABsAPu1kqE4ppaOiMAgBMB2JZwDDrCKOVlv+DajhwCqybEnGmBgAAP5Ru3t57VRaSo+nLJH9V8FZ+FwA6SnxqKHgB8wJDafgpzeOHuc5r32a8r2iWCkzdG0oHYo8GlE9UhRRsb2tVdBzCN+TfQEkgozxshVOwAA=",
+    "alt": "Two men seen from behind talking on a bench that faces the sea",
+    "credit": "Ayşegül Aytören",
+    "licence": "Pexels License"
+  },
+  "about-place": {
+    "src": "/media/about-place.webp",
+    "width": 2400,
+    "height": 1350,
+    "blurDataURL": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACQAwCdASoUAAsAPu1iqU2ppaQiMAgBMB2JZwAAW5lw5exXqygQAP2fWVkwm3By0FiU8rGmTJI9RBE63f1qAQ+vxTNzakpwAAA=",
+    "alt": "A pelican flying low over the water of the marina at Puerto Aventuras",
+    "credit": "Steve Hodder",
+    "licence": "Pexels License"
+  },
+  "about-sea": {
+    "src": "/media/about-sea.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACwAwCdASoUABsAPu1qpU2/pqMiMBgMA/AdiWcAzFhJuWCM35VgIADxsXEHx2iIrlPazlvMtvfXnbdwyP58w+Bhbcji8vJCAAA=",
+    "alt": "A person walking at the edge of the sea on a flat beach at dawn",
+    "credit": "Diogo Miranda",
+    "licence": "Pexels License"
+  },
+  "about-jungle": {
+    "src": "/media/about-jungle.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAADwBACdASoUABsAPu1cq02ppKQiMBgMATAdiWcAzjwH+B4aCjosDqqNA0RKgo1hL+AA/uv+hEWvGskqpA3T7dhlaYV0FJ1uNXA+VCdXWDX1Xx/RSsFZIYFK06EifNULPvW+zyiGPQAAAA==",
+    "alt": "Tree roots hanging into the dark water of a cenote in Yucatán",
+    "credit": "Iván Hernández-Cuevas",
+    "licence": "Pexels License"
+  },
+  "process-first-conversation": {
+    "src": "/media/process-first-conversation.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAABQBACdASoUABsAPu1gqE6ppSOiMBgMATAdiWcAvKQMiKz3XhdahBvMkxBAAP7loFlw3Rfsz1PxYLcpTAcvk7uP52LKbjLAECETrMP8oppnYG52aMdwlR0biC0lQ7Shha1w9GVDEWx194mq3VRCBlfMl7X2MZY+FKsu0XE0AAA=",
+    "alt": "A man seen from behind talking on the phone at a window over a misty view",
+    "credit": "Thirdman",
+    "licence": "Pexels License"
+  },
+  "process-lead-clinician": {
+    "src": "/media/process-lead-clinician.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAABQBQCdASoUABsAPuVcpk2pJSOiMAwBIByJZwDN/B7FZ422pMIqO8NO/Lp3RLtp+ZJROMAA/uv+jWFAoyMlIlDSOxA4up8Xon4wIx6r+vw3X8Dyg+uQ1i6jQGn+iZq+EqrYvxCu2wGFwEtx1sAPIk+zIDCimHGQ2nHVp6x3lOKAAAAA",
+    "alt": "Two people seen from behind walking along a garden path in low sun, a bench beside it",
+    "credit": "Javid M",
+    "licence": "Pexels License"
+  },
+  "process-typical-day": {
+    "src": "/media/process-typical-day.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAADQBACdASoUABsAPu1qsFAppaSiqAqpMB2JZwDOODHC4LQJWeqQdNRXeIl87ERAAADg1zREsuuw3T1tmotlyYF+muSSJSv6xXA81D7W5p4KI8S9GasIRUDnDiZa5quOiD/bT61HThG0MWXiRQgiT7OBmZLA1O3E6XL14hWVUduongT0RaATykPxW625yIHz5tgX77Asc8A1adxHpakGXex19jNbT+mIJwAAAA==",
+    "alt": "Two cups and a glass teapot on a round wooden table by a window",
+    "credit": "Letícia Alvares",
+    "licence": "Pexels License"
+  },
+  "process-family": {
+    "src": "/media/process-family.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAABQBQCdASoUABsAPu1srFEppaQiqAqpMB2JZwDC+Aq8ZOJpQyWST7LzHc56ua4DTpseXxAA/uvnuSwBXqTMYsUwRM3uv3N9FkcKb1mqHxAttsxDuQtt6im/WLxsovlP5cfACSUhapK9Kfu3z8OLmcOUGrJFg9qhykzt8BeLDRgy0uisePw3ObyzmMnceAxiHR9GFnRGxJXnpQB+Lsc9BEmNpIx/Fsa6slbRpgdiHjGLH9lKEPhHW0BuAQOsEhY+LAgAAA==",
+    "alt": "A mother talking with her adult son, both seated",
+    "credit": "Julia M Cameron",
+    "licence": "Pexels License"
+  },
+  "process-nutrition": {
+    "src": "/media/process-nutrition.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAABwBQCdASoUABsAPu1grFAppSQisBgIATAdiWcAwCgQ8CzNrPQicVcvQg0Tbm3kh5lhSNAAAP7i1yOzwoQIipIPQJiJFtwLdqL+vi0N0/lFRoEdDrSVk2wKiEzgcIqiXiBWbWJxh+YvGBEjYdcmxSQbai4tNNYFRTKHWIIk334hhEQhwz57f0hbtqwr16QUBkAAAA==",
+    "alt": "Hands laying ribbons of courgette and peas on a pastry base",
+    "credit": "damla selen demir",
+    "licence": "Pexels License"
+  },
+  "personal-message": {
+    "src": "/media/personal-message.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAABQBQCdASoUABsAPu1qrVCppaQiqAqpMB2JZwDKtBBWMsEgH1GPE4LxDj7gXo2LqcdGMwAA/SN0n+sFXt7LPnaFdamXXeDoMdgO4qpdOlSC0kGRzbZvBH1LXonOq289ZcE4/FQLcUzTEgwvekCVJfUlIlR6Kyn3zop8PK8iYnH8kdJeeHfXFgnAI9kzsqXBvMbtQ6Qt63GRTTdwu1AAAA==",
+    "alt": "A hand writing a letter on paper with a dip pen",
+    "credit": "cottonbro studio",
+    "licence": "Pexels License"
+  },
+  "fees": {
+    "src": "/media/fees.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAADwBACdASoUABsAPu1kqU2ppaOiMAgBMB2JZwDImBg7JSphYe/R6Czmzpb7oTvL7gAA/kaMPF0pMC8kQcYdrEGmCAL0KG7Qlpg4ieiKC5fhvhg/DcY3/Tw8D+KXvUntGe4WV9Pp8aSccIL5QYLcYhqmQXMpmJzFA2HdRkIs+dLXrvmcjR4tQo6JXFmYoPSwdBpICaoz5guyekVQ6DmO/5xYSAA=",
+    "alt": "A shaded veranda with a wooden daybed, ferns and potted plants",
+    "credit": "Ali Alcántara",
+    "licence": "Pexels License"
+  },
+  "services-index": {
+    "src": "/media/services-index.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAADQBACdASoUABsAPu1gq1AppKOisBgIATAdiWcAxkAHf+6bNPIXLadiM2a/DnI4gADc949owKZo/URwXoGa7zGAXp720YW633gDDLhBLTE0LUXkYmyRiVOlKzeKOkBmg7RpMjA9VCfwH7HZ4ed/h80Z8k0s2FGphPfzhZLco2xFQgGjPAAAAA==",
+    "alt": "A person seated with clasped hands, a clinician at the edge of frame",
+    "credit": "SHVETS production",
+    "licence": "Pexels License"
+  },
+  "service-addiction-treatment": {
+    "src": "/media/service-addiction-treatment.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAACQBACdASoUABsAPu1eq02ppSQiMBgMATAdiWcAxNg0gUBHNBC4ydw+NudFfnAA/sXO9ti4G0piq9Ml0lRfw7FI9dh8x5no8kHel57pZuNimycMztaOvIIHl+Pcx5cHOnLFEAAA",
+    "alt": "A glass of water on a wooden rail above the sea",
+    "credit": "Ela F. Yegen Koumpos",
+    "licence": "Pexels License"
+  },
+  "service-trauma-and-complex-trauma": {
+    "src": "/media/service-trauma-and-complex-trauma.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAABwBACdASoUABsAPu1sq08ppiOiMBgIATAdiWUAwNwQcc0l6gKWIcmuAR6uwAD+6N7dZE3byNCdM+QDSNWPwL2ddmtOpGsWhO2FA3vOwhvqPbNO96gjDGR+RfTGe+bVGsO2ckdWR6LOjFPsqtcaatTwJPlaDMItQAA=",
+    "alt": "A woman seen from behind sitting on a bed facing a curtained window",
+    "credit": "cottonbro studio",
+    "licence": "Pexels License"
+  },
+  "service-mental-health": {
+    "src": "/media/service-mental-health.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAACQBACdASoUABsAPu1oqk8ppiOiMBgIATAdiWcAxzAQ/JVxolBp4etPKRLz9eAA/sNb+bI374400QrQZY0Ke7BA0LYVzPQY565XPfGtQXdpFAjn33BKUZfm2vGj7TM9hrEqvClmAqbp1MXitMQoaNGXoU2Xxv8xvsPC0Ds4AAAAAA==",
+    "alt": "A woman sitting in a chair by a bright window with her knees drawn up",
+    "credit": "Xeniya Kovaleva",
+    "licence": "Pexels License"
+  },
+  "service-eating-disorders": {
+    "src": "/media/service-eating-disorders.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAADQBACdASoUABsAPu1oq0+ppaOiMBgIATAdiWcAyJgvnEPy93bav9+YmHMoohfBAAD+7LnDLz4cMDHPvrQYzCuOrXG6iGvaDRM487mx2BJhBqb2iMwpiOqLRhdxf+Qh15N0bJ9n3HWOJjq9phBlUDqkFLqzb7vHB7LAJE0pIXn8XxKd90TP6XHatxoAAA==",
+    "alt": "Two hands holding a small ceramic bowl against the body",
+    "credit": "Esra Afşar",
+    "licence": "Pexels License"
+  },
+  "service-executive-health-and-burnout": {
+    "src": "/media/service-executive-health-and-burnout.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAABQBQCdASoUABsAPt1ao02opSMiN/qoARAbiWcAxzAh4Uydy5Ud8XvkzFEs3qAk0Y47+QAA/lXZeulGl1YEs+vCHfy4Vv9NjV6k9/Log2vZwK4DkNqFagdUZkzbnAiPF4GHdecyYiMjBFCoFNu5eCxM96JyQWry7NsE4x3gAAA=",
+    "alt": "A man in a suit seen from behind sitting on a chair facing the sea",
+    "credit": "Lucas Mota",
+    "licence": "Pexels License"
+  },
+  "service-biochemical-restoration": {
+    "src": "/media/service-biochemical-restoration.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAAAQBQCdASoUABsAPu1sq1EppaOiqAqpMB2JZwDC+BFARbgdRd+1P0TusY/sk3ZMEnsEAP7NTY6c/DUbmeo/pAwwTqr8YLLZMqd+CLD8KvwNEMu5+aLAJvOI8MoLfIUBpq7oTWr1BC7geQ8IDReDTsHJAm1DA9mLYqYdtBwQ5F3oZYdyLjN4SdRNso+33rQA",
+    "alt": "Halved papayas and slices of lime on a dark surface",
+    "credit": "alleksana",
+    "licence": "Pexels License"
+  },
+  "service-somatic-therapies-and-nervous-system-regulation": {
+    "src": "/media/service-somatic-therapies-and-nervous-system-regulation.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAAAwBACdASoUABsAPuFgqE2opaQiMAwBEBwJZwAARWUG78v4+eP2CnE4FMAA/Sf1bb7oLQSA3U87rStTy7mZZ06q9p6cYn/mHGvFjE3qe2jWtuoIOUkobzqsKFSq1j18HtE2ZAFO6G26FXHqDMbi+MCyMn2/5w7E8j8oFtzEXMARQAAA",
+    "alt": "A man resting one hand on his chest and one on his stomach",
+    "credit": "Anastasia Shuraeva",
+    "licence": "Pexels License"
+  },
+  "service-inner-child-work": {
+    "src": "/media/service-inner-child-work.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAABwBACdASoUABsAPu1kqU2ppaQiMAgBMB2JZwDBzCGK95ktOA3kiqfpTG6P8AD+eRuPsHpnXqTZJtNcjQBJKizxk+/GuYUW46vztWC5/wDuRExnmvDc4NQSH4YVNL92fSjbOjXm6YASSr8QCE+eW2ftEXEXYkMVES8WLhG+bOya3JTDoAA=",
+    "alt": "An adult holding a small child’s hand while walking",
+    "credit": "Natalie Bond",
+    "licence": "Pexels License"
+  },
+  "service-recovery-management-and-after-care": {
+    "src": "/media/service-recovery-management-and-after-care.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAABQBQCdASoUABsAPu1kq0+ppSOiMBgIATAdiWkAz6AQc4Ew+dDXaRDhtW8bh7gNgE0YQAAA/EvmNoe5MKA+fG2lLJyayub3ibB5hKtMNO9/ywmUnCpspUAyHqNNrqt9cBjgWpHySop3heafiAsgan3lyIdtkHQAAAA=",
+    "alt": "A man seen from behind walking down a corridor with a suitcase",
+    "credit": "Gustavo Fring",
+    "licence": "Pexels License"
+  },
+  "service-interventions-and-crisis-response": {
+    "src": "/media/service-interventions-and-crisis-response.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAACQBACdASoUABsAPu1uq1GppiOiqAqpMB2JZQDH5A9osac/fvGycrLaj/cN0AAA/ujuHgV7FXjCsp9bxC5YYti06R2Jbebzf0TGazAM88G0vGxcmyGLVP7zcLU9RlZMVtOr2dJPmChJEBSKhT+tUnp5S6904gAAAAA=",
+    "alt": "A man in silhouette talking on the phone beside a window",
+    "credit": "The Humantra",
+    "licence": "Pexels License"
+  },
+  "service-family-program": {
+    "src": "/media/service-family-program.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAABQBQCdASoUABsAPu1orE+ppiQiMBgIATAdiWcAy6QQ3NwpPGldDJonQq/zPtY3Qd0kcAAA/c4WvMPUvH4o82bebM/YWtISQgJM8r+pZSiUKdPxakyq/c+xynG9YXA4OBjkJPgQHn9Pw/0E43tnLn8AAAA=",
+    "alt": "Two women seen from behind leaning on a sea wall, looking out at the water",
+    "credit": "DIBLACL .",
+    "licence": "Pexels License"
+  },
+  "team-index": {
+    "src": "/media/team-index.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAABQBQCdASoUABsAPu1krE+ppSQiMBgIATAdiWcAygAJUBZNNxS37YgLz7NSBwW0QZrVEAAA/i8n+9c1SYs8mN+gLlhl4JZqIJs9Yf5MA2DUv69mcfFBfj0W79TjtyDveLKKaXnJgYF6sl96icGBGlC0O93wks9VLTXNfbeJHBK7aYFSKZ7Dsh4wsVWloPlXeDD4OcnrVyKPFp9Zr/E19EZOwUd335mP7xGc0AAA",
+    "alt": "Hands of several people at a wooden table with open notebooks, papers and a tablet, seen from above",
+    "credit": "Pavel Danilyuk",
+    "licence": "Pexels License"
+  },
+  "assessment-index": {
+    "src": "/media/assessment-index.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAADQBACdASoUABsAPu1kqU2ppaQiMBgMATAdiWcAzYQv7jFj+Eil4P23zesbU75wwAD4qQIVFl4d7Th7rJozttRXTa9YATTqAqLOs56WZup+mh47P4SDwxsGjNqjyZDED6oJ4ZPGx2OGM3NMx5jVB+eriDWndIarp4/7feLAMkAAAA==",
+    "alt": "A woman seated in an armchair writing in a notebook",
+    "credit": "Letícia Alvares",
+    "licence": "Pexels License"
+  },
+  "contact": {
+    "src": "/media/contact.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAABwBACdASoUABsAPu1kqU2ppaQiMAgBMB2JZwDE2BXyFQcFjFwpLGL62fZnYADg9mLfrCuoMJvx/jEH7JoqBYezh3oxPE0MM+IMdWdnMxf+YfKahpUhCS8EO/9fHQRvrEftSyfOK9BiBkU9SrmBVkDeQDbEAzHSlCBfcp9bcJq+lz9x+6T3qYyJ6YIcAAAA",
+    "alt": "Two armchairs and a small table in an empty room between two windows",
+    "credit": "Luk Sauvage",
+    "licence": "Pexels License"
+  },
   "hero-surf-poster": {
     "src": "/media/hero-surf-poster.webp",
     "width": 2400,
