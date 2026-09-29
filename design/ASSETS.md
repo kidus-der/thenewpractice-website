@@ -75,7 +75,7 @@ Licence URL for every row: https://www.pexels.com/license/. Every output is unde
 
 ## Round 1 stills
 
-Added by task R1 on 2026-09-28: 17 frames, each chosen for the sentence it sits beside (register: `design/ROUND1-IMAGE-SLOTS.md`). Same source (Pexels), same licence, same grade as the set above; attribution recorded as `Photo by <author> on Pexels`. People appear, per the round-1 owner decision (docs/02 §Subject matter): calm, candid adults; unidentifiable wherever the copy is about crisis, trauma, addiction or mental illness, which is the Pexels licence's *not in a bad light* condition. `focus` absent means sharp's attention crop; `left` and `right` were added to the pipeline for two frames whose subject sits off-centre in a landscape source.
+Added by task R1 on 2026-09-28: 29 frames, each chosen for the sentence it sits beside (register: `design/ROUND1-IMAGE-SLOTS.md`). Same source (Pexels), same licence, same grade as the set above; attribution recorded as `Photo by <author> on Pexels`. People appear, per the round-1 owner decision (docs/02 §Subject matter): calm, candid adults; unidentifiable wherever the copy is about crisis, trauma, addiction or mental illness, which is the Pexels licence's *not in a bad light* condition. `focus` absent means sharp's attention crop; `left` and `right` were added to the pipeline for two frames whose subject sits off-centre in a landscape source.
 
 | File | Source page | Author | Licence | Stands in for | Aspect | Focus | ev |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -96,6 +96,18 @@ Added by task R1 on 2026-09-28: 17 frames, each chosen for the sentence it sits 
 | `process-nutrition` | https://www.pexels.com/photo/chef-preparing-gourmet-vegetable-tart-close-up-32069861/ | damla selen demir | Pexels License | Our Process, Nutrition as Therapy: a meal being prepared | 3:4 | centre | −6 |
 | `personal-message` | https://www.pexels.com/photo/person-writing-on-white-paper-6918482/ | cottonbro studio | Pexels License | A Personal Message: a letter written by hand | 3:4 | centre | 0 |
 | `fees` | https://www.pexels.com/photo/wood-framed-sofa-chair-11145310/ | Ali Alcántara | Pexels License | Fees: a shaded veranda at a tropical residence | 3:4 | centre | −6 |
+| `services-index` | https://www.pexels.com/photo/crop-psychologist-writing-in-notebook-against-patient-7176322/ | SHVETS production | Pexels License | Clinical Services index: a consultation | 3:4 | centre | 0 |
+| `service-addiction-treatment` | https://www.pexels.com/photo/glass-of-water-by-the-turquoise-sea-34199673/ | Ela F. Yegen Koumpos | Pexels License | Addiction Treatment: a glass of water | 3:4 | centre | 0 |
+| `service-trauma-and-complex-trauma` | https://www.pexels.com/photo/back-view-of-a-woman-sitting-on-a-bed-8862272/ | cottonbro studio | Pexels License | Trauma & Complex Trauma: a figure turned toward the light | 3:4 | centre | 0 |
+| `service-mental-health` | https://www.pexels.com/photo/monochrome-photo-of-a-woman-sitting-by-the-window-10266092/ | Xeniya Kovaleva | Pexels License | Mental Health: sitting with it, by a window | 3:4 | right | −12 |
+| `service-eating-disorders` | https://www.pexels.com/photo/person-holding-handmade-ceramic-bowl-29230296/ | Esra Afşar | Pexels License | Eating Disorders: a bowl held close | 3:4 | centre | 0 |
+| `service-executive-health-and-burnout` | https://www.pexels.com/photo/a-man-in-a-suit-sitting-on-bench-by-the-sea-16586208/ | Lucas Mota | Pexels License | Executive Health & Burnout: a man in a suit, stopped, facing the sea | 3:4 | centre | 0 |
+| `service-biochemical-restoration` | https://www.pexels.com/photo/photo-of-papaya-beside-sliced-lime-4113802/ | alleksana | Pexels License | Biochemical Restoration: papaya and lime | 3:4 | attention | 0 |
+| `service-somatic-therapies-and-nervous-system-regulation` | https://www.pexels.com/photo/man-holding-his-stomach-and-chest-8795387/ | Anastasia Shuraeva | Pexels License | Somatic Therapies: one hand on the chest, one on the stomach | 3:4 | centre | 0 |
+| `service-inner-child-work` | https://www.pexels.com/photo/mother-and-child-holding-hands-21787638/ | Natalie Bond | Pexels License | Inner Child Work: an adult hand holding a child’s | 3:4 | attention | 0 |
+| `service-recovery-management-and-after-care` | https://www.pexels.com/photo/back-view-of-a-man-in-a-gray-suit-walking-with-his-luggage-6050133/ | Gustavo Fring | Pexels License | Recovery Management & After Care: the journey home | 3:4 | centre | 0 |
+| `service-interventions-and-crisis-response` | https://www.pexels.com/photo/a-grayscale-photo-of-a-man-sitting-beside-the-window-13517400/ | The Humantra | Pexels License | Interventions & Crisis Response: a call made in the dark | 3:4 | centre | +8 |
+| `service-family-program` | https://www.pexels.com/photo/two-women-enjoying-ocean-view-on-a-cloudy-day-34626729/ | DIBLACL . | Pexels License | Family Program: a mother and daughter looking out to sea | 3:4 | centre | −6 |
 
 ## Rejected
 

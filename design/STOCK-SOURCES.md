@@ -465,6 +465,23 @@ Research date: 2026-09-28 (task R1). Governing brief: `docs/BUILD-LEDGER.md`, Ro
 | `personal-message` | Pexels 6918482, cottonbro studio (https://www.pexels.com/photo/person-writing-on-white-paper-6918482/) | Pexels 5425602 (a hand writing on deckled paper; closer, less context), 6918490 (same series; a stack of books in frame) |
 | `fees` | Pexels 11145310, Ali Alcántara (https://www.pexels.com/photo/wood-framed-sofa-chair-11145310/) | Pexels 18129811 (timber deck with loungers under palms; reads holiday), 4917109 (already residence-04) |
 
+### Clinical Services
+
+| Slot | Chosen | Alternates considered |
+| --- | --- | --- |
+| `services-index` | Pexels 7176322, SHVETS production (https://www.pexels.com/photo/crop-psychologist-writing-in-notebook-against-patient-7176322/) | Pexels 3958372 (therapist with notebook; the client out of focus), 6255629 (a supportive hand on a knee; closer to comfort than assessment) |
+| `service-addiction-treatment` | Pexels 34199673, Ela F. Yegen Koumpos (https://www.pexels.com/photo/glass-of-water-by-the-turquoise-sea-34199673/) | Pexels 10994408 (glass casting a shadow on wood; interior only), 5853213 (minimal glass and shadow; studio feel) |
+| `service-trauma-and-complex-trauma` | Pexels 8862272, cottonbro studio (https://www.pexels.com/photo/back-view-of-a-woman-sitting-on-a-bed-8862272/) | Pexels 4265386 (silhouette on a bed; too dark to read), 6382592 (hands around knees on a sill; tighter, more anxious) |
+| `service-mental-health` | Pexels 10266092, Xeniya Kovaleva (https://www.pexels.com/photo/monochrome-photo-of-a-woman-sitting-by-the-window-10266092/) | Pexels 6251367 (figure by a window onto palms; appears to be a minor), 36156782 (man in deep shadow; closer to despair than the copy) |
+| `service-eating-disorders` | Pexels 29230296, Esra Afşar (https://www.pexels.com/photo/person-holding-handmade-ceramic-bowl-29230296/) | Pexels 8054775 (hands around a bowl of soup; more about the food), 7578299 (hands with an uneven ceramic bowl; a pottery shoot) |
+| `service-executive-health-and-burnout` | Pexels 16586208, Lucas Mota (https://www.pexels.com/photo/a-man-in-a-suit-sitting-on-bench-by-the-sea-16586208/) | Pexels 14654924 (man in coat facing the sea; an urban harbour), 7927534 (head in hands in a suit; a stock burnout pose) |
+| `service-biochemical-restoration` | Pexels 4113802, alleksana (https://www.pexels.com/photo/photo-of-papaya-beside-sliced-lime-4113802/) | Pexels 1590152 (sliced limes and mint; less legible in duotone), 4113831 (papaya flat lay on white; too bright) |
+| `service-somatic-therapies-and-nervous-system-regulation` | Pexels 8795387, Anastasia Shuraeva (https://www.pexels.com/photo/man-holding-his-stomach-and-chest-8795387/) | Pexels 8795388 (same model on a deck; railing in frame), 5340282 (hands crossed on a pink sweater; the colour fights the grade) |
+| `service-inner-child-work` | Pexels 21787638, Natalie Bond (https://www.pexels.com/photo/mother-and-child-holding-hands-21787638/) | Pexels 7475804 (an adult thumb in an infant's grip; too young for the copy), 6338761 (hands in warm close-up; sentimental) |
+| `service-recovery-management-and-after-care` | Pexels 6050133, Gustavo Fring (https://www.pexels.com/photo/back-view-of-a-man-in-a-gray-suit-walking-with-his-luggage-6050133/) | Pexels 4246096 (suitcases and boxes on a bed; no person), 11045296 (woman with luggage; an airport advertisement register) |
+| `service-interventions-and-crisis-response` | Pexels 13517400, The Humantra (https://www.pexels.com/photo/a-grayscale-photo-of-a-man-sitting-beside-the-window-13517400/) | Pexels 6756553 (man at a sliding door at night; face in profile), crisis search results (4584397 and similar: posed alarm, faces) |
+| `service-family-program` | Pexels 34626729, DIBLACL . (https://www.pexels.com/photo/two-women-enjoying-ocean-view-on-a-cloudy-day-34626729/) | Pexels 8841344 (used for Our Process), 8497678 (mother and son on a bench; smiling to each other, more lifestyle) |
+
 ### Considered and rejected across round 1
 
 | Candidate | Why |
