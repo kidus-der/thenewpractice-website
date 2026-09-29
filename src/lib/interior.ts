@@ -91,3 +91,26 @@ export function capitaliseFirst(text: string): string {
   const head = String.fromCodePoint(first)
   return head.toLocaleUpperCase('en-GB') + text.slice(head.length)
 }
+
+/** Which side of a spread the picture takes: the first column, or the last. */
+export type SpreadSide = 'start' | 'end'
+
+/**
+ * The spread layout (round 1, R4a): a section with a plate sets its picture
+ * beside its prose, and the pictures alternate sides down the page, the first
+ * on the left. Sections without a plate keep the reading column and do not
+ * count, so two pictured sections either side of a text-only one still
+ * alternate. `undefined` for a section with no plate.
+ */
+export function spreadSides(
+  sections: readonly Section[],
+  plates: Readonly<Record<string, unknown>> | undefined
+): readonly (SpreadSide | undefined)[] {
+  return sections.reduce<{ sides: readonly (SpreadSide | undefined)[]; n: number }>(
+    ({ sides, n }, section) =>
+      plates?.[section.id] === undefined
+        ? { sides: [...sides, undefined], n }
+        : { sides: [...sides, n % 2 === 0 ? 'start' : 'end'], n: n + 1 },
+    { sides: [], n: 0 }
+  ).sides
+}

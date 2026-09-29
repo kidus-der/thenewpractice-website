@@ -7,6 +7,18 @@ describe('plateQuality', () => {
     expect(plateQuality('index-01')).toBe(REDUCED_PLATE_QUALITY)
   })
 
+  it('lowers the round-1 About, Our Process and Fees frames over the 120 kB budget', () => {
+    const heavy = [
+      'about-ceiba',
+      'process-lead-clinician',
+      'about-practice',
+      'fees',
+      'about-founder',
+    ] as const
+    for (const key of heavy) expect(plateQuality(key)).toBe(REDUCED_PLATE_QUALITY)
+    expect(plateQuality('about-sea')).toBe(DEFAULT_PLATE_QUALITY)
+  })
+
   it('leaves every other frame at the default', () => {
     expect(plateQuality('hero-surf-poster')).toBe(DEFAULT_PLATE_QUALITY)
     expect(plateQuality('residence-04')).toBe(DEFAULT_PLATE_QUALITY)

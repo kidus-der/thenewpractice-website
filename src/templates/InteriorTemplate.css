@@ -41,10 +41,23 @@
 
   /* body column: the reading placement without an index; beside it with one
      (the concept site's method block: index 1/5, panels 6/13) */
-  .content-section__body {
+  /* `.interior` in front: ContentSection.css loads after this file (the
+     template imports its own stylesheet first) and its full-width default
+     would otherwise win at equal specificity */
+  .interior .content-section__body {
     grid-column: 2 / 8;
   }
   .interior[data-indexed='true'] .content-section__body {
     grid-column: 6 / 13;
+  }
+}
+
+/* The spread layout (round 1, R4a): a picture beside each short section
+   already holds the frame, so from 1024px the sections keep the mobile
+   rhythm (--s-8) instead of stepping up to --s-9; a spread then fits in one
+   viewport at 1280 × 800 with the next section's eyebrow in view. */
+@media (min-width: 1024px) {
+  .interior[data-layout='spread'] .content-section {
+    padding-block: var(--s-8);
   }
 }

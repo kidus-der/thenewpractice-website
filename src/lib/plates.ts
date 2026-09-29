@@ -22,6 +22,12 @@ const REDUCED_QUALITY_FRAMES: ReadonlySet<MediaKey> = new Set<MediaKey>([
   'index-01',
   // kapok buttress roots in forest (round 1, R3): 404 kB on disk at 1040 wide
   'home-philosophy',
+  // round 1 (R4a): graded frames over the 120 kB budget on disk (webp at 1040 wide)
+  'about-ceiba', // 265 kB
+  'process-lead-clinician', // 173 kB
+  'about-practice', // 155 kB
+  'fees', // 154 kB
+  'about-founder', // 129 kB
 ])
 
 export function plateQuality(media: MediaKey): number {
