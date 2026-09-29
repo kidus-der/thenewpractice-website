@@ -84,7 +84,9 @@ describe('renderEnquiryEmail', () => {
 
     expect(subject).toBe(`${ENQUIRY.mail.subject}: ${ENQUIRY.mail.subjectLabels.family}`)
     for (const part of [html, text]) {
-      for (const label of Object.values(ENQUIRY.fields)) expect(part).toContain(escapeHtml(label))
+      const labels = { ...ENQUIRY.fields, telephone: ASSESSMENT_SEND.fields.telephone }
+      for (const label of Object.values(labels)) expect(part).toContain(escapeHtml(label))
+      expect(part).not.toContain(ENQUIRY.fields.telephone)
       expect(part).toContain(ENQUIRY.options.enquiringFor.family)
       expect(part).toContain(ENQUIRY.options.preferredContact.telephone)
       expect(part).toContain('10:05')
@@ -99,8 +101,8 @@ describe('renderEnquiryEmail', () => {
   it('omits the telephone when none was given', () => {
     const { html, text } = renderEnquiryEmail({ ...ENQUIRY_FIXTURE, telephone: undefined }, OPTIONS)
 
-    expect(html).not.toContain(ENQUIRY.fields.telephone)
-    expect(text).not.toContain(ENQUIRY.fields.telephone)
+    expect(html).not.toContain(`>${ASSESSMENT_SEND.fields.telephone}<`)
+    expect(text).not.toContain(`${ASSESSMENT_SEND.fields.telephone}:`)
   })
 
   it('cannot be made to carry markup through any field', () => {

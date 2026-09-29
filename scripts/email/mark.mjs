@@ -24,7 +24,8 @@ const colour = (name) => {
 }
 const mark = readFileSync(`${root}src/components/Mark.tsx`, 'utf8')
 const paths = [...mark.matchAll(/'(M 120 120 [^']+)'/g)].map((m) => m[1])
-if (paths.length !== 6) throw new Error(`mark.mjs: expected 6 strokes in Mark.tsx, found ${paths.length}`)
+if (paths.length !== 6)
+  throw new Error(`mark.mjs: expected 6 strokes in Mark.tsx, found ${paths.length}`)
 
 /** Three times the 30px the emails display it at, so it is sharp on every screen. */
 const WIDTH = 90

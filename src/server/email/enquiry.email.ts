@@ -4,6 +4,7 @@
  * on the practice's clock. HTML and plain text say the same thing. Reply-to
  * is the enquirer (set by the adapter).
  */
+import { ASSESSMENT_SEND } from '@/content/assessment-send'
 import { BRAND } from '@/content/brand'
 import { EMAIL } from '@/content/email'
 import { ENQUIRY, type EnquiringFor, type PreferredContact } from '@/content/enquiry'
