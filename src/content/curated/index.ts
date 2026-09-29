@@ -13,5 +13,6 @@
  * module per page and list it here.
  */
 import type { Curation } from './core'
+import { SELF_ASSESSMENT_CURATION } from './self-assessment'
 
-export const CURATIONS: readonly Curation<unknown>[] = []
+export const CURATIONS: readonly Curation<unknown>[] = [SELF_ASSESSMENT_CURATION]

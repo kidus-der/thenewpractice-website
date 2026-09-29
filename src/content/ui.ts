@@ -57,17 +57,6 @@ export const UI_RESIDENCES = {
 } as const
 
 /**
- * INDEX TEMPLATE STRINGS — Task 12. The one line the self-assessment index
- * sets beneath each questionnaire's title. Structural, ours: every
- * questionnaire has QUESTIONS_PER_ASSESSMENT questions (schemas.ts), and the
- * content test pins that count, so the word here cannot drift from it.
- */
-export const UI_INDEX = {
-  /** Beneath each questionnaire title, in the eyebrow register. */
-  assessmentLength: 'Fifteen questions',
-} as const
-
-/**
  * HOME TEMPLATE STRINGS — Task 16. The audio toggle's two labels (docs/08
  * §Audio: the button reads what pressing it will do) and the landmark name
  * of the philosophy pillars' index. The hero's own words — title, subtitle,

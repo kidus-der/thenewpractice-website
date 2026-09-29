@@ -55,7 +55,6 @@ import {
   UI_ASSESSMENT,
   UI_FOOTER,
   UI_HOME,
-  UI_INDEX,
   UI_INTERIOR,
   UI_PROFILE,
   UI_RESIDENCES,
@@ -372,7 +371,7 @@ function descriptionsSourced(): Check {
  * are composed.
  */
 const OUR_MODULES: Record<string, unknown> = {
-  ui: { UI, UI_FOOTER, UI_INTERIOR, UI_RESIDENCES, UI_INDEX, UI_HOME, UI_TREATMENT, UI_PROFILE },
+  ui: { UI, UI_FOOTER, UI_INTERIOR, UI_RESIDENCES, UI_HOME, UI_TREATMENT, UI_PROFILE },
   'ui-assessment': UI_ASSESSMENT,
   enquiry: ENQUIRY,
   nav: NAV,
