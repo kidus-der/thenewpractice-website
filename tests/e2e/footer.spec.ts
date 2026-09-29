@@ -6,17 +6,14 @@
  * brass point), the parts round 1 removed (marquee, contact block, wordmark,
  * confidentiality line), a height under one viewport, no animation, and axe.
  */
+import { join } from 'node:path'
+import type { Page } from '@playwright/test'
+
 import { BRAND } from '../../src/content/brand'
 import { routes } from '../../src/content/nav'
 import { HOME } from '../../src/content/pages/home'
-import {
-  expect,
-  expectNoAxeViolations,
-  expectNoConsoleErrors,
-  screenshotRoute,
-  settleMotion,
-  test,
-} from './helpers'
+import { expect, expectNoAxeViolations, expectNoConsoleErrors, settleMotion, test } from './helpers'
+import { SCREENSHOT_ROOT } from './helpers/screenshotRoute'
 import { EXPECTED_NAV } from './helpers/siteEnv'
 
 const ROUTE = '/'
@@ -28,6 +25,17 @@ const LEGAL_LINKS_EXPECTED = EXPECTED_NAV.footer.some((group) => group.heading =
 const MOTION_SAMPLE_MS = 600
 /** The client's sentence the footer used to repeat, read where it lives (home, closing section). */
 const CONFIDENTIALITY = HOME.sections.find((s) => s.id === 'begin-the-conversation')?.paragraphs[1]
+
+/**
+ * The landmark alone, not the page: the footer is what this spec reads, and a
+ * full-page capture of the home page at 1920 ran past the test timeout on a
+ * loaded machine (home.spec.ts owns the full-page capture of `/`).
+ */
+async function screenshotFooter(page: Page): Promise<string> {
+  const path = join(SCREENSHOT_ROOT, test.info().project.name, 'footer.png')
+  await page.locator(FOOTER).screenshot({ path, animations: 'disabled' })
+  return path
+}
 
 /** Resolves a CSS colour (the brass token) to the rgb() string getComputedStyle reports. */
 function toRgb(colour: string): string {
@@ -51,7 +59,7 @@ test.describe('footer', () => {
     await expect(footer).toHaveAttribute('data-ground', 'dark')
     await expect(footer.getByRole('navigation', { name: 'Footer' })).toBeVisible()
 
-    const path = await screenshotRoute(page, 'footer')
+    const path = await screenshotFooter(page)
     test.info().annotations.push({ type: 'screenshot', description: path })
     expectNoConsoleErrors(page)
   })
