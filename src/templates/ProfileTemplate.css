@@ -12,15 +12,16 @@ main > section.profile-intro {
 }
 .profile-intro__grid {
   align-items: end;
-  row-gap: var(--s-6);
+  row-gap: var(--s-5);
 }
 /* the plate keeps to part of its column so the page stays 60–70% empty and
-   the name is in the first viewport at every width: half the column while
-   the plate sits above the name, ContentSection's 62% for a 3:4 plate once
-   it sits beside it */
+   the name, the role and the start of the biography share the first
+   viewport (round 1): 40% of the width while it stands above the name, half
+   the column once it sits beside it (62% there pushed the biography below
+   the fold at 1280 × 800) */
 .profile-intro__plate {
   width: 100%;
-  max-width: 50%;
+  max-width: 40%;
 }
 .profile__plate-frame {
   width: 100%;
@@ -57,8 +58,11 @@ main > section.profile-intro {
   margin-top: var(--s-5);
 }
 @media (min-width: 1024px) {
+  .profile-intro__grid {
+    row-gap: var(--s-6);
+  }
   .profile-intro__plate {
-    max-width: 62%;
+    max-width: 50%;
     align-self: end;
   }
 }
