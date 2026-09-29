@@ -1,16 +1,17 @@
 /**
- * /clinical-services — T6 Index on `services.ts` (docs/05 §T6). The page
- * composes: the document's one intro section on sand, then the eleven
- * services as rows with no plates (services carry none yet; the list stays
- * pure type), the rail, the band. Everything else is the template's.
+ * /clinical-services — T6 Index on `services.ts` (docs/05 §T6), curated in
+ * round 1 (R4b, `curated/services.ts`). The page composes: the title page
+ * with a two-sentence lead from the document's intro and its picture, then
+ * the eleven services directly beneath, opened by the intro's last line, as
+ * rows with no plates; the rail, the band. Everything else is the template's.
  */
 import type { Metadata } from 'next'
 import { JsonLd } from '@/components/JsonLd'
 import { routes } from '@/content/nav'
 import { ROUTE_SEO } from '@/content/seo'
-import { SERVICES, SERVICES_PAGE } from '@/content/services'
+import { SERVICES_PAGE_CURATED } from '@/content/curated/services'
+import { SERVICES } from '@/content/services'
 import { rowsFromServices } from '@/lib/indexPage'
-import { assertSectionIds } from '@/lib/interior'
 import { breadcrumb, itemList, organization, webPage } from '@/lib/jsonld'
 import { prevNextFor } from '@/lib/prevNext'
 import { buildMetadata } from '@/lib/seo'
@@ -21,9 +22,9 @@ const PATH = routes.clinicalServices
 
 export const metadata: Metadata = buildMetadata({ ...SEO, path: PATH })
 
-/** The one intro section, on sand. */
-const INTRO_SECTION = 'individualized-treatment-for-complex-human-problems'
-assertSectionIds(SERVICES_PAGE, [INTRO_SECTION])
+const { page: PAGE, listLead: LIST_LEAD } = SERVICES_PAGE_CURATED
+/** design/ROUND1-IMAGE-SLOTS.md: the first consultation, told through hands. */
+const PLATE = 'services-index'
 
 const ROWS = rowsFromServices(SERVICES)
 
@@ -44,10 +45,9 @@ export default function Page() {
         ]}
       />
       <IndexTemplate
-        page={SERVICES_PAGE}
-        before={SERVICES_PAGE.sections}
-        grounds={{ [INTRO_SECTION]: 'mid' }}
-        list={{ label: SERVICES_PAGE.title, rows: ROWS }}
+        page={PAGE}
+        plate={PLATE}
+        list={{ label: PAGE.title, lead: LIST_LEAD, rows: ROWS }}
         prevNext={prevNextFor(PATH)}
       />
     </>

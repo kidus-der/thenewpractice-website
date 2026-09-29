@@ -12,6 +12,7 @@
  */
 import './IndexTemplate.css'
 import { SectionHeader } from '@/components/SectionHeader'
+import type { MediaKey } from '@/content/media'
 import type { Page, Section } from '@/content/schemas'
 import type { IndexRow } from '@/lib/indexPage'
 import { numeral, resolveGrounds } from '@/lib/interior'
@@ -43,6 +44,8 @@ export type IndexTemplateProps = {
   grounds?: Readonly<Record<string, Ground>>
   list: IndexListSpec
   prevNext?: PrevNext
+  /** The title page's picture, beside the lead (round 1). */
+  plate?: MediaKey
 }
 
 function IndexSection({ spec, id, n }: { spec: IndexListSpec; id: string; n: string }) {
@@ -79,6 +82,7 @@ export function IndexTemplate({
   grounds,
   list,
   prevNext,
+  plate,
 }: IndexTemplateProps) {
   const listPosition = before.length + 1
   const bandPosition = listPosition + after.length + 1
@@ -95,6 +99,7 @@ export function IndexTemplate({
         eyebrow={page.eyebrow}
         headline={page.title}
         lead={page.lead}
+        plate={plate}
       />
 
       {before.map((section, i) => (

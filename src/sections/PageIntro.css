@@ -36,3 +36,57 @@ main > section.page-intro {
     align-self: end;
   }
 }
+
+/* — with a plate (round 1): the title page's picture, small enough that the
+     lockup and the start of the next block still share the first viewport.
+     Below 1024px the copy's children join the grid: the eyebrow and the title
+     run the full width, the lead takes seven columns and the plate the last
+     five beside it (four from 768px), top-aligned. From 1024px the copy is one column again at
+     .p-lead and the plate hangs from its baseline in the middle of .p-offset,
+     half that column wide: clear of the copy on its left and of the scroll
+     rail's numeral in the right margin. — */
+.page-intro--plate .page-intro__grid {
+  row-gap: 0;
+  align-items: start;
+}
+.page-intro--plate .page-intro__copy {
+  display: contents;
+}
+.page-intro--plate .page-intro__eyebrow,
+.page-intro--plate .page-intro__title {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+.page-intro--plate .page-intro__lead {
+  grid-column: 1 / 8;
+}
+.page-intro--plate .page-intro__plate {
+  grid-column: 8 / 13;
+  margin-top: var(--s-5);
+}
+/* the scroll rail appears in the right margin from 768px: the plate leaves
+   the last column to it */
+@media (min-width: 768px) {
+  .page-intro--plate .page-intro__plate {
+    grid-column: 8 / 12;
+  }
+}
+@media (min-width: 1024px) {
+  .page-intro--plate .page-intro__grid {
+    align-items: end;
+  }
+  .page-intro--plate .page-intro__copy {
+    display: flex;
+    grid-row: 1;
+  }
+  .page-intro--plate .page-intro__lead {
+    grid-column: auto;
+  }
+  .page-intro--plate .page-intro__plate {
+    grid-column: 7 / 13;
+    grid-row: 1;
+    justify-self: center;
+    width: 50%;
+    margin-top: 0;
+  }
+}

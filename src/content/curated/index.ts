@@ -14,5 +14,10 @@
  */
 import type { Curation } from './core'
 import { HOME_CURATION } from './home'
+import { SERVICES_CURATION, SERVICES_PAGE_CURATION } from './services'
 
-export const CURATIONS: readonly Curation<unknown>[] = [HOME_CURATION]
+export const CURATIONS: readonly Curation<unknown>[] = [
+  HOME_CURATION,
+  SERVICES_PAGE_CURATION,
+  SERVICES_CURATION,
+]
