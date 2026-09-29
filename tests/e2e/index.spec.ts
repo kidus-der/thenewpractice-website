@@ -6,12 +6,22 @@
  * href; the travelling glow follows keyboard focus; no plate where no row
  * has an image; axe scoped to <main>; a full-page capture after a reveal
  * pass. Reduced-motion project: the glow lands instantly.
+ *
+ * /self-assessment is the round-1 tab page (R5) on the same list: the
+ * description and its one picture, then the ten tests — all in the first
+ * viewport from 1024px, starting in it and one short scroll long below.
  */
-import { ASSESSMENTS, ASSESSMENTS_PAGE } from '../../src/content/assessments'
+import { ASSESSMENTS, ASSESSMENTS_PAGE, ASSESSMENT_SERIES } from '../../src/content/assessments'
+import {
+  SELF_ASSESSMENT_CURATED,
+  SELF_ASSESSMENT_DISCLAIMER,
+  SELF_ASSESSMENT_INTRO,
+} from '../../src/content/curated/self-assessment'
+import { MEDIA } from '../../src/content/media'
 import { routes } from '../../src/content/nav'
 import { SERVICES, SERVICES_PAGE } from '../../src/content/services'
 import { TEAM, TEAM_PAGE } from '../../src/content/team'
-import { UI_INDEX, UI_INTERIOR } from '../../src/content/ui'
+import { UI_INTERIOR } from '../../src/content/ui'
 import {
   liftLead,
   rowsFromAssessments,
@@ -42,6 +52,8 @@ type Fixture = Readonly<{
   /** Section titles expected as h2s before the list, in order. */
   introTitles: readonly string[]
   rows: readonly IndexRow[]
+  /** Pictures in <main> besides the rows' own (none but the tab page's one). */
+  plates?: number
 }>
 
 const titled = (sections: readonly { title?: string }[]): readonly string[] =>
@@ -66,10 +78,10 @@ const FIXTURES: readonly Fixture[] = [
     name: 'self-assessment',
     route: routes.selfAssessment,
     title: ASSESSMENTS_PAGE.title,
-    introTitles: titled(
-      ASSESSMENTS_PAGE.sections.filter((s) => s.id !== 'available-self-assessments')
-    ),
-    rows: rowsFromAssessments(ASSESSMENTS, UI_INDEX.assessmentLength),
+    // Round 1 (R5): no long-read sections; the title page carries the description.
+    introTitles: [],
+    rows: rowsFromAssessments(ASSESSMENTS),
+    plates: 1,
   },
 ]
 
@@ -184,7 +196,7 @@ for (const fixture of FIXTURES) {
     test('shows no plate when no row has an image', async ({ page }) => {
       await expect(page.locator('.hover-plate')).toHaveCount(0)
       await expect(page.locator('.index-list__thumb')).toHaveCount(0)
-      await expect(page.locator('main img')).toHaveCount(0)
+      await expect(page.locator('main img')).toHaveCount(fixture.plates ?? 0)
     })
 
     test('links to the previous and next pages in reading order', async ({ page }) => {
@@ -215,3 +227,56 @@ for (const fixture of FIXTURES) {
     })
   })
 }
+
+/** The paragraph a curated section renders, or a failed test. */
+const curatedLine = (id: string): string => {
+  const line = SELF_ASSESSMENT_CURATED.sections.find((s) => s.id === id)?.paragraphs[0]
+  if (!line) throw new Error(`curated/self-assessment has no ${id} paragraph`)
+  return line
+}
+
+test.describe('index: self-assessment tab page (R5)', () => {
+  const DESKTOP = 1024
+  const ROW = '.index-list__row'
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto(routes.selfAssessment)
+    await settleMotion(page)
+  })
+
+  test('opens on the description and one picture, then the tests', async ({ page }) => {
+    const main = page.getByRole('main')
+    const intro = page.locator('main > :first-child')
+    await expect(intro).toContainText(curatedLine(SELF_ASSESSMENT_INTRO))
+    await expect(intro.locator('img')).toHaveCount(1)
+    await expect(intro.locator('img')).toHaveAttribute('alt', MEDIA['assessment-index'].alt)
+    await expect(main).toContainText(curatedLine(SELF_ASSESSMENT_DISCLAIMER))
+    // The disclaimer is one line here; its full text is on each questionnaire's result.
+    const [, second] =
+      ASSESSMENTS_PAGE.sections.find((s) => s.id === 'important-disclaimer')?.paragraphs ?? []
+    if (!second) throw new Error('the disclaimer has a second sentence')
+    await expect(main).not.toContainText(second)
+    await expect(main).not.toContainText(ASSESSMENT_SERIES.scoringText)
+    await expect(main.locator('[data-ground="mid"]')).toHaveCount(0)
+  })
+
+  test('puts the ten tests in view: all of them from 1024px, one short scroll below', async ({
+    page,
+  }) => {
+    const rows = page.locator(ROW)
+    await expect(rows).toHaveCount(ASSESSMENTS.length)
+    const { width, height } = page.viewportSize() ?? { width: 0, height: 0 }
+    const edge = (index: number, side: 'top' | 'bottom') =>
+      rows.nth(index).evaluate((el, s) => el.getBoundingClientRect()[s], side)
+    if (width >= DESKTOP) {
+      expect(await edge(ASSESSMENTS.length - 1, 'bottom'), 'the tenth test').toBeLessThanOrEqual(
+        height
+      )
+    } else {
+      expect(await edge(0, 'top'), 'the first test starts in view').toBeLessThan(height)
+      expect(await edge(ASSESSMENTS.length - 1, 'bottom'), 'the tenth, a screen on').toBeLessThan(
+        2 * height
+      )
+    }
+  })
+})

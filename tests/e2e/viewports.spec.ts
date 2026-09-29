@@ -70,7 +70,6 @@ const AWAITING_CURATION: Readonly<Record<string, string>> = {
   [routes.contact]: 'R4d: the letter runs to 929px',
   '/clinical-services/biochemical-restoration': 'R4b: the lead, 31px over',
   '/clinical-services/inner-child-work': 'R4b: the lead, 3px over',
-  '/self-assessment/adult-children': 'R5: a three-line title and the scoring line, 67px over',
 }
 
 test.describe('viewports', () => {
