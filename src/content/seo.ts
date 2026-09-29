@@ -196,9 +196,15 @@ export function teamSeo(member: TeamMember): RouteSeo {
   return route(member.name, description, { type: 'profile' })
 }
 
-/** The document's own scoring line, l.1020, verbatim; it follows every questionnaire. */
-const SCORING_LINE = 'Scoring: Give yourself 1 point for each “yes” answer. Total score: 0–15.'
+/**
+ * The first sentence of the document's disclaimer (l.962), verbatim. Round 1
+ * (R5): the scoring line it replaced ("1 point for each yes") no longer
+ * describes how the questionnaires are scored, so it is not used anywhere;
+ * the how-to sentence would take the longest title past DESCRIPTION_MAX.
+ */
+const SCREENING_LINE =
+  'The New Practice Self-Assessment Series is designed as a screening tool only.'
 
-/** A questionnaire page: its title, then the client's scoring line. */
+/** A questionnaire page: its title, then the client's screening sentence. */
 export const assessmentSeo = (assessment: Assessment): RouteSeo =>
-  route(assessment.title, `${assessment.title}. ${SCORING_LINE}`)
+  route(assessment.title, `${assessment.title}. ${SCREENING_LINE}`)

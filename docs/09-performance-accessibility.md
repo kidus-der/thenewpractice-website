@@ -168,7 +168,7 @@ Target: **WCAG 2.2 AA**, with the specific ambition of a genuinely good screen-r
 - **Nav overlay:** trigger has `aria-expanded` and `aria-controls`; focus moves into the overlay on open and back to the trigger on close; focus trapped while open; `Escape` closes; the page behind is `inert`
 - **Route curtain** traps nothing and steals no focus; focus lands on the new page's `<main>`
 - **Index lists:** every row is a real link; the travelling glow and the plate preview follow focus as well as pointer
-- **Self-assessment:** each question is a radio group reachable by arrow keys; the result is reachable and announced
+- **Self-assessment:** each question is a `radiogroup` (a fieldset whose legend is the question); Tab moves between questions, the arrow keys within one and do not move on; a choice by Space or pointer moves focus to the next unanswered question and then to _See your result_ (round 1, R5); the 1 to 10 groups are described by the one line that reads the scale; the result is focused and announced
 - **Enquiry form:** completable end to end by keyboard; the confirmation is focused when it appears
 - The preloader traps nothing and is dismissible by any key
 - Test by tabbing from the URL bar to the footer without touching the mouse, on every template
@@ -222,7 +222,7 @@ The enquiry form is the only place a visitor can hand the site anything, and the
 
 ### Self-assessment data handling
 
-The ten questionnaires (`/self-assessment/[slug]`, Task 18b) are scored in the browser and nowhere else: the answers are one array in React state (`src/lib/assessment.ts`), there is no `<form>` to submit, and nothing is written to storage, cookies or the URL, sent in a request, or logged — closing the tab is the only exit, and the metadata says so. The unit test in `src/sections/AssessmentForm.test.tsx` and the e2e in `tests/e2e/assessment.spec.ts` assert each of those absences.
+The ten questionnaires (`/self-assessment/[slug]`, Task 18b; answered on a 1 to 10 scale or yes / no / maybe and scored as an average severity since round 1, R5) are scored in the browser and nowhere else: the answers are one array in React state (`src/lib/assessment.ts`), there is no `<form>` to submit, and nothing is written to storage, cookies or the URL, sent in a request, or logged — closing the tab is the only exit, and the metadata says so. The unit test in `src/sections/AssessmentForm.test.tsx` and the e2e in `tests/e2e/assessment.spec.ts` assert each of those absences. Moving to the next question reads only the page's own layout; nothing about it is kept. R6 adds an opt-in send beneath the result; until a visitor chooses it, this paragraph holds.
 
 ### Security headers
 

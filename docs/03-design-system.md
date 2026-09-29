@@ -180,7 +180,7 @@ There are exactly three interactive treatments on this site. Do not invent a fou
 **1. Text link** — inline, in body copy and footer columns.
 Underline is a `1px` `currentColor` bottom border at `0.3` alpha. On hover, alpha → `1` over `--d-fast`. No colour change. No movement.
 
-**2. Line action** — the primary CTA (`Enquire`, `Menu`, `See your result`, `Send`), primary nav links, self-assessment toggles.
+**2. Line action** — the primary CTA (`Enquire`, `Menu`, `See your result`, `Send`), primary nav links. Laid flat as a row of cells (`ChoiceCell`, round 1, R5): the self-assessment's 1 to 10 scale and its _Yes_ / _No_ / _Maybe_, each cell a number or word on a `--rule-strong` hairline, the brass wiping in on hover and a 2px brass rule under the chosen one.
 Letterspaced caps at `--t-eyebrow`, with a full-width `1px` rule beneath. On hover the rule wipes from left to right in `--accent` over `--d-base` using `scaleX` from `transform-origin: left`. The label itself does not move. Active route: the brass rule is already drawn.
 
 **3. Media surface** — plates, portraits, index hover previews.

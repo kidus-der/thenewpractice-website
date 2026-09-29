@@ -57,17 +57,6 @@ export const UI_RESIDENCES = {
 } as const
 
 /**
- * INDEX TEMPLATE STRINGS — Task 12. The one line the self-assessment index
- * sets beneath each questionnaire's title. Structural, ours: every
- * questionnaire has QUESTIONS_PER_ASSESSMENT questions (schemas.ts), and the
- * content test pins that count, so the word here cannot drift from it.
- */
-export const UI_INDEX = {
-  /** Beneath each questionnaire title, in the eyebrow register. */
-  assessmentLength: 'Fifteen questions',
-} as const
-
-/**
  * HOME TEMPLATE STRINGS — Task 16. The audio toggle's two labels (docs/08
  * §Audio: the button reads what pressing it will do) and the landmark name
  * of the philosophy pillars' index. The hero's own words — title, subtitle,
@@ -111,24 +100,28 @@ export const UI_PROFILE = {
 } as const
 
 /**
- * SELF-ASSESSMENT SCORER STRINGS — Task 18b. The questionnaire page's
- * interface copy: the two answer words, the tally, the two actions and the
- * score line. Structural, ours (docs/01 §Voice); every clinical word on the
- * page — the questions, the disclaimer, the band labels, the interpretation,
- * the consultation invitation — is the client's and comes from assessments.ts.
- * `{answered}`, `{total}` and `{max}` are filled by src/lib/assessment.ts.
+ * SELF-ASSESSMENT SCORER STRINGS — Task 18b, round 1 (R5). The questionnaire
+ * page's interface copy: the three answer words, the one line that reads the
+ * 1 to 10 scale, the tally, the two actions and the score line. Structural,
+ * ours (docs/01 §Voice); every clinical word on the page — the questions,
+ * the disclaimer, the band labels, the interpretation, the consultation
+ * invitation — is the client's and comes from assessments.ts. `{answered}`,
+ * `{total}`, `{average}` and `{max}` are filled by src/lib/assessment.ts.
  */
 export const UI_ASSESSMENT = {
-  /** aria-label on the questions <section>; the eyebrow heading is UI_INDEX.assessmentLength. */
+  /** aria-label on the questions <section>, which has no visible heading. */
   sectionLabel: 'Questionnaire',
   /** Joins the series name and the questionnaire's numeral in the title-page eyebrow. */
   eyebrowSeparator: '·',
   yes: 'Yes',
   no: 'No',
+  maybe: 'Maybe',
+  /** Above the questions, and the description of every 1 to 10 group. */
+  scaleHint: 'On the scale, 1 means not at all and 10 means very much.',
   /** The live tally, shown once the first question is answered. */
   tally: '{answered} of {total} answered',
   seeResult: 'See your result',
   startAgain: 'Start again',
   /** The eyebrow line above the band label in the result. */
-  score: 'Score {total} of {max}',
+  score: 'Average severity {average} of {max}',
 } as const

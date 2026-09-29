@@ -45,6 +45,7 @@ import {
   serviceSchema,
   teamMemberSchema,
 } from './schemas'
+import { ANSWER_TYPES } from './assessment-answers'
 import { ROUTE_SEO, assessmentSeo, serviceSeo } from './seo'
 import { sentences } from './sentences'
 import { BRAND } from './brand'
@@ -54,7 +55,6 @@ import {
   UI_ASSESSMENT,
   UI_FOOTER,
   UI_HOME,
-  UI_INDEX,
   UI_INTERIOR,
   UI_PROFILE,
   UI_RESIDENCES,
@@ -225,6 +225,24 @@ function assessmentsCount(): Check {
   )
 }
 
+/** R5: every questionnaire says how each of its questions is answered, and only those. */
+function answerTypesComplete(): Check {
+  const slugs = new Set(ASSESSMENTS.map((a) => a.slug))
+  const problems = [
+    ...ASSESSMENTS.flatMap((a) => {
+      const types = ANSWER_TYPES[a.slug]
+      if (!types) return [`${a.slug}: no answer types`]
+      return types.length === a.questions.length
+        ? []
+        : [`${a.slug}: ${types.length} answer types for ${a.questions.length} questions`]
+    }),
+    ...Object.keys(ANSWER_TYPES)
+      .filter((slug) => !slugs.has(slug))
+      .map((slug) => `${slug}: answer types for no questionnaire`),
+  ]
+  return check('every questionnaire has one answer type per question', problems)
+}
+
 function noMarkdownResidue(): Check {
   const problems = allStrings().flatMap(({ path, value }) =>
     FORBIDDEN_RESIDUE.filter((r) => r.pattern.test(value)).map((r) => `${path}: ${r.label}`)
@@ -353,7 +371,7 @@ function descriptionsSourced(): Check {
  * are composed.
  */
 const OUR_MODULES: Record<string, unknown> = {
-  ui: { UI, UI_FOOTER, UI_INTERIOR, UI_RESIDENCES, UI_INDEX, UI_HOME, UI_TREATMENT, UI_PROFILE },
+  ui: { UI, UI_FOOTER, UI_INTERIOR, UI_RESIDENCES, UI_HOME, UI_TREATMENT, UI_PROFILE },
   'ui-assessment': UI_ASSESSMENT,
   enquiry: ENQUIRY,
   nav: NAV,
@@ -409,6 +427,7 @@ export function contentChecks(): readonly Check[] {
     servicesCount(),
     teamCount(),
     assessmentsCount(),
+    answerTypesComplete(),
     noMarkdownResidue(),
     noStrayWhitespace(),
     navResolves(),

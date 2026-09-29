@@ -109,6 +109,28 @@ export function ChoiceToggle({ id, label, input }: ChoiceToggleProps) {
 }
 
 /**
+ * One radio painted as a cell in a row of equal answers: the word or number
+ * on a hairline, the brass rule under the chosen one. The self-assessment's
+ * 1 to 10 scale and its yes / no / maybe use it (round 1, R5). As with
+ * ChoiceToggle the radio stays in the document, unpainted, so the arrow keys
+ * and the group semantics are the browser's own.
+ */
+export function ChoiceCell({
+  id,
+  label,
+  input,
+  className,
+  labelClassName,
+}: ChoiceToggleProps & { className?: string; labelClassName?: string }) {
+  return (
+    <label className={cn('choice__cell', className)} htmlFor={id}>
+      <input id={id} className="choice__input" type="radio" {...input} />
+      <span className={cn('choice__cell-label', labelClassName)}>{label}</span>
+    </label>
+  )
+}
+
+/**
  * A radio group rendered as line-action toggles: letterspaced caps, a brass
  * tick drawn beside the chosen word, no boxes. Native radios carry the
  * keyboard model (arrow keys move, Space selects) and the group semantics.
