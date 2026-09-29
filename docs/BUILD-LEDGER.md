@@ -686,8 +686,8 @@ Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its 
 | R4b | done | R0, R1 | Clinical Services index + 11 service pages: curate, images | round1/r4b-services | 3412 |
 | R4c | doing | R0, R1 | Team index + 11 profiles: curate, images | round1/r4c-team | 3413 |
 | R4d | doing | R0, R1 | Contact and Residences: curate, images | round1/r4d-contact | 3414 |
-| R5 | doing | R0, R1 | Self-assessment: tests on the tab page, questions at the top, per-question answer types | round1/r5-assessment | 3405 |
-| R6 | todo | R5 | Email: branded HTML emails, opt-in assessment send, previews, provisioning-ready | round1/r6-email | 3406 |
+| R5 | done | R0, R1 | Self-assessment: tests on the tab page, questions at the top, per-question answer types | round1/r5-assessment | 3405 |
+| R6 | doing | R5 | Email: branded HTML emails, opt-in assessment send, previews, provisioning-ready | round1/r6-email | 3406 |
 | R9 | todo | R3–R6 | Polish and QA: rail overlaps, round-wide e2e on a quiet machine, docs/HANDOFF sweep | round1/r9-polish | 3409 |
 | R8 | todo | R3, R4a–d, R5, R7 | Palette artifact from real renders | — (main session) | — |
 
@@ -769,3 +769,9 @@ Owner paused the run. Each task's resume notes (done, remaining, decisions, gotc
 
 - Merged `71db8af`. About, Our Process, A Personal Message and Fees curated from client sentences only (no summaries); a "spread" layout pairs each section with its R1 frame, sides alternating, from 1024px; the sticky index is off on spread pages (**owner to confirm at review**: the index needs the full grid width the spreads use); Process 15 954 → 8 495 px at 1280, About 12 655 → 9 451; day timeline four lines; letter six of ten lines with signature; Fees verbatim beside `fees`. Five oversized frames in `plateQuality()`. Fixed a pre-existing cascade bug that put letter/fees text in column 1. Main session read the About and Process 1280 overviews. Merge: CLAUDE.md, `curated/index.ts`, `plates.ts` conflicted (union). Unit 389/389, content checks 15/15, typecheck clean.
 - R9 must fix: spreads and R4b's title-page plate use `8 / 13`, which reaches column 12 under the scroll rail (the rail numeral paints over the service pictures at 1280); move them to `.p-aside` (`8 / 12`) or equivalent and register any new span in docs/03 §4. Also the `--s-8` section spacing on spread pages needs a docs/03 §3 line.
+
+### R5 — accepted (2026-09-28)
+
+- Merged `209f3fe`. `/self-assessment`: description (two client sentences), `assessment-index` picture cropped 21:9, the ten tests beside it; all visible at 1280×800, first test at 34px scroll on 390. Questionnaires: title, instruction and question one in the first viewport; 105 questions on a 1–10 scale, 45 yes / no / maybe (`src/content/assessment-answers.ts`); result = average severity (yes 10, maybe 5, no 1) to one decimal, bands < 4 / 4–6.9 / ≥ 7 with the client's labels; focus and a gentle scroll advance to the next unanswered question; the "1 point per yes" line gone. Strings of ours: "Maybe", "On the scale, 1 means not at all and 10 means very much.", "Average severity {average} of {max}". Empty slot under the result for R6. CONTENT-GAPS C1 updated. Main session read the 1280 tab page and questionnaire opening.
+- Merge: CLAUDE.md, `curated/index.ts`, `viewports.spec.ts` (both removed their `AWAITING_CURATION` entries), `index.spec.ts` (fixture gained both `lead/plate/listLead` and `plates`; image count `plate ? 1 : plates ?? 0`) resolved by hand; unit 405/405, content 16/16, typecheck and lint clean. R9 runs `index.spec` on all projects.
+- R9: the list sits at `8 / 13` and the scroll rail overlaps its hairlines at 1280 (same rail issue as R4a/R4b).
