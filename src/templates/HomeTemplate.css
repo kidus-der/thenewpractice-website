@@ -1,0 +1,26 @@
+/* ==========================================================================
+   HOME — the page's rhythm, imported once by HomeTemplate.tsx. Round 1, R3:
+   the client asked for a shorter home page, and each section is now a few
+   lines beside one picture, so the sections sit a step closer than the
+   house rhythm (sections.css: --s-8, --s-9 from 1024px). The pinned
+   statement keeps its own zero padding (sections.css). Tokens only.
+   ========================================================================== */
+
+.home > .long-read,
+.home > .conditions,
+.home > .philosophy,
+.home > .conversation {
+  padding-block: var(--s-7);
+}
+@media (min-width: 1024px) {
+  .home > .long-read,
+  .home > .conditions,
+  .home > .philosophy,
+  .home > .conversation {
+    padding-block: var(--s-8);
+  }
+}
+/* the manifesto's pinned frame carries its own air; no rhythm below it */
+.home > .philosophy {
+  padding-bottom: 0;
+}

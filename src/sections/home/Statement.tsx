@@ -4,14 +4,14 @@
  * 01 — Private Treatment Without Compromise: the "One" moment (docs/04 §6
  * "Ghosted mark + statement", docs/01 §The mark). The ceiba at ~58vh, ghosted
  * on canopy, behind the client's triad revealed one line at a time under
- * scrub; the gold point lands between the second and third lines. Pinned 2×
- * viewport from 768px and 1.4× below; unpinned under reduced motion, where
- * the mark renders complete and the lines stand in flow. The section's four
- * paragraphs follow on bone at .p-lead.
+ * scrub; the gold point lands between the second and third lines; then the
+ * one sentence the curation keeps of the section's prose settles in at the
+ * foot of the frame. Pinned one viewport from 768px and 0.8 below (round 1,
+ * R3: the home page is shorter); unpinned under reduced motion, where the
+ * mark renders complete and the lines stand in flow.
  *
- * One <section>, two grounds: the stage is canopy, the prose is bone, and
- * each block claims its own ground so the chrome recolours over both
- * (docs/03 §1 "Chrome ground"). No photograph. Adding one halves it.
+ * Canopy only: the bone prose block that followed is gone with the three
+ * paragraphs it carried. No photograph. Adding one halves it.
  */
 import { useLayoutEffect, useRef } from 'react'
 import './Statement.css'
@@ -20,12 +20,11 @@ import { Mark } from '@/components/Mark'
 import { SectionHeader } from '@/components/SectionHeader'
 import { gsap, ScrollTrigger, SplitText } from '@/motion/gsap'
 import { E } from '@/motion/tokens'
-import { Reveal } from '@/motion/Reveal'
 import { triadLines } from '@/lib/home'
 
-/** docs/04 §6: 2× viewport from 768px, 1.4× below. */
-const PIN_DESKTOP = '+=200%'
-const PIN_MOBILE = '+=140%'
+/** docs/04 §6: one viewport from 768px, 0.8 below (round 1, R3). */
+const PIN_DESKTOP = '+=100%'
+const PIN_MOBILE = '+=80%'
 const SCRUB = 0.6
 
 /** Timeline positions, in scrub-seconds, ported from the concept site's §02. */
@@ -41,6 +40,8 @@ const T = {
   lineDuration: 0.9,
   recede: 3.4,
   recedeDuration: 1,
+  foot: 3.4,
+  footDuration: 0.8,
   hold: 0.4,
 } as const
 const RECEDE = { scale: 1.1, opacity: 0.5 } as const
@@ -74,6 +75,7 @@ function buildTimeline(el: HTMLElement, end: string, lines: HTMLElement[]) {
       T.lines
     )
     .to('.statement__mark', { ...RECEDE, ease: E.outQuart, duration: T.recedeDuration }, T.recede)
+    .from('.statement__foot', { opacity: 0, ease: E.outQuart, duration: T.footDuration }, T.foot)
     .to({}, { duration: T.hold })
 }
 
@@ -81,6 +83,7 @@ export function Statement({ section, numeral }: Props) {
   const root = useRef<HTMLElement>(null)
   const headingId = `${section.id}-title`
   const lines = triadLines(section.subtitle ?? '')
+  const [foot] = section.paragraphs
 
   useLayoutEffect(() => {
     const el = root.current
@@ -129,11 +132,12 @@ export function Statement({ section, numeral }: Props) {
       className="statement"
       id={section.id}
       data-n={numeral}
+      data-ground="dark"
       data-pinned="true"
       ref={root}
       aria-labelledby={headingId}
     >
-      <div className="statement__pin" data-ground="dark">
+      <div className="statement__pin">
         <div className="shell">
           <SectionHeader n={numeral} label={section.title ?? ''} id={headingId} />
         </div>
@@ -154,18 +158,12 @@ export function Statement({ section, numeral }: Props) {
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="statement__prose" data-ground="light">
-        <div className="shell grid12">
-          <Reveal staggerChildren className="p-lead statement__paragraphs">
-            {section.paragraphs.map((text) => (
-              <p key={text} className="t-body">
-                {text}
-              </p>
-            ))}
-          </Reveal>
-        </div>
+        {foot && (
+          <div className="shell grid12">
+            <p className="p-narrow t-lead statement__foot">{foot}</p>
+          </div>
+        )}
       </div>
     </section>
   )

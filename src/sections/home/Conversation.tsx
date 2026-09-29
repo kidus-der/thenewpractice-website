@@ -1,26 +1,30 @@
 /**
  * 05 — Begin the Conversation (docs/05 §T1, §Reusable blocks "Enquire"). The
- * client's three lines at the reading placement; on the counterweight, the
- * founder — name, credentials, role, telephone, email, location — from the
- * one source in brand.ts by way of HOME.contact, and the Enquire line action
- * to the enquiry page. Bone. The page closes here; the footer follows.
- * Server component.
+ * client's three lines at the reading placement, then the founder (name,
+ * credentials, role, telephone, email, location) from the one source in
+ * brand.ts by way of HOME.contact, and the Enquire line action to the enquiry
+ * page; beside them from 1024px, between the lines and the founder below it,
+ * the picture of a first call. Bone. The page closes here; the footer
+ * follows. Server component.
  */
 import Link from 'next/link'
 import './Conversation.css'
+import type { MediaKey } from '@/content/media'
 import type { ContactBlock, NavItem, Section } from '@/content/schemas'
 import { SectionHeader } from '@/components/SectionHeader'
 import { mailHref, telHref } from '@/lib/contact'
 import { Reveal } from '@/motion/Reveal'
+import { HomePlate } from './HomePlate'
 
 type Props = Readonly<{
   section: Section
   contact: ContactBlock
   action: NavItem
   numeral: string
+  plate: MediaKey
 }>
 
-export function Conversation({ section, contact, action, numeral }: Props) {
+export function Conversation({ section, contact, action, numeral, plate }: Props) {
   const headingId = `${section.id}-title`
   return (
     <section
@@ -42,7 +46,9 @@ export function Conversation({ section, contact, action, numeral }: Props) {
           </Reveal>
         </div>
 
-        <div className="p-offset conversation__founder">
+        <HomePlate media={plate} className="p-aside conversation__plate" />
+
+        <div className="p-lead conversation__founder">
           <Reveal as="address" className="conversation__address">
             <span className="conversation__name">
               {contact.name}

@@ -1,7 +1,7 @@
 /* ==========================================================================
    01 — STATEMENT — co-located with Statement.tsx, imported once by it. The
    concept site's "one" block (sections.css) recomposed for the home page:
-   canopy stage, then bone prose. Tokens only; px for geometry per rule 4 as
+   the canopy stage, the triad, one sentence at its foot. Tokens only; px for geometry per rule 4 as
    amended.
    ========================================================================== */
 
@@ -15,8 +15,13 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-block: var(--s-8);
+  padding-block: var(--s-7);
   position: relative;
+}
+@media (min-width: 1024px) {
+  .statement__pin {
+    padding-block: var(--s-8);
+  }
 }
 .statement__stage {
   position: relative;
@@ -75,20 +80,15 @@
   display: block;
 }
 
-/* the four paragraphs on bone, at the reading placement, a block apart. The
-   foot is a step shorter than the rhythm: the long read that follows is bone
-   too, and two full paddings on one ground read as a void. */
-.statement__prose {
-  padding-block: var(--s-8) var(--s-6);
-}
-.statement__paragraphs {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-4);
-  max-width: 62ch;
-}
-@media (min-width: 1024px) {
-  .statement__prose {
-    padding-block: var(--s-9) var(--s-7);
-  }
+/* the one sentence of prose the curation keeps, at the foot of the frame:
+   centred under the triad, muted, so the moment stays the triad's */
+.statement__foot {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  text-align: center;
+  color: var(--fg-muted);
+  max-width: 46ch;
+  justify-self: center;
+  text-wrap: balance;
 }

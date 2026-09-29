@@ -160,14 +160,16 @@ An 8px base with a non-linear scale. Larger steps grow faster because luxury lay
 
 Reuse these; do not invent new column spans per template.
 
-| Name        | Span     | Use                                                                                                                                              |
-| ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `.p-lead`   | `2 / 8`  | Lead paragraphs, statements, interior body                                                                                                       |
-| `.p-offset` | `7 / 13` | Secondary text blocks, profile bio, the counterweight                                                                                            |
-| `.p-plate`  | `1 / 7`  | Portrait image plates                                                                                                                            |
-| `.p-narrow` | `4 / 10` | Centred-ish text moments (the home statement only)                                                                                               |
-| `.p-wide`   | `1 / -1` | Full-bleed media (a `grid12` child spanning everything)                                                                                          |
-| `.p-list`   | `2 / 12` | Index and hairline lists: numerals align with the section titles at column 2, the margin holds the brass tick (blessed after Task 12; T3 and T6) |
+| Name             | Span     | Use                                                                                                                                                                                                                          |
+| ---------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.p-lead`        | `2 / 8`  | Lead paragraphs, statements, interior body                                                                                                                                                                                   |
+| `.p-offset`      | `7 / 13` | Secondary text blocks, profile bio, the counterweight                                                                                                                                                                        |
+| `.p-plate`       | `1 / 7`  | Portrait image plates                                                                                                                                                                                                        |
+| `.p-narrow`      | `4 / 10` | Centred-ish text moments (the home statement only)                                                                                                                                                                           |
+| `.p-wide`        | `1 / -1` | Full-bleed media (a `grid12` child spanning everything)                                                                                                                                                                      |
+| `.p-list`        | `2 / 12` | Index and hairline lists: numerals align with the section titles at column 2, the margin holds the brass tick (blessed after Task 12; T3 and T6)                                                                             |
+| `.p-aside`       | `8 / 12` | A portrait plate beside a `.p-lead` column: four columns keep a 3:4 frame inside a 1280 × 800 viewport; column 12 stays clear, as column 1 does, so a sticky plate never meets the scroll rail (round 1, R3: home §3 and §5) |
+| `.p-aside-start` | `2 / 6`  | The same plate mirrored, beside a `.p-offset` column (round 1, R3: home §2 and the manifesto)                                                                                                                                |
 
 ---
 

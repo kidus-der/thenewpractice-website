@@ -7,7 +7,7 @@
    ========================================================================== */
 
 .philosophy__body {
-  margin-top: var(--s-7);
+  margin-top: var(--s-6);
   row-gap: var(--s-6);
   align-items: start;
 }
@@ -20,8 +20,10 @@
   margin: 0;
   padding: 0;
 }
+/* a group apart rather than a block (--s-5, --s-6 from 1024px): five panels
+   at --s-7 read as five sections (round 1, R3) */
 .philosophy__panel {
-  padding-block: var(--s-7);
+  padding-block: var(--s-5);
   border-top: 1px solid var(--rule);
 }
 .philosophy__panel:last-child {
@@ -42,6 +44,9 @@
 }
 
 @media (min-width: 1024px) {
+  .philosophy__panel {
+    padding-block: var(--s-6);
+  }
   .philosophy__index {
     display: block;
     grid-column: 1 / 5;
