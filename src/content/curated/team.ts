@@ -14,8 +14,8 @@
  *
  * The profiles (`TEAM_CURATION`): each member's paragraphs are replaced by
  * one or two built from the client's own sentences, joined where two short
- * sentences read as one paragraph. A first paragraph short enough is still
- * lifted onto the title page as the lead (`biographyLead`). Every fact is the
+ * sentences read as one paragraph; the profile renders them whole in the
+ * body (`wholeBiography`). Every fact is the
  * document's, in its words; the one string of ours restates Lowell
  * Monkhouse's graduate school, whose client sentence has no subject.
  * Not rendered, on purpose: Katia Rhainds's _Origin_ sentence (its en dash)

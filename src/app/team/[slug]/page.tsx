@@ -1,8 +1,8 @@
 /**
  * /team/[slug] — T4 Profile on `team.ts` (docs/05 §T4). Eleven pages, one
  * per member in document order; each composes the biography as
- * `curated/team.ts` chooses it (round 1, R4c: a short opening lifted to the
- * lead when there is one, then a paragraph or two), the three colleagues who
+ * `curated/team.ts` chooses it (round 1, R4c: a paragraph or two, whole in
+ * the body, `wholeBiography`), the three colleagues who
  * follow in the document, and the neighbours for the rail. Metadata and
  * structured data from the Task 10 helpers: a `Person` carrying only name,
  * credentials where the document gives them, role, employer and URL.
@@ -17,11 +17,11 @@ import { TEAM } from '@/content/team'
 import { rowsFromTeam } from '@/lib/indexPage'
 import { breadcrumb, organization, person, webPage } from '@/lib/jsonld'
 import {
-  biographyLead,
   memberBySlug,
   profileNumeral,
   profilePrevNext,
   teamIndexItem,
+  wholeBiography,
   worksAlongside,
 } from '@/lib/profile'
 import { buildMetadata } from '@/lib/seo'
@@ -72,7 +72,7 @@ export default async function Page({ params }: Props) {
         member={member}
         ordinal={profileNumeral(member)}
         index={index}
-        biography={biographyLead(memberBySlug(slug, TEAM_CURATED) ?? member)}
+        biography={wholeBiography(memberBySlug(slug, TEAM_CURATED) ?? member)}
         alongside={rowsFromTeam(worksAlongside(slug))}
         prevNext={profilePrevNext(slug)}
       />

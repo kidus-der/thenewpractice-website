@@ -16,7 +16,7 @@ import { TEAM_CURATED } from '../../src/content/curated/team'
 import { teamHref } from '../../src/content/nav'
 import { TEAM } from '../../src/content/team'
 import { UI_INTERIOR, UI_PROFILE } from '../../src/content/ui'
-import { biographyLead, profilePrevNext, worksAlongside } from '../../src/lib/profile'
+import { profilePrevNext, wholeBiography, worksAlongside } from '../../src/lib/profile'
 import {
   expect,
   expectNoAxeViolations,
@@ -39,7 +39,7 @@ const FIXTURES = FIXTURE_SLUGS.map((slug) => {
   return member
 })
 
-/** Round 1 (R4c): a biography renders at most a lead and two short paragraphs. */
+/** Round 1 (R4c): a biography renders whole in the body, in one or two short paragraphs. */
 const MAX_BODY_PARAGRAPHS = 2
 
 const RAIL = `nav[aria-label="${UI_INTERIOR.railLabel}"]`
@@ -95,7 +95,7 @@ for (const member of FIXTURES) {
     })
 
     test('renders the curated biography, verbatim, in a paragraph or two', async ({ page }) => {
-      const { lead, paragraphs } = biographyLead(member)
+      const { lead, paragraphs } = wholeBiography(member)
       const body = page.locator(`${BIOGRAPHY} p`)
       await expect(body).toHaveCount(paragraphs.length)
       const texts = (await body.allTextContents()).map((t) => t.trim())

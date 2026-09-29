@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 
-import { biographyLead } from '@/lib/profile'
 import { sentences } from '../sentences'
 import { TEAM, TEAM_PAGE } from '../team'
 import { TEAM_CURATED, TEAM_CURATION, TEAM_PAGE_CURATED, TEAM_PAGE_CURATION } from './team'
@@ -60,12 +59,12 @@ describe('the team biographies curation', () => {
     })
   })
 
-  it('curates every member to at most a lead and two short paragraphs', () => {
+  it('curates every member to one or two short paragraphs', () => {
     for (const member of TEAM_CURATED) {
-      const { lead, paragraphs } = biographyLead(member)
+      const { paragraphs } = member
       expect(paragraphs.length, member.slug).toBeGreaterThanOrEqual(1)
       expect(paragraphs.length, member.slug).toBeLessThanOrEqual(2)
-      const total = words([lead ?? '', ...paragraphs].join(' '))
+      const total = words(paragraphs.join(' '))
       expect(total, member.slug).toBeLessThanOrEqual(120)
     }
   })
