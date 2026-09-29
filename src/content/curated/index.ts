@@ -14,6 +14,7 @@
  */
 import { ABOUT_CURATION } from './about'
 import type { Curation } from './core'
+import { FEES_CURATION } from './fees'
 import { PERSONAL_MESSAGE_CURATION } from './personal-message'
 import { PROCESS_CURATION } from './process'
 
@@ -21,4 +22,5 @@ export const CURATIONS: readonly Curation<unknown>[] = [
   ABOUT_CURATION,
   PROCESS_CURATION,
   PERSONAL_MESSAGE_CURATION,
+  FEES_CURATION,
 ]

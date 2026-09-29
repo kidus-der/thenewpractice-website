@@ -5,16 +5,19 @@
  * Every route, every project: the h1, the section titles as headings in
  * document order, the opening ground, a clean console, axe scoped to <main>,
  * and a full-page capture after a reveal pass. Then what each page adds:
- * the process page's sticky index and timeline rule, the letter's signature,
- * the fees statement, the legal stubs' staging flag and noindex, and the
- * sitemap without the legal routes.
+ * the process page's spreads and timeline rule, the letter's picture and
+ * signature, the fees statement verbatim beside its picture, the legal
+ * stubs' noindex, and the sitemap without the legal routes. Round 1 (R4a):
+ * the process, letter and fees routes render their curations
+ * (src/content/curated/) in the spread layout, so none carries an index.
  */
 import { MEDIA } from '../../src/content/media'
 import { NOINDEX_ROUTES, routes } from '../../src/content/nav'
+import { FEES_CURATED } from '../../src/content/curated/fees'
+import { PERSONAL_MESSAGE_CURATED as PERSONAL_MESSAGE } from '../../src/content/curated/personal-message'
+import { PROCESS_CURATED as PROCESS } from '../../src/content/curated/process'
 import { FEES } from '../../src/content/pages/fees'
 import { PRIVACY, TERMS } from '../../src/content/pages/legal'
-import { PERSONAL_MESSAGE } from '../../src/content/pages/personal-message'
-import { PROCESS } from '../../src/content/pages/process'
 import type { Page as PageContent } from '../../src/content/schemas'
 import { UI_INTERIOR } from '../../src/content/ui'
 import { prevNextFor } from '../../src/lib/prevNext'
@@ -34,7 +37,7 @@ type Route = Readonly<{ path: string; name: string; content: PageContent }>
 const ROUTES: readonly Route[] = [
   { path: routes.process, name: 'process', content: PROCESS },
   { path: routes.personalMessage, name: 'personal-message', content: PERSONAL_MESSAGE },
-  { path: routes.fees, name: 'fees', content: FEES },
+  { path: routes.fees, name: 'fees', content: FEES_CURATED },
   { path: routes.privacy, name: 'privacy', content: PRIVACY },
   { path: routes.terms, name: 'terms', content: TERMS },
 ]
@@ -46,7 +49,20 @@ const MARKER = '.day-timeline__marker'
 const DAY_SECTION = 'a-typical-day'
 const PLACEHOLDER = 'PLACEHOLDER'
 
-const WIDE_PROJECTS: readonly string[] = [PROJECTS.desktop, PROJECTS.wide, PROJECTS.reducedMotion]
+const WIDE_PROJECTS: readonly string[] = [
+  PROJECTS.desktop,
+  PROJECTS.wide,
+  PROJECTS.reducedMotion,
+  PROJECTS.webkit,
+]
+/** The process pictures in render order (src/app/our-process/page.tsx). */
+const PROCESS_PICTURES = [
+  'process-first-conversation',
+  'process-lead-clinician',
+  'process-typical-day',
+  'process-family',
+  'process-nutrition',
+] as const
 /** The projects where the timeline scrubs: at least 1024px wide, motion allowed. */
 const SCRUB_PROJECTS: readonly string[] = [PROJECTS.desktop, PROJECTS.wide, PROJECTS.webkit]
 /** The rule follows the reading line at 70% of the viewport (DayTimeline.tsx). */
@@ -115,15 +131,24 @@ test.describe('our-process', () => {
     await settleMotion(page)
   })
 
-  test('shows the sticky index from 1024px and hides it below', async ({ page }, info) => {
-    const index = page.locator(INDEX)
-    if (!WIDE_PROJECTS.includes(info.project.name)) {
-      await expect(index).toBeHidden()
-      return
-    }
-    await expect(index).toBeVisible()
-    await expect(index.getByRole('link')).toHaveCount(titlesOf(PROCESS).length)
-    expect(await index.evaluate((el) => getComputedStyle(el).position)).toBe('sticky')
+  test('carries no sticky index and alternates its pictures beside the text', async ({
+    page,
+  }, info) => {
+    await expect(page.locator(INDEX)).toHaveCount(0)
+    const spreads = page.locator('section[data-side]')
+    await expect(spreads).toHaveCount(PROCESS_PICTURES.length)
+    const sides = await spreads.evaluateAll((els) => els.map((el) => el.getAttribute('data-side')))
+    expect(sides).toEqual(PROCESS_PICTURES.map((_, i) => (i % 2 === 0 ? 'start' : 'end')))
+    if (!WIDE_PROJECTS.includes(info.project.name)) return
+    const beside = await spreads.evaluateAll((els) =>
+      els.map((el) => {
+        const text = el.querySelector('.content-section__body')?.getBoundingClientRect()
+        const plate = el.querySelector('.content-section__spread-plate')?.getBoundingClientRect()
+        if (!text || !plate) return false
+        return plate.top < text.bottom && text.top < plate.bottom
+      })
+    )
+    expect(beside).toEqual(PROCESS_PICTURES.map(() => true))
   })
 
   test('renders the day as the timeline with every paragraph as a marker', async ({ page }) => {
@@ -188,10 +213,11 @@ test.describe('our-process', () => {
     for (const colour of colours) expect(colour).toBe(ink)
   })
 
-  test('shows the cenote as the only plate, with content-layer alt text', async ({ page }) => {
+  test('shows one picture per spread, with content-layer alt text', async ({ page }) => {
     const images = page.locator('main img')
-    await expect(images).toHaveCount(1)
-    await expect(images).toHaveAttribute('alt', MEDIA['hero-cenote-poster'].alt)
+    await expect(images).toHaveCount(PROCESS_PICTURES.length)
+    const alts = await images.evaluateAll((els) => els.map((el) => el.getAttribute('alt')))
+    expect(alts).toEqual(PROCESS_PICTURES.map((key) => MEDIA[key].alt))
   })
 
   test('links to its neighbours in reading order', async ({ page }) => {
@@ -229,6 +255,10 @@ test.describe('a-personal-message', () => {
     const prose = page.locator('.content-section__prose p')
     await expect(prose).toHaveCount(letter.paragraphs.length - 1)
     await expect(page.locator('main > :first-child')).toContainText(PERSONAL_MESSAGE.eyebrow ?? '')
+    // Round 1: the letter beside the hand writing one.
+    await expect(page.locator('main img')).toHaveCount(1)
+    await expect(page.locator('main img')).toHaveAttribute('alt', MEDIA['personal-message'].alt)
+    await expect(page.locator('section#letter')).toHaveAttribute('data-side', 'start')
   })
 
   test('carries a rail: Our Process before it, Fees after (the footer Practice order)', async ({
@@ -250,7 +280,9 @@ test.describe('a-personal-message', () => {
 })
 
 test.describe('fees', () => {
-  test('is the statement alone under the heading Cost', async ({ page }) => {
+  test('is the statement, verbatim, beside its picture under the heading Cost', async ({
+    page,
+  }) => {
     await page.goto(routes.fees)
     await settleMotion(page)
     const statement = FEES.sections[0]?.paragraphs[0]
@@ -259,7 +291,10 @@ test.describe('fees', () => {
     const prose = page.locator('.content-section__prose p')
     await expect(prose).toHaveCount(1)
     await expect(prose).toHaveText(statement)
-    await expect(page.locator('main img')).toHaveCount(0)
+    // Round 1 (R4a): the statement is short and renders verbatim; its picture beside it.
+    await expect(page.locator('main img')).toHaveCount(1)
+    await expect(page.locator('main img')).toHaveAttribute('alt', MEDIA.fees.alt)
+    await expect(page.locator('section#cost')).toHaveAttribute('data-side', 'start')
     // The rail leads back to the letter and on to the services (ledger, Task 18 triage).
     const { prev, next } = prevNextFor(routes.fees)
     expect(prev?.href).toBe(routes.personalMessage)
