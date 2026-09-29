@@ -683,9 +683,9 @@ Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its 
 | R7 | done | — | Palettes: ten lighter palettes + capture tooling | round1/r7-palettes | 3407 |
 | R3 | done | R0, R1 | Home: shorter; Who We Help list left, fixed image right | round1/r3-home | 3404 |
 | R4a | doing | R0, R1 | About, Our Process, A Personal Message, Fees: curate, images | round1/r4a-interior | 3411 |
-| R4b | doing | R0, R1 | Clinical Services index + 11 service pages: curate, images | round1/r4b-services | 3412 |
+| R4b | done | R0, R1 | Clinical Services index + 11 service pages: curate, images | round1/r4b-services | 3412 |
 | R4c | doing | R0, R1 | Team index + 11 profiles: curate, images | round1/r4c-team | 3413 |
-| R4d | todo | R0, R1 | Contact and Residences: curate, images | round1/r4d-contact | 3414 |
+| R4d | doing | R0, R1 | Contact and Residences: curate, images | round1/r4d-contact | 3414 |
 | R5 | doing | R0, R1 | Self-assessment: tests on the tab page, questions at the top, per-question answer types | round1/r5-assessment | 3405 |
 | R6 | todo | R5 | Email: branded HTML emails, opt-in assessment send, previews, provisioning-ready | round1/r6-email | 3406 |
 | R8 | todo | R3, R4a–d, R5, R7 | Palette artifact from real renders | — (main session) | — |
@@ -758,3 +758,8 @@ Owner paused the run. Each task's resume notes (done, remaining, decisions, gotc
 
 - Merged `1ccff7d`. Home 13 823 → 9 453 px at 1280 (−32%), 13 661 → 10 436 at 390 (−24%); every rendered word the client's (no summaries); one R1 image per section; §3 one column left, sticky `home-who-we-help` right (above the list below 1024px), glow kept; "One" pin 1× (0.8× mobile), manifesto first paragraph only, pin 1×; new placements `.p-aside` (8/12) and `.p-aside-start` (2/6); §6a rows added. Main session read the 1280 overview, §3 and the manifesto mid-pin.
 - Polish for later: at 1280 the manifesto's display line runs to ~35px of the scroll rail (right column reaches column 12); `home-philosophy` 138 kB at 750w on 3× phones; axe/full-page tests on 1280/1920 needed a 120 s limit under load — rerun on a quiet machine at round close.
+
+### R4b — accepted (2026-09-28)
+
+- Merged `b2221df`. Services index lead is two client sentences, the eleven rows straight under it with `services-index`; each service opens with its R1 frame beside the lead (`PageIntro` gained a plate layout, `PlateFigure` a `priority` option, `IndexTemplate` a `plate` option); client sentences only (no summaries); trauma definitions cut to name plus one sentence; "may include" and definitions two-column from desktop; closing sentences folded into the opening text; section gap one step smaller. Heights at 1280 down 7–28% (trauma 7787 → 5642). `AWAITING_CURATION` loses the two service routes. Main session read the four-page desktop sheet and the addiction fold at 390/1920. Merge: `curated/index.ts` and CLAUDE.md §6a conflicted with R3 (both kept). Unit 384/385 on the merge; the one failure is the known `AssessmentForm` 5 s timeout under load (passes alone; R5 rewrites the file).
+- Findings: metadata descriptions still read the full client text; the scroll rail sits inside the content's right edge from 768 (pictures moved clear; other templates may overlap).
