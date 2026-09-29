@@ -73,6 +73,17 @@ The surf and canopy sources carry sensor noise that would not fit the 4 MB mp4 b
 
 Licence URL for every row: https://www.pexels.com/license/. Every output is under `public/media/<key>.{avif,webp}` and `public/video/<key>.{mp4,webm}`; the typed manifest is `src/content/media.ts` (`MEDIA` for frames, `VIDEO` for loops).
 
+## Round 1 stills
+
+Added by task R1 on 2026-09-28: 4 frames, each chosen for the sentence it sits beside (register: `design/ROUND1-IMAGE-SLOTS.md`). Same source (Pexels), same licence, same grade as the set above; attribution recorded as `Photo by <author> on Pexels`. People appear, per the round-1 owner decision (docs/02 §Subject matter): calm, candid adults; unidentifiable wherever the copy is about crisis, trauma, addiction or mental illness, which is the Pexels licence's *not in a bad light* condition. `focus` absent means sharp's attention crop; `left` and `right` were added to the pipeline for two frames whose subject sits off-centre in a landscape source.
+
+| File | Source page | Author | Licence | Stands in for | Aspect | Focus | ev |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `home-recovery` | https://www.pexels.com/photo/two-people-walking-on-a-tranquil-beach-30195618/ | Marius Gabriel | Pexels License | Home §2 Recovery Without Interruption: two people walking together | 3:4 | attention | −8 |
+| `home-who-we-help` | https://www.pexels.com/photo/photo-of-a-woman-looking-outside-a-window-while-sitting-on-a-table-7272595/ | Kaboompics.com | Pexels License | Home §3 Who We Help: the one fixed image beside the list | 3:4 | attention | −18 |
+| `home-philosophy` | https://www.pexels.com/photo/majestic-kapok-tree-with-massive-buttress-roots-38729727/ | Joaquin Reyes Ramos | Pexels License | Home §4 Our Philosophy: roots of a great tropical tree | 3:4 | bottom | 0 |
+| `home-begin-conversation` | https://www.pexels.com/photo/a-woman-sitting-on-a-window-bench-talking-on-the-phone-6951776/ | Artem Podrez | Pexels License | Home §5 Begin the Conversation: a call made from home | 3:4 | attention | −28 |
+
 ## Rejected
 
 Carried over from `design/STOCK-SOURCES.md` §Considered and rejected so no one re-evaluates them.

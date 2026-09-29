@@ -420,3 +420,36 @@ Notes for Task 2b:
 - `https://www.pexels.com/download/video/<id>/` is a stable alias that 302-redirects to the same `videos.pexels.com` file; the manifest uses the resolved file URL so no redirect handling is needed.
 - The Pexels HTML pages block plain curl (403); the CDN hosts do not. Fetch with a browser-like `User-Agent` regardless.
 - Team silhouettes are not sourced here; they are generated placeholders per the ledger.
+
+---
+
+## Round 1 — pictures matched to their text
+
+Research date: 2026-09-28 (task R1). Governing brief: `docs/BUILD-LEDGER.md`, Round 1, brief R1. Unlike task 2a, the search here started from the **sentence** each picture will sit beside, read in `src/content/**`, and people were allowed (owner decision).
+
+**Method.** Pexels search pages were rendered in a headless browser (the HTML answers 403 to curl), one fresh browser context per query; thirty-odd queries across the slots, the results laid out as numbered thumbnail sheets and read. For each slot two to four candidates were then downloaded at 900 px and read full-frame before one was chosen; the chosen frame was graded through the pipeline and read again at its crop. Four first choices were replaced where the full frame or the graded crop failed: a probable minor (mental health), a second consultation image (founder), a knife close-up (nutrition), a crop that lost the team (team index). Photographer names were read from each photo page's structured data. Unsplash and Pixabay were not needed; every pick is Pexels.
+
+**Licence.** Pexels License (https://www.pexels.com/license/): free for commercial use, attribution not required (recorded anyway), identifiable people must not be shown in a bad light. The crisis, trauma, addiction and mental-health slots therefore show no identifiable face.
+
+**Place.** The Riviera Maya coast is flat: sea frames with hills or headlands behind were rejected. `about-place` is the only destination photograph, of the real marina at Puerto Aventuras; the docs/08 advice against destination searches still holds for everything else (the `riviera maya` and `puerto aventuras` searches returned resorts, as warned).
+
+### Home
+
+| Slot | Chosen | Alternates considered |
+| --- | --- | --- |
+| `home-recovery` | Pexels 30195618, Marius Gabriel (https://www.pexels.com/photo/two-people-walking-on-a-tranquil-beach-30195618/) | Pexels 37100933 (two figures far down a beach; too small at 3:4), 13521149 (two walkers on a pale beach; tree in the foreground) |
+| `home-who-we-help` | Pexels 7272595, Kaboompics.com (https://www.pexels.com/photo/photo-of-a-woman-looking-outside-a-window-while-sitting-on-a-table-7272595/) | Pexels 20152432 (woman seated in a tropical garden; a red ribbon and cap pull the eye), 10266092 (used for Mental Health) |
+| `home-philosophy` | Pexels 38729727, Joaquin Reyes Ramos (https://www.pexels.com/photo/majestic-kapok-tree-with-massive-buttress-roots-38729727/) | Pexels 7292924 (kapok bark in tropical woods; texture only), 3191101 (tall kapok in rainforest; the roots are out of frame) |
+| `home-begin-conversation` | Pexels 6951776, Artem Podrez (https://www.pexels.com/photo/a-woman-sitting-on-a-window-bench-talking-on-the-phone-6951776/) | Pexels 6612273 (similar scene; a posed smile and gesture), 7653765 (used for Our Process) |
+
+### Considered and rejected across round 1
+
+| Candidate | Why |
+| --- | --- |
+| Flowering silk-cotton and *Bombax* trees (India, Bangladesh, Vietnam results for "ceiba") | Not the Maya ceiba; red blossom reads postcard. |
+| White-coat and scrubs team photographs (the "medical team" search) | Read hospital; docs/02 forbids anything clinical-institutional. |
+| The "worried woman on phone" set (Pexels 4584397, 6382646 and neighbours) | Posed alarm with faces in focus; the licence forbids showing identifiable people in a bad light. |
+| Head-in-hands burnout portraits (Pexels 7927534, 7984780 and neighbours) | A stock burnout pose; the chosen frame says the same thing by stopping, not collapsing. |
+| Yoga and meditation poses from the breathwork search | Forbidden by docs/02 (*Yoga poses*). |
+| Marina sunrises (Pexels 28834345, 10341944 and neighbours) | Temperate harbours with mountains; not the Riviera Maya. |
+| Beach couples holding hands (Pexels 14992496, 33530668 and neighbours) | Romantic register, swimwear or resort. |

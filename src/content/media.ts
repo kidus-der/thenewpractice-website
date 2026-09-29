@@ -110,6 +110,42 @@ export const MEDIA = {
     "credit": "Wavy. revolution",
     "licence": "Pexels License"
   },
+  "home-recovery": {
+    "src": "/media/home-recovery.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAQBACdASoUABsAPuFep02opSOiMAwBEBwJZwAAW8FEqPz0snnvOv3xoAD9zBx7nBxTiY/XF9BmoqxBPUdDws1K/iprbddrPvYlsL7/uWxN9wIeHP5nnphl38BtLjqWgAA=",
+    "alt": "Two people seen from behind standing side by side on a beach facing the sea",
+    "credit": "Marius Gabriel",
+    "licence": "Pexels License"
+  },
+  "home-who-we-help": {
+    "src": "/media/home-who-we-help.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAACwBACdASoUABsAPu1osFAppaUiqAqpMB2JZwDJEDBim9x2z19K4HES7TiAVGUAAPyjIAfMQJ+f4PDZG2l2OHKUIa9GhMR3zh0CGziiuAgoOhI2VDoQZNfLuh9qYvT9Y43zopYVF/KRU8/HXomAfpQfeP2ji8G1gAA=",
+    "alt": "A woman seated on a small table by a window with a sheer curtain, looking out",
+    "credit": "Kaboompics.com",
+    "licence": "Pexels License"
+  },
+  "home-philosophy": {
+    "src": "/media/home-philosophy.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAABQBQCdASoUABsAPu1qq1EppaOiqAqpMB2JaQDG+bHAPf8SLIb6RU9FDOUE2lJP3g3HjIAA/h5PgDVTWHDL9JWfGsLXBpHujqQrQNHs7DGo4+gkiR8hzHr9hdxsyYW+mS8pGdDYtS7Avne+tAvbiOd2QkOYuaracc6h6mmzS8M9HJeetDa1/2ZL/4J9wDnf/SZr7605mRoaIEV6gblG/HAA",
+    "alt": "Buttress roots of a large kapok tree on a forest floor, a vine wound around the trunk",
+    "credit": "Joaquin Reyes Ramos",
+    "licence": "Pexels License"
+  },
+  "home-begin-conversation": {
+    "src": "/media/home-begin-conversation.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAABQBQCdASoUABsAPu1krE+ppSQiMBgIATAdiWcAzfwxUadiTDaNxHvPWxiCFmMsSc4gRAAA9oFbipwYBNB7K6iVGibtAW8+YtARLIZ0CsjfVy0+aknbnGx4K+XEdFa96Cnnn34+wY4+jC3877diLQQkzAzkd4H5TVGfLBn3PjNzkBNU/QAAAA==",
+    "alt": "A woman sitting on a window seat talking on a mobile phone",
+    "credit": "Artem Podrez",
+    "licence": "Pexels License"
+  },
   "hero-surf-poster": {
     "src": "/media/hero-surf-poster.webp",
     "width": 2400,

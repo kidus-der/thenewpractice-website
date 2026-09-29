@@ -27,7 +27,7 @@ Stock is a stand-in, not a compromise: the templates are built to receive commis
 - **Architecture and interiors, unoccupied.** A corridor. A doorway with light across it. A single chair. A linen bed no one has slept in. Tropical-modern, not resort.
 - **Landscape at distance.** Canopy, cloud, cenote and sea water, mist through trees, a shaded pool edge. Always wide, always quiet, never dramatic-golden-hour.
 - **Materials in extreme close-up.** Raw linen weave. Limestone grain. Plaster. Water tension. Rain beaded on a leaf. Untreated hardwood.
-- **The human presence, only obliquely.** A hand at the edge of frame. A shadow. A back turned. Never a face in focus. Never eye contact. Team portraits, when they arrive, are the one exception — and until then they are generated silhouettes.
+- **People, calm and candid.** Owner decision, round 1: people are allowed, in the manner of kusnachtpractice.com. Adults in quiet, unposed moments: two people walking, a conversation at a table, a hand on a letter, a back turned to the sea. Never a posed stock smile, never eye contact with the lens. Where the text is about crisis, trauma, addiction or mental illness, the person is not identifiable (back turned, silhouette, hands only): the Pexels licence forbids showing an identifiable person in a bad light. No children's faces. Team portraits stay the client's own; until they arrive they are generated silhouettes.
 - **Instruments of care, abstracted.** A glass of water. Never a syringe, chart, monitor, or anything that reads _hospital_.
 
 ### Subject matter — forbidden

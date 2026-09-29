@@ -206,6 +206,55 @@
       "focus": "centre",
       "ev": 10,
       "alt": "A person seen from behind standing at a window with a palm shadow on the blind"
+    },
+    {
+      "key": "home-recovery",
+      "slot": "Home §2 Recovery Without Interruption: two people walking together",
+      "page": "https://www.pexels.com/photo/two-people-walking-on-a-tranquil-beach-30195618/",
+      "url": "https://images.pexels.com/photos/30195618/pexels-photo-30195618.jpeg",
+      "credit": "Marius Gabriel",
+      "licence": "Pexels License",
+      "licenceUrl": "https://www.pexels.com/license/",
+      "aspect": "3:4",
+      "ev": -8,
+      "alt": "Two people seen from behind standing side by side on a beach facing the sea"
+    },
+    {
+      "key": "home-who-we-help",
+      "slot": "Home §3 Who We Help: the one fixed image beside the list",
+      "page": "https://www.pexels.com/photo/photo-of-a-woman-looking-outside-a-window-while-sitting-on-a-table-7272595/",
+      "url": "https://images.pexels.com/photos/7272595/pexels-photo-7272595.jpeg",
+      "credit": "Kaboompics.com",
+      "licence": "Pexels License",
+      "licenceUrl": "https://www.pexels.com/license/",
+      "aspect": "3:4",
+      "ev": -18,
+      "alt": "A woman seated on a small table by a window with a sheer curtain, looking out"
+    },
+    {
+      "key": "home-philosophy",
+      "slot": "Home §4 Our Philosophy: roots of a great tropical tree",
+      "page": "https://www.pexels.com/photo/majestic-kapok-tree-with-massive-buttress-roots-38729727/",
+      "url": "https://images.pexels.com/photos/38729727/pexels-photo-38729727.jpeg",
+      "credit": "Joaquin Reyes Ramos",
+      "licence": "Pexels License",
+      "licenceUrl": "https://www.pexels.com/license/",
+      "aspect": "3:4",
+      "focus": "bottom",
+      "ev": 0,
+      "alt": "Buttress roots of a large kapok tree on a forest floor, a vine wound around the trunk"
+    },
+    {
+      "key": "home-begin-conversation",
+      "slot": "Home §5 Begin the Conversation: a call made from home",
+      "page": "https://www.pexels.com/photo/a-woman-sitting-on-a-window-bench-talking-on-the-phone-6951776/",
+      "url": "https://images.pexels.com/photos/6951776/pexels-photo-6951776.jpeg",
+      "credit": "Artem Podrez",
+      "licence": "Pexels License",
+      "licenceUrl": "https://www.pexels.com/license/",
+      "aspect": "3:4",
+      "ev": -28,
+      "alt": "A woman sitting on a window seat talking on a mobile phone"
     }
   ]
 }
