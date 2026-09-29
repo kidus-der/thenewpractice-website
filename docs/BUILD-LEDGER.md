@@ -678,7 +678,7 @@ Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its 
 | id | status | depends_on | task | branch | port |
 |---|---|---|---|---|---|
 | R0 | doing (resumed) | — | Foundation: shorter title pages, curation layer, rule and doc updates | round1/r0-foundation | 3401 |
-| R1 | doing (resumed) | — | Images: source, grade and log pictures matched to their text | round1/r1-images | 3402 |
+| R1 | done | — | Images: source, grade and log pictures matched to their text | round1/r1-images | 3402 |
 | R2 | doing (resumed) | — | Footer: links, © line, small mark | round1/r2-footer | 3403 |
 | R7 | done | — | Palettes: ten lighter palettes + capture tooling | round1/r7-palettes | 3407 |
 | R3 | todo | R0, R1 | Home: shorter; Who We Help list left, fixed image right | round1/r3-home | 3404 |
@@ -735,3 +735,9 @@ Owner paused the run. Each task's resume notes (done, remaining, decisions, gotc
 
 - Merged `f939e0d`. Ten palettes in `design/palettes/palettes.json` (deep: Jungle Shade, Cenote, Clay; light: Limestone, Sage, Sea Glass, Sand Dune, Mist, Shell, Linen); `CONTRAST.md` all ten pass (text AA, accent 3:1 as a mark). Tooling: `node scripts/palettes/capture.mjs [--palettes=…] [--routes=…]` against a production server on 3417; `contrast.mjs [--check]`. Main session read Current / Sea Glass / Cenote home captures: correct recolour, chrome follows, images regraded. `src/` untouched; the agent's single `verify` run hit AssessmentForm 5 s timeouts under machine load (steps pass separately); main session re-ran lint + typecheck on the merge.
 - Findings for later: form errors are set in the accent (2.77:1 on bone today) — move `.field__error` to ink (R6 touches the forms); Current's accent fails 3:1 as a mark on bone/sand and the hero eyebrow/tagline at 0.72 bone fall under 4.5 (estimate); GroundManager hard-codes the dark ground → bone pairing and `--c-canopy` doubles as ink — a real palette switch needs `--ground-dark-fg` and a separate ink token (future palette task, not this round).
+
+### R1 — accepted (2026-09-28)
+
+- Merged `a5d2a0b`: 32 Pexels frames, one per slot, graded through the pipeline's own grade; register in `design/ROUND1-IMAGE-SLOTS.md`; ASSETS and STOCK-SOURCES round-1 sections; docs/02 and docs/08 imagery lines now allow calm candid adults, kept unidentifiable beside crisis, trauma, addiction and mental-health text; `left`/`right` crop positions added to `prepare-assets.mjs`. Main session read the contact sheet: consistent grade, each frame fits its slot.
+- For R3/R4: six frames exceed the 120 kB budget (`home-philosophy` 404k, `about-ceiba` 265k, `process-lead-clinician` 173k, `about-practice` 155k, `fees` 154k, `about-founder` 129k) — add them to `plateQuality()` when wiring. Repeated motifs to avoid placing side by side: bench facing the sea (`about-founder`, `service-executive-health-and-burnout`), phone at a window (`home-begin-conversation`, `process-first-conversation`). Weakest: `team-index`, `services-index` crop.
+- CLAUDE.md §6a rows owed (added after R0 merges): people in pictures; extra crop positions.
