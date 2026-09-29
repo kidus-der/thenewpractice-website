@@ -23,35 +23,20 @@ export const RESIDENCES: ResidencesPage = {
   eyebrow: `${P}The residence`,
   // l.293
   lead: `${P}A comfortable home where treatment and everyday life naturally exist together.`,
+  // Round 1 (R4d): one section of three short paragraphs where there were
+  // three sections of two; the chef, the concierge and the security the
+  // amenities already list are not repeated in prose.
   sections: [
     {
       id: 'the-house',
       title: `${P}The house`,
       paragraphs: [
-        // l.291
-        `${P}On arrival, you will be welcomed into your private residence in Puerto Aventuras.`,
         // l.303
         `${P}One of our clinicians lives in the residence with you.`,
-      ],
-    },
-    {
-      id: 'the-day',
-      title: `${P}The day`,
-      paragraphs: [
-        // l.324
-        `${P}Begin each morning in the calm of the Caribbean. Breakfast is then prepared by your private chef, with each meal designed to support your nutritional needs, physical health, recovery, and overall wellbeing.`,
-        // l.330
-        `${P}There are no crowded waiting rooms, institutional routines, or competing priorities.`,
-      ],
-    },
-    {
-      id: 'privacy',
-      title: `${P}Privacy`,
-      paragraphs: [
+        // l.324, l.330
+        `${P}Begin each morning in the calm of the Caribbean. There are no crowded waiting rooms, institutional routines, or competing priorities.`,
         // l.182
         `${P}Puerto Aventuras is a private gated community on Mexico’s Riviera Maya.`,
-        // l.752, l.771–772
-        `${P}Depending upon individual needs, your team may include concierge and client services, and transportation and security.`,
       ],
     },
   ],
