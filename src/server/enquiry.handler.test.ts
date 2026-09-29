@@ -40,10 +40,15 @@ function captureLogger(): { logger: Logger; lines: () => readonly Record<string,
   return { logger, lines: () => raw.map((l) => JSON.parse(l) as Record<string, unknown>) }
 }
 
-const deps = (adapter: MailAdapter, logger: Logger) => ({ adapter, logger, now: () => NOW })
+const deps = (adapter: MailAdapter, logger: Logger) => ({
+  adapter,
+  logger,
+  site: 'thenewpractice.health',
+  now: () => NOW,
+})
 
 describe('handleEnquiry', () => {
-  it('sends a valid enquiry through the adapter and reports sent', async () => {
+  it('renders the enquiry as an email, sends it through the adapter and reports sent', async () => {
     const { adapter, send } = fakeAdapter()
     const { logger, lines } = captureLogger()
 
@@ -51,14 +56,18 @@ describe('handleEnquiry', () => {
 
     expect(result).toEqual({ status: 'sent' })
     expect(send).toHaveBeenCalledTimes(1)
-    const sent = send.mock.calls[0]?.[0] as unknown as Record<string, unknown>
+    const sent = send.mock.calls[0]?.[0]
     expect(sent).toMatchObject({
-      name: 'Ada Lovelace',
-      email: 'ada@example.com',
-      enquiringFor: 'self',
+      kind: 'enquiry',
+      subject: 'Enquiry: Self',
+      replyTo: 'ada@example.com',
+      facts: { enquiringFor: 'self', preferredContact: 'email', hasTelephone: false },
     })
-    expect(sent).not.toHaveProperty('website')
-    expect(sent).not.toHaveProperty('startedAt')
+    expect(sent?.html).toContain('Ada Lovelace')
+    expect(sent?.text).toContain('A few words.')
+    expect(sent?.text).toContain('thenewpractice.health')
+    expect(JSON.stringify(sent?.facts)).not.toMatch(/Ada|example\.com|few words/)
+    expect(sent?.text).not.toContain(String(NOW))
     expect(lines().some((l) => l.event === 'enquiry.sent' && l.id === 'id_1')).toBe(true)
   })
 

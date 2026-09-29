@@ -34,7 +34,7 @@ import { mailHref, telHref } from '@/lib/contact'
 import { Reveal } from '@/motion/Reveal'
 import { D, STAGGER } from '@/motion/tokens'
 import { submitEnquiry } from '@/server/enquiry.action'
-import { INITIAL_ENQUIRY_RESULT } from '@/server/enquiry.handler'
+import { IDLE } from '@/server/results'
 import {
   enquiryFormSchema,
   type EnquiryFieldErrors,
@@ -110,7 +110,7 @@ function Confirmation() {
 }
 
 export function EnquiryForm({ headingId }: { headingId: string }) {
-  const [result, formAction, isPending] = useActionState(submitEnquiry, INITIAL_ENQUIRY_RESULT)
+  const [result, formAction, isPending] = useActionState(submitEnquiry, IDLE)
   const reduced = useReducedMotion()
   const startedAt = useStartedAt()
   const hydrated = startedAt !== ''
