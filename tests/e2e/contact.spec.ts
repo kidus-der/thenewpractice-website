@@ -7,6 +7,7 @@ import { BRAND } from '../../src/content/brand'
 import { ENQUIRY } from '../../src/content/enquiry'
 import { CONTACT_CURATED as CONTACT } from '../../src/content/curated/contact'
 import { MEDIA } from '../../src/content/media'
+import { PALETTE } from '../../src/lib/tokens'
 import { ENQUIRY_MIN_ELAPSED_MS } from '../../src/server/enquiry.schema'
 import {
   expect,
@@ -24,6 +25,8 @@ const MAX_TABS = 40
 const TIMING_MARGIN_MS = 400
 /** How long a failed submission is given to (not) produce a confirmation. */
 const QUIET_MS = 1500
+/** --c-canopy as the computed colour an error line on the bone sheet should have. */
+const INK = `rgb(${(PALETTE.canopy.slice(1).match(/../g) ?? []).map((h) => parseInt(h, 16)).join(', ')})`
 
 const textbox = (page: import('@playwright/test').Page, name: string) =>
   page.getByRole('textbox', { name })
@@ -202,6 +205,8 @@ test.describe('contact', () => {
     await expect(alert).toBeVisible()
     await expect(email).toHaveAttribute('aria-invalid', 'true')
     await expect(email).toHaveAttribute('aria-describedby', (await alert.getAttribute('id')) ?? '')
+    // In ink, not the accent: brass on the bone sheet is under AA for text (R7 finding, R6).
+    await expect(alert).toHaveCSS('color', INK)
 
     await page.getByRole('button', { name: ENQUIRY.submit }).click()
     await page.waitForTimeout(QUIET_MS)

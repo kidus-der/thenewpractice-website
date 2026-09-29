@@ -50,6 +50,8 @@ import { ROUTE_SEO, assessmentSeo, serviceSeo } from './seo'
 import { sentences } from './sentences'
 import { BRAND } from './brand'
 import { ENQUIRY } from './enquiry'
+import { EMAIL } from './email'
+import { ASSESSMENT_SEND } from './assessment-send'
 import {
   UI,
   UI_ASSESSMENT,
@@ -374,6 +376,8 @@ const OUR_MODULES: Record<string, unknown> = {
   ui: { UI, UI_FOOTER, UI_INTERIOR, UI_RESIDENCES, UI_HOME, UI_TREATMENT, UI_PROFILE },
   'ui-assessment': UI_ASSESSMENT,
   enquiry: ENQUIRY,
+  email: EMAIL,
+  'assessment-send': ASSESSMENT_SEND,
   nav: NAV,
   residences: RESIDENCES,
   legal: { privacy: PRIVACY, terms: TERMS },

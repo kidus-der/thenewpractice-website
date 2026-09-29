@@ -192,7 +192,7 @@ On hover: `scale(1.03)` on the inner `<img>` only, `--d-slow`, `--e-out-expo`, w
 
 ### Form fields
 
-Bottom-rule only. The label overlays the baseline and floats up on focus or when filled; a brass underline wipes in from the left on focus (`--d-base`, `--e-out-expo`). Errors sit outside the control, in `--accent`, in a `role="alert"` line per field. Radius `--radius-input` (`2px`) — the one radius on the site.
+Bottom-rule only. The label overlays the baseline and floats up on focus or when filled; a brass underline wipes in from the left on focus (`--d-base`, `--e-out-expo`). Errors sit outside the control, in ink (`--fg`; brass on bone is 2.77:1, under AA for text, so the accent marks the underline and never the words), in a `role="alert"` line per field. One checkbox exists (`CheckField`, the self-assessment's consent, round 1 R6): a 16px hairline square in `--fg-muted` (the control's boundary clears 3:1), filled with a smaller brass square when ticked, the sentence beside it at `--t-small` in ink. Radius `--radius-input` (`2px`) — the one radius on the site.
 
 ---
 
