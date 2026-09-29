@@ -108,3 +108,14 @@ export function biographyLead(member: TeamMember, max: number = LEAD_MAX_CHARS):
     ? { lead: opening, paragraphs: rest }
     : { lead: undefined, paragraphs: [...member.paragraphs] }
 }
+
+/**
+ * The whole biography in the body, no lead (round 1, R4c). The curated
+ * biographies are a paragraph or two; a lifted opening lengthened the title
+ * page until the biography started below the fold at 390 and 768 wide, and
+ * the title page already carries the name, credentials and role.
+ */
+export const wholeBiography = (member: TeamMember): BiographyLead => ({
+  lead: undefined,
+  paragraphs: [...member.paragraphs],
+})

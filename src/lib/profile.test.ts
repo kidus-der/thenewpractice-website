@@ -6,6 +6,7 @@ import { TEAM } from '@/content/team'
 import {
   LEAD_MAX_CHARS,
   biographyLead,
+  wholeBiography,
   initials,
   memberBySlug,
   profileNumeral,
@@ -164,5 +165,20 @@ describe('biographyLead', () => {
     // Every opening paragraph is a full introduction (169–336 characters); the
     // rule is here for the day the client supplies opening lines (CONTENT-GAPS C8).
     for (const m of TEAM) expect(biographyLead(m).lead).toBeUndefined()
+  })
+})
+
+describe('wholeBiography', () => {
+  const member = { ...first, paragraphs: ['A short opening line.', 'The rest.'] }
+
+  it('keeps every paragraph in the body and lifts no lead', () => {
+    expect(wholeBiography(member)).toEqual({
+      lead: undefined,
+      paragraphs: ['A short opening line.', 'The rest.'],
+    })
+  })
+
+  it('returns a new array', () => {
+    expect(wholeBiography(member).paragraphs).not.toBe(member.paragraphs)
   })
 })

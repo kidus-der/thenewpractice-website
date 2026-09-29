@@ -1,6 +1,6 @@
 /**
  * T6 — Index (docs/05 §T6, plan §3.3). A list that reads as a composition:
- * the title page, the collection's own intro copy as long-read sections, the
+ * the title page (with a plate when the route names one), the collection's own intro copy as long-read sections, the
  * numbered list, any sections the document places after the list, the
  * previous/next rail, the closing band. Takes a `Page` for the title page,
  * the sections around the list, and the rows; contains no copy, no route
@@ -36,6 +36,8 @@ export type IndexListSpec = Readonly<{
 
 export type IndexTemplateProps = {
   page: Page
+  /** The title page's picture, beside the lead (round 1: R4b services, R4c team; a 3:4 frame sits at .p-aside). */
+  plate?: MediaKey
   /** Sections rendered between the title page and the list, in order. */
   before?: readonly Section[]
   /** Sections the document places after the list. */
@@ -44,8 +46,6 @@ export type IndexTemplateProps = {
   grounds?: Readonly<Record<string, Ground>>
   list: IndexListSpec
   prevNext?: PrevNext
-  /** The title page's picture, beside the lead (round 1). */
-  plate?: MediaKey
 }
 
 function IndexSection({ spec, id, n }: { spec: IndexListSpec; id: string; n: string }) {
@@ -77,12 +77,12 @@ function IndexSection({ spec, id, n }: { spec: IndexListSpec; id: string; n: str
 
 export function IndexTemplate({
   page,
+  plate,
   before = [],
   after = [],
   grounds,
   list,
   prevNext,
-  plate,
 }: IndexTemplateProps) {
   const listPosition = before.length + 1
   const bandPosition = listPosition + after.length + 1

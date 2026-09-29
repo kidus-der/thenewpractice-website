@@ -20,6 +20,7 @@ import { PERSONAL_MESSAGE_CURATION } from './personal-message'
 import { PROCESS_CURATION } from './process'
 import { SELF_ASSESSMENT_CURATION } from './self-assessment'
 import { SERVICES_CURATION, SERVICES_PAGE_CURATION } from './services'
+import { TEAM_CURATION, TEAM_PAGE_CURATION } from './team'
 
 export const CURATIONS: readonly Curation<unknown>[] = [
   HOME_CURATION,
@@ -29,5 +30,7 @@ export const CURATIONS: readonly Curation<unknown>[] = [
   FEES_CURATION,
   SERVICES_PAGE_CURATION,
   SERVICES_CURATION,
+  TEAM_PAGE_CURATION,
+  TEAM_CURATION,
   SELF_ASSESSMENT_CURATION,
 ]

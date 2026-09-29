@@ -91,6 +91,7 @@ Then list `ABOUT_CURATION` in `CURATIONS` (`curated/index.ts`; a test fails when
 - **Checks.** A reference to a section, paragraph, sentence, list item or definition that no longer exists is left out of the value and reported; every `ours()` string is run through `curated/voice.ts`. Both fail `npm test` and `npm run content:check`.
 - **Bundles.** A route imports its own curation module, never `curated/index.ts`; the layer has no Zod and is safe in a client component.
 - **Curated pages.** `curated/home.ts` (`HOME_CURATION`, round 1 R3): client sentences only, one or two per section; its test pins what renders.
+- **Team.** `curated/team.ts` (round 1 R4c): `TEAM_PAGE_CURATION` (the index: a one-sentence lead, the roles list with one client sentence) and `TEAM_CURATION` (each biography to one or two short paragraphs of the client's sentences, joined within a paragraph; one string of ours, Lowell Monkhouse's graduate school, because the client's sentence has no subject). Katia Rhainds's _Origin_ sentence (an en dash in a method's name) and Nicolas Neduchal's _Intuitive Reconnection Massage™_ sentence do not render. SEO descriptions and structured data still read the full `team.ts`.
 
 ## Regenerating
 
