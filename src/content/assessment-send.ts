@@ -40,8 +40,6 @@ export const ASSESSMENT_SEND = {
     email: ENQUIRY.errors.email,
     telephone: ENQUIRY.errors.telephone,
     preferredContact: ENQUIRY.errors.preferredContact,
-    /** Neither detail given and no preference chosen. */
-    contact: 'Please give an email address or a telephone number.',
     consent: 'Please confirm that you would like to send your answers.',
   },
 
