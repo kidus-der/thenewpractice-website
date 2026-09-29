@@ -52,9 +52,10 @@ main > section.contact-open {
   gap: var(--s-6);
 }
 /* the 3:4 picture is capped to part of the column, as ContentSection caps
-   its portraits, so the letter stays mostly air (docs/03 §4) */
+   its portraits and HomePlate its plate, so the letter stays mostly air
+   (docs/03 §4); the cap keeps it modest where the column is the full width */
 .contact__plate {
-  width: 62%;
+  width: min(62%, 360px);
 }
 .contact__list-heading {
   margin-block: var(--s-4) var(--s-4);
