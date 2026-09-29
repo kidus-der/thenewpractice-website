@@ -25,8 +25,9 @@ export const ASSESSMENT_SEND = {
 
   fields: {
     name: ENQUIRY.fields.name,
-    email: 'Email',
-    telephone: 'Telephone',
+    /** Not just "Email": the preferred-contact choice already has an option by that name. */
+    email: 'Email address',
+    telephone: 'Telephone number',
     preferredContact: ENQUIRY.fields.preferredContact,
   },
   /** Under the preferred-contact choice: which of the two details is needed. */

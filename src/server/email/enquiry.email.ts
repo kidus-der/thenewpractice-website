@@ -47,7 +47,7 @@ function lines(enquiry: EnquiryEmailInput, received: string): readonly Line[] {
   const preferred = ENQUIRY.options.preferredContact[enquiry.preferredContact]
   const all: readonly (Line | null)[] = [
     [ENQUIRY.fields.name, enquiry.name, escapeHtml(enquiry.name)],
-    [ENQUIRY.fields.email, enquiry.email, actionLink(`mailto:${enquiry.email}`, enquiry.email)],
+    [ASSESSMENT_SEND.fields.email, enquiry.email, actionLink(`mailto:${enquiry.email}`, enquiry.email)],
     enquiry.telephone
       ? [
           ASSESSMENT_SEND.fields.telephone,

@@ -7,7 +7,7 @@ import { cn } from '@/lib/cn'
  *
  * Bottom rule only; the label sits on the baseline and floats up on focus
  * or once filled; a brass underline wipes in from the left on focus. The
- * error line lives outside the control, in --accent, as a `role="alert"`
+ * error line lives outside the control, in ink (--fg), as a `role="alert"`
  * region that is always present so its arrival announces and never shifts
  * the layout. No user-facing literal here: every string arrives as a prop.
  */
@@ -157,5 +157,36 @@ export function ChoiceField({ id, label, error, className, options, input }: Cho
       </div>
       <FieldError id={id} error={error} />
     </fieldset>
+  )
+}
+
+type CheckFieldProps = Shell & {
+  /** Spread onto the checkbox: name, value, required, register(). */
+  input: Omit<ComponentPropsWithRef<'input'>, 'id' | 'type' | 'className'>
+}
+
+/**
+ * One checkbox with its sentence beside it: a hairline square in the muted
+ * ink, filled with a small brass square when ticked. The native checkbox
+ * stays in the document, unpainted, so Space toggles it and the label is its
+ * name. Used for the self-assessment's one-line consent (round 1, R6).
+ */
+export function CheckField({ id, label, error, className, input }: CheckFieldProps) {
+  return (
+    <div className={cn('field check', className)}>
+      <label className="check__option" htmlFor={id}>
+        <input
+          id={id}
+          className="choice__input"
+          type="checkbox"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId(id) : undefined}
+          {...input}
+        />
+        <span className="check__box" aria-hidden="true" />
+        <span className="check__label t-small">{label}</span>
+      </label>
+      <FieldError id={id} error={error} />
+    </div>
   )
 }

@@ -1,0 +1,68 @@
+/* ==========================================================================
+   Send my answers to the practice (round 1, R6; docs/05 §Self-assessment).
+   Beneath the result, after a hairline: the line action, then the form in
+   the enquiry form's grammar (fields on their rules, choices as line-action
+   toggles, one consent line, Send). Tokens for colour, type, space, motion.
+   ========================================================================== */
+
+.assessment-send {
+  width: 100%;
+  margin-top: var(--s-7);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.assessment-send__form {
+  width: 100%;
+  max-width: 36rem;
+  margin-top: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+.assessment-send__intro {
+  max-width: 46ch;
+  color: var(--fg-muted);
+}
+/* the hint reads with the choice above it: pulled up to sit under its rule */
+.assessment-send__hint {
+  margin-top: calc(var(--s-5) * -1 + var(--s-2));
+  max-width: 46ch;
+  color: var(--fg-muted);
+}
+.assessment-send__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+  margin-top: var(--s-3);
+}
+.assessment-send .line-action[aria-disabled='true'] {
+  color: var(--fg-muted);
+  cursor: progress;
+}
+.assessment-send__failed {
+  max-width: 46ch;
+}
+/* Off-canvas, not display:none: a form-filler still sees it, a person never does. */
+.assessment-send__hp {
+  position: absolute;
+  left: -200vw;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.assessment-send__sent {
+  outline: none;
+}
+.assessment-send__sent-copy {
+  max-width: 24ch;
+}
+
+@media print {
+  .assessment-send {
+    display: none;
+  }
+}

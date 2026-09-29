@@ -16,8 +16,10 @@
  * not move on, so the keyboard model stays the browser's own.
  *
  * The answers are one immutable array in a reducer (src/lib/assessment.ts)
- * and nothing else: there is no <form> to submit them, nothing is written to
- * storage, cookies or the URL, and no request is made.
+ * and nothing else: the sheet is not a <form>, nothing is written to storage,
+ * cookies or the URL, and no request is made. Beneath a revealed result,
+ * AssessmentSend offers to send the answers to the practice (round 1, R6);
+ * only a visitor who opens it, fills it in and submits it makes a request.
  */
 import { useEffect, useId, useReducer, useRef, type KeyboardEvent } from 'react'
 import './AssessmentForm.css'
@@ -34,10 +36,10 @@ import {
   type Answer,
   type FactAnswer,
 } from '@/lib/assessment'
-import { scrollTo } from '@/motion/SmoothScroll'
-import { D } from '@/motion/tokens'
 import { AssessmentQuestion } from './AssessmentQuestion'
+import { bringIntoView } from './assessmentScroll'
 import { AssessmentResult } from './AssessmentResult'
+import { AssessmentSend } from './AssessmentSend'
 
 type Props = {
   assessment: Assessment
@@ -51,23 +53,10 @@ type Props = {
   enquire: NavItem
 }
 
-/** A question already this comfortably in view is not scrolled to (fractions of the viewport). */
-const COMFORT_TOP = 0.2
-const COMFORT_BOTTOM = 0.85
-/** Where a question scrolled to comes to rest: its top this far down the viewport. */
-const REST_AT = 0.3
-
 /** The first unanswered question after `from`, wrapping to the start; -1 when none is left. */
 export function nextUnanswered(answers: readonly Answer[], from: number): number {
   const order = [...answers.keys()].map((i) => (from + 1 + i) % answers.length)
   return order.find((i) => answers[i] === null) ?? -1
-}
-
-function bringIntoView(el: HTMLElement) {
-  const rect = el.getBoundingClientRect()
-  const vh = window.innerHeight
-  if (rect.top >= vh * COMFORT_TOP && rect.bottom <= vh * COMFORT_BOTTOM) return
-  scrollTo(Math.max(0, rect.top + window.scrollY - vh * REST_AT), 0, D.slow)
 }
 
 export function AssessmentForm({
@@ -170,16 +159,19 @@ export function AssessmentForm({
       </div>
 
       {state.revealed && score.band && score.average !== null && (
-        <AssessmentResult
-          average={score.average}
-          band={score.band}
-          interpretation={assessment.interpretation}
-          disclaimer={disclaimer}
-          consultation={consultation}
-          enquire={enquire}
-        />
+        <>
+          <AssessmentResult
+            average={score.average}
+            band={score.band}
+            interpretation={assessment.interpretation}
+            disclaimer={disclaimer}
+            consultation={consultation}
+            enquire={enquire}
+          />
+          {/* Opt-in (R6): nothing is sent unless the visitor opens this and submits it. */}
+          <AssessmentSend slug={assessment.slug} answers={state.answers} />
+        </>
       )}
-      {/* R6: the opt-in "send my answers" block sits here, beneath the result. */}
     </div>
   )
 }
