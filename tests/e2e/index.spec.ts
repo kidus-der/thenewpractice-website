@@ -4,12 +4,16 @@
  * Every project, every route: the h1 and the intro sections in document
  * order; exactly 11 / 11 / 10 rows, each one link to the right collection
  * href; the travelling glow follows keyboard focus; no plate where no row
- * has an image; axe scoped to <main>; a full-page capture after a reveal
- * pass. Reduced-motion project: the glow lands instantly.
+ * has an image, and no picture but the title page's where the route gives
+ * one (round 1: the services index); axe scoped to <main>; a full-page
+ * capture after a reveal pass. Reduced-motion project: the glow lands
+ * instantly.
  */
 import { ASSESSMENTS, ASSESSMENTS_PAGE } from '../../src/content/assessments'
+import { SERVICES_PAGE_CURATED } from '../../src/content/curated/services'
+import { MEDIA, type MediaKey } from '../../src/content/media'
 import { routes } from '../../src/content/nav'
-import { SERVICES, SERVICES_PAGE } from '../../src/content/services'
+import { SERVICES } from '../../src/content/services'
 import { TEAM, TEAM_PAGE } from '../../src/content/team'
 import { UI_INDEX, UI_INTERIOR } from '../../src/content/ui'
 import {
@@ -42,6 +46,10 @@ type Fixture = Readonly<{
   /** Section titles expected as h2s before the list, in order. */
   introTitles: readonly string[]
   rows: readonly IndexRow[]
+  /** The title page's lead and picture, and the list's introducing line, where the route sets them. */
+  lead?: string
+  plate?: MediaKey
+  listLead?: string
 }>
 
 const titled = (sections: readonly { title?: string }[]): readonly string[] =>
@@ -51,9 +59,12 @@ const FIXTURES: readonly Fixture[] = [
   {
     name: 'clinical-services',
     route: routes.clinicalServices,
-    title: SERVICES_PAGE.title,
-    introTitles: titled(SERVICES_PAGE.sections),
+    title: SERVICES_PAGE_CURATED.page.title,
+    introTitles: titled(SERVICES_PAGE_CURATED.page.sections),
     rows: rowsFromServices(SERVICES),
+    lead: SERVICES_PAGE_CURATED.page.lead,
+    plate: 'services-index',
+    listLead: SERVICES_PAGE_CURATED.listLead,
   },
   {
     name: 'team',
@@ -99,6 +110,22 @@ for (const fixture of FIXTURES) {
         () => document.documentElement.scrollWidth - document.documentElement.clientWidth
       )
       expect(overflow).toBe(0)
+    })
+
+    test('opens with the lead and the picture the route gives, then the list', async ({ page }) => {
+      test.skip(!fixture.lead && !fixture.plate, 'this route sets neither')
+      const intro = page.locator('main > :first-child')
+      if (fixture.lead) await expect(intro.locator('.page-intro__lead')).toHaveText(fixture.lead)
+      if (fixture.plate) {
+        const img = intro.locator('.page-intro__plate img')
+        await expect(img).toHaveCount(1)
+        await expect(img).toHaveAttribute('alt', MEDIA[fixture.plate].alt)
+      }
+      // Round 1: the list follows the title page directly.
+      await expect(page.locator('main > :nth-child(2)')).toHaveClass(/index-section/)
+      if (fixture.listLead) {
+        await expect(page.locator('.index-section__lead')).toHaveText(fixture.listLead)
+      }
     })
 
     test('renders the intro sections as headings in document order', async ({ page }) => {
@@ -184,7 +211,9 @@ for (const fixture of FIXTURES) {
     test('shows no plate when no row has an image', async ({ page }) => {
       await expect(page.locator('.hover-plate')).toHaveCount(0)
       await expect(page.locator('.index-list__thumb')).toHaveCount(0)
-      await expect(page.locator('main img')).toHaveCount(0)
+      await expect(page.locator('.index-section img')).toHaveCount(0)
+      // The only picture is the title page's, where the route gives one.
+      await expect(page.locator('main img')).toHaveCount(fixture.plate ? 1 : 0)
     })
 
     test('links to the previous and next pages in reading order', async ({ page }) => {

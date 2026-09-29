@@ -2,7 +2,10 @@
  * The T3 Treatment template on four of its eleven routes (Task 13). docs/05
  * §T3, docs/09 §2 and §5.
  *
- * Every project, four fixtures: the h1 on bone; the body's section order and
+ * Round 1 (R4b): the pages render the curated services (`curated/services.ts`)
+ * with the service's picture on the title page.
+ *
+ * Every project, four fixtures: the h1 on bone with its lead and picture; the body's section order and
  * numerals equal to `serviceBlocks()`; list counts equal to the content;
  * definitions rendered open with nothing expandable; three related rows in
  * wrap-around order; the rail to the neighbouring services; the JSON-LD
@@ -11,13 +14,15 @@
  * pass. Desktop project only: every one of the eleven routes answers 200
  * with its title as the h1.
  */
+import { SERVICES_CURATED as SERVICES } from '../../src/content/curated/services'
+import { MEDIA } from '../../src/content/media'
 import { routes, serviceHref } from '../../src/content/nav'
-import { SERVICES } from '../../src/content/services'
 import { UI_INTERIOR, UI_TREATMENT } from '../../src/content/ui'
 import { capitaliseFirst } from '../../src/lib/interior'
 import {
   relatedServices,
   serviceBlocks,
+  servicePlate,
   servicePrevNext,
   type TreatmentBlock,
 } from '../../src/lib/treatment'
@@ -80,6 +85,16 @@ for (const slug of FIXTURE_SLUGS) {
       await expect(intro).toHaveAttribute('data-n', String(fixture.order).padStart(2, '0'))
       await expect(intro.locator('.page-intro__lead')).toHaveText(fixture.intro[0] ?? '')
       expectNoConsoleErrors(page)
+    })
+
+    test('sets the service’s picture on the title page and none in the body', async ({ page }) => {
+      const plate = servicePlate(slug)
+      if (!plate) throw new Error(`media.ts has no frame for ${slug}`)
+      const img = page.locator('main > :first-child .page-intro__plate img')
+      await expect(img).toHaveCount(1)
+      await expect(img).toHaveAttribute('alt', MEDIA[plate].alt)
+      await expect(img).toBeVisible()
+      await expect(page.locator('main img')).toHaveCount(1)
     })
 
     test('renders the blocks in the document order serviceBlocks() derives', async ({ page }) => {
