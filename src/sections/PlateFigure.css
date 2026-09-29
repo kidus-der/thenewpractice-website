@@ -28,17 +28,7 @@
   aspect-ratio: 21 / 9;
 }
 
-/* caption left, credit right — one line at any width that allows it; the
-   caption register is --fg-muted (docs/03 §1 "captions, metadata") */
+/* the caption register is --fg-muted (docs/03 §1 "captions, metadata") */
 .plate-figure__caption {
   color: var(--fg-muted);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  column-gap: var(--s-4);
-  row-gap: var(--s-1);
-}
-.plate-figure__credit {
-  margin-left: auto;
 }

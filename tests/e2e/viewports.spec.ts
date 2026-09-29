@@ -6,6 +6,7 @@
  * the screenshots; this is the sweep that keeps the whole route set honest.
  */
 import { allRoutes, routes } from '../../src/content'
+import { MEDIA } from '../../src/content/media'
 import { NOINDEX_ROUTES } from '../../src/content/nav'
 import { expect, expectNoConsoleErrors, revealAll, settleMotion, test } from './helpers'
 
@@ -83,6 +84,10 @@ const titlePageAgainstFold = (page: import('@playwright/test').Page) =>
  */
 const AWAITING_CURATION: Readonly<Record<string, string>> = {}
 
+const PHOTO_CREDITS = [
+  ...new Set(Object.values(MEDIA).map((frame) => frame.credit.toLowerCase())),
+]
+
 test.describe('viewports', () => {
   for (const path of ROUTES) {
     test(`${path} has no horizontal overflow, nothing under the header, the rail in the margin`, async ({
@@ -119,6 +124,16 @@ test.describe('viewports', () => {
       expect(fold.lockup, 'px the title page lockup runs below the fold').toBeLessThan(0)
       if (path in AWAITING_CURATION) return
       expect(fold.next, 'px the next block starts below the fold').toBeLessThan(0)
+    })
+
+    // Round 1 (owner decision): no photographer credit renders under any picture.
+    test(`${path} shows no photographer credit`, async ({ page }) => {
+      await page.goto(path)
+      await settleMotion(page)
+      const text = ` ${(await page.locator('body').innerText()).toLowerCase().replace(/\s+/g, ' ')} `
+      // whole words only: one credit ("Nati") is also the start of "International"
+      const shown = PHOTO_CREDITS.filter((credit) => text.includes(` ${credit} `))
+      expect(shown).toEqual([])
     })
   }
 

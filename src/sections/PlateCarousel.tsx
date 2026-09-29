@@ -132,7 +132,6 @@ function Item({ plate, total, duplicate, position }: ItemProps) {
           <span>{plate.caption}</span>
           <span className="plate-carousel__meta t-eyebrow">
             <span aria-hidden="true">{plateCounter(plate.index, total)}</span>
-            <span className="plate-carousel__credit">{plate.credit}</span>
           </span>
         </figcaption>
       </figure>
