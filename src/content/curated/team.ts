@@ -22,9 +22,9 @@
  * and Nicolas Neduchal's _Intuitive Reconnection Massage™_ sentence (the ™
  * stays out of running text, CONTENT-GAPS §3).
  */
-import type { Page, Section } from '../schemas'
-import { TEAM_PAGE } from '../team'
-import { ALL, curate, sentencesOf } from './core'
+import type { Page, Section, TeamMember } from '../schemas'
+import { TEAM, TEAM_PAGE } from '../team'
+import { ALL, type Curator, type ItemPick, curate, ours, sentencesOf } from './core'
 
 const OPENING = 'intro'
 const ONE_TEAM = 'one-client-one-team'
@@ -53,4 +53,42 @@ export const TEAM_PAGE_CURATION = curate('teamPage', (c): Page => {
   }
 })
 
+/** One rendered paragraph: the picks, each resolved, joined by a space. */
+type Paragraph = readonly ItemPick[]
+
+/** Per member, in document order: the paragraphs that render. */
+const BIOGRAPHIES: Readonly<Record<string, readonly Paragraph[]>> = {
+  // the opening sentence restates the role line above it on the title page
+  'lowell-monkhouse': [
+    [
+      ours('Lowell is a graduate of the Hazelden Betty Ford Graduate School of Addiction Studies.'),
+      sentencesOf(0, [1]),
+    ],
+    [sentencesOf(4, [0]), sentencesOf(5, [1])],
+  ],
+  'nathaniel-bruce': [[sentencesOf(2, [0])], [sentencesOf(1, [0, 1])]],
+  'elena-vasquez-whitfield': [[0], [1]],
+  'justin-nolan': [[0], [sentencesOf(2, [0]), sentencesOf(3, [0])]],
+  'iona-hames': [[sentencesOf(5, [0])], [sentencesOf(2, [0]), sentencesOf(4, [0])]],
+  'richard-warren': [
+    [sentencesOf(0, [0])],
+    [sentencesOf(1, [1]), sentencesOf(2, [1]), sentencesOf(4, [0])],
+  ],
+}
+
+function biography(c: Curator, member: TeamMember): string[] {
+  const where = `${member.slug}.paragraphs`
+  const picks = BIOGRAPHIES[member.slug]
+  // a member the document adds later renders in full until curated (the unit test flags it)
+  if (picks === undefined) return c.texts(member.paragraphs, ALL, where)
+  return picks.map((paragraph, i) =>
+    c.texts(member.paragraphs, paragraph, `${where}[${i}]`).join(' ')
+  )
+}
+
+export const TEAM_CURATION = curate('team', (c): readonly TeamMember[] =>
+  TEAM.map((member) => ({ ...member, paragraphs: biography(c, member) }))
+)
+
 export const TEAM_PAGE_CURATED = TEAM_PAGE_CURATION.value
+export const TEAM_CURATED = TEAM_CURATION.value
