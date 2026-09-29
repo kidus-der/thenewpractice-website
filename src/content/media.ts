@@ -200,6 +200,69 @@ export const MEDIA = {
     "credit": "Iván Hernández-Cuevas",
     "licence": "Pexels License"
   },
+  "process-first-conversation": {
+    "src": "/media/process-first-conversation.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAABQBACdASoUABsAPu1gqE6ppSOiMBgMATAdiWcAvKQMiKz3XhdahBvMkxBAAP7loFlw3Rfsz1PxYLcpTAcvk7uP52LKbjLAECETrMP8oppnYG52aMdwlR0biC0lQ7Shha1w9GVDEWx194mq3VRCBlfMl7X2MZY+FKsu0XE0AAA=",
+    "alt": "A man seen from behind talking on the phone at a window over a misty view",
+    "credit": "Thirdman",
+    "licence": "Pexels License"
+  },
+  "process-lead-clinician": {
+    "src": "/media/process-lead-clinician.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAABQBQCdASoUABsAPuVcpk2pJSOiMAwBIByJZwDN/B7FZ422pMIqO8NO/Lp3RLtp+ZJROMAA/uv+jWFAoyMlIlDSOxA4up8Xon4wIx6r+vw3X8Dyg+uQ1i6jQGn+iZq+EqrYvxCu2wGFwEtx1sAPIk+zIDCimHGQ2nHVp6x3lOKAAAAA",
+    "alt": "Two people seen from behind walking along a garden path in low sun, a bench beside it",
+    "credit": "Javid M",
+    "licence": "Pexels License"
+  },
+  "process-typical-day": {
+    "src": "/media/process-typical-day.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAADQBACdASoUABsAPu1qsFAppaSiqAqpMB2JZwDOODHC4LQJWeqQdNRXeIl87ERAAADg1zREsuuw3T1tmotlyYF+muSSJSv6xXA81D7W5p4KI8S9GasIRUDnDiZa5quOiD/bT61HThG0MWXiRQgiT7OBmZLA1O3E6XL14hWVUduongT0RaATykPxW625yIHz5tgX77Asc8A1adxHpakGXex19jNbT+mIJwAAAA==",
+    "alt": "Two cups and a glass teapot on a round wooden table by a window",
+    "credit": "Letícia Alvares",
+    "licence": "Pexels License"
+  },
+  "process-family": {
+    "src": "/media/process-family.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAABQBQCdASoUABsAPu1srFEppaQiqAqpMB2JZwDC+Aq8ZOJpQyWST7LzHc56ua4DTpseXxAA/uvnuSwBXqTMYsUwRM3uv3N9FkcKb1mqHxAttsxDuQtt6im/WLxsovlP5cfACSUhapK9Kfu3z8OLmcOUGrJFg9qhykzt8BeLDRgy0uisePw3ObyzmMnceAxiHR9GFnRGxJXnpQB+Lsc9BEmNpIx/Fsa6slbRpgdiHjGLH9lKEPhHW0BuAQOsEhY+LAgAAA==",
+    "alt": "A mother talking with her adult son, both seated",
+    "credit": "Julia M Cameron",
+    "licence": "Pexels License"
+  },
+  "process-nutrition": {
+    "src": "/media/process-nutrition.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAABwBQCdASoUABsAPu1grFAppSQisBgIATAdiWcAwCgQ8CzNrPQicVcvQg0Tbm3kh5lhSNAAAP7i1yOzwoQIipIPQJiJFtwLdqL+vi0N0/lFRoEdDrSVk2wKiEzgcIqiXiBWbWJxh+YvGBEjYdcmxSQbai4tNNYFRTKHWIIk334hhEQhwz57f0hbtqwr16QUBkAAAA==",
+    "alt": "Hands laying ribbons of courgette and peas on a pastry base",
+    "credit": "damla selen demir",
+    "licence": "Pexels License"
+  },
+  "personal-message": {
+    "src": "/media/personal-message.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAABQBQCdASoUABsAPu1qrVCppaQiqAqpMB2JZwDKtBBWMsEgH1GPE4LxDj7gXo2LqcdGMwAA/SN0n+sFXt7LPnaFdamXXeDoMdgO4qpdOlSC0kGRzbZvBH1LXonOq289ZcE4/FQLcUzTEgwvekCVJfUlIlR6Kyn3zop8PK8iYnH8kdJeeHfXFgnAI9kzsqXBvMbtQ6Qt63GRTTdwu1AAAA==",
+    "alt": "A hand writing a letter on paper with a dip pen",
+    "credit": "cottonbro studio",
+    "licence": "Pexels License"
+  },
+  "fees": {
+    "src": "/media/fees.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAADwBACdASoUABsAPu1kqU2ppaOiMAgBMB2JZwDImBg7JSphYe/R6Czmzpb7oTvL7gAA/kaMPF0pMC8kQcYdrEGmCAL0KG7Qlpg4ieiKC5fhvhg/DcY3/Tw8D+KXvUntGe4WV9Pp8aSccIL5QYLcYhqmQXMpmJzFA2HdRkIs+dLXrvmcjR4tQo6JXFmYoPSwdBpICaoz5guyekVQ6DmO/5xYSAA=",
+    "alt": "A shaded veranda with a wooden daybed, ferns and potted plants",
+    "credit": "Ali Alcántara",
+    "licence": "Pexels License"
+  },
   "hero-surf-poster": {
     "src": "/media/hero-surf-poster.webp",
     "width": 2400,

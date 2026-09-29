@@ -453,6 +453,18 @@ Research date: 2026-09-28 (task R1). Governing brief: `docs/BUILD-LEDGER.md`, Ro
 | `about-sea` | Pexels 20703791, Diogo Miranda (https://www.pexels.com/photo/man-on-beach-at-dawn-20703791/) | Pexels 35120407 (lone walker at dawn; hills behind, which the Riviera Maya does not have), 36068262 (similar; figure too small) |
 | `about-jungle` | Pexels 38996760, Iván Hernández-Cuevas (https://www.pexels.com/photo/mystical-hanging-roots-in-yucatan-cenote-38996760/) | Pexels 34855022 (hidden jungle cenote; wide and busy), 14440966 (low-angle forest with light shafts; could be anywhere) |
 
+### Our Process, A Personal Message, Fees
+
+| Slot | Chosen | Alternates considered |
+| --- | --- | --- |
+| `process-first-conversation` | Pexels 7653765, Thirdman (https://www.pexels.com/photo/person-talking-on-the-phone-7653765/) | Pexels 10308472 (silhouette on the phone in an empty room; almost black), 7255320 (close profile; too much face for a first call) |
+| `process-lead-clinician` | Pexels 33490052, Javid M (https://www.pexels.com/photo/two-people-walking-in-a-sunlit-forest-path-33490052/) | Pexels 38029660 (two adults at an outdoor table; the 3:4 crop left one identifiable man with a brand name on his jacket), 32233857 (two men on a waterfront; tower blocks behind) |
+| `process-typical-day` | Pexels 31145148, Letícia Alvares (https://www.pexels.com/photo/warm-morning-coffee-scene-with-teacups-31145148/) | Pexels 2930966 (croissant and fruit on a round table; the papaya repeats Biochemical Restoration), 984860 (mug and plate; a café register) |
+| `process-family` | Pexels 8841344, Julia M Cameron (https://www.pexels.com/photo/a-man-and-woman-talking-together-8841344/) | Pexels 8848794 (mother and son over a photo album; busy wallpaper), 7317736 (mother and son, emotional; too theatrical) |
+| `process-nutrition` | Pexels 32069861, damla selen demir (https://www.pexels.com/photo/chef-preparing-gourmet-vegetable-tart-close-up-32069861/) | Pexels 37923422 (hands slicing onion; a knife close-up at 3:4), 8629083 (herbs over a board; a professional kitchen) |
+| `personal-message` | Pexels 6918482, cottonbro studio (https://www.pexels.com/photo/person-writing-on-white-paper-6918482/) | Pexels 5425602 (a hand writing on deckled paper; closer, less context), 6918490 (same series; a stack of books in frame) |
+| `fees` | Pexels 11145310, Ali Alcántara (https://www.pexels.com/photo/wood-framed-sofa-chair-11145310/) | Pexels 18129811 (timber deck with loungers under palms; reads holiday), 4917109 (already residence-04) |
+
 ### Considered and rejected across round 1
 
 | Candidate | Why |

@@ -75,7 +75,7 @@ Licence URL for every row: https://www.pexels.com/license/. Every output is unde
 
 ## Round 1 stills
 
-Added by task R1 on 2026-09-28: 10 frames, each chosen for the sentence it sits beside (register: `design/ROUND1-IMAGE-SLOTS.md`). Same source (Pexels), same licence, same grade as the set above; attribution recorded as `Photo by <author> on Pexels`. People appear, per the round-1 owner decision (docs/02 §Subject matter): calm, candid adults; unidentifiable wherever the copy is about crisis, trauma, addiction or mental illness, which is the Pexels licence's *not in a bad light* condition. `focus` absent means sharp's attention crop; `left` and `right` were added to the pipeline for two frames whose subject sits off-centre in a landscape source.
+Added by task R1 on 2026-09-28: 17 frames, each chosen for the sentence it sits beside (register: `design/ROUND1-IMAGE-SLOTS.md`). Same source (Pexels), same licence, same grade as the set above; attribution recorded as `Photo by <author> on Pexels`. People appear, per the round-1 owner decision (docs/02 §Subject matter): calm, candid adults; unidentifiable wherever the copy is about crisis, trauma, addiction or mental illness, which is the Pexels licence's *not in a bad light* condition. `focus` absent means sharp's attention crop; `left` and `right` were added to the pipeline for two frames whose subject sits off-centre in a landscape source.
 
 | File | Source page | Author | Licence | Stands in for | Aspect | Focus | ev |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -89,6 +89,13 @@ Added by task R1 on 2026-09-28: 10 frames, each chosen for the sentence it sits 
 | `about-place` | https://www.pexels.com/photo/pelican-in-flight-over-puerto-aventuras-marina-36734777/ | Steve Hodder | Pexels License | About, Privacy, Safety and Peace: the marina at Puerto Aventuras | 16:9 | centre | −6 |
 | `about-sea` | https://www.pexels.com/photo/man-on-beach-at-dawn-20703791/ | Diogo Miranda | Pexels License | About, The Caribbean Sea: a morning walk beside the water | 3:4 | centre | −12 |
 | `about-jungle` | https://www.pexels.com/photo/mystical-hanging-roots-in-yucatan-cenote-38996760/ | Iván Hernández-Cuevas | Pexels License | About, The Healing Power of the Mayan Jungle: roots in a cenote | 3:4 | centre | +12 |
+| `process-first-conversation` | https://www.pexels.com/photo/person-talking-on-the-phone-7653765/ | Thirdman | Pexels License | Our Process, The New Practice Experience: the first call | 3:4 | left | −10 |
+| `process-lead-clinician` | https://www.pexels.com/photo/two-people-walking-in-a-sunlit-forest-path-33490052/ | Javid M | Pexels License | Our Process, Why We Have a Lead Clinician: a walk together | 3:4 | centre | 0 |
+| `process-typical-day` | https://www.pexels.com/photo/warm-morning-coffee-scene-with-teacups-31145148/ | Letícia Alvares | Pexels License | Our Process, A Typical Day: the morning table | 3:4 | centre | 0 |
+| `process-family` | https://www.pexels.com/photo/a-man-and-woman-talking-together-8841344/ | Julia M Cameron | Pexels License | Our Process, Family Participation: a mother and her adult son | 3:4 | attention | 0 |
+| `process-nutrition` | https://www.pexels.com/photo/chef-preparing-gourmet-vegetable-tart-close-up-32069861/ | damla selen demir | Pexels License | Our Process, Nutrition as Therapy: a meal being prepared | 3:4 | centre | −6 |
+| `personal-message` | https://www.pexels.com/photo/person-writing-on-white-paper-6918482/ | cottonbro studio | Pexels License | A Personal Message: a letter written by hand | 3:4 | centre | 0 |
+| `fees` | https://www.pexels.com/photo/wood-framed-sofa-chair-11145310/ | Ali Alcántara | Pexels License | Fees: a shaded veranda at a tropical residence | 3:4 | centre | −6 |
 
 ## Rejected
 
