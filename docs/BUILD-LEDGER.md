@@ -685,7 +685,7 @@ Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its 
 | R4a | done | R0, R1 | About, Our Process, A Personal Message, Fees: curate, images | round1/r4a-interior | 3411 |
 | R4b | done | R0, R1 | Clinical Services index + 11 service pages: curate, images | round1/r4b-services | 3412 |
 | R4c | done | R0, R1 | Team index + 11 profiles: curate, images | round1/r4c-team | 3413 |
-| R4d | doing | R0, R1 | Contact and Residences: curate, images | round1/r4d-contact | 3414 |
+| R4d | done | R0, R1 | Contact and Residences: curate, images | round1/r4d-contact | 3414 |
 | R5 | done | R0, R1 | Self-assessment: tests on the tab page, questions at the top, per-question answer types | round1/r5-assessment | 3405 |
 | R6 | doing | R5 | Email: branded HTML emails, opt-in assessment send, previews, provisioning-ready | round1/r6-email | 3406 |
 | R9 | todo | R3–R6 | Polish and QA: rail overlaps, round-wide e2e on a quiet machine, docs/HANDOFF sweep | round1/r9-polish | 3409 |
@@ -781,3 +781,8 @@ Owner paused the run. Each task's resume notes (done, remaining, decisions, gotc
 - Merged `604d718`. `/team`: lead is the client's opening sentence, `team-index` beside the title, the eleven members straight beneath, then the multidisciplinary roles on sand; 7 541 → 5 708 px at 1280. Profiles: 55–108-word biographies of client sentences; one summary of ours ("Lowell is a graduate of the Hazelden Betty Ford Graduate School of Addiction Studies.", grounded in the document l.789, whose sentence has no subject). Cut by rule: Katia's *Origin – A Somatic Nutrition Method* (en dash in the name) and Nicolas's *Intuitive Reconnection Massage™* (™ rule) pending the client. Biographies render whole in the body (no lifted lead). Main session read `/team` at 1280 and checked the Hazelden line against the document.
 - Merge: R4b and R4c both added `IndexTemplate.plate` and both edited `index.spec` fixtures; deduplicated to one prop feeding `PageIntro`, the fixture keeps `plate` + `lead/listLead` + `afterTitles` + `plates`; two list-order checks scoped away from the R5 tab page. `index.spec` + `profile.spec` on desktop-1280 and mobile-390 against a production build: 132 passed, 2 skipped. Captured `/team` and `/clinical-services` at 1280 after the merge.
 - R9: the `/team` title block sits lower in its frame than `/clinical-services` (the team plate CSS centres on the row); align them.
+
+### R4d — accepted (2026-09-28)
+
+- Merged `460f8f7`. `/contact`: the form sheet leads the split, beside the lead from 1024px; form top 1 068 → 511 px at 1280, 2 368 → 698 at 390; letter to two client sentences, the `contact` picture, International Services (first paragraph), the consultation line and founder; *Who Contacts Us* cut; words in main 284 → 123. `/residences`: one section of three `PLACEHOLDER — ` paragraphs on bone; 9 508 → 7 756 px at 1280. `pageTitle()` joins with " | ". No summaries of ours. Main session read the contact fold at 1280. Merge: CLAUDE.md, docs/06, `curated/index.ts`, `viewports.spec.ts` (`AWAITING_CURATION` now empty) resolved; typecheck, lint, unit 421/421, content 16/16.
+- R9 must fix on `/contact` at 1280: the letter paragraph under the lead starts at the page margin (x 64) instead of the title's column; the sheet's fields are spaced very wide (form reads sparse); the scroll rail sits over the sheet's top-right corner.
