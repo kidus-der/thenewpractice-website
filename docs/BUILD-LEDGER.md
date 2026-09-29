@@ -688,7 +688,7 @@ Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its 
 | R4d | done | R0, R1 | Contact and Residences: curate, images | round1/r4d-contact | 3414 |
 | R5 | done | R0, R1 | Self-assessment: tests on the tab page, questions at the top, per-question answer types | round1/r5-assessment | 3405 |
 | R6 | done | R5 | Email: branded HTML emails, opt-in assessment send, previews, provisioning-ready | round1/r6-email | 3406 |
-| R9 | todo | R3–R6 | Polish and QA: rail overlaps, round-wide e2e on a quiet machine, docs/HANDOFF sweep | round1/r9-polish | 3409 |
+| R9 | doing | R3–R6 | Polish and QA: rail overlaps, round-wide e2e on a quiet machine, docs/HANDOFF sweep | round1/r9-polish | 3409 |
 | R8 | todo | R3, R4a–d, R5, R7 | Palette artifact from real renders | — (main session) | — |
 
 ## Round-1 briefs
@@ -792,3 +792,12 @@ Owner paused the run. Each task's resume notes (done, remaining, decisions, gotc
 - Merged `aa5ba4d`. Branded HTML + text emails for enquiries and opt-in assessment results (`src/server/email/`), mark as an inline PNG (Gmail strips SVG), times in America/Cancun, every field escaped (unit-tested against injection). Opt-in *Send my answers to the practice* under the result (name, email or telephone, preferred contact, consent; honeypot and a required timing stamp); one POST only on submit (asserted). Adapter sends via Resend when `RESEND_API_KEY` is set, logs otherwise; `ENQUIRY_TO_EMAIL` receives both kinds; `ENQUIRY_FROM_EMAIL` optional. `npm run email:preview`; `docs/EMAIL-SETUP.md` (Marketplace install on the client's account, DNS, env, test sends). Form errors moved to ink (R7 finding). Subjects join with a colon. Main session read the assessment email at 600px and the opt-in form at 1280. Merge: CLAUDE.md and `contact.spec.ts` imports (R4d curated contact + R6 `PALETTE`); unit 472/472, content 16/16.
 - Provisioning waits on the client's domain and inbox (owner to supply). No `kidusder.com` sender anywhere.
 - R9: the opt-in and contact forms space their fields very wide (large empty gaps between rows at 1280); tighten the shared `Field` rhythm. The confirmation says "on their way" while staging only logs (true once Resend is live).
+
+### R9 — Polish and QA (brief)
+Everything R3–R6 left for a single pass, then the whole suite on a quiet machine.
+1. **Scroll rail overlap.** The fixed rail sits over content that reaches column 12: R4a spread plates and R4b title plates (`8 / 13`), the R5 tab-page list (`8 / 13`), the R4d contact sheet, the home manifesto line. Fix it once, systemically (preferred: move the rail into the page margin so column 12 is free at every width; or bring those spans to `.p-aside` `8 / 12`), and register whatever span survives in docs/03 §4, plus the `--s-8` spread rhythm in docs/03 §3.
+2. **Contact and forms.** The letter paragraph under the lead on `/contact` starts at the page margin, not the title's column; the shared `Field` rhythm spaces rows very wide on the contact sheet and the assessment opt-in; tighten it so each form reads as one composed block (keep bottom-rule fields, floating labels and error lines).
+3. **Index title pages.** `/team`'s title block sits lower in its frame than `/clinical-services`; align the T6 title pages.
+4. **Weight.** `home-philosophy` serves 138 kB at 750w on 3× phones; bring it under 120 kB (quality or a tighter `sizes`).
+5. **Docs sweep.** `HANDOFF.md` (round 1: footer, curated pages, images, self-assessment scale, opt-in email and `docs/EMAIL-SETUP.md`, the palette study), `.claude/plans/two-week-templates.plan.md` marquee lines, docs/06 Schema rules (".parse() at import" is stale since Task 20), CONTENT-GAPS (Katia's *Origin – A Somatic Nutrition Method* and Nicolas's *Intuitive Reconnection Massage™* held back pending the client; C1 new scale), docs/10 pointing at round 1.
+6. **Full suite.** `npm run verify`, then `npm run e2e` on all five projects against a production build with `--workers=2`, plus `npm run e2e:webkit -- home nav route-curtain contact assessment`; fix every failure (product or test), rerun the home axe and full-page tests without raised timeouts; read the 390/768/1280/1920/reduced-motion screenshots of every route touched above.
