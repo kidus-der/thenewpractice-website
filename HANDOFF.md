@@ -226,8 +226,9 @@ None of this is code. Every item is an account or a value on the Vercel project.
    a sending domain, and the project gets `RESEND_API_KEY`, `ENQUIRY_TO_EMAIL` (the
    mailbox that receives enquiries) and `ENQUIRY_FROM_EMAIL` (an address on the
    verified domain). Without the key the adapter logs and never mails; with the key
-   and no recipient it warns `enquiry.mail.misconfigured` and logs. Nothing a
-   visitor submits is stored, on any setting.
+   and no recipient it warns `mail.misconfigured` and logs. Nothing a
+   visitor submits is stored, on any setting. The exact steps (Marketplace install,
+   DNS records, variables, a test send) are in `docs/EMAIL-SETUP.md` (round 1, R6).
 2. **Environment.** `SITE_ENV=production` and `NEXT_PUBLIC_SITE_URL=https://<the
 real domain>` on the production target. That alone flips `robots.txt` to allow,
    fills the sitemap, removes `noindex`, hides the placeholder routes from the

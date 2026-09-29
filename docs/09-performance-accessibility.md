@@ -213,16 +213,23 @@ The full reduced-motion specification is in `docs/04` §7. The failure modes to 
 
 ### Enquiry data handling
 
-The enquiry form is the only place a visitor can hand the site anything, and the contract (§1) says the site collects nothing beyond what a person types there and stores none of it. What happens to a submission, end to end (`src/server/`, Task 15):
+The enquiry form and the opt-in beneath a self-assessment result are the only places a visitor can hand the site anything, and the contract (§1) says the site collects nothing beyond what a person types there and stores none of it. What happens to an enquiry, end to end (`src/server/`, Task 15, round 1 R6):
 
-- **Sent:** the six fields — name, email, telephone if given, who the enquiry concerns, the message, the preferred channel — as one plain-text email from `enquiries@<site host>` (or `ENQUIRY_FROM_EMAIL`) to `ENQUIRY_TO_EMAIL` through Resend, with the enquirer as reply-to. Resend receives exactly that email and nothing else (no tags, no metadata, no HTML). While `RESEND_API_KEY` is unset (staging today) nothing leaves the machine.
-- **Logged:** one JSON line per event on stdout — `enquiry.sent | invalid | rejected | failed | logged | mail.*` — carrying the level, the time, the provider message id, the enquiring-for and preferred-contact values, whether a telephone was given, the rejection reason (`honeypot`, `too-fast`, `expired`) and, for text fields, only their character counts. `src/lib/logger.ts` reduces `name`, `email`, `telephone` and `message` to lengths at every depth; a unit test asserts the words never appear.
-- **Stored:** nothing. No database, no file, no cookie, no analytics event. The action's result to the browser is a status and, when invalid, the content-layer error messages — never the submitted text, which is also why a no-JavaScript resubmission starts from an empty form.
+- **Sent:** the six fields (name, email, telephone if given, who the enquiry concerns, the message, the preferred channel) and the time it arrived on the practice's clock (America/Cancun) as one email from `enquiries@<site host>` (or `ENQUIRY_FROM_EMAIL`) to `ENQUIRY_TO_EMAIL` through Resend, with the enquirer as reply-to. The email has a branded HTML part and a plain-text part saying the same thing (`src/server/email/`); the ceiba mark travels inside it as one inline attachment, so nothing is fetched from the network when it is opened; no tracking pixel, no links but `mailto:` and `tel:`. Everything a person typed is escaped before it reaches the HTML (unit-tested with injection attempts). Resend receives exactly that message: no tags, no metadata. While `RESEND_API_KEY` is unset (staging today) nothing leaves the machine. Provisioning: `docs/EMAIL-SETUP.md`.
+- **Logged:** one JSON line per event on stdout (`enquiry.sent | invalid | rejected | failed | logged | mail.*`) carrying the level, the time, the provider message id, the enquiring-for and preferred-contact values, whether a telephone was given, the message's length, and the rejection reason (`honeypot`, `too-fast`, `expired`). The adapter logs only the facts the handler chose; `src/lib/logger.ts` also reduces `name`, `email`, `telephone` and `message` to lengths at every depth; unit tests assert the words never appear.
+- **Stored:** nothing. No database, no file, no cookie, no analytics event. The action's result to the browser is a status and, when invalid, the content-layer error messages, never the submitted text, which is also why a no-JavaScript resubmission starts from an empty form.
 - **Not done:** no rate limiting beyond the honeypot and the 3 s / 2 h timing window (the window applies when the client stamped the form; without JavaScript only the honeypot guards), no IP logging, no reCAPTCHA or third-party anti-abuse.
 
 ### Self-assessment data handling
 
-The ten questionnaires (`/self-assessment/[slug]`, Task 18b; answered on a 1 to 10 scale or yes / no / maybe and scored as an average severity since round 1, R5) are scored in the browser and nowhere else: the answers are one array in React state (`src/lib/assessment.ts`), there is no `<form>` to submit, and nothing is written to storage, cookies or the URL, sent in a request, or logged — closing the tab is the only exit, and the metadata says so. The unit test in `src/sections/AssessmentForm.test.tsx` and the e2e in `tests/e2e/assessment.spec.ts` assert each of those absences. Moving to the next question reads only the page's own layout; nothing about it is kept. R6 adds an opt-in send beneath the result; until a visitor chooses it, this paragraph holds.
+The ten questionnaires (`/self-assessment/[slug]`, Task 18b; answered on a 1 to 10 scale or yes / no / maybe and scored as an average severity since round 1, R5) are scored in the browser: the answers are one array in React state (`src/lib/assessment.ts`), the sheet is not a `<form>`, and nothing is written to storage, cookies or the URL, sent in a request, or logged while answering or reading the result. The unit test in `src/sections/AssessmentForm.test.tsx` and the e2e in `tests/e2e/assessment.spec.ts` assert each of those absences.
+
+**Sending is opt-in (round 1, R6).** Beneath the result, _Send my answers to the practice_ is a closed disclosure; opening it makes no request. Only when the visitor fills in a name, a preferred channel and the detail for it (email address or telephone number), ticks the one-line consent (_I agree to send my answers and these details to The New Practice._) and presses _Send_ does the browser make one request: a POST of that form, the questionnaire's slug and the answers, to the page's own server action (`src/server/assessment.action.ts`). `tests/e2e/assessment-send.spec.ts` asserts that no request happens before, that exactly one POST is made, and that it carries exactly the form's fields and the sheet the result was scored from.
+
+- **Checked:** the same honeypot and 3 s / 2 h timing window as the enquiry, with the timing token required (the form exists only with JavaScript). The server re-reads the questionnaire by slug, refuses a sheet that is incomplete or has an answer of the wrong type, and scores it itself.
+- **Sent:** one email to `ENQUIRY_TO_EMAIL`, reply-to the visitor's email when given: the questionnaire's title, the average severity and the band, the contact details and preferred channel, the time on the practice's clock, and every question with its answer. Same HTML and text parts, escaping and no-network rules as the enquiry.
+- **Logged:** `assessment.sent | invalid | rejected | failed | logged | mail.*` with the questionnaire's slug, the preferred channel, whether an email and a telephone were given, the timing verdict and the provider id. Never the name, the details, the answers, the score or the band.
+- **Stored:** nothing. The result stays on screen after sending; closing the tab is still the only exit.
 
 ### Security headers
 
@@ -246,12 +253,12 @@ CSP directives and the reason each one is as wide as it is:
 | `img-src` | `'self' data: blob:` | LQIP data URIs; three.js textures via blob |
 | `media-src` | `'self' blob:` | Hero video and (later) ambient audio are self-hosted |
 | `font-src` | `'self'` | `next/font` self-hosts; no Google Fonts host at runtime |
-| `connect-src` | `'self' https://vitals.vercel-insights.com` | Server actions; Vercel Speed Insights if ever enabled after approval |
+| `connect-src` | `'self' https://vitals.vercel-insights.com` | Server actions (the enquiry and the self-assessment opt-in both post to their own page; the email is sent from the server, so Resend needs no browser origin); Vercel Speed Insights if ever enabled after approval |
 | `worker-src` | `'self' blob:` | three.js and R3F may spawn workers |
 | `frame-ancestors` | `'none'` | The site is never embedded |
 | `object-src` | `'none'` | No plugins |
 | `base-uri` | `'self'` | No `<base>` hijack |
-| `form-action` | `'self'` | The enquiry form posts only to its own server action |
+| `form-action` | `'self'` | The enquiry form and the self-assessment opt-in post only to their own server actions |
 
 Not set: `Cross-Origin-Embedder-Policy` and `Cross-Origin-Opener-Policy`, because nothing here needs `SharedArrayBuffer`, and COEP would block any future cross-origin media without CORP headers.
 
