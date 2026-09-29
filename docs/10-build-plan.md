@@ -1,6 +1,8 @@
 # 10 — Build Plan
 
 > **Status.** The two-week template milestone (Tasks 1–21) is delivered: the seven templates and the global chrome are deployed to the staging URL, smoke-tested live, and handed over in [`HANDOFF.md`](../HANDOFF.md). The ledger's status table and _Deploys_ table are the record; nothing below is a queue any more, it is how the milestone was run.
+>
+> **Round 1 (client feedback, from 2026-09-28)** runs on branch `improvements/round-1` from the ledger's section _Round 1 — Client feedback_: its owner decisions, rules, status table and briefs (R0 to R9, R8 the palette artifact). Each task runs in its own worktree on `round1/<id>-<slug>`; nothing merges to `main` until the owner has reviewed the round visually. `HANDOFF.md` §Round 1 summarises what changed.
 
 ## The plan and the ledger
 

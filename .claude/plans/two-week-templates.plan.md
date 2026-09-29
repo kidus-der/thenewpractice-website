@@ -113,7 +113,7 @@ src/
 
 ### 3.3 Design direction per template (what makes it award-tier, not a brochure)
 
-- **Global chrome.** Header: mark + wordmark left, four primary links + *Enquire* line-action right on desktop; a single *Menu* line-action on mobile. Menu is a full-viewport canopy overlay (Motion `AnimatePresence`, clip-path wipe, `--e-in-out-quart`), nav items as `--t-d1` display type with the ceiba drawing itself in the corner, secondary links and founder contact in the eyebrow register. Header recolours from `--ground`. Footer: wordmark marquee (the one permitted), sitemap in four hairline columns, founder contact, location, legal, the mark alone at the bottom.
+- **Global chrome.** Header: mark + wordmark left, four primary links + *Enquire* line-action right on desktop; a single *Menu* line-action on mobile. Menu is a full-viewport canopy overlay (Motion `AnimatePresence`, clip-path wipe, `--e-in-out-quart`), nav items as `--t-d1` display type with the ceiba drawing itself in the corner, secondary links and founder contact in the eyebrow register. Header recolours from `--ground`. Footer: wordmark marquee (the one permitted), sitemap in four hairline columns, founder contact, location, legal, the mark alone at the bottom. *Round 1 (R2, the client's feedback): the footer is the link groups, the © line and the small mark; the marquee, the founder contact and the wordmark are gone.*
 - **Route transitions.** A canopy curtain with the mark drawing outward covers the outgoing page and reveals the incoming one; scroll resets under the curtain. Reduced motion: instant swap.
 - **T1 Home.** Video hero (`preload="metadata"`, poster first, AVIF/WebP poster), ambient shader gradient behind the video at low opacity on desktop, overlay title in the Didone, subtitle in the eyebrow register, *Scroll to discover* cue with the looping vertical rule, a *Listen* toggle (mdx.so's MUTE/UNMUTE, default off) that plays the monologue track when the client supplies it — hidden until the asset exists. Then: §1 statement with the ceiba ghosted behind the triad (the demo's *One* moment, kept), §2 long-read pair, §3 *Who we help* as a two-column editorial list with hover plate preview, §4 philosophy as sticky-index pillars, *Why The New Practice* as a scrubbed line-by-line manifesto, §5 *Begin the conversation* with founder contact and a short form teaser linking to `/contact`.
 - **T2 Interior.** Editorial long-read: eyebrow + headline + lead at `.p-lead`, body at `62ch`, pull-quotes in serif italic, optional sticky section index on ≥1024px for pages with ≥5 sections (Process, About), inline plates at 3:4 / 21:9 only, prev/next page rail at the foot.
@@ -128,7 +128,7 @@ src/
 - Character-level splits: at most two per page (hero title, one statement).
 - One pinned ScrollTrigger active at a time; pins only on Home and Process.
 - Ambient gradient: desktop only, `uSpeed` ≤ 0.2, paused offscreen and on tab blur, unmounted under reduced motion.
-- Reduced motion is a second finished design: Lenis off, pins unpinned, video shows poster, gradient absent, curtain replaced by a fade, marquee static.
+- Reduced motion is a second finished design: Lenis off, pins unpinned, video shows poster, gradient absent, curtain replaced by a fade (the marquee this line once named was removed in round 1).
 
 ---
 
@@ -186,7 +186,7 @@ Manual gates per template (the agent does these and records evidence in the ledg
 
 ### Phase 1 — Global chrome
 7. Header (settled/hidden states, ground-aware), desktop nav, mobile nav overlay, focus trap, escape, route-close.
-8. Footer (marquee, sitemap, contact, legal, mark).
+8. Footer (marquee, sitemap, contact, legal, mark; round 1 reduced it to the link groups, the © line and the mark).
 9. Route curtain transition + scroll reset + reduced-motion fade.
 10. SEO baseline: metadata helpers, JSON-LD builders, sitemap, robots, llms.txt, OG image template.
 

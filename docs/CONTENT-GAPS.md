@@ -96,3 +96,15 @@ Rendered verbatim, not changed; for the client's decision.
 | Self-assessment questionnaires                                                                             | Nine of ten questionnaires carry only the generic second sentence of the alcohol interpretation (G6), so the result reads the same on nine pages.                                                                       | Verbatim. Already asked in G6; repeated here because it is the most visible gap in the walkthrough.                                                                                                                                                    |
 | Residences                                                                                                 | Every string is structural `PLACEHOLDER` restating a cited document line (G1; audit §8); the title page carries no review note (Task 21), and production links to the route from nowhere.                                | The `PLACEHOLDER — ` prefix on the title and lead is the only marker.                                                                                                                                                                                  |
 | Legal                                                                                                      | `/privacy` and `/terms` are `PLACEHOLDER` stubs, `noindex`, absent from the sitemap and `llms.txt`, and unlinked on production (G3).                                                                                    | Four headings each, one pending sentence.                                                                                                                                                                                                              |
+
+## 7. Round 1: client sentences held back
+
+Round 1 curates what renders (docs/06 §Curation); the full text stays in the generated modules. Two biography sentences are held back under the copy rules, not cut for length, and return as soon as the client decides.
+
+| Where | Sentence (document line) | Why it does not render | **Client** to decide |
+| --- | --- | --- | --- |
+| `/team/katia-rhainds` | _Founder of Origin – A Somatic Nutrition Method, Katia has developed an approach that recognizes the relationship between nutrition, trauma, digestion, inflammation, emotional wellbeing, and nervous system regulation._ (l.913) | The method's name carries an en dash; round 1 renders no dashes unless grammar requires one | How the method's name should read (with a colon, or the name alone); the sentence then returns |
+| `/team/nicolas-neduchal` | _As creator of Intuitive Reconnection Massage™, Nicolas has developed an individualized body-centred approach that…_ (l.930) | The ™ stays out of running text (§3) | Whether the name renders without its ™, or the rule exempts it |
+
+The self-assessment's new answer scale (1 to 10 severity, or yes / no / maybe) and its bands wait on the client's confirmation under C1.
+
