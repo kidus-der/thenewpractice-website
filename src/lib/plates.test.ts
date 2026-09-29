@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import { DEFAULT_PLATE_QUALITY, REDUCED_PLATE_QUALITY, isPortrait, plateQuality } from './plates'
+import {
+  DEFAULT_PLATE_QUALITY,
+  LOW_PLATE_QUALITY,
+  REDUCED_PLATE_QUALITY,
+  isPortrait,
+  plateQuality,
+} from './plates'
 
 describe('plateQuality', () => {
   it('lowers the canopy silhouette, the one frame over the served-size budget', () => {
@@ -17,6 +23,11 @@ describe('plateQuality', () => {
     ] as const
     for (const key of heavy) expect(plateQuality(key)).toBe(REDUCED_PLATE_QUALITY)
     expect(plateQuality('about-sea')).toBe(DEFAULT_PLATE_QUALITY)
+  })
+
+  it('lowers the manifesto kapok roots further, over budget at 750 wide even at 60', () => {
+    expect(plateQuality('home-philosophy')).toBe(LOW_PLATE_QUALITY)
+    expect(LOW_PLATE_QUALITY).toBeLessThan(REDUCED_PLATE_QUALITY)
   })
 
   it('leaves every other frame at the default', () => {
