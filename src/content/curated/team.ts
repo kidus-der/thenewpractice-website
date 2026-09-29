@@ -74,6 +74,14 @@ const BIOGRAPHIES: Readonly<Record<string, readonly Paragraph[]>> = {
     [sentencesOf(0, [0])],
     [sentencesOf(1, [1]), sentencesOf(2, [1]), sentencesOf(4, [0])],
   ],
+  'patricia-heyland': [
+    [0, sentencesOf(3, [1])],
+    [2, 4],
+  ],
+  'caroline-adams': [[sentencesOf(0, [0])], [sentencesOf(3, [0]), 4]],
+  'katia-rhainds': [[sentencesOf(0, [0])], [2, sentencesOf(3, [0, 1])]],
+  'nicolas-neduchal': [[0], [sentencesOf(1, [1]), 3]],
+  'fernando-escobosa-garcia': [[3], [1]],
 }
 
 function biography(c: Curator, member: TeamMember): string[] {

@@ -10,8 +10,7 @@
 import type { Metadata } from 'next'
 import { JsonLd } from '@/components/JsonLd'
 import type { MediaKey } from '@/content/media'
-import { TEAM_PAGE_CURATED } from '@/content/curated/team'
-import { TEAM } from '@/content/team'
+import { TEAM_CURATED, TEAM_PAGE_CURATED } from '@/content/curated/team'
 import { routes } from '@/content/nav'
 import { ROUTE_SEO } from '@/content/seo'
 import { rowsFromTeam } from '@/lib/indexPage'
@@ -32,7 +31,7 @@ assertSectionIds(TEAM_PAGE_CURATED, [ROLES_SECTION])
 
 /** design/ROUND1-IMAGE-SLOTS.md: one team working on one case. */
 const PLATE: MediaKey = 'team-index'
-const ROWS = rowsFromTeam(TEAM)
+const ROWS = rowsFromTeam(TEAM_CURATED)
 
 const TRAIL = [
   { name: ROUTE_SEO.home.name, path: routes.home },

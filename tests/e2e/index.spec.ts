@@ -10,11 +10,10 @@
  * Reduced-motion project: the glow lands instantly.
  */
 import { ASSESSMENTS, ASSESSMENTS_PAGE } from '../../src/content/assessments'
-import { TEAM_PAGE_CURATED } from '../../src/content/curated/team'
+import { TEAM_CURATED, TEAM_PAGE_CURATED } from '../../src/content/curated/team'
 import { MEDIA, type MediaKey } from '../../src/content/media'
 import { routes } from '../../src/content/nav'
 import { SERVICES, SERVICES_PAGE } from '../../src/content/services'
-import { TEAM } from '../../src/content/team'
 import { UI_INDEX, UI_INTERIOR } from '../../src/content/ui'
 import {
   rowsFromAssessments,
@@ -70,7 +69,7 @@ const FIXTURES: readonly Fixture[] = [
     introTitles: [],
     afterTitles: titled(TEAM_PAGE_CURATED.sections),
     plate: 'team-index',
-    rows: rowsFromTeam(TEAM),
+    rows: rowsFromTeam(TEAM_CURATED),
   },
   {
     name: 'self-assessment',
