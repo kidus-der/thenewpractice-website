@@ -52,5 +52,5 @@ export const BRAND: Brand = {
   },
 
   markStory:
-    'The ceiba — the Maya world tree, joining the underworld, the earthly plane and the heavens through a single trunk. Three branches rise, three roots descend, and all six meet at one point.',
+    'The ceiba: the Maya world tree, joining the underworld, the earthly plane and the heavens through a single trunk. Three branches rise, three roots descend, and all six meet at one point.',
 }

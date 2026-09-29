@@ -1,60 +1,38 @@
 /* ==========================================================================
    PAGE INTRO — co-located with PageIntro.tsx, imported once by it.
-   Tokens only; px for geometry per rule 4 as amended. The intro is a title
-   page: the lockup sits low in a tall, otherwise empty frame, so the first
-   viewport holds one thing (docs/02 §Composition).
+   Tokens only; px for geometry per rule 4 as amended. The intro is a short
+   title page (round 1, owner decision): the lockup sits in the upper part of
+   the first viewport, clear of the header, and the next block starts inside
+   the same frame. The reveals are unchanged (docs/05 §T2, docs/09 §1).
    ========================================================================== */
 
-.page-intro {
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+/* Beats `main > section` (sections.css): one step above the header's row,
+   and a short step below, because the next block brings its own rhythm. */
+main > section.page-intro {
+  padding-block: var(--s-8) var(--s-6);
 }
 .page-intro__grid {
-  flex: 1;
   align-items: end;
-  row-gap: var(--s-7);
+  row-gap: var(--s-6);
 }
-/* the title sits at roughly the golden section of the frame, not on its floor */
 .page-intro__copy {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-bottom: var(--s-7);
 }
 .page-intro__eyebrow {
-  margin-bottom: var(--s-6);
+  margin-bottom: var(--s-5);
   color: var(--fg-muted);
 }
 .page-intro__title {
   max-width: 18ch;
 }
 .page-intro__lead {
-  margin-top: var(--s-6);
+  margin-top: var(--s-5);
 }
 @media (min-width: 1024px) {
   .page-intro__plate {
     /* the counterweight hangs from the same baseline as the title */
     align-self: end;
-  }
-}
-
-/* A short desktop frame (1280 × 800, 1440 × 900): the standing --s-9 rhythm
-   above and below leaves ~270px for the lockup, and a four-line title or a
-   ninety-word lead ran past the fold (ledger, Tasks 13 and 17). The title page
-   keeps its full height; only the padding and the gaps relax, so eyebrow,
-   title and lead sit inside the first viewport. */
-@media (min-width: 1024px) and (max-height: 900px) {
-  main > .page-intro {
-    padding-block: var(--s-7) var(--s-5);
-  }
-  .page-intro__copy {
-    padding-bottom: var(--s-5);
-  }
-  .page-intro__eyebrow {
-    margin-bottom: var(--s-5);
-  }
-  .page-intro__lead {
-    margin-top: var(--s-5);
   }
 }

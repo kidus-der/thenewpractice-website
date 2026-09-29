@@ -70,7 +70,9 @@ Four adjectives, in priority order. When two conflict, the earlier one wins.
 
 ## Voice
 
-The client's copy is rendered verbatim, so the voice rules below govern the small amount of **structural copy we write**: navigation labels, form labels and errors, confirmation lines, `PLACEHOLDER` residences copy, metadata descriptions, the `llms.txt` summary.
+Since round 1 the site reads less: what renders is **curated** from the client's document (owner decision; `src/content/curated/`, docs/06 §Curation). Prefer the client's own sentences, chosen and left as they wrote them. Where no client sentence carries the point, we write a short summary that restates only what the document says. The voice rules below govern everything **we write**: those summaries, navigation labels, form labels and errors, confirmation lines, `PLACEHOLDER` residences copy, metadata, the `llms.txt` summary.
+
+**Plain, human, professional.** Say it the way a senior clinician would say it to a family across a table: short sentences, ordinary words, no marketing. Never invent a clinical claim, statistic, credential, outcome or named person.
 
 **Write like a physician who has also read a great deal of literature.**
 
@@ -81,10 +83,13 @@ The client's copy is rendered verbatim, so the voice rules below govern the smal
 | Understatement. "It is unusual." | Superlatives. "The world's most exclusive." |
 | Second person, sparingly. | "We" as a self-congratulating subject. |
 | Full stops. | Exclamation marks. Ever. |
+| Commas, colons, full stops, a new sentence. | En or em dashes. None in anything we write, unless grammar strictly requires one. The `PLACEHOLDER — ` prefix is the one exception. |
 
 **Forbidden in copy we write:** journey, transformative, bespoke, luxury *(a luxury brand never says it)*, unparalleled, world-class, cutting-edge, oasis, sanctuary, elevate, curated, paradise, escape.
 
-The client's own copy uses some of these words (*wellbeing*, *holistic*, *luxurious*). It is theirs; it is not edited. Flag concerns in `docs/CONTENT-GAPS.md`, never in the module.
+`content.checks.ts` enforces the dash, exclamation and forbidden-word rules on every string of ours (`src/content/curated/voice.ts`: every `ours()` string, the interface and navigation strings, the placeholder pages); a breach fails `npm run verify`.
+
+The client's own copy uses some of these words (*wellbeing*, *holistic*, *luxurious*) and their own dashes. Their sentences are chosen or left out, never rewritten; a sentence we cannot use as written is replaced by a summary of ours, not edited. Flag concerns in `docs/CONTENT-GAPS.md`, never in the module.
 
 **British spelling** throughout — the client's document uses it (*behavioural*, *programme*, *centre*, *individualised*), and copy we write matches it.
 

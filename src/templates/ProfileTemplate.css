@@ -5,25 +5,23 @@
    imported once by it. Tokens only; px for geometry per rule 4 as amended.
    ========================================================================== */
 
-/* — title page: a tall frame, the plate and the lockup hanging from one
-     baseline low in it, as PageIntro does (docs/02 §Composition) — */
-.profile-intro {
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+/* — title page: short, as PageIntro is (round 1): the plate and the lockup
+     hang from one baseline in the upper part of the first viewport — */
+main > section.profile-intro {
+  padding-block: var(--s-8) var(--s-6);
 }
 .profile-intro__grid {
-  flex: 1;
   align-items: end;
-  row-gap: var(--s-7);
+  row-gap: var(--s-5);
 }
 /* the plate keeps to part of its column so the page stays 60–70% empty and
-   the name is in the first viewport at every width: half the column while
-   the plate sits above the name, ContentSection's 62% for a 3:4 plate once
-   it sits beside it */
+   the name, the role and the start of the biography share the first
+   viewport (round 1): 40% of the width while it stands above the name, half
+   the column once it sits beside it (62% there pushed the biography below
+   the fold at 1280 × 800) */
 .profile-intro__plate {
   width: 100%;
-  max-width: 50%;
+  max-width: 40%;
 }
 .profile__plate-frame {
   width: 100%;
@@ -32,10 +30,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-bottom: var(--s-7);
 }
 .profile-intro__eyebrow {
-  margin-bottom: var(--s-6);
+  margin-bottom: var(--s-5);
 }
 .profile-intro__index {
   color: inherit;
@@ -58,11 +55,14 @@
   margin-top: var(--s-4);
 }
 .profile-intro__lead {
-  margin-top: var(--s-6);
+  margin-top: var(--s-5);
 }
 @media (min-width: 1024px) {
+  .profile-intro__grid {
+    row-gap: var(--s-6);
+  }
   .profile-intro__plate {
-    max-width: 62%;
+    max-width: 50%;
     align-self: end;
   }
 }

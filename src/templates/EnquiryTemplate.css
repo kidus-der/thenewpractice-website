@@ -6,11 +6,10 @@
    block that still lives in sections.css.
    ========================================================================== */
 
-/* — the opening: a letter's first page, headline low in the frame — */
+/* — the opening: a letter's first page, short as every title page is
+     (round 1); the split begins inside the first viewport — */
 main > section.contact-open {
-  min-height: 100svh;
-  display: flex;
-  align-items: flex-end;
+  padding-block: var(--s-8) var(--s-6);
 }
 .contact-open .shell {
   width: 100%;
