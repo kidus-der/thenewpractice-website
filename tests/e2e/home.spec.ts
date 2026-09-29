@@ -276,9 +276,7 @@ test.describe('home', () => {
     await expect(page.locator('.long-read__prose p')).toHaveCount(
       SECTIONS.longRead.paragraphs.length
     )
-    await expect(page.locator('.long-read__prose p')).toHaveText([
-      /^A dedicated live-in clinician/,
-    ])
+    await expect(page.locator('.long-read__prose p')).toHaveText([/^A dedicated live-in clinician/])
   })
 
   test('sets one picture beside each section after the statement, lazily', async ({ page }) => {
