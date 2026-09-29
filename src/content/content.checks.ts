@@ -45,6 +45,7 @@ import {
   serviceSchema,
   teamMemberSchema,
 } from './schemas'
+import { ANSWER_TYPES } from './assessment-answers'
 import { ROUTE_SEO, assessmentSeo, serviceSeo } from './seo'
 import { sentences } from './sentences'
 import { BRAND } from './brand'
@@ -223,6 +224,24 @@ function assessmentsCount(): Check {
     `${EXPECTED_ASSESSMENTS} assessments × ${QUESTIONS_PER_ASSESSMENT} questions`,
     problems
   )
+}
+
+/** R5: every questionnaire says how each of its questions is answered, and only those. */
+function answerTypesComplete(): Check {
+  const slugs = new Set(ASSESSMENTS.map((a) => a.slug))
+  const problems = [
+    ...ASSESSMENTS.flatMap((a) => {
+      const types = ANSWER_TYPES[a.slug]
+      if (!types) return [`${a.slug}: no answer types`]
+      return types.length === a.questions.length
+        ? []
+        : [`${a.slug}: ${types.length} answer types for ${a.questions.length} questions`]
+    }),
+    ...Object.keys(ANSWER_TYPES)
+      .filter((slug) => !slugs.has(slug))
+      .map((slug) => `${slug}: answer types for no questionnaire`),
+  ]
+  return check('every questionnaire has one answer type per question', problems)
 }
 
 function noMarkdownResidue(): Check {
@@ -409,6 +428,7 @@ export function contentChecks(): readonly Check[] {
     servicesCount(),
     teamCount(),
     assessmentsCount(),
+    answerTypesComplete(),
     noMarkdownResidue(),
     noStrayWhitespace(),
     navResolves(),
