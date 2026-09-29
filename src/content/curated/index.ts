@@ -14,5 +14,6 @@
  */
 import type { Curation } from './core'
 import { HOME_CURATION } from './home'
+import { TEAM_PAGE_CURATION } from './team'
 
-export const CURATIONS: readonly Curation<unknown>[] = [HOME_CURATION]
+export const CURATIONS: readonly Curation<unknown>[] = [HOME_CURATION, TEAM_PAGE_CURATION]
