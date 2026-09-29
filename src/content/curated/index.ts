@@ -14,5 +14,6 @@
  */
 import { ABOUT_CURATION } from './about'
 import type { Curation } from './core'
+import { PROCESS_CURATION } from './process'
 
-export const CURATIONS: readonly Curation<unknown>[] = [ABOUT_CURATION]
+export const CURATIONS: readonly Curation<unknown>[] = [ABOUT_CURATION, PROCESS_CURATION]
