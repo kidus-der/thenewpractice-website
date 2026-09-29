@@ -1,0 +1,297 @@
+{
+  "palettes": [
+    {
+      "id": "current",
+      "name": "Current",
+      "family": "current",
+      "character": "The site as built: canopy green and bone, the brass point.",
+      "core": {
+        "canopy": "#14231c",
+        "canopySoft": "#1c2e25",
+        "bone": "#f1ece0",
+        "sand": "#e3dccb",
+        "clay": "#c8b9a0",
+        "stone": "#566059",
+        "brass": "#a9895c"
+      },
+      "grade": {
+        "shadow": "#182a21",
+        "highlight": "#e9e2d3"
+      }
+    },
+    {
+      "id": "jungle-shade",
+      "name": "Jungle Shade",
+      "family": "deep",
+      "character": "The canopy lifted into shade: a softer forest green under warm bone, the brass point kept.",
+      "core": {
+        "canopy": "#2b3a33",
+        "canopySoft": "#34463d",
+        "bone": "#f4f0e6",
+        "sand": "#e9e3d5",
+        "clay": "#cbbfa6",
+        "stone": "#55605a",
+        "brass": "#9a7b4b"
+      },
+      "grade": {
+        "shadow": "#2e3f37",
+        "highlight": "#ddd7c8"
+      },
+      "dark": {
+        "lift": 0.55
+      },
+      "scrim": {
+        "colour": "#2b3a33",
+        "strength": 1.4
+      }
+    },
+    {
+      "id": "cenote",
+      "name": "Cenote",
+      "family": "deep",
+      "character": "Deep water under limestone: a teal slate ground, cool bone, the gold point as light on the water.",
+      "core": {
+        "canopy": "#23393f",
+        "canopySoft": "#2c444a",
+        "bone": "#f1f0e8",
+        "sand": "#e4e6dd",
+        "clay": "#bcc3b8",
+        "stone": "#4c5d60",
+        "brass": "#9a7b4b"
+      },
+      "grade": {
+        "shadow": "#253c42",
+        "highlight": "#d8dbd2"
+      },
+      "dark": {
+        "lift": 0.55
+      },
+      "scrim": {
+        "colour": "#23393f",
+        "strength": 1.4
+      }
+    },
+    {
+      "id": "clay",
+      "name": "Clay",
+      "family": "deep",
+      "character": "Terracotta after sunset: a burnt earth ground, warm bone, a gilded point.",
+      "core": {
+        "canopy": "#48312a",
+        "canopySoft": "#533a31",
+        "bone": "#f5eee3",
+        "sand": "#eee4d3",
+        "clay": "#d1bea2",
+        "stone": "#675950",
+        "brass": "#9a7b4b"
+      },
+      "grade": {
+        "shadow": "#4a342c",
+        "highlight": "#e2d7c5"
+      },
+      "dark": {
+        "lift": 0.55
+      },
+      "scrim": {
+        "colour": "#48312a",
+        "strength": 1.4
+      }
+    },
+    {
+      "id": "limestone",
+      "name": "Limestone",
+      "family": "light",
+      "character": "The coast's own stone: pale warm limestone takes the canopy's place, green black ink, a bronze point.",
+      "ink": "#1c2621",
+      "dark": {
+        "fg": "#1c2621",
+        "lift": 0.45
+      },
+      "scrim": {
+        "colour": "#d9d2c2",
+        "strength": 1.15
+      },
+      "core": {
+        "canopy": "#bcb3a0",
+        "canopySoft": "#c6bdab",
+        "bone": "#f4f0e6",
+        "sand": "#e7e1d2",
+        "clay": "#c6bca6",
+        "stone": "#595e54",
+        "brass": "#6e5026"
+      },
+      "grade": {
+        "shadow": "#5b5e52",
+        "highlight": "#f1ede2"
+      }
+    },
+    {
+      "id": "sage",
+      "name": "Sage",
+      "family": "light",
+      "character": "Dry season leaves: a soft sage ground, deep green ink, bronze.",
+      "ink": "#1d2a22",
+      "dark": {
+        "fg": "#1d2a22",
+        "lift": 0.45
+      },
+      "scrim": {
+        "colour": "#c9d0bf",
+        "strength": 1.15
+      },
+      "core": {
+        "canopy": "#a9b5a0",
+        "canopySoft": "#b3bea9",
+        "bone": "#f2f1e7",
+        "sand": "#e3e5d7",
+        "clay": "#c0c6b2",
+        "stone": "#4f5c52",
+        "brass": "#6e5026"
+      },
+      "grade": {
+        "shadow": "#4f5d50",
+        "highlight": "#eff0e5"
+      }
+    },
+    {
+      "id": "sea-glass",
+      "name": "Sea Glass",
+      "family": "light",
+      "character": "Caribbean shallows worn smooth: a pale aqua ground, deep teal ink, bronze.",
+      "ink": "#16302e",
+      "dark": {
+        "fg": "#16302e",
+        "lift": 0.45
+      },
+      "scrim": {
+        "colour": "#c4d8d1",
+        "strength": 1.15
+      },
+      "core": {
+        "canopy": "#9fbdb4",
+        "canopySoft": "#aac6bd",
+        "bone": "#eef3ea",
+        "sand": "#dde7e1",
+        "clay": "#b9ccc3",
+        "stone": "#48605b",
+        "brass": "#6b4f27"
+      },
+      "grade": {
+        "shadow": "#46625c",
+        "highlight": "#ebf1e8"
+      }
+    },
+    {
+      "id": "sand-dune",
+      "name": "Sand Dune",
+      "family": "light",
+      "character": "Midday sand: the warmest ground, an ochre dune under umber ink, a dark gold point.",
+      "ink": "#2a2016",
+      "dark": {
+        "fg": "#2a2016",
+        "lift": 0.45
+      },
+      "scrim": {
+        "colour": "#e2d2b4",
+        "strength": 1.15
+      },
+      "core": {
+        "canopy": "#cfb792",
+        "canopySoft": "#d6c09e",
+        "bone": "#f6efe2",
+        "sand": "#ecdfc8",
+        "clay": "#d2bf9e",
+        "stone": "#665748",
+        "brass": "#6a4a20"
+      },
+      "grade": {
+        "shadow": "#665440",
+        "highlight": "#f3eadb"
+      }
+    },
+    {
+      "id": "mist",
+      "name": "Mist",
+      "family": "light",
+      "character": "Morning haze over the reef: a cool blue green ground, slate ink, bronze.",
+      "ink": "#1b2630",
+      "dark": {
+        "fg": "#1b2630",
+        "lift": 0.45
+      },
+      "scrim": {
+        "colour": "#c9d4d6",
+        "strength": 1.15
+      },
+      "core": {
+        "canopy": "#a9b6b9",
+        "canopySoft": "#b4c0c2",
+        "bone": "#f2f1e8",
+        "sand": "#dce4e3",
+        "clay": "#bac6c6",
+        "stone": "#4e5a61",
+        "brass": "#6e5026"
+      },
+      "grade": {
+        "shadow": "#4e5b62",
+        "highlight": "#eff0e7"
+      }
+    },
+    {
+      "id": "shell",
+      "name": "Shell",
+      "family": "light",
+      "character": "The inside of a conch: a pale rose clay ground, cocoa ink, bronze.",
+      "ink": "#2b1f1d",
+      "dark": {
+        "fg": "#2b1f1d",
+        "lift": 0.45
+      },
+      "scrim": {
+        "colour": "#e3cdc3",
+        "strength": 1.15
+      },
+      "core": {
+        "canopy": "#d1b3a6",
+        "canopySoft": "#d8beb2",
+        "bone": "#f6efe8",
+        "sand": "#eee0d6",
+        "clay": "#d6bfb2",
+        "stone": "#6a5751",
+        "brass": "#6c4c25"
+      },
+      "grade": {
+        "shadow": "#6a544d",
+        "highlight": "#f3ebe3"
+      }
+    },
+    {
+      "id": "linen",
+      "name": "Linen",
+      "family": "light",
+      "character": "Almost unpainted: the lightest set, a flax ground one step below sand, olive black ink, the most golden point.",
+      "ink": "#28261c",
+      "dark": {
+        "fg": "#28261c",
+        "lift": 0.45
+      },
+      "scrim": {
+        "colour": "#e8e1d2",
+        "strength": 1.15
+      },
+      "core": {
+        "canopy": "#d8cebb",
+        "canopySoft": "#ded5c4",
+        "bone": "#f6f2ea",
+        "sand": "#ebe6d9",
+        "clay": "#cfc6b3",
+        "stone": "#5c5a50",
+        "brass": "#8a6a36"
+      },
+      "grade": {
+        "shadow": "#6b6858",
+        "highlight": "#f4f0e7"
+      }
+    }
+  ]
+}
