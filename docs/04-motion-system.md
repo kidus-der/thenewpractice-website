@@ -25,6 +25,8 @@ The site uses **GSAP** (ScrollTrigger, SplitText, Lenis on its ticker) and **Mot
 | Scroll position, viewport entry, pins, scrubs, parallax, smooth scroll          | **GSAP**   | `<Reveal>`, hero settle, manifesto scrub, sticky index, timeline rule, travelling glow, header settle/hide, drifting carousel |
 | React state: mount/unmount, route change, open/closed, hover/tap, layout change | **Motion** | Route curtain, nav overlay `AnimatePresence`, form → confirmation swap, self-assessment result reveal, index plate preview    |
 
+The self-assessment's move to the next question (round 1, R5) is a page scroll, so it goes through `scrollTo()` in `SmoothScroll.tsx` like every other programmatic scroll, at `--d-slow` rather than the default glide, and only when the next question is not already comfortably in view; under reduced motion Lenis is off and the jump is native and instant.
+
 Enforced by:
 
 - `<MotionProvider>` in `src/motion/motion-config.ts`, mounted once in `app/layout.tsx` around the page. It is `<MotionConfig reducedMotion="user" transition={defaultTransition}>`, and `defaultTransition` is `{ type: 'tween', duration: D.base, ease: identityEase.outExpo }`. Every child `motion` component inherits it; no component passes `type: 'spring'`.
