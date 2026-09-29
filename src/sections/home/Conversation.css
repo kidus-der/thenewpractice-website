@@ -1,11 +1,11 @@
 /* ==========================================================================
    05 — CONVERSATION — co-located with Conversation.tsx, imported once by it.
-   Copy left, founder right; the line action closes the page. Tokens only; px
+   Copy and founder left, the plate right; the line action closes the page. Tokens only; px
    for geometry per rule 4 as amended.
    ========================================================================== */
 
 .conversation__grid {
-  row-gap: var(--s-7);
+  row-gap: var(--s-6);
   align-items: start;
 }
 .conversation__copy {
@@ -54,12 +54,24 @@
   max-width: 28ch;
 }
 .conversation__action {
-  margin-top: var(--s-7);
+  margin-top: var(--s-6);
 }
 
 @media (min-width: 1024px) {
-  /* the founder block starts level with the copy, a group down from the eyebrow */
+  /* copy and founder on the left, the plate on the right across both, the
+     pair centred on it */
+  .conversation__grid {
+    grid-template-rows: 1fr auto auto 1fr;
+    row-gap: 0;
+  }
+  .conversation__plate {
+    grid-row: 1 / -1;
+  }
+  .conversation__copy {
+    grid-row: 2;
+  }
   .conversation__founder {
-    padding-top: calc(var(--s-6) + var(--t-eyebrow));
+    grid-row: 3;
+    margin-top: var(--s-6);
   }
 }

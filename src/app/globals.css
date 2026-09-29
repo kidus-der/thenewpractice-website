@@ -294,6 +294,10 @@ textarea {
 .p-list {
   grid-column: 1 / -1;
 }
+.p-aside,
+.p-aside-start {
+  grid-column: 1 / -1;
+}
 
 @media (min-width: 1024px) {
   .p-lead {
@@ -312,6 +316,16 @@ textarea {
      the margin to the left kept for the brass tick (docs/03 §4, Task 12) */
   .p-list {
     grid-column: 2 / 12;
+  }
+  /* a portrait plate beside a .p-lead column, or mirrored beside a .p-offset
+     one: four columns, so a 3:4 frame stays inside a 1280 × 800 viewport,
+     and column 12 left clear as column 1 is, for the scroll rail (round 1,
+     R3: the home page's sections pair a few lines with a picture) */
+  .p-aside {
+    grid-column: 8 / 12;
+  }
+  .p-aside-start {
+    grid-column: 2 / 6;
   }
 }
 

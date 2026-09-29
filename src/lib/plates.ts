@@ -20,6 +20,8 @@ export const REDUCED_PLATE_QUALITY = 60
 const REDUCED_QUALITY_FRAMES: ReadonlySet<MediaKey> = new Set<MediaKey>([
   // canopy silhouette: 424 kB at 1080 wide and quality 75; 372 kB at 60
   'index-01',
+  // kapok buttress roots in forest (round 1, R3): 404 kB on disk at 1040 wide
+  'home-philosophy',
 ])
 
 export function plateQuality(media: MediaKey): number {

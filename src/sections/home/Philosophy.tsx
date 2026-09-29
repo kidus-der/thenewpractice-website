@@ -5,10 +5,11 @@
  * interior template), the panels on the right — numeral, term in the
  * Didone, the client's sentence beneath. No icons, no cards. Then the
  * manifesto, "Why The New Practice?", nested as the section's one
- * subsection. Canopy throughout. Server component; the index and the
- * manifesto own the client code.
+ * subsection, with the section's picture beside it. Canopy throughout.
+ * Server component; the index and the manifesto own the client code.
  */
 import './Philosophy.css'
+import type { MediaKey } from '@/content/media'
 import type { Section } from '@/content/schemas'
 import { SectionHeader } from '@/components/SectionHeader'
 import { StickyIndex } from '@/sections/StickyIndex'
@@ -21,11 +22,13 @@ type Props = Readonly<{
   manifesto: Section
   numeral: string
   indexLabel: string
+  /** The manifesto's picture. */
+  plate: MediaKey
 }>
 
 const pillarId = (sectionId: string, index: number): string => `${sectionId}-pillar-${index + 1}`
 
-export function Philosophy({ section, manifesto, numeral, indexLabel }: Props) {
+export function Philosophy({ section, manifesto, numeral, indexLabel, plate }: Props) {
   const headingId = `${section.id}-title`
   const pillars = section.definitions ?? []
   const items = pillars.map((pillar, i) => ({
@@ -68,7 +71,7 @@ export function Philosophy({ section, manifesto, numeral, indexLabel }: Props) {
         </ol>
       </div>
 
-      <Manifesto section={manifesto} numeral={numeral} />
+      <Manifesto section={manifesto} numeral={numeral} plate={plate} />
     </section>
   )
 }

@@ -168,6 +168,8 @@ Reuse these; do not invent new column spans per template.
 | `.p-narrow` | `4 / 10` | Centred-ish text moments (the home statement only)                                                                                               |
 | `.p-wide`   | `1 / -1` | Full-bleed media (a `grid12` child spanning everything)                                                                                          |
 | `.p-list`   | `2 / 12` | Index and hairline lists: numerals align with the section titles at column 2, the margin holds the brass tick (blessed after Task 12; T3 and T6) |
+| `.p-aside`  | `8 / 12` | A portrait plate beside a `.p-lead` column: four columns keep a 3:4 frame inside a 1280 × 800 viewport; column 12 stays clear, as column 1 does, so a sticky plate never meets the scroll rail (round 1, R3: home §3 and §5) |
+| `.p-aside-start` | `2 / 6` | The same plate mirrored, beside a `.p-offset` column (round 1, R3: home §2 and the manifesto) |
 
 ---
 
