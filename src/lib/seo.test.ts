@@ -170,12 +170,13 @@ describe('collection builders', () => {
     }
   })
 
-  it("names every assessment, then the document's scoring line, within the limit", () => {
+  it("names every assessment, then the document's screening sentence, within the limit", () => {
     for (const assessment of ASSESSMENTS) {
       const seo = assessmentSeo(assessment)
       expect(seo.description).toBe(
-        `${assessment.title}. Scoring: Give yourself 1 point for each “yes” answer. Total score: 0–15.`
+        `${assessment.title}. The New Practice Self-Assessment Series is designed as a screening tool only.`
       )
+      expect(seo.description).not.toMatch(/1 point for each/)
       expect(seo.description.length).toBeLessThanOrEqual(DESCRIPTION_MAX)
     }
   })

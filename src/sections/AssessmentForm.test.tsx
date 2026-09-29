@@ -99,7 +99,9 @@ const storageSpy = () => {
   }
 }
 
-describe('AssessmentForm', () => {
+// Every test renders and answers a sheet of fifteen; on a shared, loaded machine
+// that has run past Vitest's 5 s default (ledger, R7 acceptance note).
+describe('AssessmentForm', { timeout: 20_000 }, () => {
   const fetchSpy = vi.fn()
   const local = storageSpy()
   const session = storageSpy()
@@ -127,7 +129,8 @@ describe('AssessmentForm', () => {
     assessment.questions.forEach((question, i) => {
       const group = groups[i]!
       expect(group).toHaveAccessibleName(question)
-      const radios = within(group).getAllByRole('radio')
+      // By selector: 150 role queries are slow in jsdom; the group roles are asserted above.
+      const radios = [...group.querySelectorAll<HTMLInputElement>('input[type="radio"]')]
       if (types[i] === 'scale') {
         expect(radios.map((r) => r.getAttribute('value'))).toEqual(
           Array.from({ length: 10 }, (_, n) => String(n + 1))

@@ -197,13 +197,14 @@ export function teamSeo(member: TeamMember): RouteSeo {
 }
 
 /**
- * The document's own how-to sentence (l.974), verbatim. Round 1 (R5): the
- * scoring line it replaced ("1 point for each yes") no longer describes how
- * the questionnaires are scored, so it is not used anywhere.
+ * The first sentence of the document's disclaimer (l.962), verbatim. Round 1
+ * (R5): the scoring line it replaced ("1 point for each yes") no longer
+ * describes how the questionnaires are scored, so it is not used anywhere;
+ * the how-to sentence would take the longest title past DESCRIPTION_MAX.
  */
-const HOW_TO_LINE =
-  'Answer each question as honestly as possible based on your experiences over the past twelve months.'
+const SCREENING_LINE =
+  'The New Practice Self-Assessment Series is designed as a screening tool only.'
 
-/** A questionnaire page: its title, then the client's how-to sentence. */
+/** A questionnaire page: its title, then the client's screening sentence. */
 export const assessmentSeo = (assessment: Assessment): RouteSeo =>
-  route(assessment.title, `${assessment.title}. ${HOW_TO_LINE}`)
+  route(assessment.title, `${assessment.title}. ${SCREENING_LINE}`)
