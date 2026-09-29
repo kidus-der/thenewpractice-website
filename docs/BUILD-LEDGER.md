@@ -680,7 +680,7 @@ Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its 
 | R0 | doing (resumed) | — | Foundation: shorter title pages, curation layer, rule and doc updates | round1/r0-foundation | 3401 |
 | R1 | doing (resumed) | — | Images: source, grade and log pictures matched to their text | round1/r1-images | 3402 |
 | R2 | doing (resumed) | — | Footer: links, © line, small mark | round1/r2-footer | 3403 |
-| R7 | doing (resumed) | — | Palettes: ten lighter palettes + capture tooling | round1/r7-palettes | 3407 |
+| R7 | done | — | Palettes: ten lighter palettes + capture tooling | round1/r7-palettes | 3407 |
 | R3 | todo | R0, R1 | Home: shorter; Who We Help list left, fixed image right | round1/r3-home | 3404 |
 | R4a | todo | R0, R1 | About, Our Process, A Personal Message, Fees: curate, images | round1/r4a-interior | 3411 |
 | R4b | todo | R0, R1 | Clinical Services index + 11 service pages: curate, images | round1/r4b-services | 3412 |
@@ -730,3 +730,8 @@ For each page in the group: cut the reading load to roughly the Kusnacht shape (
 ## Round-1 pause (2026-09-28)
 
 Owner paused the run. Each task's resume notes (done, remaining, decisions, gotchas, next steps) are in `docs/round1-progress/<id>-progress.md`. Resume: a fresh agent per task in the same worktree (`../tnp-wt/<branch-suffix>`), told to read its notes first and continue from the pushed branch head.
+
+### R7 — accepted (2026-09-28)
+
+- Merged `f939e0d`. Ten palettes in `design/palettes/palettes.json` (deep: Jungle Shade, Cenote, Clay; light: Limestone, Sage, Sea Glass, Sand Dune, Mist, Shell, Linen); `CONTRAST.md` all ten pass (text AA, accent 3:1 as a mark). Tooling: `node scripts/palettes/capture.mjs [--palettes=…] [--routes=…]` against a production server on 3417; `contrast.mjs [--check]`. Main session read Current / Sea Glass / Cenote home captures: correct recolour, chrome follows, images regraded. `src/` untouched; the agent's single `verify` run hit AssessmentForm 5 s timeouts under machine load (steps pass separately); main session re-ran lint + typecheck on the merge.
+- Findings for later: form errors are set in the accent (2.77:1 on bone today) — move `.field__error` to ink (R6 touches the forms); Current's accent fails 3:1 as a mark on bone/sand and the hero eyebrow/tagline at 0.72 bone fall under 4.5 (estimate); GroundManager hard-codes the dark ground → bone pairing and `--c-canopy` doubles as ink — a real palette switch needs `--ground-dark-fg` and a separate ink token (future palette task, not this round).
