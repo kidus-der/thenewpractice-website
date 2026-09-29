@@ -72,6 +72,11 @@
   --margin: 20px;
   --gutter: 24px;
   --container: 1720px;
+  /* the distance from the viewport's edge to the content's edge: the margin,
+     plus the space either side of the capped container on a wide screen.
+     The scroll rail sits in the middle of it, so no column is ever under the
+     rail (round 1, R9). */
+  --page-edge: max(var(--margin), calc((100vw - var(--container)) / 2 + var(--margin)));
 
   /* — motion — */
   --d-instant: 120ms;
@@ -319,8 +324,9 @@ textarea {
   }
   /* a portrait plate beside a .p-lead column, or mirrored beside a .p-offset
      one: four columns, so a 3:4 frame stays inside a 1280 × 800 viewport,
-     and column 12 left clear as column 1 is, for the scroll rail (round 1,
-     R3: the home page's sections pair a few lines with a picture) */
+     and column 12 left clear as column 1 is, so the pair sits centred on the
+     page (round 1, R3: the home page's sections pair a few lines with a
+     picture) */
   .p-aside {
     grid-column: 8 / 12;
   }
@@ -495,9 +501,11 @@ textarea {
   display: flex;
   flex-direction: column;
 }
+/* one step above the rule: room for the label once it floats (round 1, R9:
+   the rows read as one composed block; docs/03 §5 Form fields) */
 .field__control {
   position: relative;
-  padding-top: var(--s-5);
+  padding-top: var(--s-4);
 }
 .field__input {
   width: 100%;

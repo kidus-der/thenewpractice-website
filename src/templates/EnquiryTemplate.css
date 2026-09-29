@@ -103,12 +103,15 @@ main > section.contact-open {
 .contact__sheet-inner {
   padding: var(--s-6) var(--margin);
 }
+/* the heading opens the form, one step above the first field's label room */
 .contact__sheet-heading {
-  margin-bottom: var(--s-6);
+  margin-bottom: var(--s-4);
 }
 @media (min-width: 1024px) {
+  /* the letter starts on the title's column (.p-lead, 2 / 8) and stops a
+     gutter short of the sheet */
   .contact__letter {
-    grid-column: 1 / 6;
+    grid-column: 2 / 7;
     grid-row: 1;
   }
   /* the sheet rises one step into the title page's lower half, beside the
@@ -132,10 +135,12 @@ main > section.contact-open {
 }
 
 /* — the form — */
+/* rows at --s-3: the error line each field reserves beneath its rule is
+   the rest of the gap (docs/03 §5 Form fields) */
 .enquiry-form {
   display: flex;
   flex-direction: column;
-  gap: var(--s-5);
+  gap: var(--s-3);
   max-width: 36rem;
 }
 .enquiry-form__actions {
