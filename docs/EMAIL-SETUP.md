@@ -6,10 +6,10 @@ Until the steps below are done, the website runs the **log adapter**: a submissi
 
 ## What the emails are
 
-| Email | Sent when | To | Reply-to | Subject |
-| --- | --- | --- | --- | --- |
-| Enquiry | the contact form is sent | `ENQUIRY_TO_EMAIL` | the enquirer's email | `Enquiry: Self`, `Enquiry: Family` or `Enquiry: Professional` |
-| Self-assessment | a visitor opts in beneath a result, ticks the consent and sends | `ENQUIRY_TO_EMAIL` | the visitor's email, if they gave one | `Self-assessment: <questionnaire title>` |
+| Email           | Sent when                                                       | To                 | Reply-to                              | Subject                                                       |
+| --------------- | --------------------------------------------------------------- | ------------------ | ------------------------------------- | ------------------------------------------------------------- |
+| Enquiry         | the contact form is sent                                        | `ENQUIRY_TO_EMAIL` | the enquirer's email                  | `Enquiry: Self`, `Enquiry: Family` or `Enquiry: Professional` |
+| Self-assessment | a visitor opts in beneath a result, ticks the consent and sends | `ENQUIRY_TO_EMAIL` | the visitor's email, if they gave one | `Self-assessment: <questionnaire title>`                      |
 
 Both are branded HTML (the palette, the ceiba mark carried inside the message, hairlines, the Didone with safe fallbacks) with a plain-text part that says the same thing. They load nothing from the internet, carry no tracking and contain no links except `mailto:` and `tel:`. The website keeps no copy. The code: `src/server/email/` (templates), `src/server/mail.adapter.ts` (sending), `src/server/*.handler.ts` (what goes in each).
 
@@ -35,12 +35,12 @@ Open Resend from the integration (Vercel dashboard, Integrations, Resend, _Open 
 
 Resend then lists the DNS records to add. They are, in outline:
 
-| Type | Name | Value | Purpose |
-| --- | --- | --- | --- |
-| `TXT` | `resend._domainkey` | the long `p=…` key Resend shows | DKIM: proves the email is from the domain |
-| `MX` | `send` | `feedback-smtp.<region>.amazonses.com`, priority `10` | bounce handling for the sending subdomain |
-| `TXT` | `send` | `v=spf1 include:amazonses.com ~all` | SPF: allows Resend to send for the domain |
-| `TXT` | `_dmarc` (recommended) | `v=DMARC1; p=none;` | DMARC: tells inboxes what to do with failures |
+| Type  | Name                   | Value                                                 | Purpose                                       |
+| ----- | ---------------------- | ----------------------------------------------------- | --------------------------------------------- |
+| `TXT` | `resend._domainkey`    | the long `p=…` key Resend shows                       | DKIM: proves the email is from the domain     |
+| `MX`  | `send`                 | `feedback-smtp.<region>.amazonses.com`, priority `10` | bounce handling for the sending subdomain     |
+| `TXT` | `send`                 | `v=spf1 include:amazonses.com ~all`                   | SPF: allows Resend to send for the domain     |
+| `TXT` | `_dmarc` (recommended) | `v=DMARC1; p=none;`                                   | DMARC: tells inboxes what to do with failures |
 
 Copy each value **exactly as Resend shows it**; the table is the shape, the dashboard is the truth.
 
@@ -76,11 +76,11 @@ vercel --prod
 
 ## Environment variables, in one place
 
-| Variable | Required | What it is |
-| --- | --- | --- |
-| `RESEND_API_KEY` | yes, to send | Added by the Resend integration. Without it the site logs instead of sending. |
-| `ENQUIRY_TO_EMAIL` | yes, to send | The practice's inbox for every submission. |
-| `ENQUIRY_FROM_EMAIL` | no | The sending address, on the verified domain. Default `enquiries@<site domain>`. |
+| Variable             | Required     | What it is                                                                      |
+| -------------------- | ------------ | ------------------------------------------------------------------------------- |
+| `RESEND_API_KEY`     | yes, to send | Added by the Resend integration. Without it the site logs instead of sending.   |
+| `ENQUIRY_TO_EMAIL`   | yes, to send | The practice's inbox for every submission.                                      |
+| `ENQUIRY_FROM_EMAIL` | no           | The sending address, on the verified domain. Default `enquiries@<site domain>`. |
 
 A second recipient for self-assessments is not needed: both kinds go to the same inbox and the subject says which is which. If the practice later wants them apart, a filter on the subject prefix `Self-assessment:` does it without a code change.
 
