@@ -20,6 +20,12 @@ export const REDUCED_PLATE_QUALITY = 60
 const REDUCED_QUALITY_FRAMES: ReadonlySet<MediaKey> = new Set<MediaKey>([
   // canopy silhouette: 424 kB at 1080 wide and quality 75; 372 kB at 60
   'index-01',
+  // round 1 (R4a): graded frames over the 120 kB budget on disk (webp at 1040 wide)
+  'about-ceiba', // 265 kB
+  'process-lead-clinician', // 173 kB
+  'about-practice', // 155 kB
+  'fees', // 154 kB
+  'about-founder', // 129 kB
 ])
 
 export function plateQuality(media: MediaKey): number {

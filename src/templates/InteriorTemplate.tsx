@@ -16,12 +16,23 @@
  * statement, docs/05's Statement block — both read this way; nothing else
  * about the template changes. `bodies` lets a route stand a block in for one
  * section's prose (the process page's timeline).
+ *
+ * `layout="spread"` (round 1, R4a) sets every pictured section as a spread,
+ * its plate beside the text and alternating sides (`spreadSides`). A spread
+ * takes the whole grid, so a page in this layout carries no sticky index;
+ * its sections are short enough that the reader sees where they are.
  */
 import type { ReactNode } from 'react'
 import './InteriorTemplate.css'
 import type { Page } from '@/content/schemas'
 import { UI_INTERIOR } from '@/content/ui'
-import { hasStickyIndex, numeral, resolveGrounds, sectionsToIndex } from '@/lib/interior'
+import {
+  hasStickyIndex,
+  numeral,
+  resolveGrounds,
+  sectionsToIndex,
+  spreadSides,
+} from '@/lib/interior'
 import type { PrevNext } from '@/lib/prevNext'
 import {
   ContentSection,
@@ -35,6 +46,8 @@ import { PrevNextRail } from '@/sections/PrevNextRail'
 import { StickyIndex } from '@/sections/StickyIndex'
 
 export type InteriorVariant = 'long-read' | 'letter'
+/** `column`: plates inside the reading column. `spread`: each plate beside its text. */
+export type InteriorLayout = 'column' | 'spread'
 
 const REGISTER: Readonly<Record<InteriorVariant, Register>> = {
   'long-read': 'body',
@@ -53,6 +66,7 @@ export type InteriorTemplateProps = {
   /** Section id → a block that replaces that section's prose. */
   bodies?: Readonly<Record<string, ReactNode>>
   prevNext?: PrevNext
+  layout?: InteriorLayout
 }
 
 export function InteriorTemplate({
@@ -63,8 +77,11 @@ export function InteriorTemplate({
   figures,
   bodies,
   prevNext,
+  layout = 'column',
 }: InteriorTemplateProps) {
-  const indexed = hasStickyIndex(page.sections)
+  const spread = layout === 'spread'
+  const indexed = !spread && hasStickyIndex(page.sections)
+  const sides = spread ? spreadSides(page.sections, plates) : []
   const items = sectionsToIndex(page.sections)
   // docs/02 §Ground rhythm: a sand section never directly follows another.
   const sectionGrounds = resolveGrounds(page.sections, grounds)
@@ -75,6 +92,7 @@ export function InteriorTemplate({
       className="interior"
       data-variant={variant}
       data-indexed={indexed ? 'true' : undefined}
+      data-layout={layout}
     >
       <PageIntro
         id={`${page.slug}-title`}
@@ -102,6 +120,7 @@ export function InteriorTemplate({
             figure={figures?.[section.id]}
             body={bodies?.[section.id]}
             register={REGISTER[variant]}
+            side={sides[i]}
           />
         ))}
       </div>

@@ -15,13 +15,18 @@
  * section's prose with a block of the route's choosing (the process page's
  * timeline). An untitled section carries no eyebrow: the numeral is a label
  * for a heading, and alone it is decoration.
+ *
+ * Round 1 (R4a), additive: `side` sets the section as a spread. Its plate
+ * leaves the prose and stands beside the whole text block from 1024px, in
+ * the first or the last half of the grid (ContentSection.css); below 1024px
+ * it follows the text. Without `side` nothing changes.
  */
 import type { ReactNode } from 'react'
 import './ContentSection.css'
 import type { MediaKey } from '@/content/media'
 import type { Section, Signature } from '@/content/schemas'
 import { isPortrait } from '@/lib/plates'
-import { capitaliseFirst } from '@/lib/interior'
+import { capitaliseFirst, type SpreadSide } from '@/lib/interior'
 import { Reveal } from '@/motion/Reveal'
 import { HairlineList } from './HairlineList'
 import { PlateFigure } from './PlateFigure'
@@ -44,6 +49,8 @@ const PROSE_CLASS: Readonly<Record<Register, string>> = {
  */
 const PLATE_SIZES = '(min-width: 1024px) 52vw, 90vw'
 const PORTRAIT_PLATE_SIZES = '(min-width: 1024px) 36vw, 56vw'
+/** A spread's plate: half the grid at most from 1024px, the column below. */
+const SPREAD_PLATE_SIZES = '(min-width: 1024px) 40vw, 90vw'
 
 type Props = {
   section: Section
@@ -55,6 +62,8 @@ type Props = {
   /** A block that stands in for the section's prose (the process timeline). */
   body?: ReactNode
   register?: Register
+  /** Set the section as a spread, its plate on this side (round 1, R4a). */
+  side?: SpreadSide
 }
 
 type ProseProps = { items: readonly string[]; register: Register; className?: string }
@@ -163,14 +172,19 @@ export function ContentSection({
   figure,
   body,
   register = 'body',
+  side,
 }: Props) {
   const titleId = `${section.id}-title`
+  const spread = side ? plates?.[section.id] : undefined
+  // A spread's plate stands beside the text, so the prose does not also carry it.
+  const bodyPlates = spread ? undefined : plates
   return (
     <section
       id={section.id}
       className="content-section"
       data-ground={ground}
       data-n={numeral}
+      data-side={spread ? side : undefined}
       aria-labelledby={section.title ? titleId : undefined}
     >
       <div className="shell grid12">
@@ -197,12 +211,19 @@ export function ContentSection({
             </Reveal>
           )}
           {figure && <div className="content-section__figure">{figure}</div>}
-          {body ?? <SectionBody section={section} plates={plates} register={register} />}
+          {body ?? <SectionBody section={section} plates={bodyPlates} register={register} />}
           {section.subsections?.map((sub) => (
             <Subsection key={sub.id} section={sub} plates={plates} register={register} />
           ))}
           {section.signature && <SignatureBlock signature={section.signature} />}
         </div>
+        {spread && (
+          <PlateFigure
+            media={spread}
+            sizes={SPREAD_PLATE_SIZES}
+            className="content-section__spread-plate"
+          />
+        )}
       </div>
     </section>
   )

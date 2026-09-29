@@ -11,6 +11,7 @@ import {
   plateRatio,
   resolveGrounds,
   sectionsToIndex,
+  spreadSides,
 } from './interior'
 
 const section = (id: string, title?: string): Section => ({ id, title, paragraphs: [] })
@@ -135,5 +136,31 @@ describe('capitaliseFirst', () => {
   it('handles a leading accented or astral character', () => {
     expect(capitaliseFirst('élan vital')).toBe('Élan vital')
     expect(capitaliseFirst('𝒶bc')).toBe('𝒶bc')
+  })
+})
+
+describe('spreadSides', () => {
+  const four = ['a', 'b', 'c', 'd'].map((id) => section(id))
+
+  it('alternates the pictured sections, the first on the left', () => {
+    expect(spreadSides(four, { a: 'x', b: 'x', c: 'x', d: 'x' })).toEqual([
+      'start',
+      'end',
+      'start',
+      'end',
+    ])
+  })
+
+  it('skips a section without a plate and keeps the alternation across it', () => {
+    expect(spreadSides(four, { a: 'x', c: 'x', d: 'x' })).toEqual([
+      'start',
+      undefined,
+      'end',
+      'start',
+    ])
+  })
+
+  it('gives no side to anything when there are no plates', () => {
+    expect(spreadSides(four, undefined)).toEqual([undefined, undefined, undefined, undefined])
   })
 })
