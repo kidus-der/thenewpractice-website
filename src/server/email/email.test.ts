@@ -99,7 +99,10 @@ describe('renderEnquiryEmail', () => {
   })
 
   it('omits the telephone when none was given', () => {
-    const { html, text } = renderEnquiryEmail({ ...ENQUIRY_FIXTURE, telephone: undefined }, OPTIONS)
+    const { html, text } = renderEnquiryEmail(
+      { ...ENQUIRY_FIXTURE, telephone: undefined, preferredContact: 'email' },
+      OPTIONS
+    )
 
     expect(html).not.toContain(`>${ASSESSMENT_SEND.fields.telephone}<`)
     expect(text).not.toContain(`${ASSESSMENT_SEND.fields.telephone}:`)
