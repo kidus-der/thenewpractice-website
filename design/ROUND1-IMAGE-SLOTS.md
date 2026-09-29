@@ -55,3 +55,11 @@ Written by task R1 (round 1, 2026-09-28). Every picture chosen in round 1, the t
 | `service-recovery-management-and-after-care` | Recovery Management & After care | “The transition home often determines whether progress made during treatment becomes a lasting change.” | A man walking away down a bright corridor with a suitcase: the journey home that after care is built around. Back view. |
 | `service-interventions-and-crisis-response` | Interventions & Crisis Response | “Families often contact us at a time of crisis.” | A man in silhouette on the phone by a window: the call made in a hard hour. Dark and not identifiable, so no one is shown in a bad light. |
 | `service-family-program` | Family Program | “Recovery is most successful when families understand the challenges they are facing and learn healthier ways of supporting one another.” | A mother and her grown daughter leaning on a sea wall, side by side, looking the same way: support between adults, backs to us. |
+
+## Team, Self-Assessment, Contact
+
+| Key | Page / section | The sentence it illustrates | Why it fits |
+| --- | --- | --- | --- |
+| `team-index` | Team index, intro | “Psychiatrists, psychologists, physicians, trauma therapists, addiction counselors, family therapists, nutritional specialists, somatic practitioners, and wellness professionals work as one integrated clinical team.” | Several people's hands over one wooden table of notes, seen from above: one team working on one case. No white coats, no hospital. |
+| `assessment-index` | Self-Assessment index | “They offer a confidential opportunity to reflect honestly on your experiences and may help you decide whether it would be beneficial to seek a professional consultation.” | A woman writing in a notebook in an armchair, absorbed: private, honest reflection at home, which is what the questionnaires ask for. |
+| `contact` | Contact, Begin the Conversation | “At The New Practice, every enquiry is handled personally, professionally, and with complete confidentiality.” | Two armchairs and a small table in an empty room between two windows: a conversation waiting to happen, in private. No one in frame. |

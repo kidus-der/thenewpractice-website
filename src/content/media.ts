@@ -371,6 +371,33 @@ export const MEDIA = {
     "credit": "DIBLACL .",
     "licence": "Pexels License"
   },
+  "team-index": {
+    "src": "/media/team-index.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAABQBQCdASoUABsAPu1krE+ppSQiMBgIATAdiWcAygAJUBZNNxS37YgLz7NSBwW0QZrVEAAA/i8n+9c1SYs8mN+gLlhl4JZqIJs9Yf5MA2DUv69mcfFBfj0W79TjtyDveLKKaXnJgYF6sl96icGBGlC0O93wks9VLTXNfbeJHBK7aYFSKZ7Dsh4wsVWloPlXeDD4OcnrVyKPFp9Zr/E19EZOwUd335mP7xGc0AAA",
+    "alt": "Hands of several people at a wooden table with open notebooks, papers and a tablet, seen from above",
+    "credit": "Pavel Danilyuk",
+    "licence": "Pexels License"
+  },
+  "assessment-index": {
+    "src": "/media/assessment-index.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAADQBACdASoUABsAPu1kqU2ppaQiMBgMATAdiWcAzYQv7jFj+Eil4P23zesbU75wwAD4qQIVFl4d7Th7rJozttRXTa9YATTqAqLOs56WZup+mh47P4SDwxsGjNqjyZDED6oJ4ZPGx2OGM3NMx5jVB+eriDWndIarp4/7feLAMkAAAA==",
+    "alt": "A woman seated in an armchair writing in a notebook",
+    "credit": "Letícia Alvares",
+    "licence": "Pexels License"
+  },
+  "contact": {
+    "src": "/media/contact.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAABwBACdASoUABsAPu1kqU2ppaQiMAgBMB2JZwDE2BXyFQcFjFwpLGL62fZnYADg9mLfrCuoMJvx/jEH7JoqBYezh3oxPE0MM+IMdWdnMxf+YfKahpUhCS8EO/9fHQRvrEftSyfOK9BiBkU9SrmBVkDeQDbEAzHSlCBfcp9bcJq+lz9x+6T3qYyJ6YIcAAAA",
+    "alt": "Two armchairs and a small table in an empty room between two windows",
+    "credit": "Luk Sauvage",
+    "licence": "Pexels License"
+  },
   "hero-surf-poster": {
     "src": "/media/hero-surf-poster.webp",
     "width": 2400,

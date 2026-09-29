@@ -482,6 +482,14 @@ Research date: 2026-09-28 (task R1). Governing brief: `docs/BUILD-LEDGER.md`, Ro
 | `service-interventions-and-crisis-response` | Pexels 13517400, The Humantra (https://www.pexels.com/photo/a-grayscale-photo-of-a-man-sitting-beside-the-window-13517400/) | Pexels 6756553 (man at a sliding door at night; face in profile), crisis search results (4584397 and similar: posed alarm, faces) |
 | `service-family-program` | Pexels 34626729, DIBLACL . (https://www.pexels.com/photo/two-women-enjoying-ocean-view-on-a-cloudy-day-34626729/) | Pexels 8841344 (used for Our Process), 8497678 (mother and son on a bench; smiling to each other, more lifestyle) |
 
+### Team, Self-Assessment, Contact
+
+| Slot | Chosen | Alternates considered |
+| --- | --- | --- |
+| `team-index` | Pexels 6340672, Pavel Danilyuk (https://www.pexels.com/photo/a-group-of-people-having-a-meeting-6340672/) | Pexels 7888816 (people around a table; the 3:4 crop leaves one person's hands), white-coat team photographs (read hospital; rejected) |
+| `assessment-index` | Pexels 33359322, Letícia Alvares (https://www.pexels.com/photo/woman-journaling-in-a-cozy-chair-at-home-33359322/) | Pexels 5357185 (hands writing on the knee; darker, less context), 3363111 (journal and cup; a lifestyle flat lay) |
+| `contact` | Pexels 36962663, Luk Sauvage (https://www.pexels.com/photo/cozy-minimalist-interior-with-natural-light-36962663/) | Pexels 16625884 (two chairs and a table against brick; colder), 30065112 (vintage armchairs by blinds; too dark) |
+
 ### Considered and rejected across round 1
 
 | Candidate | Why |

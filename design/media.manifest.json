@@ -576,6 +576,45 @@
       "focus": "centre",
       "ev": -6,
       "alt": "Two women seen from behind leaning on a sea wall, looking out at the water"
+    },
+    {
+      "key": "team-index",
+      "slot": "Team index: one team at one table",
+      "page": "https://www.pexels.com/photo/a-group-of-people-having-a-meeting-6340672/",
+      "url": "https://images.pexels.com/photos/6340672/pexels-photo-6340672.jpeg",
+      "credit": "Pavel Danilyuk",
+      "licence": "Pexels License",
+      "licenceUrl": "https://www.pexels.com/license/",
+      "aspect": "3:4",
+      "focus": "centre",
+      "ev": 0,
+      "alt": "Hands of several people at a wooden table with open notebooks, papers and a tablet, seen from above"
+    },
+    {
+      "key": "assessment-index",
+      "slot": "Self-Assessment index: reflecting in writing",
+      "page": "https://www.pexels.com/photo/woman-journaling-in-a-cozy-chair-at-home-33359322/",
+      "url": "https://images.pexels.com/photos/33359322/pexels-photo-33359322.jpeg",
+      "credit": "Letícia Alvares",
+      "licence": "Pexels License",
+      "licenceUrl": "https://www.pexels.com/license/",
+      "aspect": "3:4",
+      "focus": "centre",
+      "ev": 0,
+      "alt": "A woman seated in an armchair writing in a notebook"
+    },
+    {
+      "key": "contact",
+      "slot": "Contact, Begin the Conversation: two chairs, a small table",
+      "page": "https://www.pexels.com/photo/cozy-minimalist-interior-with-natural-light-36962663/",
+      "url": "https://images.pexels.com/photos/36962663/pexels-photo-36962663.jpeg",
+      "credit": "Luk Sauvage",
+      "licence": "Pexels License",
+      "licenceUrl": "https://www.pexels.com/license/",
+      "aspect": "3:4",
+      "focus": "centre",
+      "ev": 0,
+      "alt": "Two armchairs and a small table in an empty room between two windows"
     }
   ]
 }

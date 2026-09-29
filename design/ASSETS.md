@@ -75,7 +75,7 @@ Licence URL for every row: https://www.pexels.com/license/. Every output is unde
 
 ## Round 1 stills
 
-Added by task R1 on 2026-09-28: 29 frames, each chosen for the sentence it sits beside (register: `design/ROUND1-IMAGE-SLOTS.md`). Same source (Pexels), same licence, same grade as the set above; attribution recorded as `Photo by <author> on Pexels`. People appear, per the round-1 owner decision (docs/02 §Subject matter): calm, candid adults; unidentifiable wherever the copy is about crisis, trauma, addiction or mental illness, which is the Pexels licence's *not in a bad light* condition. `focus` absent means sharp's attention crop; `left` and `right` were added to the pipeline for two frames whose subject sits off-centre in a landscape source.
+Added by task R1 on 2026-09-28: 32 frames, each chosen for the sentence it sits beside (register: `design/ROUND1-IMAGE-SLOTS.md`). Same source (Pexels), same licence, same grade as the set above; attribution recorded as `Photo by <author> on Pexels`. People appear, per the round-1 owner decision (docs/02 §Subject matter): calm, candid adults; unidentifiable wherever the copy is about crisis, trauma, addiction or mental illness, which is the Pexels licence's *not in a bad light* condition. `focus` absent means sharp's attention crop; `left` and `right` were added to the pipeline for two frames whose subject sits off-centre in a landscape source.
 
 | File | Source page | Author | Licence | Stands in for | Aspect | Focus | ev |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -108,6 +108,9 @@ Added by task R1 on 2026-09-28: 29 frames, each chosen for the sentence it sits 
 | `service-recovery-management-and-after-care` | https://www.pexels.com/photo/back-view-of-a-man-in-a-gray-suit-walking-with-his-luggage-6050133/ | Gustavo Fring | Pexels License | Recovery Management & After Care: the journey home | 3:4 | centre | 0 |
 | `service-interventions-and-crisis-response` | https://www.pexels.com/photo/a-grayscale-photo-of-a-man-sitting-beside-the-window-13517400/ | The Humantra | Pexels License | Interventions & Crisis Response: a call made in the dark | 3:4 | centre | +8 |
 | `service-family-program` | https://www.pexels.com/photo/two-women-enjoying-ocean-view-on-a-cloudy-day-34626729/ | DIBLACL . | Pexels License | Family Program: a mother and daughter looking out to sea | 3:4 | centre | −6 |
+| `team-index` | https://www.pexels.com/photo/a-group-of-people-having-a-meeting-6340672/ | Pavel Danilyuk | Pexels License | Team index: one team at one table | 3:4 | centre | 0 |
+| `assessment-index` | https://www.pexels.com/photo/woman-journaling-in-a-cozy-chair-at-home-33359322/ | Letícia Alvares | Pexels License | Self-Assessment index: reflecting in writing | 3:4 | centre | 0 |
+| `contact` | https://www.pexels.com/photo/cozy-minimalist-interior-with-natural-light-36962663/ | Luk Sauvage | Pexels License | Contact, Begin the Conversation: two chairs, a small table | 3:4 | centre | 0 |
 
 ## Rejected
 
