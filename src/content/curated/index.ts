@@ -12,6 +12,7 @@
  * Round 1: R0 built the layer and curates nothing; R3, R4a–d and R5 add a
  * module per page and list it here.
  */
+import { CONTACT_CURATION } from './contact'
 import type { Curation } from './core'
 import { HOME_CURATION } from './home'
 import { SERVICES_CURATION, SERVICES_PAGE_CURATION } from './services'
@@ -20,4 +21,5 @@ export const CURATIONS: readonly Curation<unknown>[] = [
   HOME_CURATION,
   SERVICES_PAGE_CURATION,
   SERVICES_CURATION,
+  CONTACT_CURATION,
 ]

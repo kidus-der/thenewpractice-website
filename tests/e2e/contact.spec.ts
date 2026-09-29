@@ -5,7 +5,8 @@
  */
 import { BRAND } from '../../src/content/brand'
 import { ENQUIRY } from '../../src/content/enquiry'
-import { CONTACT } from '../../src/content/pages/contact'
+import { CONTACT_CURATED as CONTACT } from '../../src/content/curated/contact'
+import { MEDIA } from '../../src/content/media'
 import { ENQUIRY_MIN_ELAPSED_MS } from '../../src/server/enquiry.schema'
 import {
   expect,
@@ -113,10 +114,36 @@ test.describe('contact', () => {
       `tel:${BRAND.phone.replace(/[^\d+]/g, '')}`
     )
 
+    // Round 1 (R4d): the curated letter, the picture beside the form, and
+    // the cut section nowhere on the page.
+    for (const section of CONTACT.sections)
+      for (const paragraph of section.paragraphs)
+        await expect(page.getByRole('main')).toContainText(paragraph)
+    await expect(page.getByRole('main')).not.toContainText('Who Contacts Us')
+    await expect(page.locator(`main img[alt="${MEDIA.contact.alt}"]`)).toHaveCount(1)
+
     await revealAll(page)
     const path = await screenshotRoute(page, 'contact')
     test.info().annotations.push({ type: 'screenshot', description: path })
     expectNoConsoleErrors(page)
+  })
+
+  test('starts the form inside the first viewport, before the letter', async ({ page }) => {
+    // Round 1 (R4d): the sheet leads the split, so the form is in reach of
+    // the first viewport at every width, and before the letter in reading order.
+    const form = page.getByRole('form', { name: ENQUIRY.formHeading })
+    const top = await form.evaluate((el) => el.getBoundingClientRect().top + window.scrollY)
+    expect(top, 'px from the top of the page to the form').toBeLessThan(
+      page.viewportSize()?.height ?? 0
+    )
+    const formFirst = await page.evaluate(() => {
+      const form = document.querySelector('main form')
+      const address = document.querySelector('main address')
+      return Boolean(
+        form && address && form.compareDocumentPosition(address) & Node.DOCUMENT_POSITION_FOLLOWING
+      )
+    })
+    expect(formFirst, 'the form precedes the founder block').toBe(true)
   })
 
   test('posts to its own origin', async ({ page }) => {

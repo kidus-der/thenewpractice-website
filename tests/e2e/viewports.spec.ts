@@ -67,7 +67,6 @@ const titlePageAgainstFold = (page: import('@playwright/test').Page) =>
  * that curates them brings the next block up (px over at 1280 x 800):
  */
 const AWAITING_CURATION: Readonly<Record<string, string>> = {
-  [routes.contact]: 'R4d: the letter runs to 929px',
   '/self-assessment/adult-children': 'R5: a three-line title and the scoring line, 67px over',
 }
 
