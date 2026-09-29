@@ -687,7 +687,7 @@ Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its 
 | R4c | done | R0, R1 | Team index + 11 profiles: curate, images | round1/r4c-team | 3413 |
 | R4d | done | R0, R1 | Contact and Residences: curate, images | round1/r4d-contact | 3414 |
 | R5 | done | R0, R1 | Self-assessment: tests on the tab page, questions at the top, per-question answer types | round1/r5-assessment | 3405 |
-| R6 | doing | R5 | Email: branded HTML emails, opt-in assessment send, previews, provisioning-ready | round1/r6-email | 3406 |
+| R6 | done | R5 | Email: branded HTML emails, opt-in assessment send, previews, provisioning-ready | round1/r6-email | 3406 |
 | R9 | todo | R3–R6 | Polish and QA: rail overlaps, round-wide e2e on a quiet machine, docs/HANDOFF sweep | round1/r9-polish | 3409 |
 | R8 | todo | R3, R4a–d, R5, R7 | Palette artifact from real renders | — (main session) | — |
 
@@ -786,3 +786,9 @@ Owner paused the run. Each task's resume notes (done, remaining, decisions, gotc
 
 - Merged `460f8f7`. `/contact`: the form sheet leads the split, beside the lead from 1024px; form top 1 068 → 511 px at 1280, 2 368 → 698 at 390; letter to two client sentences, the `contact` picture, International Services (first paragraph), the consultation line and founder; *Who Contacts Us* cut; words in main 284 → 123. `/residences`: one section of three `PLACEHOLDER — ` paragraphs on bone; 9 508 → 7 756 px at 1280. `pageTitle()` joins with " | ". No summaries of ours. Main session read the contact fold at 1280. Merge: CLAUDE.md, docs/06, `curated/index.ts`, `viewports.spec.ts` (`AWAITING_CURATION` now empty) resolved; typecheck, lint, unit 421/421, content 16/16.
 - R9 must fix on `/contact` at 1280: the letter paragraph under the lead starts at the page margin (x 64) instead of the title's column; the sheet's fields are spaced very wide (form reads sparse); the scroll rail sits over the sheet's top-right corner.
+
+### R6 — accepted (2026-09-29)
+
+- Merged `aa5ba4d`. Branded HTML + text emails for enquiries and opt-in assessment results (`src/server/email/`), mark as an inline PNG (Gmail strips SVG), times in America/Cancun, every field escaped (unit-tested against injection). Opt-in *Send my answers to the practice* under the result (name, email or telephone, preferred contact, consent; honeypot and a required timing stamp); one POST only on submit (asserted). Adapter sends via Resend when `RESEND_API_KEY` is set, logs otherwise; `ENQUIRY_TO_EMAIL` receives both kinds; `ENQUIRY_FROM_EMAIL` optional. `npm run email:preview`; `docs/EMAIL-SETUP.md` (Marketplace install on the client's account, DNS, env, test sends). Form errors moved to ink (R7 finding). Subjects join with a colon. Main session read the assessment email at 600px and the opt-in form at 1280. Merge: CLAUDE.md and `contact.spec.ts` imports (R4d curated contact + R6 `PALETTE`); unit 472/472, content 16/16.
+- Provisioning waits on the client's domain and inbox (owner to supply). No `kidusder.com` sender anywhere.
+- R9: the opt-in and contact forms space their fields very wide (large empty gaps between rows at 1280); tighten the shared `Field` rhythm. The confirmation says "on their way" while staging only logs (true once Resend is live).
