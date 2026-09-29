@@ -88,11 +88,11 @@ Global
 
 T1 Home
   Hero (video)              ── canopy
-  §1 statement + triad      ── bone
-  §2 long-read              ── bone
-  §3 who we help            ── sand
-  §4 philosophy + manifesto ── canopy
-  §5 begin the conversation ── bone
+  §1 statement + triad      ── canopy (one pinned frame; the bone prose block went in round 1)
+  §2 long-read              ── bone    (plate: home-recovery)
+  §3 who we help            ── sand    (plate: home-who-we-help, sticky beside the list)
+  §4 philosophy + manifesto ── canopy  (plate: home-philosophy, beside the manifesto)
+  §5 begin the conversation ── bone    (plate: home-begin-conversation)
 
 T2 Interior     bone throughout; inline plates on sand bands; enquire band canopy
 T3 Treatment    bone; lists ("we provide treatment for", "may include") and related services sand, never two sand blocks in a row; definitions bone; enquire band canopy

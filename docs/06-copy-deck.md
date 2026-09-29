@@ -89,6 +89,7 @@ Then list `ABOUT_CURATION` in `CURATIONS` (`curated/index.ts`; a test fails when
 - **Other shapes.** `curate(name, (c) => …)` gives `c.texts()`, `c.text()`, `c.section()`, `c.sections()` and `c.page()` for services, team members and questionnaires.
 - **Checks.** A reference to a section, paragraph, sentence, list item or definition that no longer exists is left out of the value and reported; every `ours()` string is run through `curated/voice.ts`. Both fail `npm test` and `npm run content:check`.
 - **Bundles.** A route imports its own curation module, never `curated/index.ts`; the layer has no Zod and is safe in a client component.
+- **Curated pages.** `curated/home.ts` (`HOME_CURATION`, round 1 R3): client sentences only, one or two per section; its test pins what renders.
 
 ## Regenerating
 
