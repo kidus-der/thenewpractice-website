@@ -95,8 +95,8 @@ for (const route of ROUTES) {
 
     test('has no serious axe violations in the page', async ({ page }) => {
       await revealAll(page)
-      // Scoped to <main> as about.spec.ts is: the scroll rail numeral and the
-      // footer marquee are chrome findings owned by Task 19.
+      // Scoped to <main> as about.spec.ts is: the scroll rail and the footer
+      // are chrome with their own specs (footer.spec.ts).
       await expectNoAxeViolations(page, { impactAtLeast: 'serious', include: 'main' })
     })
 

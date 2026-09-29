@@ -165,8 +165,8 @@ for (const member of FIXTURES) {
 
     test('has no serious axe violations in the page', async ({ page }) => {
       await revealAll(page)
-      // Scoped to <main>: the scroll rail numeral and the footer marquee are
-      // chrome findings owned by Task 19 (ledger, Tasks 8 and 11).
+      // Scoped to <main>: the chrome around it (scroll rail, footer) is
+      // covered by its own specs (footer.spec.ts, keyboard.spec.ts).
       await expectNoAxeViolations(page, { impactAtLeast: 'serious', include: 'main' })
     })
 

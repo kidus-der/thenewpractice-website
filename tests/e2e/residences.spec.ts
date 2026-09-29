@@ -199,8 +199,8 @@ test.describe('residences', () => {
 
   test('has no serious axe violations in the page', async ({ page }) => {
     await revealAll(page)
-    // Scoped to <main>: the scroll rail numeral and the footer marquee are
-    // chrome outside this route (about.spec.ts; ledger, Task 8 findings).
+    // Scoped to <main>: the scroll rail and the footer are chrome outside
+    // this route, covered by their own specs (footer.spec.ts).
     await expectNoAxeViolations(page, { impactAtLeast: 'serious', include: 'main' })
   })
 
