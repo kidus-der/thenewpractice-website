@@ -677,10 +677,10 @@ Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its 
 
 | id | status | depends_on | task | branch | port |
 |---|---|---|---|---|---|
-| R0 | paused — `ed2f7cf`: title pages shortened; curation layer, docs, specs, verify remain | — | Foundation: shorter title pages, curation layer, rule and doc updates | round1/r0-foundation | 3401 |
-| R1 | paused — no commits; 31-slot plan and search results in notes | — | Images: source, grade and log pictures matched to their text | round1/r1-images | 3402 |
-| R2 | paused — `016d855`: footer built, verify green; 3 e2e timeouts, docs remain | — | Footer: links, © line, small mark | round1/r2-footer | 3403 |
-| R7 | paused — no commits; design plan and findings in notes | — | Palettes: ten lighter palettes + capture tooling | round1/r7-palettes | 3407 |
+| R0 | doing (resumed) | — | Foundation: shorter title pages, curation layer, rule and doc updates | round1/r0-foundation | 3401 |
+| R1 | doing (resumed) | — | Images: source, grade and log pictures matched to their text | round1/r1-images | 3402 |
+| R2 | doing (resumed) | — | Footer: links, © line, small mark | round1/r2-footer | 3403 |
+| R7 | doing (resumed) | — | Palettes: ten lighter palettes + capture tooling | round1/r7-palettes | 3407 |
 | R3 | todo | R0, R1 | Home: shorter; Who We Help list left, fixed image right | round1/r3-home | 3404 |
 | R4a | todo | R0, R1 | About, Our Process, A Personal Message, Fees: curate, images | round1/r4a-interior | 3411 |
 | R4b | todo | R0, R1 | Clinical Services index + 11 service pages: curate, images | round1/r4b-services | 3412 |
