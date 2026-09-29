@@ -682,12 +682,13 @@ Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its 
 | R2 | done | — | Footer: links, © line, small mark | round1/r2-footer | 3403 |
 | R7 | done | — | Palettes: ten lighter palettes + capture tooling | round1/r7-palettes | 3407 |
 | R3 | done | R0, R1 | Home: shorter; Who We Help list left, fixed image right | round1/r3-home | 3404 |
-| R4a | doing | R0, R1 | About, Our Process, A Personal Message, Fees: curate, images | round1/r4a-interior | 3411 |
+| R4a | done | R0, R1 | About, Our Process, A Personal Message, Fees: curate, images | round1/r4a-interior | 3411 |
 | R4b | done | R0, R1 | Clinical Services index + 11 service pages: curate, images | round1/r4b-services | 3412 |
 | R4c | doing | R0, R1 | Team index + 11 profiles: curate, images | round1/r4c-team | 3413 |
 | R4d | doing | R0, R1 | Contact and Residences: curate, images | round1/r4d-contact | 3414 |
 | R5 | doing | R0, R1 | Self-assessment: tests on the tab page, questions at the top, per-question answer types | round1/r5-assessment | 3405 |
 | R6 | todo | R5 | Email: branded HTML emails, opt-in assessment send, previews, provisioning-ready | round1/r6-email | 3406 |
+| R9 | todo | R3–R6 | Polish and QA: rail overlaps, round-wide e2e on a quiet machine, docs/HANDOFF sweep | round1/r9-polish | 3409 |
 | R8 | todo | R3, R4a–d, R5, R7 | Palette artifact from real renders | — (main session) | — |
 
 ## Round-1 briefs
@@ -763,3 +764,8 @@ Owner paused the run. Each task's resume notes (done, remaining, decisions, gotc
 
 - Merged `b2221df`. Services index lead is two client sentences, the eleven rows straight under it with `services-index`; each service opens with its R1 frame beside the lead (`PageIntro` gained a plate layout, `PlateFigure` a `priority` option, `IndexTemplate` a `plate` option); client sentences only (no summaries); trauma definitions cut to name plus one sentence; "may include" and definitions two-column from desktop; closing sentences folded into the opening text; section gap one step smaller. Heights at 1280 down 7–28% (trauma 7787 → 5642). `AWAITING_CURATION` loses the two service routes. Main session read the four-page desktop sheet and the addiction fold at 390/1920. Merge: `curated/index.ts` and CLAUDE.md §6a conflicted with R3 (both kept). Unit 384/385 on the merge; the one failure is the known `AssessmentForm` 5 s timeout under load (passes alone; R5 rewrites the file).
 - Findings: metadata descriptions still read the full client text; the scroll rail sits inside the content's right edge from 768 (pictures moved clear; other templates may overlap).
+
+### R4a — accepted (2026-09-28)
+
+- Merged `71db8af`. About, Our Process, A Personal Message and Fees curated from client sentences only (no summaries); a "spread" layout pairs each section with its R1 frame, sides alternating, from 1024px; the sticky index is off on spread pages (**owner to confirm at review**: the index needs the full grid width the spreads use); Process 15 954 → 8 495 px at 1280, About 12 655 → 9 451; day timeline four lines; letter six of ten lines with signature; Fees verbatim beside `fees`. Five oversized frames in `plateQuality()`. Fixed a pre-existing cascade bug that put letter/fees text in column 1. Main session read the About and Process 1280 overviews. Merge: CLAUDE.md, `curated/index.ts`, `plates.ts` conflicted (union). Unit 389/389, content checks 15/15, typecheck clean.
+- R9 must fix: spreads and R4b's title-page plate use `8 / 13`, which reaches column 12 under the scroll rail (the rail numeral paints over the service pictures at 1280); move them to `.p-aside` (`8 / 12`) or equivalent and register any new span in docs/03 §4. Also the `--s-8` section spacing on spread pages needs a docs/03 §3 line.
