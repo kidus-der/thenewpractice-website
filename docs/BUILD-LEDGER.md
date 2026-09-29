@@ -689,7 +689,7 @@ Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its 
 | R5 | done | R0, R1 | Self-assessment: tests on the tab page, questions at the top, per-question answer types | round1/r5-assessment | 3405 |
 | R6 | done | R5 | Email: branded HTML emails, opt-in assessment send, previews, provisioning-ready | round1/r6-email | 3406 |
 | R9 | done | R3–R6 | Polish and QA: rail overlaps, round-wide e2e on a quiet machine, docs/HANDOFF sweep | round1/r9-polish | 3409 |
-| R8 | doing | R3, R4a–d, R5, R7 | Palette artifact from real renders | — (main session) | — |
+| R8 | done | R3, R4a–d, R5, R7 | Palette artifact from real renders | — (main session) | — |
 
 ## Round-1 briefs
 
@@ -807,3 +807,12 @@ Everything R3–R6 left for a single pass, then the whole suite on a quiet machi
 - Merged `f3fdab1`. Rail centred in the page margin via `--page-edge` (clears column 12 everywhere; asserted in `viewports.spec`); `8 / 13` registered in docs/03 §4 as aside-to-the-edge; one field rhythm for the enquiry sheet and the opt-in (row pitch 150 → 106 px at 1280); contact letter on the title's column; T6 title lockup top-aligned with its plate; `home-philosophy` at quality 45 (115 kB at 750w); HANDOFF round-1 section, plan, docs/06, docs/10, CONTENT-GAPS §7. `verify` green (473 unit); full `npm run e2e`, five projects, production build: **1 727 passed, 0 failed, 148 skipped**. Main session read the contact and addiction-treatment sheets at all widths.
 - Not run: WebKit (`npm run e2e:webkit`) — the machine lacks WebKit's system libraries; needs `sudo npx playwright install-deps webkit` (owner) before it can run.
 - Open, pre-existing: on `/contact` at 1280, once the bone sheet passes under the settled header the nav's right half loses contrast (GroundManager reads the canopy section, not the sheet surface). Dead `.enquiry__*` block in `sections.css`; `enquiry.email.ts` fails `prettier --check`.
+
+### R10 — photographer credits removed (2026-09-29, owner instruction)
+
+- `d184f78`: no credit renders under any picture (`PlateFigure` renders only a page's own caption; the carousel keeps its counter); credits stay in `media.ts` and `design/ASSETS.md` (Pexels/Pixabay licences need no attribution). `viewports.spec` asserts no credit on any route (whole-word match; "Nati" is inside "International"). viewports + residences + about on desktop-1280 and mobile-390, production build: 298 passed, 4 skipped. §6a row added.
+
+### R8 — palette artifact (2026-09-29)
+
+- Captured all eleven palettes from the round-1 site at `d184f78` (`node scripts/palettes/capture.mjs`, 0 stale colour paths on 88 captures). Built with `scripts/palettes/artifact/build.py` over `template.html` (a colour-study folio in the site's type: an overview of the eleven home pages, then one tab per palette with swatches, the home page in laptop and phone frames, and six pages that open full size). 99 WebP images, 10.3 MB. Published privately: https://claude.ai/artifact/Cq8cNcS8nVcKHbRLH46eB9 — the owner shares it with the client from its Share menu.
+- Round 1 complete on `improvements/round-1`. Preview (Vercel login): https://thenewpractice-staging-git-impro-ae7de2-kidus-projects-8964b022.vercel.app. **Awaiting the owner's visual review; nothing merges to `main` before it.**
