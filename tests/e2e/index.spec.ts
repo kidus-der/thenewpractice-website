@@ -153,11 +153,14 @@ for (const fixture of FIXTURES) {
       expect(inOrder.every((i) => i >= 0)).toBe(true)
       expect([...inOrder].sort((a, b) => a - b)).toEqual(inOrder)
       // the sections after the list follow its heading, in document order
-      const listHeading = (await page.locator(`${LIST_SECTION} h2`).textContent())?.trim() ?? ''
-      const after = (fixture.afterTitles ?? []).map((t) => h2s.indexOf(t))
-      expect(after.every((i) => i > h2s.indexOf(listHeading))).toBe(true)
-      expect([...after].sort((a, b) => a - b)).toEqual(after)
-      if (fixture.introTitles.length === 0) {
+      if (fixture.afterTitles) {
+        const listHeading = (await page.locator(`${LIST_SECTION} h2`).textContent())?.trim() ?? ''
+        const after = fixture.afterTitles.map((t) => h2s.indexOf(t))
+        expect(after.every((i) => i > h2s.indexOf(listHeading))).toBe(true)
+        expect([...after].sort((a, b) => a - b)).toEqual(after)
+      }
+      // The self-assessment tab page composes its own first block (R5); its own tests cover it.
+      if (fixture.introTitles.length === 0 && fixture.plates === undefined) {
         // nothing stands between the title page and the rows
         await expect(page.locator(`main > :nth-child(2)`)).toHaveAttribute(
           'id',
