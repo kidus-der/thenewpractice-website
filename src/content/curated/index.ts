@@ -13,5 +13,6 @@
  * module per page and list it here.
  */
 import type { Curation } from './core'
+import { HOME_CURATION } from './home'
 
-export const CURATIONS: readonly Curation<unknown>[] = []
+export const CURATIONS: readonly Curation<unknown>[] = [HOME_CURATION]
