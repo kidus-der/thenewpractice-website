@@ -7,7 +7,8 @@
    ========================================================================== */
 
 /* — the opening: a letter's first page, short as every title page is
-     (round 1); the split begins inside the first viewport — */
+     (round 1): the eyebrow, the title and the lead, the title to the lead
+     one step as on PageIntro; the form begins inside the first viewport — */
 main > section.contact-open {
   padding-block: var(--s-8) var(--s-6);
 }
@@ -23,9 +24,6 @@ main > section.contact-open {
 }
 .contact-open__title {
   max-width: 14ch;
-  margin-bottom: var(--s-6);
-}
-.contact-open__lead {
   margin-bottom: var(--s-5);
 }
 .contact__prose {
@@ -34,7 +32,9 @@ main > section.contact-open {
   gap: var(--s-4);
 }
 
-/* — the split: letter left, sheet right, consultation closing the column — */
+/* — the split (round 1, R4d): the sheet first, so the form follows the title
+     page below 1024px; from 1024px it takes the right five columns, lifted
+     beside the lead, and the letter runs in the left column — */
 .contact__grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -42,13 +42,20 @@ main > section.contact-open {
   row-gap: var(--s-7);
 }
 .contact__letter,
-.contact__sheet,
-.contact__consult {
+.contact__sheet {
   grid-column: 1 / -1;
   min-width: 0;
 }
-.contact__block + .contact__block {
-  margin-top: var(--s-7);
+.contact__letter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+}
+/* the 3:4 picture is capped to part of the column, as ContentSection caps
+   its portraits and HomePlate its plate, so the letter stays mostly air
+   (docs/03 §4); the cap keeps it modest where the column is the full width */
+.contact__plate {
+  width: min(62%, 360px);
 }
 .contact__list-heading {
   margin-block: var(--s-4) var(--s-4);
@@ -104,18 +111,18 @@ main > section.contact-open {
     grid-column: 1 / 6;
     grid-row: 1;
   }
+  /* the sheet rises one step into the title page's lower half, beside the
+     lead, so the first fields sit in the first viewport; it starts at column
+     8, clear of the title page's .p-lead (2 / 8) at every width */
   .contact__sheet {
-    grid-column: 7 / 13;
-    grid-row: 1 / 3;
+    grid-column: 8 / 13;
+    grid-row: 1;
     align-self: start;
     margin-inline: 0;
+    margin-top: calc(-1 * var(--s-9));
   }
   .contact__sheet-inner {
     padding: var(--s-6) var(--s-6);
-  }
-  .contact__consult {
-    grid-column: 1 / 6;
-    grid-row: 2;
   }
 }
 @media (min-width: 1536px) {

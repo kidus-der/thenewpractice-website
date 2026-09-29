@@ -38,9 +38,10 @@ export type RouteSeo = {
   type: OpenGraphType
 }
 
-const TITLE_SEPARATOR = ' — '
+/** A bar, not a dash: the round 1 no-dash rule (docs/01) holds in titles too. */
+const TITLE_SEPARATOR = ' | '
 
-/** `"<Page> — The New Practice"`. */
+/** `"<Page> | The New Practice"`. */
 export const pageTitle = (name: string): string => `${name}${TITLE_SEPARATOR}${BRAND.name}`
 
 // ---------------------------------------------------------------------------
@@ -91,7 +92,8 @@ export const SEO_DEFAULTS = {
   /** The copy is British English; Open Graph wants a territory. */
   locale: 'en_GB',
   language: 'en',
-  ogImageAlt: `${BRAND.nameUpper}${TITLE_SEPARATOR}${BRAND.tagline}`,
+  /** Read aloud, so a full stop rather than the title's bar. */
+  ogImageAlt: `${BRAND.nameUpper}. ${BRAND.tagline}`,
 } as const
 
 /**

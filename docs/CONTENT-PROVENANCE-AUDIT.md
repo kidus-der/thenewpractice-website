@@ -231,7 +231,7 @@ Only strings that are **not** VERBATIM are listed; everything else in a module i
 | String | Class |
 | --- | --- |
 | `The New Practice — Private treatment without compromise` (`<title>` on `/`), `THE NEW PRACTICE — Private treatment without compromise` (OG alt) | IDENTITY composition |
-| `<Page> — The New Practice` (×11 titles) | INTERFACE composition of DERIVED names |
+| `<Page> \| The New Practice` (×11 titles; a bar since round 1) | INTERFACE composition of DERIVED names |
 | Home description | DERIVED (D5) |
 | `Home` | INTERFACE (breadcrumb, `llms.txt`) |
 | About, Process, Personal Message, Fees, Residences, Team descriptions | **UNSOURCED** Descriptive (A9–A13, A15) |

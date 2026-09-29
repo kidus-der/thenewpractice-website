@@ -224,7 +224,7 @@ for (const slug of FIXTURE_SLUGS) {
       // No medical subtype and no `about`: the page is classified as nothing
       // the client has not claimed (docs/CONTENT-PROVENANCE-AUDIT.md A6–A8).
       const webPage = nodes.find((n) => n['@type'] === 'WebPage')
-      expect(webPage).toMatchObject({ name: `${fixture.title} — The New Practice` })
+      expect(webPage).toMatchObject({ name: `${fixture.title} | The New Practice` })
       expect(webPage).not.toHaveProperty('about')
       expect(String(webPage?.url)).toMatch(new RegExp(`${route}$`))
       expect(raw).not.toMatch(/Medical|medicalSpecialty/)

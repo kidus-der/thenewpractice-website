@@ -91,12 +91,12 @@ describe('ROUTE_SEO', () => {
     expect(Object.keys(ROUTE_SEO).sort()).toEqual(Object.keys(routes).sort())
   })
 
-  it('titles every page "<Page> — The New Practice" except home', () => {
+  it('titles every page "<Page> | The New Practice" except home', () => {
     for (const [key, seo] of Object.entries(ROUTE_SEO)) {
       if (key === 'home') continue
-      expect(seo.title).toBe(`${seo.name} — ${BRAND.name}`)
+      expect(seo.title).toBe(`${seo.name} | ${BRAND.name}`)
     }
-    expect(ROUTE_SEO.home.title).toBe(`${BRAND.name} — ${BRAND.tagline}`)
+    expect(ROUTE_SEO.home.title).toBe(`${BRAND.name} | ${BRAND.tagline}`)
     expect(ROUTE_SEO.home.ogTitle).toBeNull()
   })
 
@@ -150,7 +150,7 @@ describe('collection builders', () => {
   it('derives every service description from its intro within the limit', () => {
     for (const service of SERVICES) {
       const seo = serviceSeo(service)
-      expect(seo.title).toBe(`${service.title} — ${BRAND.name}`)
+      expect(seo.title).toBe(`${service.title} | ${BRAND.name}`)
       expect(seo.description.length).toBeLessThanOrEqual(DESCRIPTION_MAX)
       expect(seo.type).toBe('article')
       const intro = service.intro[0] ?? ''
@@ -161,7 +161,7 @@ describe('collection builders', () => {
   it('derives every team description from the biography or the role', () => {
     for (const member of TEAM) {
       const seo = teamSeo(member)
-      expect(seo.title).toBe(`${member.name} — ${BRAND.name}`)
+      expect(seo.title).toBe(`${member.name} | ${BRAND.name}`)
       expect(seo.description.length).toBeLessThanOrEqual(DESCRIPTION_MAX)
       expect(seo.type).toBe('profile')
       const fromBiography = (member.paragraphs[0] ?? '').startsWith(seo.description)
@@ -215,7 +215,7 @@ describe('ogImagePath and sanitiseOgTitle', () => {
 
 describe('buildMetadata', () => {
   const input = {
-    title: 'About — The New Practice',
+    title: 'About | The New Practice',
     description: ROUTE_SEO.about.description,
     path: '/about/',
     ogTitle: 'About',

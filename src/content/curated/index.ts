@@ -13,6 +13,7 @@
  * module per page and list it here.
  */
 import { ABOUT_CURATION } from './about'
+import { CONTACT_CURATION } from './contact'
 import type { Curation } from './core'
 import { FEES_CURATION } from './fees'
 import { HOME_CURATION } from './home'
@@ -33,4 +34,5 @@ export const CURATIONS: readonly Curation<unknown>[] = [
   TEAM_PAGE_CURATION,
   TEAM_CURATION,
   SELF_ASSESSMENT_CURATION,
+  CONTACT_CURATION,
 ]

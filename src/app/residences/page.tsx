@@ -2,8 +2,8 @@
  * /residences — T5 Residences on `pages/residences.ts` (docs/05 §T5). The
  * page composes: the canopy poster as the full-bleed plate; the six
  * residence frames in the carousel, `residence-04` cropped from the top
- * (ledger, Task 2b: a table and stools sit at its bottom edge); the second
- * section on sand; the discretion band under the privacy statement; the
+ * (ledger, Task 2b: a table and stools sit at its bottom edge); the one
+ * section on bone (round 1, R4d); the discretion band under the privacy statement; the
  * rail Team ← Residences → Self-Assessment.
  *
  * Every string in the page module is structural PLACEHOLDER (CONTENT-GAPS
@@ -17,7 +17,6 @@ import type { MediaKey } from '@/content/media'
 import { routes } from '@/content/nav'
 import { RESIDENCES } from '@/content/pages/residences'
 import { ROUTE_SEO } from '@/content/seo'
-import { assertSectionIds } from '@/lib/interior'
 import { breadcrumb, organization, webPage } from '@/lib/jsonld'
 import { prevNextFor } from '@/lib/prevNext'
 import { buildMetadata } from '@/lib/seo'
@@ -43,12 +42,6 @@ const CAROUSEL = [
 ] as const satisfies readonly MediaKey[]
 const OBJECT_POSITIONS: ObjectPositions = { 'residence-04': 'top' }
 
-/** The middle section on sand: bone / sand / bone (docs/02 §Ground rhythm). */
-const SAND_SECTION = 'the-day'
-
-// A renamed section id fails the build here rather than silently dropping the ground.
-assertSectionIds(RESIDENCES, [SAND_SECTION])
-
 const TRAIL = [
   { name: ROUTE_SEO.home.name, path: routes.home },
   { name: SEO.name, path: PATH },
@@ -70,7 +63,6 @@ export default function Page() {
         carousel={CAROUSEL}
         objectPositions={OBJECT_POSITIONS}
         band={BAND}
-        grounds={{ [SAND_SECTION]: 'mid' }}
         prevNext={prevNextFor(PATH)}
       />
     </>
