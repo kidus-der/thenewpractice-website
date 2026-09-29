@@ -217,11 +217,13 @@ main > section.one {
    SCROLL RAIL
    ========================================================================== */
 
+/* centred in the page margin, never over a column: content may run to
+   column 12 at every width (docs/03 §4, round 1 R9) */
 .scroll-rail {
   position: fixed;
-  right: var(--margin);
+  right: calc(var(--page-edge) / 2);
   top: 50%;
-  transform: translateY(-50%);
+  transform: translate(50%, -50%);
   z-index: var(--z-nav);
   display: none;
   flex-direction: column;
@@ -786,4 +788,3 @@ html[data-cursor='custom'] * {
 .enquiry__success {
   max-width: 22ch;
 }
-
