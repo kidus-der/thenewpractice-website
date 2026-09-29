@@ -679,7 +679,7 @@ Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its 
 |---|---|---|---|---|---|
 | R0 | doing (resumed) | — | Foundation: shorter title pages, curation layer, rule and doc updates | round1/r0-foundation | 3401 |
 | R1 | done | — | Images: source, grade and log pictures matched to their text | round1/r1-images | 3402 |
-| R2 | doing (resumed) | — | Footer: links, © line, small mark | round1/r2-footer | 3403 |
+| R2 | done | — | Footer: links, © line, small mark | round1/r2-footer | 3403 |
 | R7 | done | — | Palettes: ten lighter palettes + capture tooling | round1/r7-palettes | 3407 |
 | R3 | todo | R0, R1 | Home: shorter; Who We Help list left, fixed image right | round1/r3-home | 3404 |
 | R4a | todo | R0, R1 | About, Our Process, A Personal Message, Fees: curate, images | round1/r4a-interior | 3411 |
@@ -741,3 +741,9 @@ Owner paused the run. Each task's resume notes (done, remaining, decisions, gotc
 - Merged `a5d2a0b`: 32 Pexels frames, one per slot, graded through the pipeline's own grade; register in `design/ROUND1-IMAGE-SLOTS.md`; ASSETS and STOCK-SOURCES round-1 sections; docs/02 and docs/08 imagery lines now allow calm candid adults, kept unidentifiable beside crisis, trauma, addiction and mental-health text; `left`/`right` crop positions added to `prepare-assets.mjs`. Main session read the contact sheet: consistent grade, each frame fits its slot.
 - For R3/R4: six frames exceed the 120 kB budget (`home-philosophy` 404k, `about-ceiba` 265k, `process-lead-clinician` 173k, `about-practice` 155k, `fees` 154k, `about-founder` 129k) — add them to `plateQuality()` when wiring. Repeated motifs to avoid placing side by side: bench facing the sea (`about-founder`, `service-executive-health-and-burnout`), phone at a window (`home-begin-conversation`, `process-first-conversation`). Weakest: `team-index`, `services-index` crop.
 - CLAUDE.md §6a rows owed (added after R0 merges): people in pictures; extra crop positions.
+
+### R2 — accepted (2026-09-28)
+
+- Merged `c18bb03`: footer is the link groups, a hairline, `© <year> The New Practice` and the small mark with its point; marquee, founder block, confidentiality line and lockup removed; `--t-hero`, `.t-hero`, `D.marquee` retired. Heights (on `/about`): 390 1807→465, 768 1392→330, 1280 1598→354, 1920 1647→354. Main session read the 1280 and 390 captures. Verify green; footer + reduced-motion + seven touched specs green on five projects (production build, 2 workers).
+- Operational (all later briefs): this WSL VM has 7 GB RAM; run Playwright with `--workers=2` and pass specs by exact path (`tests/e2e/<name>.spec.ts`) — a worktree folder name containing a spec word makes the positional filter match every spec. Run e2e against a production build (`next start`) when the dev server is slow.
+- Stale: `HANDOFF.md` and the plan still describe the marquee footer (update at round close).
