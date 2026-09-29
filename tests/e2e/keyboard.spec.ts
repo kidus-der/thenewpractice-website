@@ -59,9 +59,22 @@ const activeSnapshot = (page: import('@playwright/test').Page) =>
     // frames after focus moves (ledger, Task 12 findings); read after a short
     // settle. The ring itself is 1px brass on both grounds (Task 19 read it
     // at 600ms with and without reduced motion).
-    await new Promise<void>((r) => setTimeout(r, 80))
+    // On a loaded machine a fixed 80ms was not always enough (round 1, R0):
+    // read until two samples 60ms apart agree, for at most ~600ms.
     const focused = document.activeElement as HTMLElement | null
     const el = focused?.closest<HTMLElement>('.choice__option') ?? focused
+    const ring = () => {
+      const s = el ? getComputedStyle(el) : null
+      return s ? `${s.outlineStyle} ${s.outlineWidth} ${s.outlineColor}` : ''
+    }
+    const wait = () => new Promise<void>((r) => setTimeout(r, 60))
+    await wait()
+    for (let i = 0, last = ring(); i < 10; i += 1) {
+      await wait()
+      const next = ring()
+      if (next === last) break
+      last = next
+    }
     const style = el ? getComputedStyle(el) : null
     const rect = el?.getBoundingClientRect()
     const underline = focused?.parentElement?.querySelector<HTMLElement>('.field__underline')

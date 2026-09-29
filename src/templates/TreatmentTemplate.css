@@ -17,3 +17,36 @@
 .treatment .content-section__definition dd {
   max-width: 62ch;
 }
+
+/* a shorter rhythm between the body's blocks (round 1, R4b: the client asked
+   for less scrolling): one step below the house rhythm at every width. The
+   title page keeps its own padding and the first block its --s-7 step
+   (sections.css); the rail and the band keep theirs. */
+main.treatment > section:not(.page-intro, .enquire-band) {
+  padding-block: var(--s-7);
+}
+@media (min-width: 1024px) {
+  main.treatment > section:not(.page-intro, .enquire-band) {
+    padding-block: var(--s-8);
+  }
+}
+main.treatment > .page-intro + section {
+  padding-top: var(--s-7);
+}
+
+/* the definitions in two columns from 1024px (round 1, R4b): each is now a
+   term and one sentence, and eight in one column made the longest block on
+   the site. The section takes the list's standing width, 2 / 12. */
+@media (min-width: 1024px) {
+  .treatment .content-section:has(.content-section__definitions) .content-section__body {
+    grid-column: 2 / 12;
+  }
+  .treatment .content-section__definitions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--gutter);
+  }
+  .treatment .content-section__definition:nth-last-child(2):nth-child(odd) {
+    border-bottom: 1px solid var(--rule);
+  }
+}

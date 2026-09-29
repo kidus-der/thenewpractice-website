@@ -75,14 +75,20 @@ test.describe('residences', () => {
     expectNoConsoleErrors(page)
   })
 
-  test('renders the three sections and the privacy statement as headings in order', async ({
-    page,
-  }) => {
+  test('renders the section and the privacy statement as headings in order', async ({ page }) => {
     const h2s = await page.locator('main h2').allTextContents()
     expect(h2s.slice(0, TITLES.length).map((t) => t.trim())).toEqual(TITLES)
     const statement = discretionStatement()
     if (!statement) throw new Error('about.ts no longer carries the discretion sentence')
     expect(h2s[TITLES.length]?.trim()).toBe(statement)
+    // Round 1 (R4d): one section of three short paragraphs, every one still marked.
+    expect(RESIDENCES.sections).toHaveLength(1)
+    const paragraphs = RESIDENCES.sections.flatMap((s) => s.paragraphs)
+    expect(paragraphs).toHaveLength(3)
+    for (const paragraph of paragraphs) {
+      expect(paragraph).toMatch(/^PLACEHOLDER — /)
+      await expect(page.locator('main')).toContainText(paragraph)
+    }
     // No map, no address: nothing on the page is a link to a map service.
     await expect(page.locator('main a[href*="maps."], main a[href*="goo.gl/maps"]')).toHaveCount(0)
   })
@@ -199,8 +205,8 @@ test.describe('residences', () => {
 
   test('has no serious axe violations in the page', async ({ page }) => {
     await revealAll(page)
-    // Scoped to <main>: the scroll rail numeral and the footer marquee are
-    // chrome outside this route (about.spec.ts; ledger, Task 8 findings).
+    // Scoped to <main>: the scroll rail and the footer are chrome outside
+    // this route, covered by their own specs (footer.spec.ts).
     await expectNoAxeViolations(page, { impactAtLeast: 'serious', include: 'main' })
   })
 

@@ -6,6 +6,7 @@
  * the screenshots; this is the sweep that keeps the whole route set honest.
  */
 import { allRoutes, routes } from '../../src/content'
+import { MEDIA } from '../../src/content/media'
 import { NOINDEX_ROUTES } from '../../src/content/nav'
 import { expect, expectNoConsoleErrors, revealAll, settleMotion, test } from './helpers'
 
@@ -30,22 +31,109 @@ const underHeader = (page: import('@playwright/test').Page) =>
       .map((el) => `${el.tagName.toLowerCase()}: ${el.textContent?.trim().slice(0, 40)}`)
   })
 
+/**
+ * px between the content's right edge (the first shell's content box) and
+ * the scroll rail's left edge; positive when the rail sits in the page margin,
+ * clear of every column (round 1, R9). Null where the rail is hidden (< 768px).
+ */
+const railClearance = (page: import('@playwright/test').Page) =>
+  page.evaluate(() => {
+    const rail = document.querySelector('.scroll-rail')
+    const shell = document.querySelector<HTMLElement>('main .shell')
+    if (!rail || !shell || rail.getClientRects().length === 0) return null
+    const contentRight =
+      shell.getBoundingClientRect().right - parseFloat(getComputedStyle(shell).paddingRight)
+    return Math.floor(rail.getBoundingClientRect().left - contentRight)
+  })
+
+/**
+ * The title page against the first viewport, in px from its bottom edge
+ * (negative: inside it). The title page is <main>'s first child; `lockup` is
+ * the bottom of its last heading, paragraph or figure; `next` is where the
+ * following block's content starts (its top plus its top padding), wherever
+ * the template nests it: a section, or a full-bleed wrapper with a ground.
+ */
+const titlePageAgainstFold = (page: import('@playwright/test').Page) =>
+  page.evaluate(() => {
+    const title = document.querySelector('main')?.firstElementChild
+    if (!title) return null
+    const lockup = Math.max(
+      ...Array.from(title.querySelectorAll('h1, p, figure')).map(
+        (el) => el.getBoundingClientRect().bottom
+      )
+    )
+    const next = Array.from(document.querySelectorAll('main section, main [data-ground]')).find(
+      (el) =>
+        !title.contains(el) &&
+        !el.contains(title) &&
+        title.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING
+    )
+    if (!next) return null
+    const start = next.getBoundingClientRect().top + parseFloat(getComputedStyle(next).paddingTop)
+    return {
+      lockup: Math.round(lockup - window.innerHeight),
+      next: Math.round(start - window.innerHeight),
+    }
+  })
+
+/**
+ * Round 1 (owner decision): every title page but the home hero is short, so
+ * its lockup sits in the first viewport and the next block starts inside it
+ * too. These still run past the fold on the client's full text, and the task
+ * that curates them brings the next block up (px over at 1280 x 800):
+ */
+const AWAITING_CURATION: Readonly<Record<string, string>> = {}
+
+const PHOTO_CREDITS = [
+  ...new Set(Object.values(MEDIA).map((frame) => frame.credit.toLowerCase())),
+]
+
 test.describe('viewports', () => {
   for (const path of ROUTES) {
-    test(`${path} has no horizontal overflow and nothing under the header`, async ({ page }) => {
+    test(`${path} has no horizontal overflow, nothing under the header, the rail in the margin`, async ({
+      page,
+    }) => {
       await page.goto(path)
       await settleMotion(page)
       expect(await overflow(page), 'scroll width equals client width at the top').toBe(0)
-      // The title page sits low in the frame; the header's own row is empty
-      // of page text on every template (the hero on home carries its lockup
-      // beneath the header, not under it).
+      // The title page opens one step below the header (round 1: short title
+      // pages); the header's own row is empty of page text on every template
+      // (the hero on home carries its lockup beneath the header, not under it).
       if (path !== routes.home) {
         expect(await underHeader(page), 'no page text under the fixed header').toEqual([])
+      }
+      const rail = await railClearance(page)
+      if (rail !== null) {
+        expect(rail, 'px between the content edge and the scroll rail').toBeGreaterThanOrEqual(0)
       }
       await revealAll(page)
       expect(await overflow(page), 'scroll width equals client width after a scroll').toBe(0)
       await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
       expectNoConsoleErrors(page)
+    })
+  }
+
+  for (const path of ROUTES.filter((r) => r !== routes.home)) {
+    test(`${path} has a short title page: the next block starts in the first viewport`, async ({
+      page,
+    }) => {
+      await page.goto(path)
+      await settleMotion(page)
+      const fold = await titlePageAgainstFold(page)
+      if (!fold) throw new Error('no block follows the title page')
+      expect(fold.lockup, 'px the title page lockup runs below the fold').toBeLessThan(0)
+      if (path in AWAITING_CURATION) return
+      expect(fold.next, 'px the next block starts below the fold').toBeLessThan(0)
+    })
+
+    // Round 1 (owner decision): no photographer credit renders under any picture.
+    test(`${path} shows no photographer credit`, async ({ page }) => {
+      await page.goto(path)
+      await settleMotion(page)
+      const text = ` ${(await page.locator('body').innerText()).toLowerCase().replace(/\s+/g, ' ')} `
+      // whole words only: one credit ("Nati") is also the start of "International"
+      const shown = PHOTO_CREDITS.filter((credit) => text.includes(` ${credit} `))
+      expect(shown).toEqual([])
     })
   }
 

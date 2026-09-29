@@ -30,3 +30,29 @@
 .index .content-section__eyebrow + .content-section__prose {
   margin-top: 0;
 }
+
+/* — the title page's plate (round 1, R4c: the team's picture). A 3:4 frame
+     at the standing .p-offset would push the rows out of the first viewport,
+     so it keeps to 40% of the width while it stands under the lead (as the
+     profile's portrait does), and
+     from 1024px it takes the standing .p-aside placement (8 / 12) beside the
+     title, on the title's baseline — */
+.index .page-intro__plate {
+  width: 100%;
+  max-width: 40%;
+}
+@media (min-width: 1024px) {
+  /* the lockup hangs from the plate's top edge, not its baseline: the eyebrow
+     then opens at the same height on /clinical-services and /team (and on
+     every title page without a plate) however long the lead runs (R9) */
+  .index .page-intro--plate .page-intro__grid {
+    align-items: start;
+  }
+  .index .page-intro__plate {
+    align-self: start;
+    grid-column: 8 / 12;
+    grid-row: 1;
+    max-width: 62%;
+    justify-self: end;
+  }
+}

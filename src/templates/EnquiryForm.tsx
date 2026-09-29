@@ -15,26 +15,19 @@
  */
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'motion/react'
-import {
-  startTransition,
-  useActionState,
-  useEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-  type FormEvent,
-} from 'react'
+import { startTransition, useActionState, useEffect, useRef, type FormEvent } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { LineActionButton } from '@/components/LineAction'
 import { ChoiceField, TextArea, TextField } from '@/components/Field'
+import { useStartedAt } from '@/components/useStartedAt'
 import { BRAND } from '@/content/brand'
 import { ENQUIRING_FOR, ENQUIRY, PREFERRED_CONTACT } from '@/content/enquiry'
 import { mailHref, telHref } from '@/lib/contact'
 import { Reveal } from '@/motion/Reveal'
 import { D, STAGGER } from '@/motion/tokens'
 import { submitEnquiry } from '@/server/enquiry.action'
-import { INITIAL_ENQUIRY_RESULT } from '@/server/enquiry.handler'
+import { IDLE } from '@/server/results'
 import {
   enquiryFormSchema,
   type EnquiryFieldErrors,
@@ -53,27 +46,6 @@ const formVariants = {
 const rowVariants = {
   exit: { opacity: 0, transition: { duration: D.fast } },
 } as const satisfies Variants
-
-const noop = () => () => {}
-
-/**
- * Epoch milliseconds of the first client render, "" on the server and until
- * hydration. Read through useSyncExternalStore so the server markup and the
- * hydration pass agree and the stamp is taken once per mount.
- */
-function useStartedAt(): string {
-  const [clock] = useState(() => {
-    let stamp = ''
-    return {
-      get: () => {
-        if (stamp === '') stamp = String(Date.now())
-        return stamp
-      },
-      server: () => '',
-    }
-  })
-  return useSyncExternalStore(noop, clock.get, clock.server)
-}
 
 function Failed() {
   return (
@@ -110,7 +82,7 @@ function Confirmation() {
 }
 
 export function EnquiryForm({ headingId }: { headingId: string }) {
-  const [result, formAction, isPending] = useActionState(submitEnquiry, INITIAL_ENQUIRY_RESULT)
+  const [result, formAction, isPending] = useActionState(submitEnquiry, IDLE)
   const reduced = useReducedMotion()
   const startedAt = useStartedAt()
   const hydrated = startedAt !== ''

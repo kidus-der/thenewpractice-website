@@ -1,7 +1,8 @@
 /* ==========================================================================
    02 — LONG READ — co-located with LongRead.tsx, imported once by it.
-   Headline left, body right; the pull line closes the column in the display
-   italic. Tokens only; px for geometry per rule 4 as amended.
+   Plate left, words right from 1024px; headline, plate, words below it. The
+   pull line closes the column in the display italic. Tokens only; px for
+   geometry per rule 4 as amended.
    ========================================================================== */
 
 .long-read__grid {
@@ -25,7 +26,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--s-4);
-  max-width: 62ch;
+  max-width: 46ch;
 }
 /* the last sentence, alone, in the site's one emphasis voice */
 .long-read__pull {
@@ -40,8 +41,20 @@
 }
 
 @media (min-width: 1024px) {
-  /* the counterweight starts level with the headline, a group down from the eyebrow */
+  /* the plate spans both rows on the left; the headline and the words stack
+     on the right, the pair centred on the plate */
+  .long-read__grid {
+    grid-template-rows: 1fr auto auto 1fr;
+    row-gap: 0;
+  }
+  .long-read__plate {
+    grid-row: 1 / -1;
+  }
+  .long-read__head {
+    grid-row: 2;
+  }
   .long-read__body {
-    padding-top: calc(var(--s-6) + var(--t-eyebrow));
+    grid-row: 3;
+    margin-top: var(--s-6);
   }
 }

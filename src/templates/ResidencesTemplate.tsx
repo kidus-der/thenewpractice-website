@@ -1,7 +1,7 @@
 /**
  * T5 — Residences (docs/05 §T5, plan §3.3). The job is to make the place
  * feel real and unavailable to anyone else: a title page, one full-bleed
- * 16:9 plate, three short sections, the drifting carousel of six 3:4 plates,
+ * 16:9 plate, the page's sections (one since round 1), the drifting carousel of six 3:4 plates,
  * the amenities as a hairline table, a privacy statement on canopy over a
  * 21:9 plate, the rail and the closing band. No map, no address, no counts.
  *
@@ -12,8 +12,8 @@
  * is the privacy statement, which is the client's own sentence about
  * discretion read from the About page through src/lib/residences.ts.
  *
- * Grounds: intro bone → plate bone → sections bone / sand / bone → carousel
- * sand → amenities bone → statement canopy → rail bone → band canopy.
+ * Grounds: intro bone → plate bone → section bone (the route may set sand
+ * through `grounds`) → carousel sand → amenities bone → statement canopy → rail bone → band canopy.
  */
 import './ResidencesTemplate.css'
 import type { MediaKey } from '@/content/media'

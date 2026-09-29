@@ -50,3 +50,6 @@ next-env.d.ts
 
 # lighthouse ci reports (task 4)
 .lighthouseci/
+
+# email previews (round 1, R6: npm run email:preview)
+email-previews/

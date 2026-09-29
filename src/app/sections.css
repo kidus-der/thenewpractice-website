@@ -41,6 +41,16 @@ main > section {
   }
 }
 
+/* The block after a title page opens one step closer (round 1, owner
+   decision: shorter title pages, less scrolling). With the title page's own
+   --s-6 below it, title and first block sit --s-8 apart at every width, so
+   the next block starts inside the first viewport. The interior templates
+   wrap their body sections, hence the second selector. */
+main > :is(.page-intro, .profile-intro, .contact-open) + section,
+main > .page-intro + .interior__body > section:first-of-type {
+  padding-top: var(--s-7);
+}
+
 /* Pinned sections size an inner element to the viewport and centre their
    content in it. Padding on the section would push that frame down and leave a
    gap at the top of the pin for its whole duration. */
@@ -207,11 +217,13 @@ main > section.one {
    SCROLL RAIL
    ========================================================================== */
 
+/* centred in the page margin, never over a column: content may run to
+   column 12 at every width (docs/03 §4, round 1 R9) */
 .scroll-rail {
   position: fixed;
-  right: var(--margin);
+  right: calc(var(--page-edge) / 2);
   top: 50%;
-  transform: translateY(-50%);
+  transform: translate(50%, -50%);
   z-index: var(--z-nav);
   display: none;
   flex-direction: column;
@@ -767,64 +779,6 @@ html[data-cursor='custom'] * {
     margin-top: 0;
   }
 }
-.field__error {
-  display: block;
-  min-height: 1.4em;
-  margin-top: var(--s-1);
-  color: var(--accent);
-}
 .enquiry__success {
   max-width: 22ch;
-}
-
-/* ==========================================================================
-   09 — FOOTER
-   ========================================================================== */
-
-.site-footer {
-  padding-block: var(--s-7) var(--s-5);
-  overflow: hidden;
-}
-.site-footer__marquee {
-  overflow: hidden;
-  opacity: 0.055;
-  user-select: none;
-}
-.site-footer__marquee-track {
-  display: flex;
-  width: max-content;
-  white-space: nowrap;
-  animation: marquee 40s linear infinite;
-  font-family: var(--font-display);
-}
-.site-footer__marquee-track span {
-  white-space: pre;
-  padding-right: 0.2em;
-}
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .site-footer__marquee-track {
-    animation: none;
-  }
-}
-.site-footer__base {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-2);
-  margin-top: var(--s-7);
-  padding-top: var(--s-4);
-  border-top: 1px solid var(--rule);
-}
-@media (min-width: 768px) {
-  .site-footer__base {
-    flex-direction: row;
-    justify-content: space-between;
-  }
 }

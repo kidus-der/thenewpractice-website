@@ -48,7 +48,6 @@
   --accent: var(--c-brass);
 
   /* — type scale — */
-  --t-hero: clamp(3.5rem, 11vw, 12rem);
   --t-d1: clamp(2.5rem, 6vw, 5.5rem);
   --t-d2: clamp(2rem, 4vw, 3.5rem);
   --t-d3: clamp(1.5rem, 2.5vw, 2.25rem);
@@ -73,6 +72,11 @@
   --margin: 20px;
   --gutter: 24px;
   --container: 1720px;
+  /* the distance from the viewport's edge to the content's edge: the margin,
+     plus the space either side of the capped container on a wide screen.
+     The scroll rail sits in the middle of it, so no column is ever under the
+     rail (round 1, R9). */
+  --page-edge: max(var(--margin), calc((100vw - var(--container)) / 2 + var(--margin)));
 
   /* — motion — */
   --d-instant: 120ms;
@@ -295,6 +299,10 @@ textarea {
 .p-list {
   grid-column: 1 / -1;
 }
+.p-aside,
+.p-aside-start {
+  grid-column: 1 / -1;
+}
 
 @media (min-width: 1024px) {
   .p-lead {
@@ -314,13 +322,23 @@ textarea {
   .p-list {
     grid-column: 2 / 12;
   }
+  /* a portrait plate beside a .p-lead column, or mirrored beside a .p-offset
+     one: four columns, so a 3:4 frame stays inside a 1280 × 800 viewport,
+     and column 12 left clear as column 1 is, so the pair sits centred on the
+     page (round 1, R3: the home page's sections pair a few lines with a
+     picture) */
+  .p-aside {
+    grid-column: 8 / 12;
+  }
+  .p-aside-start {
+    grid-column: 2 / 6;
+  }
 }
 
 /* ==========================================================================
    TYPOGRAPHY
    ========================================================================== */
 
-.t-hero,
 .t-d1,
 .t-d2,
 .t-d3 {
@@ -330,11 +348,6 @@ textarea {
   text-wrap: balance;
 }
 
-.t-hero {
-  font-size: var(--t-hero);
-  line-height: 0.95;
-  letter-spacing: -0.03em;
-}
 .t-d1 {
   font-size: var(--t-d1);
   line-height: 1;
@@ -488,9 +501,11 @@ textarea {
   display: flex;
   flex-direction: column;
 }
+/* one step above the rule: room for the label once it floats (round 1, R9:
+   the rows read as one composed block; docs/03 §5 Form fields) */
 .field__control {
   position: relative;
-  padding-top: var(--s-5);
+  padding-top: var(--s-4);
 }
 .field__input {
   width: 100%;

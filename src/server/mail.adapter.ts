@@ -1,23 +1,49 @@
 /**
- * Mail adapters. The action hands a validated enquiry to one of these and
- * keeps nothing (contract §1). Resend when the key and recipient are
- * configured; otherwise a structured log line, which is what staging runs
- * until the practice's own Resend account exists.
+ * Mail adapters. A handler renders an email (src/server/email/) and hands it
+ * to one of these, and nothing is kept (contract §1). Resend when the key and
+ * recipient are configured; otherwise a structured log line, which is what
+ * staging runs until the practice's own Resend account exists
+ * (docs/EMAIL-SETUP.md).
+ *
+ * What reaches Resend is exactly the message: from, to, reply-to, subject,
+ * the HTML and plain-text parts, and the mark as one inline attachment. No
+ * tags, no metadata. What reaches the log is the email's `facts` (chosen by
+ * the handler to carry nothing personal), the provider id and the outcome.
  */
 import { Resend } from 'resend'
 
 import { BRAND } from '@/content/brand'
 import { ENQUIRY } from '@/content/enquiry'
 import type { Env } from '@/lib/env'
-import { logger as sharedLogger, type Logger } from '@/lib/logger'
-import type { EnquiryFormOutput } from './enquiry.schema'
+import { logger as sharedLogger, type LogFields, type Logger } from '@/lib/logger'
+import { MARK_CID } from './email/layout'
+import { MARK_PNG_BASE64 } from './email/mark'
 
-export type Enquiry = EnquiryFormOutput
+/** Which form the email came from; prefixes every log event. */
+export type MailKind = 'enquiry' | 'assessment'
+
+export type OutgoingEmail = Readonly<{
+  kind: MailKind
+  subject: string
+  html: string
+  text: string
+  /** The sender's address, when they gave one, so the practice can simply reply. */
+  replyTo?: string
+  /** Non-personal facts for the log line (choices, counts, flags; never what a person typed). */
+  facts: LogFields
+}>
 
 export type MailResult = { ok: true; id: string } | { ok: false; reason: string }
 
 export interface MailAdapter {
-  send(enquiry: Enquiry): Promise<MailResult>
+  send(email: OutgoingEmail): Promise<MailResult>
+}
+
+type ResendAttachment = {
+  filename: string
+  content: Buffer
+  contentType: string
+  contentId: string
 }
 
 /** The slice of the Resend SDK the adapter uses, so a test can hand in a fake. */
@@ -26,45 +52,26 @@ export type ResendClient = {
     send: (payload: {
       from: string
       to: string[]
-      replyTo: string
+      replyTo?: string
       subject: string
+      html: string
       text: string
+      attachments: ResendAttachment[]
     }) => Promise<{ data: { id: string } | null; error: { name: string; message: string } | null }>
   }
 }
 
 type ResendDeps = Readonly<{ client?: ResendClient; logger?: Logger }>
 
-const SUBJECT_SEPARATOR = ' — '
 const LEADING_WWW = /^www\./
 
-/** Non-personal facts safe to log beside the redacted fields. */
-const summary = (enquiry: Enquiry) => ({
-  enquiringFor: enquiry.enquiringFor,
-  preferredContact: enquiry.preferredContact,
-  hasTelephone: enquiry.telephone !== undefined,
-  email: enquiry.email,
-  message: enquiry.message,
+/** The ceiba mark, carried inside the message and shown through `cid:` (email/layout.ts). */
+export const MARK_ATTACHMENT: Readonly<ResendAttachment> = Object.freeze({
+  filename: 'the-new-practice.png',
+  content: Buffer.from(MARK_PNG_BASE64, 'base64'),
+  contentType: 'image/png',
+  contentId: MARK_CID,
 })
-
-/** The plain-text email: each field under its label, the message last. */
-export function renderEnquiryText(enquiry: Enquiry): string {
-  const lines: readonly (readonly [string, string | undefined])[] = [
-    [ENQUIRY.fields.name, enquiry.name],
-    [ENQUIRY.fields.email, enquiry.email],
-    [ENQUIRY.fields.telephone, enquiry.telephone],
-    [ENQUIRY.fields.enquiringFor, ENQUIRY.options.enquiringFor[enquiry.enquiringFor]],
-    [ENQUIRY.fields.preferredContact, ENQUIRY.options.preferredContact[enquiry.preferredContact]],
-  ]
-  const header = lines
-    .filter((entry): entry is readonly [string, string] => entry[1] !== undefined)
-    .map(([label, value]) => `${label}: ${value}`)
-    .join('\n')
-  return `${header}\n\n${ENQUIRY.fields.message}:\n${enquiry.message}\n`
-}
-
-const subjectFor = (enquiry: Enquiry): string =>
-  `${ENQUIRY.mail.subject}${SUBJECT_SEPARATOR}${ENQUIRY.mail.subjectLabels[enquiry.enquiringFor]}`
 
 const withDisplayName = (address: string): string => `${BRAND.name} <${address}>`
 
@@ -82,39 +89,38 @@ export function createResendAdapter(
 ): MailAdapter {
   const resend: ResendClient = client ?? new Resend(apiKey)
   return {
-    async send(enquiry) {
+    async send({ kind, subject, html, text, replyTo, facts }) {
+      const failed = (reason: string, error?: unknown): MailResult => {
+        logger.error(`${kind}.mail.failed`, { ...facts, reason, ...(error ? { error } : {}) })
+        return { ok: false, reason }
+      }
       try {
         const { data, error } = await resend.emails.send({
           from,
           to: [to],
-          replyTo: enquiry.email,
-          subject: subjectFor(enquiry),
-          text: renderEnquiryText(enquiry),
+          ...(replyTo ? { replyTo } : {}),
+          subject,
+          html,
+          text,
+          attachments: [{ ...MARK_ATTACHMENT }],
         })
-        if (error) {
-          logger.error('enquiry.mail.failed', { ...summary(enquiry), reason: error.name, error })
-          return { ok: false, reason: error.name }
-        }
-        if (!data) {
-          logger.error('enquiry.mail.failed', { ...summary(enquiry), reason: 'empty-response' })
-          return { ok: false, reason: 'empty-response' }
-        }
-        logger.info('enquiry.mail.sent', { ...summary(enquiry), id: data.id })
+        if (error) return failed(error.name, error)
+        if (!data) return failed('empty-response')
+        logger.info(`${kind}.mail.sent`, { ...facts, id: data.id })
         return { ok: true, id: data.id }
       } catch (error) {
-        logger.error('enquiry.mail.failed', { ...summary(enquiry), reason: 'transport', error })
-        return { ok: false, reason: 'transport' }
+        return failed('transport', error)
       }
     },
   }
 }
 
-/** No mail service configured: log the redacted event and report success. */
+/** No mail service configured: log the email's facts and report success. */
 export function createLogAdapter(logger: Logger = sharedLogger()): MailAdapter {
   return {
-    async send(enquiry) {
+    async send({ kind, facts }) {
       const id = crypto.randomUUID()
-      logger.info('enquiry.logged', { ...summary(enquiry), id })
+      logger.info(`${kind}.logged`, { ...facts, id })
       return { ok: true, id }
     },
   }
@@ -125,7 +131,7 @@ export function createMailAdapter(env: Env, deps: ResendDeps = {}): MailAdapter 
   const logger = deps.logger ?? sharedLogger()
   if (!env.RESEND_API_KEY) return createLogAdapter(logger)
   if (!env.ENQUIRY_TO_EMAIL) {
-    logger.warn('enquiry.mail.misconfigured', { missing: 'ENQUIRY_TO_EMAIL' })
+    logger.warn('mail.misconfigured', { missing: 'ENQUIRY_TO_EMAIL' })
     return createLogAdapter(logger)
   }
   const from = env.ENQUIRY_FROM_EMAIL

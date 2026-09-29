@@ -1,0 +1,269 @@
+<title>The New Practice Palettes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Jost:wght@300;400;500&display=swap">
+<style>
+/* Layout: a printed colour-study folio. One sticky index of palettes, then one palette at a time:
+   name, swatches, the home page in a desktop and a phone frame, then six pages as plates. */
+:root {
+  --paper: #f3efe6;      /* the folio's page, a warm neutral that biases no palette */
+  --paper-deep: #e8e2d5; /* frames and wells */
+  --ink: #1b221e;        /* text */
+  --ink-soft: #5a605b;   /* captions */
+  --hair: rgb(27 34 30 / 0.16);
+  --hair-strong: rgb(27 34 30 / 0.32);
+  --point: #8a6a36;      /* the one accent: the gold point */
+  --display: 'Bodoni Moda', 'Didot', 'Bodoni 72', Georgia, serif;
+  --text: 'Jost', 'Futura', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+  --gutter: clamp(16px, 4vw, 56px);
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--text); font-weight: 300; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+:focus-visible { outline: 1px solid var(--point); outline-offset: 4px; }
+.wrap { max-width: 1480px; margin: 0 auto; padding-inline: var(--gutter); }
+.eyebrow { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 400; color: var(--ink-soft); }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+
+/* Masthead */
+.mast { padding-block: clamp(40px, 7vw, 96px) clamp(24px, 4vw, 48px); display: grid; gap: 28px; }
+.mast__row { display: flex; align-items: center; gap: 14px; }
+.mark { width: 18px; height: 26px; flex: none; }
+.mast h1 { font-size: clamp(2.6rem, 7vw, 5.6rem); line-height: 0.98; }
+.mast p { margin: 0; max-width: 58ch; font-size: clamp(1rem, 1.3vw, 1.15rem); color: var(--ink); }
+.mast p + p { color: var(--ink-soft); font-size: 0.95rem; }
+
+/* Palette index */
+.index { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper); border-block: 1px solid var(--hair); }
+.index__track { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding-block: 10px; }
+.index__track::-webkit-scrollbar { display: none; }
+.index__group { display: flex; align-items: stretch; gap: 4px; }
+.index__group + .index__group { border-left: 1px solid var(--hair); padding-left: 10px; margin-left: 6px; }
+.index__label { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-soft); padding-inline: 2px; align-self: center; }
+.tab { display: grid; gap: 7px; padding: 8px 10px 9px; border-bottom: 1px solid transparent; min-width: 88px; text-align: left; }
+.tab__chips { display: flex; height: 12px; }
+.tab__chips span { flex: 1; }
+.tab__name { font-size: 12px; letter-spacing: 0.04em; white-space: nowrap; color: var(--ink-soft); }
+.tab:hover .tab__name { color: var(--ink); }
+.tab[aria-selected="true"] { border-bottom-color: var(--point); }
+.tab[aria-selected="true"] .tab__name { color: var(--ink); font-weight: 400; }
+
+/* Overview */
+.overview { padding-block: clamp(32px, 5vw, 64px) clamp(56px, 8vw, 120px); }
+.overview__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 12px 32px; margin-bottom: 28px; }
+.overview__head h2 { font-size: clamp(1.8rem, 3.4vw, 2.8rem); }
+.overview__head p { margin: 0; color: var(--ink-soft); max-width: 52ch; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: clamp(20px, 2.4vw, 36px) clamp(16px, 2vw, 28px); }
+.card { display: grid; gap: 12px; text-align: left; }
+.card__frame { aspect-ratio: 16 / 10; overflow: hidden; background: var(--paper-deep); outline: 1px solid var(--hair); }
+.card__frame img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1); }
+.card:hover .card__frame img { transform: scale(1.03); }
+.card__meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.card__name { font-family: var(--display); font-size: 1.35rem; }
+.card__family { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-soft); }
+.strip { display: flex; height: 6px; }
+.strip span { flex: 1; }
+
+/* Palette panel */
+.panel { padding-block: clamp(32px, 5vw, 72px) clamp(64px, 9vw, 140px); display: grid; gap: clamp(40px, 6vw, 88px); }
+.panel__head { display: grid; gap: 18px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 960px) { .panel__head { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: end; gap: 48px; } }
+.panel__name { font-size: clamp(2.4rem, 6vw, 4.6rem); line-height: 1; }
+.panel__char { margin: 14px 0 0; max-width: 46ch; font-size: 1.05rem; }
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 14px 10px; }
+.sw { display: grid; gap: 6px; min-width: 0; }
+.sw__chip { aspect-ratio: 4 / 3; outline: 1px solid var(--hair); position: relative; }
+.sw__chip--point::after { content: ''; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: var(--dot); }
+.sw__role { font-size: 11px; letter-spacing: 0.08em; }
+.sw__hex { font-size: 11px; color: var(--ink-soft); font-variant-numeric: tabular-nums; text-transform: uppercase; letter-spacing: 0.06em; }
+
+.section-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 20px; border-top: 1px solid var(--hair-strong); padding-top: 14px; }
+.section-head h3 { font-size: clamp(1.4rem, 2.4vw, 2rem); }
+.section-head .eyebrow { margin-left: auto; text-align: right; }
+
+.home { display: grid; gap: clamp(20px, 3vw, 44px); grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 900px) { .home { grid-template-columns: minmax(0, 1fr) 300px; } }
+.browser { background: var(--paper-deep); outline: 1px solid var(--hair); }
+.browser__bar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; border-bottom: 1px solid var(--hair); }
+.browser__bar i { width: 7px; height: 7px; border-radius: 50%; background: var(--hair-strong); }
+.browser__bar span { margin-left: 10px; font-size: 11px; color: var(--ink-soft); letter-spacing: 0.04em; }
+.scroller { height: min(78vh, 760px); overflow-y: auto; overscroll-behavior: contain; }
+.scroller img { width: 100%; display: block; }
+.phone { justify-self: center; width: min(100%, 300px); border: 1px solid var(--hair-strong); border-radius: 2px; padding: 10px 8px; background: var(--paper-deep); }
+.phone .scroller { height: min(78vh, 600px); }
+.hint { margin: 10px 0 0; font-size: 12px; color: var(--ink-soft); }
+
+.plates { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: clamp(20px, 2.4vw, 32px) clamp(16px, 2vw, 24px); }
+.plate { display: grid; gap: 10px; text-align: left; }
+.plate__frame { aspect-ratio: 4 / 5; overflow: hidden; background: var(--paper-deep); outline: 1px solid var(--hair); }
+.plate__frame img { width: 100%; display: block; transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1); }
+.plate:hover .plate__frame img { transform: scale(1.03); }
+.plate__label { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; }
+.plate__label span:last-child { color: var(--ink-soft); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+
+.pager { display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid var(--hair-strong); padding-top: 18px; }
+.pager button { display: grid; gap: 4px; text-align: left; }
+.pager button:last-child { text-align: right; }
+.pager b { font-family: var(--display); font-weight: 400; font-size: 1.4rem; }
+
+/* Viewer */
+[hidden] { display: none !important; }
+.viewer { position: fixed; inset: 0; z-index: 20; background: var(--paper); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.viewer__bar { display: flex; align-items: center; gap: 16px; padding: calc(12px + env(safe-area-inset-top, 0px)) var(--gutter) 12px; border-bottom: 1px solid var(--hair); }
+.viewer__title { font-family: var(--display); font-size: 1.3rem; }
+.viewer__bar .eyebrow { flex: 1; }
+.viewer__close { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; border-bottom: 1px solid var(--hair-strong); padding-bottom: 3px; }
+.viewer__body { overflow-y: auto; overscroll-behavior: contain; padding: 24px var(--gutter) 64px; }
+.viewer__body img { display: block; width: min(100%, 1200px); margin: 0 auto; outline: 1px solid var(--hair); }
+
+.foot { border-top: 1px solid var(--hair); padding-block: 28px 48px; color: var(--ink-soft); font-size: 13px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+
+<header class="wrap mast">
+  <div class="mast__row">
+    <svg class="mark" viewBox="0 0 36 52" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M18 30V2"/><path d="M18 30C16 20 10 10 4 4"/><path d="M18 30C20 20 26 10 32 4"/><path d="M18 30v20"/><path d="M18 30c-3 7-8 13-13 18"/><path d="M18 30c3 7 8 13 13 18"/></g><circle cx="18" cy="30" r="2.2" fill="#a9895c"/></svg>
+    <span class="eyebrow">The New Practice · Colour study</span>
+  </div>
+  <h1>Palette Catalogue</h1>
+  <p>Ten lighter colour directions for the website, beside the palette it uses today. Choose a palette to see the real pages in it.</p>
+  <p>Only colour changes between palettes. Typography, layout, photography and motion are the same in every one, and the photographs are toned to each palette. Every palette keeps one accent, the gold point of the mark, and meets the accessibility contrast standard for all text.</p>
+</header>
+
+<nav class="index" aria-label="Palettes">
+  <div class="wrap index__track" role="tablist" id="tabs"></div>
+</nav>
+
+<main id="stage" class="wrap"></main>
+
+<footer class="wrap foot">
+  <span>Renders of the staging site at 1440 pixels wide, and 390 for the phone.</span>
+  <span id="count"></span>
+</footer>
+
+<div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-labelledby="viewer-title">
+  <div class="viewer__bar">
+    <span class="viewer__title" id="viewer-title"></span>
+    <span class="eyebrow" id="viewer-sub"></span>
+    <button class="viewer__close" id="viewer-close" type="button">Close</button>
+  </div>
+  <div class="viewer__body" id="viewer-body"></div>
+</div>
+
+<script>
+const DATA = /*DATA*/null;
+const ROLES = [
+  ['canopy', 'Dark ground'], ['canopySoft', 'Raised dark'], ['bone', 'Light ground'],
+  ['sand', 'Mid ground'], ['clay', 'Clay'], ['stone', 'Muted text'], ['brass', 'Accent'],
+];
+const FAMILY = { current: 'Today', deep: 'Deep', light: 'Light' };
+const PAGES = DATA.pages;
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const chips = (p) => ['canopy', 'canopySoft', 'bone', 'sand', 'stone', 'brass'].map((k) => `<span style="background:${p.core[k]}"></span>`).join('');
+const img = (p, page, kind) => `${p.id}/${page}-${kind}.webp`;
+
+function tabs() {
+  const groups = [['overview', [{ id: 'all', name: 'All palettes', overview: true }]], ...['current', 'deep', 'light'].map((f) => [f, DATA.palettes.filter((p) => p.family === f)])];
+  $('#tabs').innerHTML = groups.map(([f, list]) => `<div class="index__group">${f === 'overview' ? '' : `<span class="index__label" aria-hidden="true">${FAMILY[f]}</span>`}${list.map((p) => `
+    <button class="tab" role="tab" type="button" id="tab-${p.id}" aria-controls="stage" aria-selected="false" data-id="${p.id}">
+      <span class="tab__chips" aria-hidden="true">${p.overview ? DATA.palettes.slice(0, 6).map((q) => `<span style="background:${q.core.canopy}"></span>`).join('') : chips(p)}</span>
+      <span class="tab__name">${esc(p.name)}</span>
+    </button>`).join('')}</div>`).join('');
+  $('#tabs').addEventListener('click', (e) => { const b = e.target.closest('.tab'); if (b) go(b.dataset.id); });
+  $('#tabs').addEventListener('keydown', (e) => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+    const all = [...document.querySelectorAll('.tab')]; const i = all.indexOf(document.activeElement);
+    const n = e.key === 'Home' ? 0 : e.key === 'End' ? all.length - 1 : (i + (e.key === 'ArrowRight' ? 1 : -1) + all.length) % all.length;
+    all[n].focus(); go(all[n].dataset.id); e.preventDefault();
+  });
+}
+
+function overview() {
+  return `<section class="overview">
+    <div class="overview__head"><h2>Eleven directions at a glance</h2>
+    <p>The top of the home page in each palette. The deep palettes lighten the green and keep light text on it; the light palettes replace the dark green with a pale ground and dark text.</p></div>
+    <div class="grid">${DATA.palettes.map((p) => `
+      <button class="card" type="button" data-go="${p.id}">
+        <span class="card__frame"><img src="${img(p, 'home', 'thumb')}" alt="The home page in the ${esc(p.name)} palette" loading="lazy"></span>
+        <span class="strip" aria-hidden="true">${chips(p)}</span>
+        <span class="card__meta"><span class="card__name">${esc(p.name)}</span><span class="card__family">${FAMILY[p.family]}</span></span>
+      </button>`).join('')}</div></section>`;
+}
+
+function panel(p) {
+  const i = DATA.palettes.indexOf(p);
+  const prev = DATA.palettes[(i - 1 + DATA.palettes.length) % DATA.palettes.length];
+  const next = DATA.palettes[(i + 1) % DATA.palettes.length];
+  const sw = [...ROLES.map(([k, role]) => [role, p.core[k], k === 'brass']), ...(p.ink ? [['Text', p.ink, false]] : [])];
+  return `<section class="panel" aria-labelledby="name-${p.id}">
+    <div class="panel__head">
+      <div><span class="eyebrow">${FAMILY[p.family]} · ${String(i + 1).padStart(2, '0')} of ${DATA.palettes.length}</span>
+        <h2 class="panel__name" id="name-${p.id}">${esc(p.name)}</h2>
+        <p class="panel__char">${esc(p.character)}</p></div>
+      <div class="swatches">${sw.map(([role, hex, point]) => `
+        <div class="sw"><span class="sw__chip${point ? ' sw__chip--point' : ''}" style="background:${point ? p.core.bone : hex};${point ? `--dot:${hex}` : ''}"></span>
+        <span class="sw__role">${role}</span><span class="sw__hex">${hex}</span></div>`).join('')}</div>
+    </div>
+    <div>
+      <div class="section-head"><h3>Home</h3><span class="eyebrow">Scroll inside the frames</span></div>
+      <div class="home">
+        <div><div class="browser"><div class="browser__bar" aria-hidden="true"><i></i><i></i><i></i><span>thenewpractice · home</span></div>
+          <div class="scroller" tabindex="0" aria-label="Home page on a laptop, ${esc(p.name)}"><img src="${img(p, 'home', 'desk')}" alt="The full home page on a laptop in the ${esc(p.name)} palette" loading="lazy"></div></div></div>
+        <div><div class="phone"><div class="scroller" tabindex="0" aria-label="Home page on a phone, ${esc(p.name)}"><img src="${img(p, 'home', 'phone')}" alt="The full home page on a phone in the ${esc(p.name)} palette" loading="lazy"></div></div>
+          <p class="hint">On a phone, 390 pixels wide.</p></div>
+      </div>
+    </div>
+    <div>
+      <div class="section-head"><h3>Pages</h3><span class="eyebrow">Select a page to see it in full</span></div>
+      <div class="plates">${PAGES.map((pg) => `
+        <button class="plate" type="button" data-open="${p.id}|${pg.id}">
+          <span class="plate__frame"><img src="${img(p, pg.id, 'desk')}" alt="${esc(pg.name)} in the ${esc(p.name)} palette" loading="lazy"></span>
+          <span class="plate__label"><span>${esc(pg.name)}</span><span>View</span></span>
+        </button>`).join('')}</div>
+    </div>
+    <div class="pager">
+      <button type="button" data-go="${prev.id}"><span class="eyebrow">Previous</span><b>${esc(prev.name)}</b></button>
+      <button type="button" data-go="${next.id}"><span class="eyebrow">Next</span><b>${esc(next.name)}</b></button>
+    </div>
+  </section>`;
+}
+
+function go(id, scroll = true) {
+  const p = DATA.palettes.find((x) => x.id === id);
+  const key = p ? p.id : 'all';
+  $('#stage').innerHTML = p ? panel(p) : overview();
+  document.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.id === key)));
+  $(`#tab-${key}`)?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  try { history.replaceState(null, '', `#${key}`); } catch {}
+  try { localStorage.setItem('tnp-palette', key); } catch {}
+  if (scroll) { const top = $('#stage').getBoundingClientRect().top + scrollY - $('.index').offsetHeight; if (scrollY > top) scrollTo({ top }); }
+}
+
+let lastFocus = null;
+function open(pid, pageId) {
+  const p = DATA.palettes.find((x) => x.id === pid); const pg = PAGES.find((x) => x.id === pageId);
+  lastFocus = document.activeElement;
+  $('#viewer-title').textContent = pg.name;
+  $('#viewer-sub').textContent = `${p.name} palette`;
+  $('#viewer-body').innerHTML = `<img src="${img(p, pg.id, 'desk')}" alt="${esc(pg.name)} in full, ${esc(p.name)} palette">`;
+  $('#viewer').hidden = false; document.body.style.overflow = 'hidden';
+  $('#viewer-body').scrollTop = 0; $('#viewer-close').focus();
+}
+function close() { $('#viewer').hidden = true; document.body.style.overflow = ''; lastFocus?.focus(); }
+
+document.addEventListener('click', (e) => {
+  const g = e.target.closest('[data-go]'); if (g) { go(g.dataset.go); return; }
+  const o = e.target.closest('[data-open]'); if (o) { const [a, b] = o.dataset.open.split('|'); open(a, b); }
+});
+$('#viewer-close').addEventListener('click', close);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('#viewer').hidden) close(); });
+
+tabs();
+$('#count').textContent = `${DATA.palettes.length - 1} new palettes and today's`;
+let start = location.hash.slice(1);
+if (!start) { try { start = localStorage.getItem('tnp-palette') || ''; } catch {} }
+go(start || 'all', false);
+</script>

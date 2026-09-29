@@ -18,6 +18,8 @@
     "e2e:ui": "playwright test --ui",
     "lighthouse": "node tests/lighthouse/run.mjs",
     "content:check": "node --experimental-strip-types scripts/check-content.ts",
+    "email:preview": "node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/email/preview.ts",
+    "email:mark": "node scripts/email/mark.mjs",
     "assets": "node scripts/prepare-assets.mjs",
     "video": "node scripts/prepare-video.mjs",
     "media": "npm run video && npm run assets",

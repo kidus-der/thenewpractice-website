@@ -1,0 +1,16 @@
+/* ==========================================================================
+   HOME PLATE — co-located with HomePlate.tsx, imported once by it. Below
+   1024px the portrait keeps to part of the column (the house cap, as
+   ContentSection's 3:4 plates), so a picture never costs a whole phone
+   screen; from 1024px it fills its .p-aside column. px for geometry per
+   rule 4 as amended.
+   ========================================================================== */
+
+.home-plate {
+  width: min(62%, 360px);
+}
+@media (min-width: 1024px) {
+  .home-plate {
+    width: 100%;
+  }
+}

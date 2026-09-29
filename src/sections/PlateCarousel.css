@@ -42,7 +42,7 @@
   object-position: var(--plate-position, center);
 }
 
-/* caption left; counter and credit right, in the eyebrow register */
+/* caption left; the counter right, in the eyebrow register */
 .plate-carousel__caption {
   display: flex;
   justify-content: space-between;
@@ -50,7 +50,7 @@
   gap: var(--s-3);
 }
 .plate-carousel__meta {
-  /* the counter and the credit keep their lines; the caption wraps instead */
+  /* the counter keeps its line; the caption wraps instead */
   flex-shrink: 0;
   display: flex;
   flex-direction: column;

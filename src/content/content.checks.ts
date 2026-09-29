@@ -45,7 +45,26 @@ import {
   serviceSchema,
   teamMemberSchema,
 } from './schemas'
-import { ROUTE_SEO, assessmentSeo, sentences, serviceSeo } from './seo'
+import { ANSWER_TYPES } from './assessment-answers'
+import { ROUTE_SEO, assessmentSeo, serviceSeo } from './seo'
+import { sentences } from './sentences'
+import { BRAND } from './brand'
+import { ENQUIRY } from './enquiry'
+import { EMAIL } from './email'
+import { ASSESSMENT_SEND } from './assessment-send'
+import {
+  UI,
+  UI_ASSESSMENT,
+  UI_FOOTER,
+  UI_HOME,
+  UI_INTERIOR,
+  UI_PROFILE,
+  UI_RESIDENCES,
+  UI_TREATMENT,
+} from './ui'
+import type { Curation } from './curated/core'
+import { CURATIONS } from './curated/index'
+import { PLACEHOLDER_PREFIX, voiceProblems } from './curated/voice'
 
 export type Check = { name: string; ok: boolean; detail: string }
 
@@ -208,6 +227,24 @@ function assessmentsCount(): Check {
   )
 }
 
+/** R5: every questionnaire says how each of its questions is answered, and only those. */
+function answerTypesComplete(): Check {
+  const slugs = new Set(ASSESSMENTS.map((a) => a.slug))
+  const problems = [
+    ...ASSESSMENTS.flatMap((a) => {
+      const types = ANSWER_TYPES[a.slug]
+      if (!types) return [`${a.slug}: no answer types`]
+      return types.length === a.questions.length
+        ? []
+        : [`${a.slug}: ${types.length} answer types for ${a.questions.length} questions`]
+    }),
+    ...Object.keys(ANSWER_TYPES)
+      .filter((slug) => !slugs.has(slug))
+      .map((slug) => `${slug}: answer types for no questionnaire`),
+  ]
+  return check('every questionnaire has one answer type per question', problems)
+}
+
 function noMarkdownResidue(): Check {
   const problems = allStrings().flatMap(({ path, value }) =>
     FORBIDDEN_RESIDUE.filter((r) => r.pattern.test(value)).map((r) => `${path}: ${r.label}`)
@@ -264,7 +301,6 @@ function legalMarked(): Check {
 
 /** The client's document, at the repository root (the runners start there). */
 const SOURCE_DOCUMENT = 'Final Website Instructions_DRAFT Sept 1 2026 .docx.md'
-const PLACEHOLDER_PREFIX = 'PLACEHOLDER — '
 const MARKDOWN_MARKS = /[*_#>`\\]/g
 const SINGLE_QUOTES = /[‘’‚‛′]/g
 const DOUBLE_QUOTES = /[“”„‟″]/g
@@ -326,6 +362,63 @@ function descriptionsSourced(): Check {
   )
 }
 
+// ---------------------------------------------------------------------------
+// Copy we write — the curation layer and the interface (round 1, R0)
+// ---------------------------------------------------------------------------
+
+/**
+ * The strings that are ours outright: the interface, the navigation labels,
+ * the placeholder pages and the mark's one-line story. seo.ts is not here:
+ * its descriptions are the client's sentences (checked above) and its titles
+ * are composed.
+ */
+const OUR_MODULES: Record<string, unknown> = {
+  ui: { UI, UI_FOOTER, UI_INTERIOR, UI_RESIDENCES, UI_HOME, UI_TREATMENT, UI_PROFILE },
+  'ui-assessment': UI_ASSESSMENT,
+  enquiry: ENQUIRY,
+  email: EMAIL,
+  'assessment-send': ASSESSMENT_SEND,
+  nav: NAV,
+  residences: RESIDENCES,
+  legal: { privacy: PRIVACY, terms: TERMS },
+  brand: { markStory: BRAND.markStory },
+}
+
+/** Keys that hold an identifier or a path rather than words. */
+const NOT_PROSE = /\.(slug|id|index|href)$/
+
+function oursStrings(curations: readonly Curation<unknown>[]): readonly StringVisit[] {
+  const modules = Object.entries(OUR_MODULES)
+    .flatMap(([name, value]) => walkStrings(value, name))
+    .filter(({ path }) => !NOT_PROSE.test(path))
+  const curated = curations.flatMap((c) => c.ours.map((o) => ({ path: o.where, value: o.text })))
+  return [...modules, ...curated]
+}
+
+/**
+ * The checks on copy we write, over `curations` (the registry in production,
+ * a fixture in content.test.ts): the house voice (docs/01 §Voice: no en or em
+ * dash, no exclamation mark, none of the forbidden words, trimmed), every
+ * reference resolving to client text that still exists, one name per curation.
+ */
+export function curationChecks(curations: readonly Curation<unknown>[]): readonly Check[] {
+  const voice = oursStrings(curations).flatMap(({ path, value }) =>
+    voiceProblems(value).map((problem) => `${path}: ${problem} in “${value}”`)
+  )
+  const names = curations.map((c) => c.name)
+  return [
+    check('copy we write keeps the house voice', voice),
+    check(
+      'every curation references client text that exists',
+      curations.flatMap((c) => c.problems)
+    ),
+    check(
+      'every curation has its own name',
+      names.filter((n, i) => names.indexOf(n) !== i).map((n) => `duplicate curation ${n}`)
+    ),
+  ]
+}
+
 function routesUnique(): Check {
   const routesList = allRoutes()
   const dupes = routesList.filter((r, i) => routesList.indexOf(r) !== i)
@@ -338,6 +431,7 @@ export function contentChecks(): readonly Check[] {
     servicesCount(),
     teamCount(),
     assessmentsCount(),
+    answerTypesComplete(),
     noMarkdownResidue(),
     noStrayWhitespace(),
     navResolves(),
@@ -346,5 +440,6 @@ export function contentChecks(): readonly Check[] {
     legalMarked(),
     routesUnique(),
     descriptionsSourced(),
+    ...curationChecks(CURATIONS),
   ]
 }

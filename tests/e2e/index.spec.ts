@@ -3,17 +3,29 @@
  *
  * Every project, every route: the h1 and the intro sections in document
  * order; exactly 11 / 11 / 10 rows, each one link to the right collection
- * href; the travelling glow follows keyboard focus; no plate where no row
- * has an image; axe scoped to <main>; a full-page capture after a reveal
- * pass. Reduced-motion project: the glow lands instantly.
+ * href; the travelling glow follows keyboard focus; no hover plate where no
+ * row has an image, and only the title page's own plate where the route names
+ * one (round 1: the services index R4b, the team R4c); axe scoped to <main>;
+ * a full-page capture after a reveal pass. Reduced-motion project: the glow
+ * lands instantly.
+ *
+ * /self-assessment is the round-1 tab page (R5) on the same list: the
+ * description and its one picture, then the ten tests, all in the first
+ * viewport from 1024px, starting in it and one short scroll long below.
  */
-import { ASSESSMENTS, ASSESSMENTS_PAGE } from '../../src/content/assessments'
-import { routes } from '../../src/content/nav'
-import { SERVICES, SERVICES_PAGE } from '../../src/content/services'
-import { TEAM, TEAM_PAGE } from '../../src/content/team'
-import { UI_INDEX, UI_INTERIOR } from '../../src/content/ui'
+import { ASSESSMENTS, ASSESSMENTS_PAGE, ASSESSMENT_SERIES } from '../../src/content/assessments'
 import {
-  liftLead,
+  SELF_ASSESSMENT_CURATED,
+  SELF_ASSESSMENT_DISCLAIMER,
+  SELF_ASSESSMENT_INTRO,
+} from '../../src/content/curated/self-assessment'
+import { SERVICES_PAGE_CURATED } from '../../src/content/curated/services'
+import { TEAM_CURATED, TEAM_PAGE_CURATED } from '../../src/content/curated/team'
+import { MEDIA, type MediaKey } from '../../src/content/media'
+import { routes } from '../../src/content/nav'
+import { SERVICES } from '../../src/content/services'
+import { UI_INTERIOR } from '../../src/content/ui'
+import {
   rowsFromAssessments,
   rowsFromServices,
   rowsFromTeam,
@@ -41,7 +53,16 @@ type Fixture = Readonly<{
   title: string
   /** Section titles expected as h2s before the list, in order. */
   introTitles: readonly string[]
+  /** Section titles expected as h2s after the list, in order. */
+  afterTitles?: readonly string[]
+  /** The title page's plate, when the route names one. */
+  plate?: MediaKey
   rows: readonly IndexRow[]
+  /** The title page's lead and the list's introducing line, where the route sets them. */
+  lead?: string
+  listLead?: string
+  /** Pictures in <main> besides the rows' own, where the route composes its own (the tab page's one). */
+  plates?: number
 }>
 
 const titled = (sections: readonly { title?: string }[]): readonly string[] =>
@@ -51,29 +72,36 @@ const FIXTURES: readonly Fixture[] = [
   {
     name: 'clinical-services',
     route: routes.clinicalServices,
-    title: SERVICES_PAGE.title,
-    introTitles: titled(SERVICES_PAGE.sections),
+    title: SERVICES_PAGE_CURATED.page.title,
+    introTitles: titled(SERVICES_PAGE_CURATED.page.sections),
     rows: rowsFromServices(SERVICES),
+    lead: SERVICES_PAGE_CURATED.page.lead,
+    plate: 'services-index',
+    listLead: SERVICES_PAGE_CURATED.listLead,
   },
   {
     name: 'team',
     route: routes.team,
-    title: TEAM_PAGE.title,
-    introTitles: titled(liftLead(TEAM_PAGE, 'intro').sections),
-    rows: rowsFromTeam(TEAM),
+    title: TEAM_PAGE_CURATED.title,
+    // round 1 (R4c): the names follow the title page directly; the roles after them
+    introTitles: [],
+    afterTitles: titled(TEAM_PAGE_CURATED.sections),
+    plate: 'team-index',
+    rows: rowsFromTeam(TEAM_CURATED),
   },
   {
     name: 'self-assessment',
     route: routes.selfAssessment,
     title: ASSESSMENTS_PAGE.title,
-    introTitles: titled(
-      ASSESSMENTS_PAGE.sections.filter((s) => s.id !== 'available-self-assessments')
-    ),
-    rows: rowsFromAssessments(ASSESSMENTS, UI_INDEX.assessmentLength),
+    // Round 1 (R5): no long-read sections; the title page carries the description.
+    introTitles: [],
+    rows: rowsFromAssessments(ASSESSMENTS),
+    plates: 1,
   },
 ]
 
 const ROWS = '.index-list__row'
+const LIST_SECTION = 'section.index-section'
 const RAIL = `nav[aria-label="${UI_INTERIOR.railLabel}"]`
 
 for (const fixture of FIXTURES) {
@@ -101,6 +129,22 @@ for (const fixture of FIXTURES) {
       expect(overflow).toBe(0)
     })
 
+    test('opens with the lead and the picture the route gives, then the list', async ({ page }) => {
+      test.skip(!fixture.lead && !fixture.plate, 'this route sets neither')
+      const intro = page.locator('main > :first-child')
+      if (fixture.lead) await expect(intro.locator('.page-intro__lead')).toHaveText(fixture.lead)
+      if (fixture.plate) {
+        const img = intro.locator('.page-intro__plate img')
+        await expect(img).toHaveCount(1)
+        await expect(img).toHaveAttribute('alt', MEDIA[fixture.plate].alt)
+      }
+      // Round 1: the list follows the title page directly.
+      await expect(page.locator('main > :nth-child(2)')).toHaveClass(/index-section/)
+      if (fixture.listLead) {
+        await expect(page.locator('.index-section__lead')).toHaveText(fixture.listLead)
+      }
+    })
+
     test('renders the intro sections as headings in document order', async ({ page }) => {
       const h2s = (await page.locator('main h2').allTextContents()).map((t) => t.trim())
       // The list section's eyebrow heading and the closing band's line are h2s too;
@@ -108,6 +152,21 @@ for (const fixture of FIXTURES) {
       const inOrder = fixture.introTitles.map((t) => h2s.indexOf(t))
       expect(inOrder.every((i) => i >= 0)).toBe(true)
       expect([...inOrder].sort((a, b) => a - b)).toEqual(inOrder)
+      // the sections after the list follow its heading, in document order
+      if (fixture.afterTitles) {
+        const listHeading = (await page.locator(`${LIST_SECTION} h2`).textContent())?.trim() ?? ''
+        const after = fixture.afterTitles.map((t) => h2s.indexOf(t))
+        expect(after.every((i) => i > h2s.indexOf(listHeading))).toBe(true)
+        expect([...after].sort((a, b) => a - b)).toEqual(after)
+      }
+      // The self-assessment tab page composes its own first block (R5); its own tests cover it.
+      if (fixture.introTitles.length === 0 && fixture.plates === undefined) {
+        // nothing stands between the title page and the rows
+        await expect(page.locator(`main > :nth-child(2)`)).toHaveAttribute(
+          'id',
+          `${fixture.name}-index`
+        )
+      }
     })
 
     test(`lists exactly ${fixture.rows.length} rows, each one link to its page`, async ({
@@ -181,10 +240,20 @@ for (const fixture of FIXTURES) {
         .toBeCloseTo(fourthTop, 0)
     })
 
-    test('shows no plate when no row has an image', async ({ page }) => {
+    test('shows no row plate when no row has an image, and only the title page’s own', async ({
+      page,
+    }) => {
       await expect(page.locator('.hover-plate')).toHaveCount(0)
       await expect(page.locator('.index-list__thumb')).toHaveCount(0)
-      await expect(page.locator('main img')).toHaveCount(0)
+      const images = page.locator('main img')
+      if (!fixture.plate) {
+        await expect(images).toHaveCount(fixture.plates ?? 0)
+        return
+      }
+      await expect(images).toHaveCount(1)
+      const plate = page.locator('main > :first-child figure img')
+      await expect(plate).toHaveCount(1)
+      await expect(plate).toHaveAttribute('alt', MEDIA[fixture.plate].alt)
     })
 
     test('links to the previous and next pages in reading order', async ({ page }) => {
@@ -202,8 +271,8 @@ for (const fixture of FIXTURES) {
 
     test('has no serious axe violations in the page', async ({ page }) => {
       await revealAll(page)
-      // Scoped to <main>: the scroll rail numeral and the footer marquee are
-      // chrome findings owned by Task 19 (ledger, Tasks 8 and 11).
+      // Scoped to <main>: the chrome around it (scroll rail, footer) is
+      // covered by its own specs (footer.spec.ts, keyboard.spec.ts).
       await expectNoAxeViolations(page, { impactAtLeast: 'serious', include: 'main' })
     })
 
@@ -215,3 +284,56 @@ for (const fixture of FIXTURES) {
     })
   })
 }
+
+/** The paragraph a curated section renders, or a failed test. */
+const curatedLine = (id: string): string => {
+  const line = SELF_ASSESSMENT_CURATED.sections.find((s) => s.id === id)?.paragraphs[0]
+  if (!line) throw new Error(`curated/self-assessment has no ${id} paragraph`)
+  return line
+}
+
+test.describe('index: self-assessment tab page (R5)', () => {
+  const DESKTOP = 1024
+  const ROW = '.index-list__row'
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto(routes.selfAssessment)
+    await settleMotion(page)
+  })
+
+  test('opens on the description and one picture, then the tests', async ({ page }) => {
+    const main = page.getByRole('main')
+    const intro = page.locator('main > :first-child')
+    await expect(intro).toContainText(curatedLine(SELF_ASSESSMENT_INTRO))
+    await expect(intro.locator('img')).toHaveCount(1)
+    await expect(intro.locator('img')).toHaveAttribute('alt', MEDIA['assessment-index'].alt)
+    await expect(main).toContainText(curatedLine(SELF_ASSESSMENT_DISCLAIMER))
+    // The disclaimer is one line here; its full text is on each questionnaire's result.
+    const [, second] =
+      ASSESSMENTS_PAGE.sections.find((s) => s.id === 'important-disclaimer')?.paragraphs ?? []
+    if (!second) throw new Error('the disclaimer has a second sentence')
+    await expect(main).not.toContainText(second)
+    await expect(main).not.toContainText(ASSESSMENT_SERIES.scoringText)
+    await expect(main.locator('[data-ground="mid"]')).toHaveCount(0)
+  })
+
+  test('puts the ten tests in view: all of them from 1024px, one short scroll below', async ({
+    page,
+  }) => {
+    const rows = page.locator(ROW)
+    await expect(rows).toHaveCount(ASSESSMENTS.length)
+    const { width, height } = page.viewportSize() ?? { width: 0, height: 0 }
+    const edge = (index: number, side: 'top' | 'bottom') =>
+      rows.nth(index).evaluate((el, s) => el.getBoundingClientRect()[s], side)
+    if (width >= DESKTOP) {
+      expect(await edge(ASSESSMENTS.length - 1, 'bottom'), 'the tenth test').toBeLessThanOrEqual(
+        height
+      )
+    } else {
+      expect(await edge(0, 'top'), 'the first test starts in view').toBeLessThan(height)
+      expect(await edge(ASSESSMENTS.length - 1, 'bottom'), 'the tenth, a screen on').toBeLessThan(
+        2 * height
+      )
+    }
+  })
+})

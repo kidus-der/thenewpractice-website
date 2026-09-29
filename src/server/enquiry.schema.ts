@@ -18,12 +18,13 @@ export const ENQUIRY_MAX_AGE_MS = 2 * 60 * 60 * 1_000
  * punctuation: loose E.164. The plus is required because the field's error
  * message asks for the country code (provenance audit, B6).
  */
-const TELEPHONE = /^\+\d[\d\s().-]{5,23}$/
-const DIGITS = /^\d+$/
+export const TELEPHONE = /^\+\d[\d\s().-]{5,23}$/
+export const DIGITS = /^\d+$/
 
 const trimmed = z.string().trim()
 
-const optionalText = (schema: z.ZodString) =>
+/** An optional text field: an empty or blank string means "not given". */
+export const optionalText = <T extends z.ZodType>(schema: T) =>
   z.preprocess(
     (value) => (typeof value === 'string' && value.trim() === '' ? undefined : value),
     schema.optional()

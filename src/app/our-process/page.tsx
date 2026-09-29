@@ -1,16 +1,15 @@
 /**
- * /our-process — T2 Interior on `pages/process.ts` (docs/05 §T2). Eleven
- * sections, so the sticky index shows from 1024px. The page composes: the
- * cenote poster on _Arriving at The New Practice_ and no other image; _A
- * Typical Day_ on sand with its prose rendered as the timeline rule; the
- * rail About ← Our Process → Clinical Services. Everything else is the
- * template's.
+ * /our-process — T2 Interior in the spread layout on the curated
+ * `pages/process.ts` (docs/05 §T2, curated/process.ts). Seven short sections,
+ * five of them spreads with their round-1 pictures, alternating sides; _A
+ * Typical Day_ on sand with its prose rendered as the timeline rule; the rail
+ * About ← Our Process → A Personal Message. Everything else is the template's.
  */
 import type { Metadata } from 'next'
 import { JsonLd } from '@/components/JsonLd'
 import type { MediaKey } from '@/content/media'
 import { routes } from '@/content/nav'
-import { PROCESS } from '@/content/pages/process'
+import { PROCESS_CURATED } from '@/content/curated/process'
 import { ROUTE_SEO } from '@/content/seo'
 import { assertSectionIds } from '@/lib/interior'
 import { breadcrumb, organization, webPage } from '@/lib/jsonld'
@@ -27,15 +26,20 @@ export const metadata: Metadata = buildMetadata({ ...SEO, path: PATH })
 /** The one section whose content is a progression (docs/04 §6 "Timeline rule"). */
 const DAY_SECTION = 'a-typical-day'
 
-/** One plate: arriving, the water. Restraint elsewhere. */
+/** One picture per section that earns one (design/ROUND1-IMAGE-SLOTS.md); the
+ *  assessment and the return home read as text between them. */
 const PLATES = {
-  'arriving-at-the-new-practice': 'hero-cenote-poster',
+  'the-new-practice-experience': 'process-first-conversation',
+  'why-we-have-a-lead-clinician': 'process-lead-clinician',
+  [DAY_SECTION]: 'process-typical-day',
+  'family-participation': 'process-family',
+  'nutrition-as-therapy': 'process-nutrition',
 } as const satisfies Record<string, MediaKey>
 
 // A renamed section id fails the build here rather than silently dropping the timeline.
-assertSectionIds(PROCESS, [DAY_SECTION, ...Object.keys(PLATES)])
+assertSectionIds(PROCESS_CURATED, [DAY_SECTION, ...Object.keys(PLATES)])
 
-const daySection = PROCESS.sections.find((section) => section.id === DAY_SECTION)
+const daySection = PROCESS_CURATED.sections.find((section) => section.id === DAY_SECTION)
 if (!daySection) throw new Error(`pages/process.ts: no section ${DAY_SECTION}`)
 /** Narrowed once so the component body reads the paragraphs directly. */
 const DAY_PARAGRAPHS = daySection.paragraphs
@@ -56,7 +60,8 @@ export default function Page() {
         ]}
       />
       <InteriorTemplate
-        page={PROCESS}
+        page={PROCESS_CURATED}
+        layout="spread"
         plates={PLATES}
         grounds={{ [DAY_SECTION]: 'mid' }}
         bodies={{ [DAY_SECTION]: <DayTimeline paragraphs={DAY_PARAGRAPHS} /> }}

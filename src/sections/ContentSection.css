@@ -149,3 +149,45 @@
 .content-section__prose:has(> .content-section__prose-lead) + .content-section__signature {
   max-width: 54ch;
 }
+
+/* — the spread (round 1, R4a): a pictured section sets its plate beside the
+     whole text block from 1024px, alternating sides down the page
+     (InteriorTemplate `layout="spread"`, lib/interior.ts `spreadSides`).
+     Below 1024px the plate follows the text in the column. A portrait plate
+     is capped by the viewport's height so picture and text read as one frame
+     at 1280 × 800. — */
+/* two classes: PlateFigure.css loads after this file and resets the margin */
+.content-section .content-section__spread-plate {
+  grid-column: 1 / -1;
+  margin-top: var(--s-6);
+  width: 100%;
+}
+.content-section .content-section__spread-plate[data-ratio='3:4'] {
+  max-width: min(100%, calc(72svh * 3 / 4));
+}
+@media (min-width: 1024px) {
+  .content-section[data-side] .grid12 {
+    align-items: center;
+  }
+  .content-section[data-side] .content-section__body,
+  .content-section[data-side] .content-section__spread-plate {
+    grid-row: 1;
+    margin-top: 0;
+  }
+  /* picture on the left in the standing plate placement, text in the offset */
+  .content-section[data-side='start'] .content-section__spread-plate {
+    grid-column: 1 / 7;
+    justify-self: start;
+  }
+  .content-section[data-side='start'] .content-section__body {
+    grid-column: 7 / 13;
+  }
+  /* text in the reading placement, picture in the columns after it */
+  .content-section[data-side='end'] .content-section__body {
+    grid-column: 2 / 8;
+  }
+  .content-section[data-side='end'] .content-section__spread-plate {
+    grid-column: 8 / 13;
+    justify-self: end;
+  }
+}

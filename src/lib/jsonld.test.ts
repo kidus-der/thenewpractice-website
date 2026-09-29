@@ -93,7 +93,7 @@ describe('breadcrumb', () => {
 
 describe('webPage', () => {
   const input = {
-    title: 'About — The New Practice',
+    title: 'About | The New Practice',
     description: 'How the practice began.',
     path: '/about/',
     breadcrumb: [

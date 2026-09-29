@@ -45,6 +45,8 @@ const FOCUS = {
   top: 'top',
   centre: 'centre',
   bottom: 'bottom',
+  left: 'left',
+  right: 'right',
 }
 
 /**

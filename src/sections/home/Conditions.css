@@ -1,7 +1,7 @@
 /* ==========================================================================
    03 — CONDITIONS — co-located with Conditions.tsx, imported once by it (the
-   list component shares it). The hairline list on sand, one column below
-   1024px and two above; one travelling glow moves between the rows. Tokens
+   list component shares it). The hairline list on sand in one column, the
+   picture beside it; one travelling glow moves between the rows. Tokens
    only; px for geometry per rule 4 as amended.
    ========================================================================== */
 
@@ -13,13 +13,16 @@
 .conditions__lead {
   max-width: 40ch;
 }
+.conditions__aside {
+  margin-top: var(--s-6);
+}
 
 /* the glow travels inside this wrapper, so it is the positioning context and
    the list keeps its rows above it on their own layer */
 .conditions__wrap {
   position: relative;
   isolation: isolate;
-  margin-top: var(--s-7);
+  margin-top: var(--s-6);
 }
 .conditions__list {
   position: relative;
@@ -27,9 +30,6 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  column-gap: var(--gutter);
   border-top: 1px solid var(--rule);
 }
 .conditions__row {
@@ -40,7 +40,7 @@
   grid-template-columns: 3ch 1fr;
   align-items: baseline;
   gap: var(--s-4);
-  padding-block: var(--s-4);
+  padding-block: var(--s-3);
   color: inherit;
   text-decoration: none;
 }
@@ -56,20 +56,31 @@
 .conditions__link:focus-visible .conditions__label {
   opacity: 0.72;
 }
+
 @media (min-width: 1024px) {
-  .conditions__list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* the sentence and the list on the left, the picture on the right from
+     the sentence's top to the list's foot; it holds in view while the rows
+     pass (the header clears it at --s-7) */
+  .conditions__grid {
+    grid-template-rows: auto 1fr;
+    align-items: start;
   }
-  /* the top rule spans both columns; the second column repeats it for row one */
-  .conditions__row:nth-child(2) {
-    border-top: 0;
+  .conditions__head {
+    grid-row: 1;
   }
-  /* the list fills the shell, so the glow (src/sections/RowGlow.css) bleeds
-     only the gutter each side — the room a second-column row has — and the
-     tick is cut to fit inside it */
-  .conditions__wrap .row-glow {
-    --glow-bleed: var(--gutter);
-    --glow-tick: 16px;
-    --glow-tick-gap: var(--s-1);
+  /* the list stops a glow's bleed short of the plate beside it (RowGlow.css
+     bleeds --s-6 each side of a row) */
+  .conditions__body {
+    grid-row: 2;
+    padding-right: var(--s-6);
+  }
+  .conditions__aside {
+    grid-row: 1 / -1;
+    align-self: stretch;
+    margin-top: 0;
+  }
+  .conditions__plate {
+    position: sticky;
+    top: var(--s-7);
   }
 }

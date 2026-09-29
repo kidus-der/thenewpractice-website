@@ -4,17 +4,20 @@
  * as the title page eyebrow, the rail to the neighbouring services (the ends
  * wrap to the listing), and the page's metadata and structured data — a
  * plain WebPage, not a medical subtype (docs/09 §5, the no-claims rule;
- * docs/CONTENT-PROVENANCE-AUDIT.md A8).
+ * docs/CONTENT-PROVENANCE-AUDIT.md A8). The page renders the service as
+ * curated in round 1 (`curated/services.ts`) with its picture on the title
+ * page; the metadata still reads the client's full text.
  */
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { JsonLd } from '@/components/JsonLd'
 import { routes, serviceHref } from '@/content/nav'
 import { ROUTE_SEO, serviceSeo } from '@/content/seo'
+import { SERVICES_CURATED } from '@/content/curated/services'
 import { SERVICES, SERVICES_PAGE } from '@/content/services'
 import { breadcrumb, organization, webPage } from '@/lib/jsonld'
 import { buildMetadata } from '@/lib/seo'
-import { serviceBySlug, servicePrevNext } from '@/lib/treatment'
+import { serviceBySlug, servicePlate, servicePrevNext } from '@/lib/treatment'
 import { TreatmentTemplate } from '@/templates/TreatmentTemplate'
 
 type Params = Promise<{ slug: string }>
@@ -36,7 +39,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function Page({ params }: { params: Params }) {
   const { slug } = await params
   const service = serviceBySlug(slug)
-  if (!service) notFound()
+  const curated = serviceBySlug(slug, SERVICES_CURATED)
+  if (!service || !curated) notFound()
 
   const seo = serviceSeo(service)
   const path = serviceHref(slug)
@@ -56,9 +60,10 @@ export default async function Page({ params }: { params: Params }) {
         ]}
       />
       <TreatmentTemplate
-        service={service}
+        service={curated}
         eyebrow={SERVICES_PAGE.title}
         prevNext={servicePrevNext(slug)}
+        plate={servicePlate(slug)}
       />
     </>
   )

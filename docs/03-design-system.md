@@ -88,7 +88,6 @@ A modular scale on a 1.25 ratio, expressed in `clamp()` so every size is fluid b
 
 | Token         | Clamp                            | Use                                                                                                                                                 |
 | ------------- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--t-hero`    | `clamp(3.5rem, 11vw, 12rem)`     | Footer marquee                                                                                                                                      |
 | `--t-d1`      | `clamp(2.5rem, 6vw, 5.5rem)`     | Statements, the home overlay title, nav overlay items, every title page's `h1` — interior headlines, treatment and profile titles (Tasks 13 and 14) |
 | `--t-d2`      | `clamp(2rem, 4vw, 3.5rem)`       | Section headlines, the enquire band's line, the residences statement                                                                                |
 | `--t-d3`      | `clamp(1.5rem, 2.5vw, 2.25rem)`  | Sub-headlines, pillar titles, index list items                                                                                                      |
@@ -102,7 +101,7 @@ A modular scale on a 1.25 ratio, expressed in `clamp()` so every size is fluid b
 | Property       | Display (serif)                                                                                                                                                                                      | Text (sans)                                       |
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
 | Line height    | `0.95`–`1.05`                                                                                                                                                                                        | `1.6` body, `1.45` lead                           |
-| Letter spacing | `-0.03em` at hero, `-0.02em` at d1/d2                                                                                                                                                                | `0` body, `0.18em` on eyebrow caps                |
+| Letter spacing | `-0.02em` at d1/d2                                                                                                                                                                                   | `0` body, `0.18em` on eyebrow caps                |
 | Max measure    | `18ch` headlines; `20–30ch` statements                                                                                                                                                               | `62ch` body — hard cap, never exceed; `46ch` lead |
 | Case           | Sentence case. **All-caps in the serif only for the wordmark** and the client's own all-caps titles (_A NEW APPROACH TO WELLBEING_).                                                                 | Caps permitted only at `--t-eyebrow`              |
 | Widows         | Not tolerated in any headline. Use a non-breaking space before the last word, or an explicit `<br>` at the designed break.                                                                           |                                                   |
@@ -142,6 +141,10 @@ An 8px base with a non-linear scale. Larger steps grow faster because luxury lay
 
 **Section rhythm:** every section is `padding-block: var(--s-8)` on mobile, `var(--s-9)` on desktop. `sections.css` applies this to `main > section` so it cannot silently stop being true. Sections that size an inner element to the viewport (the hero, pinned statements) opt out with `padding-block: 0`.
 
+**Title pages (round 1, owner decision: less scrolling).** Every title page but the home hero (`PageIntro`, the profile's, the contact opening) is short: `padding-block: var(--s-8) var(--s-6)` at every width, no minimum height, the eyebrow and lead `--s-5` from the `h1`. The block after a title page opens at `--s-7` instead of the section rhythm (`sections.css`), so title and first block sit `--s-8` apart and the next block starts inside the first viewport at 390 × 844 and 1280 × 800. Where that block is on another ground (sand after the title page on `/clinical-services` and `/team`), the band reads `--s-7` above its content and the full rhythm below; that is intended: the band is entered from the title page, not from a void. The Task 19 short-viewport step (`max-height: 900px`) is gone; the short title page is shorter than its result at every height.
+
+**Compact body rhythm (round 1).** Two templates pad their body sections one step below the house from 1024px, because a picture beside each short section already holds the frame: the spread pages (`InteriorTemplate` `layout="spread"`: `/about`, `/our-process`, `/a-personal-message`, `/fees`) keep `--s-8` instead of stepping up to `--s-9`, so a spread fits one 1280 × 800 viewport with the next eyebrow in view; the treatment body (`TreatmentTemplate.css`) runs `--s-7` below 1024px and `--s-8` from it. Every other body section keeps the section rhythm above.
+
 ---
 
 ## 4. Grid
@@ -155,18 +158,23 @@ An 8px base with a non-linear scale. Larger steps grow faster because luxury lay
 | `≥ 1280px`   | `64px`                               | 12                                             |
 | `≥ 1920px`   | `auto`, container capped at `1720px` | 12                                             |
 
+**The scroll rail lives in the page margin, never over a column** (round 1, R9). `--page-edge` (globals.css) is the distance from the viewport's edge to the content's edge (the margin, plus the space beside the capped container on a wide screen); the rail is centred at half of it. Content may therefore run to column 12 at every width; `viewports.spec` asserts the rail's left edge clears the content's right edge on every route.
+
 ### Standing placements
 
 Reuse these; do not invent new column spans per template.
 
-| Name        | Span     | Use                                                                                                                                              |
-| ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `.p-lead`   | `2 / 8`  | Lead paragraphs, statements, interior body                                                                                                       |
-| `.p-offset` | `7 / 13` | Secondary text blocks, profile bio, the counterweight                                                                                            |
-| `.p-plate`  | `1 / 7`  | Portrait image plates                                                                                                                            |
-| `.p-narrow` | `4 / 10` | Centred-ish text moments (the home statement only)                                                                                               |
-| `.p-wide`   | `1 / -1` | Full-bleed media (a `grid12` child spanning everything)                                                                                          |
-| `.p-list`   | `2 / 12` | Index and hairline lists: numerals align with the section titles at column 2, the margin holds the brass tick (blessed after Task 12; T3 and T6) |
+| Name              | Span     | Use                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ----------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.p-lead`         | `2 / 8`  | Lead paragraphs, statements, interior body                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `.p-offset`       | `7 / 13` | Secondary text blocks, profile bio, the counterweight                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `.p-plate`        | `1 / 7`  | Portrait image plates                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `.p-narrow`       | `4 / 10` | Centred-ish text moments (the home statement only)                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `.p-wide`         | `1 / -1` | Full-bleed media (a `grid12` child spanning everything)                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `.p-list`         | `2 / 12` | Index and hairline lists: numerals align with the section titles at column 2, the margin holds the brass tick (blessed after Task 12; T3 and T6)                                                                                                                                                                                                                                                                                                               |
+| `.p-aside`        | `8 / 12` | A portrait plate beside a `.p-lead` column: four columns keep a 3:4 frame inside a 1280 × 800 viewport; column 12 stays clear, as column 1 does, so the pair sits centred on the page (round 1, R3: home §3 and §5)                                                                                                                                                                                                                                            |
+| aside to the edge | `8 / 13` | A block beside a `.p-lead` column that runs to the content's right edge: the spread's plate on its `end` side (`ContentSection.css`, R4a), the enquiry sheet on `/contact` (`EnquiryTemplate.css`, R4d), the ten tests on `/self-assessment` (`AssessmentIndexTemplate.css`, R5); below 1024px, the title-page plate beside the lead (`PageIntro.css`, R4b). Set in each block's own stylesheet, not a class; allowed because the rail sits in the margin (R9) |
+| `.p-aside-start`  | `2 / 6`  | The same plate mirrored, beside a `.p-offset` column (round 1, R3: home §2 and the manifesto)                                                                                                                                                                                                                                                                                                                                                                  |
 
 ---
 
@@ -177,7 +185,7 @@ There are exactly three interactive treatments on this site. Do not invent a fou
 **1. Text link** — inline, in body copy and footer columns.
 Underline is a `1px` `currentColor` bottom border at `0.3` alpha. On hover, alpha → `1` over `--d-fast`. No colour change. No movement.
 
-**2. Line action** — the primary CTA (`Enquire`, `Menu`, `See your result`, `Send`), primary nav links, self-assessment toggles.
+**2. Line action** — the primary CTA (`Enquire`, `Menu`, `See your result`, `Send`), primary nav links. Laid flat as a row of cells (`ChoiceCell`, round 1, R5): the self-assessment's 1 to 10 scale and its _Yes_ / _No_ / _Maybe_, each cell a number or word on a `--rule-strong` hairline, the brass wiping in on hover and a 2px brass rule under the chosen one.
 Letterspaced caps at `--t-eyebrow`, with a full-width `1px` rule beneath. On hover the rule wipes from left to right in `--accent` over `--d-base` using `scaleX` from `transform-origin: left`. The label itself does not move. Active route: the brass rule is already drawn.
 
 **3. Media surface** — plates, portraits, index hover previews.
@@ -189,7 +197,7 @@ On hover: `scale(1.03)` on the inner `<img>` only, `--d-slow`, `--e-out-expo`, w
 
 ### Form fields
 
-Bottom-rule only. The label overlays the baseline and floats up on focus or when filled; a brass underline wipes in from the left on focus (`--d-base`, `--e-out-expo`). Errors sit outside the control, in `--accent`, in a `role="alert"` line per field. Radius `--radius-input` (`2px`) — the one radius on the site.
+Bottom-rule only. The label overlays the baseline and floats up on focus or when filled; a brass underline wipes in from the left on focus (`--d-base`, `--e-out-expo`). Errors sit outside the control, in ink (`--fg`; brass on bone is 2.77:1, under AA for text, so the accent marks the underline and never the words), in a `role="alert"` line per field. One checkbox exists (`CheckField`, the self-assessment's consent, round 1 R6): a 16px hairline square in `--fg-muted` (the control's boundary clears 3:1), filled with a smaller brass square when ticked, the sentence beside it at `--t-small` in ink. Radius `--radius-input` (`2px`) — the one radius on the site. Rhythm (round 1, R9): the control keeps `--s-4` above its rule for the floated label, the error line (always present, `1.4em`) sits `--s-1` under the rule, and rows stack `--s-3` apart, so the enquiry sheet and the self-assessment opt-in each read as one composed block.
 
 ---
 
@@ -249,12 +257,9 @@ Defined here for completeness; the choreography that uses them is in `docs/04-mo
 | `--d-base`         | `480ms`                          | `D.base`      | `0.48`               |
 | `--d-slow`         | `800ms`                          | `D.slow`      | `0.8`                |
 | `--d-glacial`      | `1400ms`                         | `D.glacial`   | `1.4`                |
-| _(none)_           | `40s`                            | `D.marquee`   | —                    |
 | `--e-out-expo`     | `cubic-bezier(0.16, 1, 0.3, 1)`  | `expo.out`    | `[0.16, 1, 0.3, 1]`  |
 | `--e-out-quart`    | `cubic-bezier(0.25, 1, 0.5, 1)`  | `quart.out`   | `[0.25, 1, 0.5, 1]`  |
 | `--e-in-out-quart` | `cubic-bezier(0.76, 0, 0.24, 1)` | `quart.inOut` | `[0.76, 0, 0.24, 1]` |
 | `--e-linear`       | `linear`                         | `none`        | `'linear'`           |
-
-`D.marquee` is the footer marquee's seconds per cycle (docs/04 §4), the site's one continuous loop; it has no CSS counterpart because nothing in a stylesheet runs that long.
 
 **There is no spring, elastic, back, or bounce token, and none may be added — in either library.**

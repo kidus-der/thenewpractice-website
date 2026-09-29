@@ -14,6 +14,7 @@ import { ASSESSMENTS, ASSESSMENTS_PAGE } from '@/content/assessments'
 import { NAV } from '@/content/nav'
 import { QUESTIONS_PER_ASSESSMENT } from '@/content/schemas'
 import { UI_ASSESSMENT } from '@/content/ui'
+import { answerTypesFor } from '@/content/assessment-answers'
 import { progressLabel, scoreLabel } from '@/lib/assessment'
 import { AssessmentForm } from './AssessmentForm'
 
@@ -38,10 +39,17 @@ vi.mock('@/motion/Reveal', () => ({
   ),
 }))
 
+vi.mock('@/motion/SmoothScroll', () => ({ scrollTo: vi.fn() }))
+
 const [assessment] = ASSESSMENTS
-const consultation = ASSESSMENTS_PAGE.sections.find((s) => s.id === 'a-confidential-consultation')
+const section = (id: string) => ASSESSMENTS_PAGE.sections.find((s) => s.id === id)
+const consultation = section('a-confidential-consultation')
+const disclaimer = section('important-disclaimer')
 const [enquire] = NAV.utility
-if (!assessment || !consultation || !enquire) throw new Error('content missing for the test')
+if (!assessment || !consultation || !disclaimer || !enquire) {
+  throw new Error('content missing for the test')
+}
+const types = answerTypesFor(assessment.slug)
 
 const N = QUESTIONS_PER_ASSESSMENT
 const moderate = assessment.scoring.bands.find((b) => b.key === 'moderate')
@@ -49,22 +57,32 @@ if (!moderate) throw new Error('no moderate band')
 
 const setup = () => {
   const user = userEvent.setup()
-  render(<AssessmentForm assessment={assessment} consultation={consultation} enquire={enquire} />)
+  render(
+    <AssessmentForm
+      assessment={assessment}
+      answerTypes={types}
+      disclaimer={disclaimer}
+      consultation={consultation}
+      enquire={enquire}
+    />
+  )
   return user
 }
 
-const rows = () => screen.getAllByRole('group')
+const rows = () => screen.getAllByRole('radiogroup')
+const radioIn = (index: number, value: string) => {
+  const radio = document
+    .querySelectorAll('fieldset')
+    [index]?.querySelector<HTMLInputElement>(`input[value="${value}"]`)
+  if (!radio) throw new Error(`no ${value} radio in row ${index}`)
+  return radio
+}
 /** By selector and a plain click: fifteen role queries and pointer sequences per sheet are slow in jsdom. */
-const answer = async (_user: ReturnType<typeof userEvent.setup>, index: number, yes: boolean) => {
-  const row = document.querySelectorAll('fieldset')[index]
-  const radio = row?.querySelector<HTMLInputElement>(`input[value="${yes ? 'yes' : 'no'}"]`)
-  if (!radio) throw new Error(`no ${yes ? 'yes' : 'no'} radio in row ${index}`)
-  fireEvent.click(radio)
-}
+const answer = (index: number, value: string) => fireEvent.click(radioIn(index, value))
 
-const answerAll = async (user: ReturnType<typeof userEvent.setup>, yeses: number) => {
-  for (let i = 0; i < N; i += 1) await answer(user, i, i < yeses)
-}
+/** Every question at 5 or maybe: an average of 5.0, the moderate band. */
+const answerAllMiddle = () =>
+  types.forEach((type, i) => answer(i, type === 'scale' ? '5' : 'maybe'))
 
 /** An in-memory Storage that records every write; Node 26's jsdom exposes none of its own. */
 const storageSpy = () => {
@@ -81,7 +99,9 @@ const storageSpy = () => {
   }
 }
 
-describe('AssessmentForm', () => {
+// Every test renders and answers a sheet of fifteen; on a shared, loaded machine
+// that has run past Vitest's 5 s default (ledger, R7 acceptance note).
+describe('AssessmentForm', { timeout: 20_000 }, () => {
   const fetchSpy = vi.fn()
   const local = storageSpy()
   const session = storageSpy()
@@ -102,27 +122,73 @@ describe('AssessmentForm', () => {
     session.setItem.mockClear()
   })
 
-  it('renders every question as a radio group named by its question', () => {
+  it('renders every question as a radio group named by its question, answered its own way', () => {
     setup()
     const groups = rows()
     expect(groups).toHaveLength(N)
     assessment.questions.forEach((question, i) => {
-      expect(groups[i]).toHaveAccessibleName(question)
-      expect(within(groups[i]!).getAllByRole('radio')).toHaveLength(2)
+      const group = groups[i]!
+      expect(group).toHaveAccessibleName(question)
+      // By selector: 150 role queries are slow in jsdom; the group roles are asserted above.
+      const radios = [...group.querySelectorAll<HTMLInputElement>('input[type="radio"]')]
+      if (types[i] === 'scale') {
+        expect(radios.map((r) => r.getAttribute('value'))).toEqual(
+          Array.from({ length: 10 }, (_, n) => String(n + 1))
+        )
+        expect(group).toHaveAccessibleDescription(UI_ASSESSMENT.scaleHint)
+      } else {
+        expect(radios.map((r) => (r.closest('label') as HTMLElement).textContent)).toEqual([
+          UI_ASSESSMENT.yes,
+          UI_ASSESSMENT.no,
+          UI_ASSESSMENT.maybe,
+        ])
+        expect(group).not.toHaveAttribute('aria-describedby')
+      }
     })
   })
 
-  it('shows no tally until the first answer, then counts up', async () => {
-    const user = setup()
+  it('shows no tally until the first answer, then counts up', () => {
+    setup()
     const tally = screen.getByTestId('assessment-tally')
     expect(tally).toHaveAttribute('aria-live', 'polite')
     expect(tally).toHaveTextContent('')
-    await answer(user, 0, true)
+    answer(0, '7')
     expect(tally).toHaveTextContent(progressLabel(1, N))
-    await answer(user, 0, false)
+    answer(0, '2')
     expect(tally).toHaveTextContent(progressLabel(1, N))
-    await answer(user, 4, true)
+    answer(1, 'yes')
     expect(tally).toHaveTextContent(progressLabel(2, N))
+  })
+
+  it('moves focus to the next unanswered question after a choice, then to the action', () => {
+    setup()
+    answer(0, '3')
+    expect(radioIn(1, 'yes')).toHaveFocus()
+    // Out of order: moving on means forward, to the next question still unanswered.
+    answer(2, '4')
+    expect(radioIn(3, '1')).toHaveFocus()
+    // From the last question it wraps to the first one left.
+    answer(N - 1, '6')
+    expect(radioIn(1, 'yes')).toHaveFocus()
+    for (let i = 1; i < N - 2; i += 1) answer(i, types[i] === 'scale' ? '5' : 'no')
+    expect(radioIn(N - 2, '1')).toHaveFocus()
+    answer(N - 2, '6')
+    expect(screen.getByRole('button', { name: UI_ASSESSMENT.seeResult })).toHaveFocus()
+  })
+
+  it('stays on the question while the arrow keys move through its answers', () => {
+    setup()
+    const group = rows()[0]!
+    radioIn(0, '1').focus()
+    fireEvent.keyDown(group, { key: 'ArrowRight' })
+    fireEvent.click(radioIn(0, '2'))
+    radioIn(0, '2').focus()
+    expect(radioIn(0, '2')).toBeChecked()
+    expect(radioIn(0, '2')).toHaveFocus()
+    // Space (or a click) after the arrows moves on.
+    fireEvent.keyDown(group, { key: ' ' })
+    fireEvent.click(radioIn(0, '3'))
+    expect(radioIn(1, 'yes')).toHaveFocus()
   })
 
   it('keeps the result action disabled and inert until every question is answered', async () => {
@@ -131,36 +197,39 @@ describe('AssessmentForm', () => {
     expect(button).toHaveAttribute('aria-disabled', 'true')
     await user.click(button)
     expect(screen.queryByRole('status')).not.toBeInTheDocument()
-    await answerAll(user, 6)
+    answerAllMiddle()
     expect(button).not.toHaveAttribute('aria-disabled')
   })
 
-  it('reveals the band, the interpretation and the consultation for six yeses', async () => {
+  it('reveals the average, the band, the interpretation, the disclaimer and the consultation', async () => {
     const user = setup()
-    await answerAll(user, 6)
+    answerAllMiddle()
     await user.click(screen.getByRole('button', { name: UI_ASSESSMENT.seeResult }))
 
     const result = screen.getByRole('status')
     expect(result).toHaveFocus()
+    expect(result).toHaveTextContent(scoreLabel(5))
     expect(within(result).getByRole('heading', { level: 2 })).toHaveTextContent(moderate.label)
-    expect(result).toHaveTextContent(scoreLabel(6, N))
     expect(result).toHaveTextContent(assessment.interpretation)
-    expect(within(result).getByRole('heading', { level: 3 })).toHaveTextContent(
-      consultation.title ?? ''
-    )
+    const [note, invitation] = within(result).getAllByRole('heading', { level: 3 })
+    expect(note).toHaveTextContent(disclaimer.title ?? '')
+    for (const paragraph of disclaimer.paragraphs) expect(result).toHaveTextContent(paragraph)
+    expect(invitation).toHaveTextContent(consultation.title ?? '')
     for (const paragraph of consultation.paragraphs) expect(result).toHaveTextContent(paragraph)
     expect(within(result).getByRole('link', { name: enquire.label })).toHaveAttribute(
       'href',
       enquire.href
     )
     expect(screen.queryByRole('button', { name: UI_ASSESSMENT.seeResult })).not.toBeInTheDocument()
+    // The retired scoring line renders nowhere.
+    expect(document.body).not.toHaveTextContent(/1 point for each/)
   })
 
   it('withdraws the result when an answer changes, and clears everything on start again', async () => {
     const user = setup()
-    await answerAll(user, 6)
+    answerAllMiddle()
     await user.click(screen.getByRole('button', { name: UI_ASSESSMENT.seeResult }))
-    await answer(user, 0, false)
+    answer(0, '9')
     expect(screen.queryByRole('status')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: UI_ASSESSMENT.seeResult })).not.toHaveAttribute(
       'aria-disabled'
@@ -176,7 +245,7 @@ describe('AssessmentForm', () => {
   it('keeps the answers in component state and nowhere else', async () => {
     const user = setup()
     const href = window.location.href
-    await answerAll(user, 6)
+    answerAllMiddle()
     await user.click(screen.getByRole('button', { name: UI_ASSESSMENT.seeResult }))
 
     expect(local.setItem).not.toHaveBeenCalled()

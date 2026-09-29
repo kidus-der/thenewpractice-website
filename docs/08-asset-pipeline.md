@@ -10,7 +10,7 @@ The client has not yet supplied photography, video, voice-over or team portraits
 | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Never** use an image from Küsnacht Practice, Paracelsus, Clinic Les Alpes, or any competing practice | Instantly recognisable to this client. Fatal.                                                                                                                                   |
 | **Never** use an image of an identifiable real hotel, resort or private residence                      | Implies a claim about a place, and the residences page is privacy-first                                                                                                         |
-| **Never** use an image with an identifiable face                                                       | Violates the premise and creates a model-release problem                                                                                                                        |
+| **Never** show an identifiable person beside crisis, trauma, addiction or mental-illness copy          | Owner decision, round 1: calm, candid adults are allowed (docs/02); stock licences forbid showing identifiable people in a bad light                                            |
 | **Never** use AI-generated imagery of people or places                                                 | Uncanny at this tier, and dishonest in a medical context. Generated **silhouettes** for team placeholders are the one exception: abstract, faceless, unmistakably placeholders. |
 | **Always** record source URL, licence name and licence URL for every asset in `design/ASSETS.md`       | If it is not in the manifest it is not on the site                                                                                                                              |
 | **Always** normalise every still through the same grade                                                | Consistency is what makes sourced photography read as commissioned                                                                                                              |
@@ -32,7 +32,7 @@ The client has not yet supplied photography, video, voice-over or team portraits
 
 Search for the _materials and weather_ of the place — `rain on tropical leaf`, `jungle canopy from below`, `cenote`, `limestone wall`, `linen bed morning light`, `tropical modernism interior` — never for the destination. `tulum`, `riviera maya`, `cancun` return resort photography, which is the exact wrong register.
 
-**Reject on sight:** anything alpine or temperate, resort-branded, with faces, lotus, candles, hot stones, lens flare, turquoise-water clichés, ruins as backdrop.
+**Reject on sight:** anything alpine or temperate, resort-branded, posed smiles or eye contact with the lens, lotus, candles, hot stones, lens flare, turquoise-water clichés, ruins as backdrop.
 
 ## The grade — a brand duotone
 
@@ -88,7 +88,7 @@ Downloads are cached under `node_modules/.cache/tnp-media/` (ignored with `node_
 
 ### `prepare-assets.mjs` — every `stills[]` entry, then every cached poster
 
-1. Validate the manifest (key, https URL, aspect ∈ 3:4 / 16:9 / 1:1 / 21:9, numeric `ev`, optional `focus` ∈ top / centre / bottom, required `alt`, `credit`, `licence`)
+1. Validate the manifest (key, https URL, aspect ∈ 3:4 / 16:9 / 1:1 / 21:9, numeric `ev`, optional `focus` ∈ top / centre / bottom / left / right, required `alt`, `credit`, `licence`)
 2. Fetch each still to the cache; crop, expose, duotone with `sharp` at the slot size: 16:9 → 2400×1350, 3:4 → 1040×1387, 1:1 → 1200×1200, 21:9 → 2100×900
 3. Write AVIF (`quality 55, effort 6`) + WebP (`quality 78`) to `public/media/<key>.{avif,webp}`
 4. Write a 20 px WebP LQIP per frame
@@ -117,7 +117,7 @@ Commissioned photography replaces a stock frame by changing its `url` (a local `
 | Team plates   | SVG silhouettes (generated)                                | ≤ 4kB each                          |
 | Grain texture | inline SVG `feTurbulence`                                  | ≤ 2kB                               |
 
-Initial-viewport media weight (poster + fonts) must stay under **1.6MB**. The video loads after the poster paints; the LCP is the poster, never the video. `next/image` re-encodes the WebP source per device width, so the on-disk plate size is the ceiling, not what ships; the served sizes are what the budget above is measured against (Task 20's Playwright audit, docs/09 §Measured budgets). Per-frame quality lives in `src/lib/plates.ts` (`plateQuality()`), with every value it uses listed in `images.qualities` in `next.config.ts`; today only `index-01`, the canopy silhouette, ships at 60 rather than 75, and it still exceeds 120 kB above 640 px served (see the ledger). Add a key there, with the measured reason beside it, rather than lowering the pipeline's global WebP quality.
+Initial-viewport media weight (poster + fonts) must stay under **1.6MB**. The video loads after the poster paints; the LCP is the poster, never the video. `next/image` re-encodes the WebP source per device width, so the on-disk plate size is the ceiling, not what ships; the served sizes are what the budget above is measured against (Task 20's Playwright audit, docs/09 §Measured budgets). Per-frame quality lives in `src/lib/plates.ts` (`plateQuality()`), with every value it uses listed in `images.qualities` in `next.config.ts`; `index-01`, the canopy silhouette, and the five heaviest round-1 frames (R4a) ship at 60 rather than 75 (`index-01` still exceeds 120 kB above 640 px served, see the ledger); `home-philosophy`, the manifesto's kapok roots, ships at 45, the one quality that brings it under 120 kB at the 750 px width 3× phones and 2× tablets take (115 kB; 138 kB at 60, R9). It is 134 kB at 828 px, the width a 2× laptop takes at 1280. Add a key there, with the measured reason beside it, rather than lowering the pipeline's global WebP quality.
 
 **LQIP:** every `next/image` gets a `blurDataURL`. The blur-up is part of the art direction — images develop rather than pop in.
 

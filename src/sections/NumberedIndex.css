@@ -45,3 +45,12 @@
     padding-block: var(--s-5);
   }
 }
+/* two columns from 1024px, read across as the hairline list is (round 1,
+   R4b: the programme list was the longest block on a service page) */
+@media (min-width: 1024px) {
+  .numbered-index {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--gutter);
+  }
+}

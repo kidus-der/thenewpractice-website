@@ -637,3 +637,182 @@ Lighthouse CI on `/` and one URL per template; image `sizes` audit; only the dis
 - **Shipped** on `fix/conditions-glow` (worktree, dev :3320): the home §3 hover plate is replaced by the travelling glow, one implementation now — `src/sections/RowGlow.tsx` + `.css` (the glow, the brass tick, `x`/`y` over `--d-base` `--e-out-expo`, `gsap.set` under reduced motion, pointer and focus) used by `IndexList` and `ConditionsList`; the pure `glowBox()` / `releaseRow()` in `src/lib/rowGlow.ts` are unit-tested; `plateForRow()`, the `conditionPlates` prop and the route's `CONDITION_PLATES` are gone; `HoverPlate` stays for the index lists; `index-01..04` untouched in `media.ts`.
 - **Evidence.** `npm run verify` green; `home` on desktop-1280, mobile-390 and reduced-motion and `index` on desktop-1280 against :3320 green (the new home test: one `.row-glow` in the list, no image, focus and Tab move it on every project, hover row 3 → row 7 moves its transform and the tick is `--accent`, reduced motion places it with no transition); a 1280 capture with the pointer over row 07 shows one soft canopy glow with the brass tick and no image.
 - **Deviations.** From 1024px the conditions glow bleeds the gutter (24px) each side rather than `--s-6`, with a 16px tick: the list fills the shell, so a second-column row has only the gutter to its left and a first-column row only the page margin (40px at 1024). docs/04 §6, docs/05 §T1 and CLAUDE.md §6a updated.
+
+---
+
+# Round 1 — Client feedback (from 2026-09-28)
+
+Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its own worktree on `round1/<id>-<slug>`; the main session reviews and merges task branches into `improvements/round-1`. **Nothing merges to `main` until the owner has reviewed it visually and approved.** Client review URL at the end: https://thenewpractice-staging.kidusder.com (the production target).
+
+## The client's feedback
+
+1. Too much text across the site. Read less, see more pictures (Kusnacht Practice as the model for brevity).
+2. Remove the footer's large wordmark. The footer takes less space and keeps only its link categories. The home page is shorter.
+3. Home §3 *Who We Help*: the twelve items on the left, a picture on the right.
+4. Self-assessment has too much friction: the tests should be right there on the tab page under a short description with a picture; questions near the top; answers on a 1–10 severity scale where that is meaningful.
+5. Every submission on the site (enquiries, assessment responses) reaches the client by email, cleanly structured and branded.
+6. A catalogue of lighter colour palettes shown as renders of the real site, as an artifact, for the client to choose from. No palette change on the site this round.
+
+## Owner decisions (override the older rules where they conflict; each override gets a CLAUDE.md §6a row)
+
+- **Copy.** Curate the client's sentences; write summaries where needed. Language is plain, human and professional, British spelling. **No em or en dashes** in anything we write unless grammar strictly requires one. Still never invent a clinical claim, statistic, credential, outcome or named person; summaries restate only what the client's document says. The forbidden-words list (docs/01) and "no exclamation marks" still apply to what we write. The full client text stays in the generated modules; what renders is chosen by the curation layer (R0).
+- **Images.** People are allowed (Kusnacht style: calm, adult, candid, never posed stock smiles). Rule of thumb: every picture matches the text it sits with and the site's look, and means something. No resort clichés, no alpine imagery, no spa clichés (docs/02 forbidden list otherwise stands).
+- **Footer.** Link columns in their categories, the © line, the small mark. No marquee, no contact block.
+- **Who We Help.** One fixed image beside the list.
+- **Self-assessment.** Least possible friction to reach and to complete. Per question, the answer type is whichever is most meaningful: a 1–10 severity scale, or yes / no / maybe. Result: the average severity places the respondent in the client's own three band labels, split evenly (flagged in CONTENT-GAPS for the client to confirm). Emailing a result is **opt-in**, with contact details and a one-line consent.
+- **Email.** Resend (Vercel Marketplace, the existing adapter). The client has no domain yet; they will buy one on their own Vercel account. **Nothing may be tied to `kidusder.com` as a sending domain.** Build everything short of provisioning: when the recipient address and domain arrive, it is env vars only.
+- **Title pages.** Shorter on every page (less scrolling); the route curtain, preloader and reveals stay as they are. The home hero stays a full viewport.
+- **Palettes.** Ten lighter palettes, in different directions, rendered from the real site with colour the only variable.
+- **Commits.** Small commits after every logical step, pushed after each (`git push -u origin <branch>`). Never a batch commit. Conventional messages, no co-author trailer.
+
+## Rules for round-1 agents (in addition to the ten above)
+
+- Work only in your worktree; run `npm ci` there first (Node 24 on this machine). Start your dev server on your assigned port (`npx next dev -p <port>`), detached, and stop it when done.
+- Do **not** edit this ledger. Report deviations and findings in your final message; the main session records them and adds CLAUDE.md §6a rows (R0 is the exception and edits §3/§6a directly).
+- Update the governing doc for what you change (docs/05 for templates, docs/04 for motion, docs/02 for imagery, docs/06 for content) in the same commit as the change.
+- Update the Playwright specs your change breaks so they assert the new design; never delete an assertion without replacing it.
+- Before reporting: `npm run verify` green; `E2E_BASE_URL=http://localhost:<port> npm run e2e:route -- <spec>` green for touched routes on all five projects; screenshots at 390 / 768 / 1280 / 1920 and reduced motion **read by you**; paths in the report. Push your final commit and report the branch head SHA.
+
+## Round-1 status
+
+| id | status | depends_on | task | branch | port |
+|---|---|---|---|---|---|
+| R0 | done | — | Foundation: shorter title pages, curation layer, rule and doc updates | round1/r0-foundation | 3401 |
+| R1 | done | — | Images: source, grade and log pictures matched to their text | round1/r1-images | 3402 |
+| R2 | done | — | Footer: links, © line, small mark | round1/r2-footer | 3403 |
+| R7 | done | — | Palettes: ten lighter palettes + capture tooling | round1/r7-palettes | 3407 |
+| R3 | done | R0, R1 | Home: shorter; Who We Help list left, fixed image right | round1/r3-home | 3404 |
+| R4a | done | R0, R1 | About, Our Process, A Personal Message, Fees: curate, images | round1/r4a-interior | 3411 |
+| R4b | done | R0, R1 | Clinical Services index + 11 service pages: curate, images | round1/r4b-services | 3412 |
+| R4c | done | R0, R1 | Team index + 11 profiles: curate, images | round1/r4c-team | 3413 |
+| R4d | done | R0, R1 | Contact and Residences: curate, images | round1/r4d-contact | 3414 |
+| R5 | done | R0, R1 | Self-assessment: tests on the tab page, questions at the top, per-question answer types | round1/r5-assessment | 3405 |
+| R6 | done | R5 | Email: branded HTML emails, opt-in assessment send, previews, provisioning-ready | round1/r6-email | 3406 |
+| R9 | done | R3–R6 | Polish and QA: rail overlaps, round-wide e2e on a quiet machine, docs/HANDOFF sweep | round1/r9-polish | 3409 |
+| R8 | done | R3, R4a–d, R5, R7 | Palette artifact from real renders | — (main session) | — |
+
+## Round-1 briefs
+
+### R0 — Foundation
+1. **Title pages.** `PageIntro` (and the title pages of T4 profile, T7 enquiry opening, the assessment page) stop being a full viewport. Target: at 1280×800 and 390×844 the eyebrow, `h1`, lead (and plate, where one exists) sit in the upper part of the first viewport and the start of the next block is visible. Keep the reveals, the `lines` h1 and the `mask` lead exactly (LCP credit, docs/09 §1). Home hero unchanged. Remove the Task 19 short-viewport padding step if it becomes redundant.
+2. **Curation layer.** One mechanism every later task uses to decide what renders, without editing generated modules: e.g. `src/content/curated/` with a helper that picks client paragraphs/sections/list items by id and index, and a way to add our own summary strings. Our strings are checked in `content.checks.ts`: no em/en dash (the `PLACEHOLDER — ` prefix excepted), no exclamation mark, none of the docs/01 forbidden words, trimmed. A reference to a client paragraph that no longer exists fails the check. Unit-test the helper. Prove it on nothing user-visible (no page curation in R0; R3/R4/R5 do the pages).
+3. **Rules and docs.** CLAUDE.md §1/§3/§5 and docs/01, docs/06 rewritten for the new copy rule (curated client text plus our summaries, no dashes, no invented claims); docs/02 for people in pictures; docs/03/05 for the shorter title page; §6a rows for each override. Do not touch the footer, home sections, assessment or palette.
+
+### R1 — Images
+Source roughly 25–35 new licence-free photographs (Pexels, Unsplash, Pixabay; record source URL, author, licence) for these slots, **reading the text each will sit with in `src/content/**` first**: home §2 long read, §3 Who We Help (one strong image), §4 philosophy, §5 begin the conversation; About (its main sections), Our Process (four to five of its key sections), A Personal Message, Fees; Clinical Services index and one per service (11); Team index; Self-Assessment index; Contact. People allowed per the decisions above. Match the Riviera Maya setting where a place shows. Grade through the existing pipeline (`design/media.manifest.json` → `npm run assets` → `public/media`, `src/content/media.ts`); key names by slot (`service-addiction-treatment`, `home-who-we-help`, …). Update `design/ASSETS.md`, `design/STOCK-SOURCES.md` (a round-1 section) and write `design/ROUND1-IMAGE-SLOTS.md`: key → page/section → the sentence it illustrates → why it fits. Look at every candidate yourself (download and view) before choosing. Produce a contact sheet PNG of all chosen, graded frames with their keys (scratch path in the report, not committed). No template wiring; R3/R4/R5 place them. Commit per batch of slots.
+
+### R2 — Footer
+Remove the marquee (`Marquee.tsx`, its CSS, `D.marquee` and its docs rows), the founder `<address>` and the confidentiality line. Keep the four link groups exactly as they gate today (production hides the placeholder routes and the Legal group), then one thin bottom line: `© <year> The New Practice` and the small ceiba mark with its gold point. Much less vertical space at every width. Server component. Update `footer.spec.ts`, docs/05 §Footer, docs/04 §4 (marquee), docs/02 anti-patterns row, docs/03 §9, docs/09 if it mentions the marquee.
+
+### R7 — Palettes and capture tooling
+1. Design ten lighter palettes in distinct directions (the client only said "lighter"; e.g. limestone, sage, sea glass, clay, sand dune, mist, cenote, jungle shade, shell, linen). Each defines the seven core tokens (`--c-canopy`, `--c-canopy-soft`, `--c-bone`, `--c-sand`, `--c-clay`, `--c-stone`, `--c-brass`) plus any alias values the dark ground needs, so the site's structure (grounds, one accent) holds. Every text/ground pair the site uses must clear AA (4.5:1 body, 3:1 ≥ 24px); no pure black or white, no neutral grey; exactly one accent. Store them in `design/palettes/palettes.json` with names and a one-line character note each.
+2. Capture tooling in `scripts/palettes/`: builds nothing on the site; drives Playwright against a running production build, injects each palette's tokens (`:root`, `[data-ground]`, `[data-surface]`, chrome `--ground`), regrades the stills and video posters to that palette's duotone (reuse `prepare-assets.mjs`'s grade; serve regraded files by request interception, never overwrite `public/`), reveals the page (preloader skipped, `revealAll`-style pass), and writes full-page captures for Home, About, one service, one profile, Self-Assessment index, one questionnaire, Contact at 1440 wide, plus Home at 390, to a gitignored output folder. Current palette included as "Current".
+3. A contrast report per palette (`design/palettes/CONTRAST.md`). Prove the tooling on today's pages with two palettes and read the captures. The artifact itself is R8, after the layout tasks land.
+
+### R3 — Home
+Home at roughly half its current length, Kusnacht brevity: each section a short piece of text with an image. Keep the hero as it is and keep the "One" moment (the ceiba behind the triad) but shorten its pin to about one viewport; drop or summarise §1's four paragraphs. §2 long read: headline, one short paragraph (curated or summarised), the pull line, with its R1 image. §3 *Who We Help*: the twelve conditions in one column on the left, one fixed R1 image on the right (sticky while the list passes on desktop; above the list below 1024px); the travelling glow stays. §4: the five pillars stay, shorter where needed; the manifesto keeps its first paragraph only, pin shortened; an R1 image where it helps. §5 stays with its R1 image. All text through the R0 curation layer. Update `home.spec.ts` and docs/05 §T1, docs/04 §6 pin lengths.
+
+### R4a–R4d — Curate and illustrate the remaining pages
+For each page in the group: cut the reading load to roughly the Kusnacht shape (sections of about 50–120 words, each paired with an image where the section earns one), through the R0 curation layer. Prefer the client's own sentences; write a summary only where no client sentence carries the point. Place the R1 images per `design/ROUND1-IMAGE-SLOTS.md`. Remove sections that add reading without adding meaning; say which in the report. Sticky index only where a page still has five or more sections. Update the page specs and docs/05.
+- **R4a:** `/about`, `/our-process` (keep the day timeline, shorter), `/a-personal-message`, `/fees`.
+- **R4b:** `/clinical-services` and the eleven service pages (image on each service's title band; lists stay lists; definitions trimmed to the term plus one sentence).
+- **R4c:** `/team` and the eleven profiles (biographies to a short paragraph or two; full role lines stay).
+- **R4d:** `/contact` (the form within reach of the first viewport, the letter much shorter) and `/residences` (placeholder copy shortened, still `PLACEHOLDER — ` prefixed).
+
+### R5 — Self-assessment
+`/self-assessment`: a short description (two or three sentences) with one R1 image, then the ten tests directly beneath, reachable without scrolling at 1280×800 and with one short scroll at 390; the disclaimer reduced to one line near the list (its full text on each questionnaire's result); the consultation section moved to the results. `/self-assessment/[slug]`: title, one-line instruction and the first question inside the first viewport; no sand disclaimer band above the questions. Answer types per question (content decision recorded in a new typed module): a 1–10 severity scale where the question asks about degree or frequency, yes / no / maybe where it asks about a fact; each rendered as the site's line-action toggles (ten compact numbered cells, fits 390); answering moves focus and gently scrolls to the next unanswered question (reduced motion: no scroll animation). Result: average severity (yes = 10, maybe = 5, no = 1, scale as answered) mapped evenly onto the client's three band labels; score shown; interpretation and the consultation text after it. The scoring line "1 point for each yes" no longer renders. Update `scoreAssessment` and its tests, the reducer, `assessment.spec.ts`, docs/05 §Self-assessment, CONTENT-GAPS C1 (new scale, pending the client's confirmation). No sending yet (R6).
+
+### R6 — Email
+1. **Templates.** Branded HTML emails plus a plain-text part for (a) an enquiry and (b) an assessment result: the site's palette, a Didone-style serif with safe fallbacks, the ceiba mark as an inline image or table-safe SVG fallback, hairlines, no tracking pixels, no external fonts or images that need a network. Enquiry: every field, labelled, reply-to the enquirer. Assessment: questionnaire title, each question with its answer, total, band, the respondent's contact details and preferred contact, submitted time in the practice's timezone.
+2. **Opt-in send on the result.** Beneath the result: *Send my answers to the practice* reveals name, email or telephone, preferred contact, and a one-line consent; submits through a new server action with the same honeypot and timing trap as the enquiry; the result stays on screen; confirmation and failure states in the site's voice. Nothing stored; logs carry no personal data.
+3. **Provisioning-ready.** Adapter sends HTML + text via Resend when configured, logs otherwise. Env: `RESEND_API_KEY`, `ENQUIRY_TO_EMAIL`, `ENQUIRY_FROM_EMAIL` (and an assessment recipient only if a second address is needed). `npm run email:preview` renders every template with sample data to a gitignored folder for review. A short `docs/EMAIL-SETUP.md`: the exact steps once the client's domain exists (Marketplace Resend install on their Vercel account, domain verification records, env vars). **No `kidusder.com` sending domain.** Update docs/09 §3 (data handling now includes opt-in sending) and the unit tests (handler, adapter, templates).
+
+
+## Round-1 pause (2026-09-28)
+
+Owner paused the run. Each task's resume notes (done, remaining, decisions, gotchas, next steps) are in `docs/round1-progress/<id>-progress.md`. Resume: a fresh agent per task in the same worktree (`../tnp-wt/<branch-suffix>`), told to read its notes first and continue from the pushed branch head.
+
+### R7 — accepted (2026-09-28)
+
+- Merged `f939e0d`. Ten palettes in `design/palettes/palettes.json` (deep: Jungle Shade, Cenote, Clay; light: Limestone, Sage, Sea Glass, Sand Dune, Mist, Shell, Linen); `CONTRAST.md` all ten pass (text AA, accent 3:1 as a mark). Tooling: `node scripts/palettes/capture.mjs [--palettes=…] [--routes=…]` against a production server on 3417; `contrast.mjs [--check]`. Main session read Current / Sea Glass / Cenote home captures: correct recolour, chrome follows, images regraded. `src/` untouched; the agent's single `verify` run hit AssessmentForm 5 s timeouts under machine load (steps pass separately); main session re-ran lint + typecheck on the merge.
+- Findings for later: form errors are set in the accent (2.77:1 on bone today) — move `.field__error` to ink (R6 touches the forms); Current's accent fails 3:1 as a mark on bone/sand and the hero eyebrow/tagline at 0.72 bone fall under 4.5 (estimate); GroundManager hard-codes the dark ground → bone pairing and `--c-canopy` doubles as ink — a real palette switch needs `--ground-dark-fg` and a separate ink token (future palette task, not this round).
+
+### R1 — accepted (2026-09-28)
+
+- Merged `a5d2a0b`: 32 Pexels frames, one per slot, graded through the pipeline's own grade; register in `design/ROUND1-IMAGE-SLOTS.md`; ASSETS and STOCK-SOURCES round-1 sections; docs/02 and docs/08 imagery lines now allow calm candid adults, kept unidentifiable beside crisis, trauma, addiction and mental-health text; `left`/`right` crop positions added to `prepare-assets.mjs`. Main session read the contact sheet: consistent grade, each frame fits its slot.
+- For R3/R4: six frames exceed the 120 kB budget (`home-philosophy` 404k, `about-ceiba` 265k, `process-lead-clinician` 173k, `about-practice` 155k, `fees` 154k, `about-founder` 129k) — add them to `plateQuality()` when wiring. Repeated motifs to avoid placing side by side: bench facing the sea (`about-founder`, `service-executive-health-and-burnout`), phone at a window (`home-begin-conversation`, `process-first-conversation`). Weakest: `team-index`, `services-index` crop.
+- CLAUDE.md §6a rows owed (added after R0 merges): people in pictures; extra crop positions.
+
+### R2 — accepted (2026-09-28)
+
+- Merged `c18bb03`: footer is the link groups, a hairline, `© <year> The New Practice` and the small mark with its point; marquee, founder block, confidentiality line and lockup removed; `--t-hero`, `.t-hero`, `D.marquee` retired. Heights (on `/about`): 390 1807→465, 768 1392→330, 1280 1598→354, 1920 1647→354. Main session read the 1280 and 390 captures. Verify green; footer + reduced-motion + seven touched specs green on five projects (production build, 2 workers).
+- Operational (all later briefs): this WSL VM has 7 GB RAM; run Playwright with `--workers=2` and pass specs by exact path (`tests/e2e/<name>.spec.ts`) — a worktree folder name containing a spec word makes the positional filter match every spec. Run e2e against a production build (`next start`) when the dev server is slow.
+- Stale: `HANDOFF.md` and the plan still describe the marquee footer (update at round close).
+
+### R0 — accepted (2026-09-28)
+
+- Merged `44ec7e2`. Title pages short on every template (home hero unchanged): `--s-8` above, `--s-6` below, next block at `--s-7`; profile plate 40% stacked / 50% beside. Curation layer `src/content/curated/` (`curatePage`, `curate`, `ours`, `only`, `sentencesOf`, `ALL`; register every curation in `CURATIONS`; import a page's curation from its own module) with `curationChecks()` (no en/em dash outside the `PLACEHOLDER — ` prefix, no `!`, no forbidden word, broken references fail). CLAUDE.md §1/§3/§5/§7 and docs/01, 02, 03, 05, 06, 08 rewritten; four §6a rows. `viewports.spec` asserts every title page ends and the next block starts in the first viewport, with `AWAITING_CURATION` listing `/contact`, `biochemical-restoration`, `inner-child-work`, `self-assessment/adult-children` (R4b, R4d, R5 remove them from that list). Main session read the 1280×800 sheet. Merge: docs/02 and docs/08 people rule conflicted with R1; kept R1's licence wording (unidentifiable beside crisis copy) plus R0's rule of thumb. Unit 368/368, content checks 15/15, typecheck clean after merge.
+- Owner-visible decision taken by main session: SEO `pageTitle()` joins with " — "; R4d changes it to " | " under the no-dash rule.
+- Stale: docs/06 Schema rules still says modules `.parse()` at import (fix at round close).
+
+### R3 — accepted (2026-09-28)
+
+- Merged `1ccff7d`. Home 13 823 → 9 453 px at 1280 (−32%), 13 661 → 10 436 at 390 (−24%); every rendered word the client's (no summaries); one R1 image per section; §3 one column left, sticky `home-who-we-help` right (above the list below 1024px), glow kept; "One" pin 1× (0.8× mobile), manifesto first paragraph only, pin 1×; new placements `.p-aside` (8/12) and `.p-aside-start` (2/6); §6a rows added. Main session read the 1280 overview, §3 and the manifesto mid-pin.
+- Polish for later: at 1280 the manifesto's display line runs to ~35px of the scroll rail (right column reaches column 12); `home-philosophy` 138 kB at 750w on 3× phones; axe/full-page tests on 1280/1920 needed a 120 s limit under load — rerun on a quiet machine at round close.
+
+### R4b — accepted (2026-09-28)
+
+- Merged `b2221df`. Services index lead is two client sentences, the eleven rows straight under it with `services-index`; each service opens with its R1 frame beside the lead (`PageIntro` gained a plate layout, `PlateFigure` a `priority` option, `IndexTemplate` a `plate` option); client sentences only (no summaries); trauma definitions cut to name plus one sentence; "may include" and definitions two-column from desktop; closing sentences folded into the opening text; section gap one step smaller. Heights at 1280 down 7–28% (trauma 7787 → 5642). `AWAITING_CURATION` loses the two service routes. Main session read the four-page desktop sheet and the addiction fold at 390/1920. Merge: `curated/index.ts` and CLAUDE.md §6a conflicted with R3 (both kept). Unit 384/385 on the merge; the one failure is the known `AssessmentForm` 5 s timeout under load (passes alone; R5 rewrites the file).
+- Findings: metadata descriptions still read the full client text; the scroll rail sits inside the content's right edge from 768 (pictures moved clear; other templates may overlap).
+
+### R4a — accepted (2026-09-28)
+
+- Merged `71db8af`. About, Our Process, A Personal Message and Fees curated from client sentences only (no summaries); a "spread" layout pairs each section with its R1 frame, sides alternating, from 1024px; the sticky index is off on spread pages (**owner to confirm at review**: the index needs the full grid width the spreads use); Process 15 954 → 8 495 px at 1280, About 12 655 → 9 451; day timeline four lines; letter six of ten lines with signature; Fees verbatim beside `fees`. Five oversized frames in `plateQuality()`. Fixed a pre-existing cascade bug that put letter/fees text in column 1. Main session read the About and Process 1280 overviews. Merge: CLAUDE.md, `curated/index.ts`, `plates.ts` conflicted (union). Unit 389/389, content checks 15/15, typecheck clean.
+- R9 must fix: spreads and R4b's title-page plate use `8 / 13`, which reaches column 12 under the scroll rail (the rail numeral paints over the service pictures at 1280); move them to `.p-aside` (`8 / 12`) or equivalent and register any new span in docs/03 §4. Also the `--s-8` section spacing on spread pages needs a docs/03 §3 line.
+
+### R5 — accepted (2026-09-28)
+
+- Merged `209f3fe`. `/self-assessment`: description (two client sentences), `assessment-index` picture cropped 21:9, the ten tests beside it; all visible at 1280×800, first test at 34px scroll on 390. Questionnaires: title, instruction and question one in the first viewport; 105 questions on a 1–10 scale, 45 yes / no / maybe (`src/content/assessment-answers.ts`); result = average severity (yes 10, maybe 5, no 1) to one decimal, bands < 4 / 4–6.9 / ≥ 7 with the client's labels; focus and a gentle scroll advance to the next unanswered question; the "1 point per yes" line gone. Strings of ours: "Maybe", "On the scale, 1 means not at all and 10 means very much.", "Average severity {average} of {max}". Empty slot under the result for R6. CONTENT-GAPS C1 updated. Main session read the 1280 tab page and questionnaire opening.
+- Merge: CLAUDE.md, `curated/index.ts`, `viewports.spec.ts` (both removed their `AWAITING_CURATION` entries), `index.spec.ts` (fixture gained both `lead/plate/listLead` and `plates`; image count `plate ? 1 : plates ?? 0`) resolved by hand; unit 405/405, content 16/16, typecheck and lint clean. R9 runs `index.spec` on all projects.
+- R9: the list sits at `8 / 13` and the scroll rail overlaps its hairlines at 1280 (same rail issue as R4a/R4b).
+
+### R4c — accepted (2026-09-28)
+
+- Merged `604d718`. `/team`: lead is the client's opening sentence, `team-index` beside the title, the eleven members straight beneath, then the multidisciplinary roles on sand; 7 541 → 5 708 px at 1280. Profiles: 55–108-word biographies of client sentences; one summary of ours ("Lowell is a graduate of the Hazelden Betty Ford Graduate School of Addiction Studies.", grounded in the document l.789, whose sentence has no subject). Cut by rule: Katia's *Origin – A Somatic Nutrition Method* (en dash in the name) and Nicolas's *Intuitive Reconnection Massage™* (™ rule) pending the client. Biographies render whole in the body (no lifted lead). Main session read `/team` at 1280 and checked the Hazelden line against the document.
+- Merge: R4b and R4c both added `IndexTemplate.plate` and both edited `index.spec` fixtures; deduplicated to one prop feeding `PageIntro`, the fixture keeps `plate` + `lead/listLead` + `afterTitles` + `plates`; two list-order checks scoped away from the R5 tab page. `index.spec` + `profile.spec` on desktop-1280 and mobile-390 against a production build: 132 passed, 2 skipped. Captured `/team` and `/clinical-services` at 1280 after the merge.
+- R9: the `/team` title block sits lower in its frame than `/clinical-services` (the team plate CSS centres on the row); align them.
+
+### R4d — accepted (2026-09-28)
+
+- Merged `460f8f7`. `/contact`: the form sheet leads the split, beside the lead from 1024px; form top 1 068 → 511 px at 1280, 2 368 → 698 at 390; letter to two client sentences, the `contact` picture, International Services (first paragraph), the consultation line and founder; *Who Contacts Us* cut; words in main 284 → 123. `/residences`: one section of three `PLACEHOLDER — ` paragraphs on bone; 9 508 → 7 756 px at 1280. `pageTitle()` joins with " | ". No summaries of ours. Main session read the contact fold at 1280. Merge: CLAUDE.md, docs/06, `curated/index.ts`, `viewports.spec.ts` (`AWAITING_CURATION` now empty) resolved; typecheck, lint, unit 421/421, content 16/16.
+- R9 must fix on `/contact` at 1280: the letter paragraph under the lead starts at the page margin (x 64) instead of the title's column; the sheet's fields are spaced very wide (form reads sparse); the scroll rail sits over the sheet's top-right corner.
+
+### R6 — accepted (2026-09-29)
+
+- Merged `aa5ba4d`. Branded HTML + text emails for enquiries and opt-in assessment results (`src/server/email/`), mark as an inline PNG (Gmail strips SVG), times in America/Cancun, every field escaped (unit-tested against injection). Opt-in *Send my answers to the practice* under the result (name, email or telephone, preferred contact, consent; honeypot and a required timing stamp); one POST only on submit (asserted). Adapter sends via Resend when `RESEND_API_KEY` is set, logs otherwise; `ENQUIRY_TO_EMAIL` receives both kinds; `ENQUIRY_FROM_EMAIL` optional. `npm run email:preview`; `docs/EMAIL-SETUP.md` (Marketplace install on the client's account, DNS, env, test sends). Form errors moved to ink (R7 finding). Subjects join with a colon. Main session read the assessment email at 600px and the opt-in form at 1280. Merge: CLAUDE.md and `contact.spec.ts` imports (R4d curated contact + R6 `PALETTE`); unit 472/472, content 16/16.
+- Provisioning waits on the client's domain and inbox (owner to supply). No `kidusder.com` sender anywhere.
+- R9: the opt-in and contact forms space their fields very wide (large empty gaps between rows at 1280); tighten the shared `Field` rhythm. The confirmation says "on their way" while staging only logs (true once Resend is live).
+
+### R9 — Polish and QA (brief)
+Everything R3–R6 left for a single pass, then the whole suite on a quiet machine.
+1. **Scroll rail overlap.** The fixed rail sits over content that reaches column 12: R4a spread plates and R4b title plates (`8 / 13`), the R5 tab-page list (`8 / 13`), the R4d contact sheet, the home manifesto line. Fix it once, systemically (preferred: move the rail into the page margin so column 12 is free at every width; or bring those spans to `.p-aside` `8 / 12`), and register whatever span survives in docs/03 §4, plus the `--s-8` spread rhythm in docs/03 §3.
+2. **Contact and forms.** The letter paragraph under the lead on `/contact` starts at the page margin, not the title's column; the shared `Field` rhythm spaces rows very wide on the contact sheet and the assessment opt-in; tighten it so each form reads as one composed block (keep bottom-rule fields, floating labels and error lines).
+3. **Index title pages.** `/team`'s title block sits lower in its frame than `/clinical-services`; align the T6 title pages.
+4. **Weight.** `home-philosophy` serves 138 kB at 750w on 3× phones; bring it under 120 kB (quality or a tighter `sizes`).
+5. **Docs sweep.** `HANDOFF.md` (round 1: footer, curated pages, images, self-assessment scale, opt-in email and `docs/EMAIL-SETUP.md`, the palette study), `.claude/plans/two-week-templates.plan.md` marquee lines, docs/06 Schema rules (".parse() at import" is stale since Task 20), CONTENT-GAPS (Katia's *Origin – A Somatic Nutrition Method* and Nicolas's *Intuitive Reconnection Massage™* held back pending the client; C1 new scale), docs/10 pointing at round 1.
+6. **Full suite.** `npm run verify`, then `npm run e2e` on all five projects against a production build with `--workers=2`, plus `npm run e2e:webkit -- home nav route-curtain contact assessment`; fix every failure (product or test), rerun the home axe and full-page tests without raised timeouts; read the 390/768/1280/1920/reduced-motion screenshots of every route touched above.
+
+### R9 — accepted (2026-09-29)
+
+- Merged `f3fdab1`. Rail centred in the page margin via `--page-edge` (clears column 12 everywhere; asserted in `viewports.spec`); `8 / 13` registered in docs/03 §4 as aside-to-the-edge; one field rhythm for the enquiry sheet and the opt-in (row pitch 150 → 106 px at 1280); contact letter on the title's column; T6 title lockup top-aligned with its plate; `home-philosophy` at quality 45 (115 kB at 750w); HANDOFF round-1 section, plan, docs/06, docs/10, CONTENT-GAPS §7. `verify` green (473 unit); full `npm run e2e`, five projects, production build: **1 727 passed, 0 failed, 148 skipped**. Main session read the contact and addiction-treatment sheets at all widths.
+- Not run: WebKit (`npm run e2e:webkit`) — the machine lacks WebKit's system libraries; needs `sudo npx playwright install-deps webkit` (owner) before it can run.
+- Open, pre-existing: on `/contact` at 1280, once the bone sheet passes under the settled header the nav's right half loses contrast (GroundManager reads the canopy section, not the sheet surface). Dead `.enquiry__*` block in `sections.css`; `enquiry.email.ts` fails `prettier --check`.
+
+### R10 — photographer credits removed (2026-09-29, owner instruction)
+
+- `d184f78`: no credit renders under any picture (`PlateFigure` renders only a page's own caption; the carousel keeps its counter); credits stay in `media.ts` and `design/ASSETS.md` (Pexels/Pixabay licences need no attribution). `viewports.spec` asserts no credit on any route (whole-word match; "Nati" is inside "International"). viewports + residences + about on desktop-1280 and mobile-390, production build: 298 passed, 4 skipped. §6a row added.
+
+### R8 — palette artifact (2026-09-29)
+
+- Captured all eleven palettes from the round-1 site at `d184f78` (`node scripts/palettes/capture.mjs`, 0 stale colour paths on 88 captures). Built with `scripts/palettes/artifact/build.py` over `template.html` (a colour-study folio in the site's type: an overview of the eleven home pages, then one tab per palette with swatches, the home page in laptop and phone frames, and six pages that open full size). 99 WebP images, 10.3 MB. Published privately: https://claude.ai/artifact/Cq8cNcS8nVcKHbRLH46eB9 — the owner shares it with the client from its Share menu.
+- Round 1 complete on `improvements/round-1`. Preview (Vercel login): https://thenewpractice-staging-git-impro-ae7de2-kidus-projects-8964b022.vercel.app. **Awaiting the owner's visual review; nothing merges to `main` before it.**

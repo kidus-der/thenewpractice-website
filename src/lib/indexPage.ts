@@ -40,12 +40,12 @@ export const rowsFromTeam = (team: readonly TeamMember[]): readonly IndexRow[] =
 /** The ten questionnaires: title over the shared length line the route passes in. */
 export const rowsFromAssessments = (
   assessments: readonly Assessment[],
-  meta: string
+  meta?: string
 ): readonly IndexRow[] =>
   byOrder(assessments).map((assessment) => ({
     href: assessmentHref(assessment.slug),
     title: assessment.title,
-    meta,
+    ...(meta ? { meta } : {}),
   }))
 
 export const hasRowImages = (rows: readonly IndexRow[]): boolean =>

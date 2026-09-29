@@ -1,15 +1,17 @@
 /**
- * /about — the T2 Interior template (Task 11). docs/05 §T2, docs/09 §2.
+ * /about — the T2 Interior template in the spread layout (Task 11; round 1,
+ * R4a). docs/05 §T2, docs/09 §2.
  *
- * Every project: the h1, every section title as a heading in document order,
- * the plates' alt text, the prev/next rail, a clean console, axe on the whole
- * document, and a full-page capture taken after the reveals have run.
- * Desktop projects: the sticky index is visible and an item jumps to its
- * section. Narrow projects: the index is hidden.
+ * Every project: the h1, every curated section title as a heading in render
+ * order, one picture per spread with content-layer alt text, the prev/next
+ * rail, a clean console, axe on the whole document, and a full-page capture
+ * taken after the reveals have run. The spread layout carries no sticky
+ * index; from 1024px each picture stands beside its text, alternating sides,
+ * and below it follows the text.
  */
 import { MEDIA } from '../../src/content/media'
 import { routes } from '../../src/content/nav'
-import { ABOUT } from '../../src/content/pages/about'
+import { ABOUT_CURATED as ABOUT } from '../../src/content/curated/about'
 import { UI_INTERIOR } from '../../src/content/ui'
 import { prevNextFor } from '../../src/lib/prevNext'
 import {
@@ -32,6 +34,18 @@ const DESKTOP_PROJECTS: readonly string[] = [
   PROJECTS.reducedMotion,
   PROJECTS.webkit,
 ]
+
+/** The pictures in render order (src/app/about/page.tsx). */
+const PICTURES = [
+  'about-ceiba',
+  'about-practice',
+  'about-founder',
+  'about-place',
+  'about-sea',
+  'about-jungle',
+] as const
+/** Every section but the principles is a spread. */
+const SPREAD_COUNT = PICTURES.length
 
 /** The section titles in document order: top level, then each one's subsections. */
 const TITLES = ABOUT.sections.map((s) => s.title).filter((t): t is string => Boolean(t))
@@ -66,47 +80,52 @@ test.describe('about', () => {
     }
   })
 
-  test('shows the sticky index from 1024px and hides it below', async ({ page }, info) => {
-    const index = page.locator(INDEX)
-    if (!DESKTOP_PROJECTS.includes(info.project.name)) {
-      await expect(index).toBeHidden()
-      return
-    }
-    await expect(index).toBeVisible()
-    const links = index.getByRole('link')
-    await expect(links).toHaveCount(TITLES.length)
-    await expect(links).toHaveText(
-      TITLES.map((t) => new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))
+  test('carries no sticky index in the spread layout', async ({ page }) => {
+    await expect(page.locator(INDEX)).toHaveCount(0)
+    await expect(page.locator('main')).toHaveAttribute('data-layout', 'spread')
+  })
+
+  test('sets each picture beside its text from 1024px, alternating sides', async ({
+    page,
+  }, info) => {
+    const spreads = page.locator('section[data-side]')
+    await expect(spreads).toHaveCount(SPREAD_COUNT)
+    const sides = await spreads.evaluateAll((els) => els.map((el) => el.getAttribute('data-side')))
+    expect(sides).toEqual(PICTURES.map((_, i) => (i % 2 === 0 ? 'start' : 'end')))
+
+    const boxes = await spreads.evaluateAll((els) =>
+      els.map((el) => {
+        const text = el.querySelector('.content-section__body')?.getBoundingClientRect()
+        const plate = el.querySelector('.content-section__spread-plate')?.getBoundingClientRect()
+        if (!text || !plate) throw new Error(`${el.id}: a spread without text or plate`)
+        return { side: el.getAttribute('data-side'), text, plate }
+      })
     )
-    expect(await index.evaluate((el) => getComputedStyle(el).position)).toBe('sticky')
+    for (const { side, text, plate } of boxes) {
+      if (!DESKTOP_PROJECTS.includes(info.project.name)) {
+        expect(plate.top).toBeGreaterThanOrEqual(text.bottom - 1)
+        continue
+      }
+      if (side === 'start') expect(plate.right).toBeLessThanOrEqual(text.left + 1)
+      else expect(plate.left).toBeGreaterThanOrEqual(text.right - 1)
+      // side by side: the two blocks share a band of the page
+      expect(plate.top).toBeLessThan(text.bottom)
+      expect(text.top).toBeLessThan(plate.bottom)
+    }
   })
 
-  test('an index item scrolls to its section and marks it current', async ({ page }, info) => {
-    test.skip(!DESKTOP_PROJECTS.includes(info.project.name), 'the index exists from 1024px')
-    const target = ABOUT.sections[2]
-    if (!target) throw new Error('about.ts has fewer than three sections')
-    const link = page.locator(INDEX).getByRole('link').nth(2)
-    await expect(link).toHaveAttribute('href', `#${target.id}`)
-    await link.click()
-    await expect(page).toHaveURL(new RegExp(`#${target.id}$`))
-    const top = await page
-      .locator(`section#${target.id}`)
-      .evaluate((el) => el.getBoundingClientRect().top)
-    expect(Math.abs(top)).toBeLessThan(2)
-    await expect(link).toHaveAttribute('aria-current', 'true')
-    await expect(page.locator(INDEX).locator('[aria-current="true"]')).toHaveCount(1)
-  })
-
-  test('draws the mark and the two plates with content-layer alt text', async ({ page }) => {
+  test('draws the mark and one picture per spread with content-layer alt text', async ({
+    page,
+  }) => {
     const ceiba = page.locator('.ceiba-figure svg.mark')
     await expect(ceiba).toHaveCount(1)
     // No caption: nothing names the species or the Maya name (provenance audit, A1).
     await expect(page.locator('.ceiba-figure figcaption')).toHaveCount(0)
 
     const images = page.locator('main img')
-    await expect(images).toHaveCount(2)
+    await expect(images).toHaveCount(PICTURES.length)
     const alts = await images.evaluateAll((els) => els.map((el) => el.getAttribute('alt')))
-    expect(alts).toEqual([MEDIA['hero-poster'].alt, MEDIA['index-01'].alt])
+    expect(alts).toEqual(PICTURES.map((key) => MEDIA[key].alt))
     for (const alt of alts) expect(alt?.trim().length).toBeGreaterThan(0)
   })
 

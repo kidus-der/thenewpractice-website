@@ -18,6 +18,9 @@ import { BRAND } from './brand'
 import { HOME } from './pages/home'
 import { type RouteKey } from './nav'
 import type { Assessment, Service, TeamMember } from './schemas'
+import { sentences } from './sentences'
+
+export { sentences }
 
 /** Google truncates around 155–160 characters; we stop at 155. */
 export const DESCRIPTION_MAX = 155
@@ -35,36 +38,18 @@ export type RouteSeo = {
   type: OpenGraphType
 }
 
-const TITLE_SEPARATOR = ' — '
+/** A bar, not a dash: the round 1 no-dash rule (docs/01) holds in titles too. */
+const TITLE_SEPARATOR = ' | '
 
-/** `"<Page> — The New Practice"`. */
+/** `"<Page> | The New Practice"`. */
 export const pageTitle = (name: string): string => `${name}${TITLE_SEPARATOR}${BRAND.name}`
 
 // ---------------------------------------------------------------------------
-// Sentence handling — pure, shared with src/lib/seo.ts
+// Sentence handling — pure, in sentences.ts; shared with src/lib/seo.ts and the
+// curation layer
 // ---------------------------------------------------------------------------
 
-const ABBREVIATIONS = new Set(['Dr', 'Mr', 'Mrs', 'Ms', 'Prof', 'St'])
-const SENTENCE_BOUNDARY = /(?<=[.!?…])\s+(?=[A-Z“"(])/
-const TRAILING_PUNCTUATION = /[.!?…]$/
 const ELLIPSIS = '…'
-
-const endsWithAbbreviation = (piece: string): boolean => {
-  const lastWord = piece.split(/\s+/).at(-1) ?? ''
-  return ABBREVIATIONS.has(lastWord.replace(TRAILING_PUNCTUATION, ''))
-}
-
-/** Splits prose into sentences without breaking after "Dr." and friends. */
-export function sentences(text: string): readonly string[] {
-  const pieces = text.trim().split(SENTENCE_BOUNDARY)
-  return pieces.reduce<readonly string[]>((acc, piece) => {
-    const previous = acc.at(-1)
-    if (previous !== undefined && endsWithAbbreviation(previous)) {
-      return [...acc.slice(0, -1), `${previous} ${piece}`]
-    }
-    return [...acc, piece]
-  }, [])
-}
 
 /** Cuts at the last word boundary that keeps room for an ellipsis. */
 const cutAtWord = (text: string, max: number): string => {
@@ -107,7 +92,8 @@ export const SEO_DEFAULTS = {
   /** The copy is British English; Open Graph wants a territory. */
   locale: 'en_GB',
   language: 'en',
-  ogImageAlt: `${BRAND.nameUpper}${TITLE_SEPARATOR}${BRAND.tagline}`,
+  /** Read aloud, so a full stop rather than the title's bar. */
+  ogImageAlt: `${BRAND.nameUpper}. ${BRAND.tagline}`,
 } as const
 
 /**
@@ -212,9 +198,15 @@ export function teamSeo(member: TeamMember): RouteSeo {
   return route(member.name, description, { type: 'profile' })
 }
 
-/** The document's own scoring line, l.1020, verbatim; it follows every questionnaire. */
-const SCORING_LINE = 'Scoring: Give yourself 1 point for each “yes” answer. Total score: 0–15.'
+/**
+ * The first sentence of the document's disclaimer (l.962), verbatim. Round 1
+ * (R5): the scoring line it replaced ("1 point for each yes") no longer
+ * describes how the questionnaires are scored, so it is not used anywhere;
+ * the how-to sentence would take the longest title past DESCRIPTION_MAX.
+ */
+const SCREENING_LINE =
+  'The New Practice Self-Assessment Series is designed as a screening tool only.'
 
-/** A questionnaire page: its title, then the client's scoring line. */
+/** A questionnaire page: its title, then the client's screening sentence. */
 export const assessmentSeo = (assessment: Assessment): RouteSeo =>
-  route(assessment.title, `${assessment.title}. ${SCORING_LINE}`)
+  route(assessment.title, `${assessment.title}. ${SCREENING_LINE}`)

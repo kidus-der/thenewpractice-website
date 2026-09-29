@@ -5,7 +5,9 @@
  */
 import { BRAND } from '../../src/content/brand'
 import { ENQUIRY } from '../../src/content/enquiry'
-import { CONTACT } from '../../src/content/pages/contact'
+import { CONTACT_CURATED as CONTACT } from '../../src/content/curated/contact'
+import { MEDIA } from '../../src/content/media'
+import { PALETTE } from '../../src/lib/tokens'
 import { ENQUIRY_MIN_ELAPSED_MS } from '../../src/server/enquiry.schema'
 import {
   expect,
@@ -23,6 +25,8 @@ const MAX_TABS = 40
 const TIMING_MARGIN_MS = 400
 /** How long a failed submission is given to (not) produce a confirmation. */
 const QUIET_MS = 1500
+/** --c-canopy as the computed colour an error line on the bone sheet should have. */
+const INK = `rgb(${(PALETTE.canopy.slice(1).match(/../g) ?? []).map((h) => parseInt(h, 16)).join(', ')})`
 
 const textbox = (page: import('@playwright/test').Page, name: string) =>
   page.getByRole('textbox', { name })
@@ -113,10 +117,36 @@ test.describe('contact', () => {
       `tel:${BRAND.phone.replace(/[^\d+]/g, '')}`
     )
 
+    // Round 1 (R4d): the curated letter, the picture beside the form, and
+    // the cut section nowhere on the page.
+    for (const section of CONTACT.sections)
+      for (const paragraph of section.paragraphs)
+        await expect(page.getByRole('main')).toContainText(paragraph)
+    await expect(page.getByRole('main')).not.toContainText('Who Contacts Us')
+    await expect(page.locator(`main img[alt="${MEDIA.contact.alt}"]`)).toHaveCount(1)
+
     await revealAll(page)
     const path = await screenshotRoute(page, 'contact')
     test.info().annotations.push({ type: 'screenshot', description: path })
     expectNoConsoleErrors(page)
+  })
+
+  test('starts the form inside the first viewport, before the letter', async ({ page }) => {
+    // Round 1 (R4d): the sheet leads the split, so the form is in reach of
+    // the first viewport at every width, and before the letter in reading order.
+    const form = page.getByRole('form', { name: ENQUIRY.formHeading })
+    const top = await form.evaluate((el) => el.getBoundingClientRect().top + window.scrollY)
+    expect(top, 'px from the top of the page to the form').toBeLessThan(
+      page.viewportSize()?.height ?? 0
+    )
+    const formFirst = await page.evaluate(() => {
+      const form = document.querySelector('main form')
+      const address = document.querySelector('main address')
+      return Boolean(
+        form && address && form.compareDocumentPosition(address) & Node.DOCUMENT_POSITION_FOLLOWING
+      )
+    })
+    expect(formFirst, 'the form precedes the founder block').toBe(true)
   })
 
   test('posts to its own origin', async ({ page }) => {
@@ -175,6 +205,8 @@ test.describe('contact', () => {
     await expect(alert).toBeVisible()
     await expect(email).toHaveAttribute('aria-invalid', 'true')
     await expect(email).toHaveAttribute('aria-describedby', (await alert.getAttribute('id')) ?? '')
+    // In ink, not the accent: brass on the bone sheet is under AA for text (R7 finding, R6).
+    await expect(alert).toHaveCSS('color', INK)
 
     await page.getByRole('button', { name: ENQUIRY.submit }).click()
     await page.waitForTimeout(QUIET_MS)
@@ -200,9 +232,8 @@ test.describe('contact', () => {
   })
 
   test('has no serious axe violations inside the page content', async ({ page }) => {
-    // Scoped to <main>: the scroll rail numeral and the footer marquee ghost
-    // fail colour contrast on every route and belong to Tasks 1/8 (ledger:
-    // Task 19 lifts the numeral). Both are outside this template.
+    // Scoped to <main>: the scroll rail and the footer are chrome outside
+    // this template, covered by their own specs (footer.spec.ts).
     // The sheet fades in on scroll; axe skips invisible nodes, so bring it in first.
     const sheet = page.locator('.contact__sheet')
     await sheet.scrollIntoViewIfNeeded()

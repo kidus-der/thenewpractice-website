@@ -27,12 +27,12 @@ Stock is a stand-in, not a compromise: the templates are built to receive commis
 - **Architecture and interiors, unoccupied.** A corridor. A doorway with light across it. A single chair. A linen bed no one has slept in. Tropical-modern, not resort.
 - **Landscape at distance.** Canopy, cloud, cenote and sea water, mist through trees, a shaded pool edge. Always wide, always quiet, never dramatic-golden-hour.
 - **Materials in extreme close-up.** Raw linen weave. Limestone grain. Plaster. Water tension. Rain beaded on a leaf. Untreated hardwood.
-- **The human presence, only obliquely.** A hand at the edge of frame. A shadow. A back turned. Never a face in focus. Never eye contact. Team portraits, when they arrive, are the one exception — and until then they are generated silhouettes.
+- **People, calm and candid.** Owner decision, round 1: people are allowed, in the manner of kusnachtpractice.com. Adults in quiet, unposed moments: two people walking, a conversation at a table, a hand on a letter, a back turned to the sea. Never a posed stock smile, never eye contact with the lens. Where the text is about crisis, trauma, addiction or mental illness, the person is not identifiable (back turned, silhouette, hands only): the Pexels licence forbids showing an identifiable person in a bad light. No children's faces. Team portraits stay the client's own; until they arrive they are generated silhouettes. The rule of thumb: every picture matches the text it sits with and the site's look, and means something.
 - **Instruments of care, abstracted.** A glass of water. Never a syringe, chart, monitor, or anything that reads _hospital_.
 
 ### Subject matter — forbidden
 
-Smiling models. Group therapy circles. Yoga poses. Massage tables. Hot stones. Lotus flowers. Candles. Bamboo. Anything from a "spa" stock search. Before/after anything. People in robes. Sunsets with lens flare. Drone shots that show off. Text baked into an image.
+Posed stock smiles and models performing happiness. Group therapy circles. Yoga poses. Massage tables. Hot stones. Lotus flowers. Candles. Bamboo. Anything from a "spa" stock search. Before/after anything. People in robes. Sunsets with lens flare. Drone shots that show off. Text baked into an image.
 
 **Also forbidden, specific to this brief:** turquoise-water resort photography, white-sand beach clichés, hammocks, palapa-with-cocktail, Maya ruins as backdrop, resort branding, anything that reads _holiday_. The client is not on holiday. And no alpine, Nordic, or temperate-forest landscape — it contradicts the location outright.
 
@@ -88,11 +88,11 @@ Global
 
 T1 Home
   Hero (video)              ── canopy
-  §1 statement + triad      ── bone
-  §2 long-read              ── bone
-  §3 who we help            ── sand
-  §4 philosophy + manifesto ── canopy
-  §5 begin the conversation ── bone
+  §1 statement + triad      ── canopy (one pinned frame; the bone prose block went in round 1)
+  §2 long-read              ── bone    (plate: home-recovery)
+  §3 who we help            ── sand    (plate: home-who-we-help, sticky beside the list)
+  §4 philosophy + manifesto ── canopy  (plate: home-philosophy, beside the manifesto)
+  §5 begin the conversation ── bone    (plate: home-begin-conversation)
 
 T2 Interior     bone throughout; inline plates on sand bands; enquire band canopy
 T3 Treatment    bone; lists ("we provide treatment for", "may include") and related services sand, never two sand blocks in a row; definitions bone; enquire band canopy
@@ -130,7 +130,7 @@ Do not build a cursor that follows with physics, blurs, distorts, or magnetises 
 | Glassmorphism / frosted panels                                          | Consumer OS vocabulary, not luxury print. (The settled header's `backdrop-filter` is the one tolerated use, and Safari may cost it.)                            |
 | Gradient meshes, aurora blobs                                           | Reads as SaaS startup. The ambient gradient is a near-monochrome water plane at 0.35, not this.                                                                 |
 | Neon or high-saturation accents                                         | Cheapens instantly                                                                                                                                              |
-| Marquee text scrolling infinitely                                       | Permitted **once** on the site: the footer wordmark, at low contrast, static under reduced motion                                                               |
+| Marquee text scrolling infinitely                                       | Not permitted anywhere. The footer marquee was removed in round 1 (R2); nothing on the site loops                                                               |
 | Big rounded pill buttons                                                | Consumer app                                                                                                                                                    |
 | Icon sets (Lucide, Feather, etc.)                                       | Iconography is a systems-design language; luxury editorial uses type and rules. **No icons on this site** except the audio toggle bars and the scroll cue rule. |
 | Card grids with shadows and hover-lift                                  | The single most template-looking pattern on the web                                                                                                             |

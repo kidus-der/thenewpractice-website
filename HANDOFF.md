@@ -5,7 +5,9 @@
 > order, and what was found_, read [`docs/BUILD-LEDGER.md`](./docs/BUILD-LEDGER.md).
 > This file is _where things stand_.
 >
-> Last updated at the deploy that closed the two-week template milestone (Task 21).
+> Last updated at the close of round 1 (client feedback, R9, 2026-09-29). The milestone
+> text below is as delivered at Task 21; §_Round 1_ says what changed since, and the
+> rows and steps it made stale are corrected in place.
 
 ---
 
@@ -25,6 +27,26 @@ passes its own gates (`npm run verify`; the Playwright suite on five browser
 projects; axe at serious; reduced motion; keyboard). Approval is against the design
 direction, not final content. The concept site that won the work is a separate
 repository and deployment (`thenewpractice-demo`) and is untouched.
+
+## Round 1 (client feedback, 2026-09-28 to 29)
+
+The client reviewed the milestone and asked for six things; branch
+`improvements/round-1`, not yet merged to `main` (the owner reviews it visually
+first). Ledger: _Round 1 — Client feedback_ in `docs/BUILD-LEDGER.md`.
+
+| The client asked                            | What shipped                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Less text, more pictures                    | Every page curated to the Kusnacht shape through one layer, `src/content/curated/` (R0): the client's own sentences chosen by id, a few summaries of ours checked for no dashes, no exclamation marks and no forbidden words. Title pages are short on every template but the home hero. 32 new licence-free photographs, one per slot, graded in the house duotone (R1; `design/ROUND1-IMAGE-SLOTS.md`), placed beside the text they illustrate: About, Our Process, A Personal Message and Fees as picture-and-text spreads (R4a), a picture on every service's title page (R4b), on `/team` (R4c) and `/contact` (R4d). Two biography sentences are held back pending the client (`docs/CONTENT-GAPS.md` §7). |
+| A smaller footer, a shorter home page       | The footer is the link groups, the © line and the small mark (R2). Home is about a third shorter: each section a few lines and one picture, the _One_ moment and the manifesto kept with shorter pins (R3).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| Who We Help: the list left, a picture right | The twelve conditions in one column, one fixed picture beside them (sticky on desktop, above the list on a phone); the travelling glow stays (R3).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| Self-assessment with less friction          | `/self-assessment` is a short description with a picture and the ten tests right beneath it. Each questionnaire opens on its first question; each question is answered on a 1 to 10 severity scale or yes / no / maybe, whichever is meaningful (`src/content/assessment-answers.ts`); the result is the average severity placed in the client's three bands, split evenly (R5). **Pending the client's confirmation** (CONTENT-GAPS C1).                                                                                                                                                                                                                                                                        |
+| Every submission reaches them by email      | Branded HTML and plain-text emails for enquiries and, opt-in beneath a result, _Send my answers to the practice_ (name, email or telephone, preferred contact, one-line consent). Nothing stored; logs carry no personal data. Provisioning-ready: the client buys a domain on their own Vercel account, installs Resend from the Marketplace, sets three env vars; `docs/EMAIL-SETUP.md` has every step, `npm run email:preview` renders the templates (R6). Until then staging logs and mails nothing.                                                                                                                                                                                                         |
+| Lighter colour palettes to choose from      | Ten palettes in `design/palettes/palettes.json` with a contrast report (`CONTRAST.md`) and capture tooling (`scripts/palettes/`) that renders the real site in each (R7); the artifact the client chooses from is R8. The site's palette is unchanged this round.                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+
+R9 closed the round: the scroll rail now sits in the page margin (it painted over
+pictures, the enquiry sheet and the tests list at column 12), one field rhythm for
+both forms, the T6 title pages aligned, the manifesto picture under the weight
+budget on phones, and the full Playwright suite run on a quiet machine.
 
 ## Live
 
@@ -84,15 +106,15 @@ We did not design their brand and we did not write their copy.
 
 | Template      | Route(s)                                                                           | What to look at                                                                                                                                                | The moment                                                                                                                             |
 | ------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| T1 Home       | `/`                                                                                | Poster-first video hero with the lockup; the twelve conditions with the pointer-following plate; the five pillars on a sticky index; the founder block         | §1 **One**: the ceiba draws from its centre behind _One Client. / One Team. / One Purpose._ and the gold point lands between the lines |
+| T1 Home       | `/`                                                                                | Poster-first video hero with the lockup; the twelve conditions beside one fixed picture (round 1); the five pillars on a sticky index; the founder block       | §1 **One**: the ceiba draws from its centre behind _One Client. / One Team. / One Purpose._ and the gold point lands between the lines |
 | T2 Interior   | `/about`, `/our-process`, `/a-personal-message`, `/fees` (and the two legal stubs) | The title page; the reading column at 62ch; the sticky section index on the long pages; the ceiba figure on About; the day timeline on Our Process             | Our Process: the brass rule climbs the day with the reading line and lights each paragraph as it is reached                            |
 | T3 Treatment  | `/clinical-services/[slug]` × 11, e.g. `/clinical-services/addiction-treatment`    | The service's own numeral on the title page; the hairline lists; the definitions rendered open; _Other services_; the enquire band                             | The _Treatment may include_ index arriving row by row under its masks                                                                  |
 | T4 Profile    | `/team/[slug]` × 11, e.g. `/team/lowell-monkhouse`                                 | The portrait placeholder (sand frame, one hairline, the gold point); the name in the Didone; the biography; _Also on the team_; the rail back to Team          | The name arriving line by line beside an empty frame that is waiting for a photograph                                                  |
 | T5 Residences | `/residences` (staging only; unlinked on production)                               | The full-bleed plate; the drifting carousel that slows under the pointer and pauses offscreen; the amenities table; the discretion statement                   | The carousel: six frames drifting without a seam, native scroll-snap under reduced motion                                              |
-| T6 Index      | `/clinical-services`, `/team`, `/self-assessment`                                  | The numbered list at the standing placement; the single travelling glow; the hover plate on desktop, static thumbnails on touch                                | The glow moving from row to row as the pointer or the focus ring does                                                                  |
+| T6 Index      | `/clinical-services`, `/team`, `/self-assessment`                                  | The numbered list at the standing placement; the single travelling glow; the title page's picture (round 1)                                                    | The glow moving from row to row as the pointer or the focus ring does                                                                  |
 | T7 Enquiry    | `/contact`                                                                         | The letter on canopy, the form on the bone sheet; blur validation; the radios drawn as line actions; the founder block; the confirmation revealed line by line | The rows fading out in sequence and _Thank you._ arriving in their place                                                               |
-| T2 variant    | `/self-assessment/[slug]` × 10, e.g. `/self-assessment/alcohol`                    | Fifteen yes/no questions as a printed form; the score and band announced; nothing sent anywhere                                                                | The result panel reading the client's own scoring line back                                                                            |
-| Chrome        | every route                                                                        | Header settle and recolour over every ground; the full-viewport menu; the footer marquee; the route curtain with the mark drawing outward                      | The curtain: a canopy wipe with the ceiba growing from its point, then the next page                                                   |
+| T2 variant    | `/self-assessment/[slug]` × 10, e.g. `/self-assessment/alcohol`                    | Fifteen questions, each on a 1 to 10 scale or yes / no / maybe (round 1); the average severity and band; the opt-in send                                       | The result panel reading the client's own scoring line back                                                                            |
+| Chrome        | every route                                                                        | Header settle and recolour over every ground; the full-viewport menu; the short footer (round 1); the route curtain with the mark drawing outward              | The curtain: a canopy wipe with the ceiba growing from its point, then the next page                                                   |
 
 ## Review-call walkthrough
 
@@ -103,11 +125,11 @@ In this order. It shows the work best and surfaces the gaps early rather than la
    ambient gradient breathes behind the media on desktop. Scroll to the **One**
    moment and let the pin run. This is the pitch.
 2. **Keep scrolling the home page**: the long read and its pull line, the twelve
-   conditions with the plate following the pointer, the pillars on the sticky index,
+   conditions beside their picture, the pillars on the sticky index,
    the manifesto scrubbing line by line, the founder block at the foot.
 3. **Open the menu** (the _Menu_ line action on a narrow window; the primary links on
    a wide one) and go to **Clinical Services**. Watch the route curtain. On the index,
-   move the pointer down the list: the glow, the plate.
+   move the pointer down the list: the glow.
 4. **Open a service** — Addiction Treatment has every block the template has. Point
    out that every word is theirs and that the numerals are the document's own order.
 5. **Go to Team and open Lowell's profile.** Say out loud that the frame is waiting
@@ -119,7 +141,9 @@ In this order. It shows the work best and surfaces the gaps early rather than la
    rows leave in sequence. Say that on staging nothing is mailed: the server logs one
    structured line without the message text, and nothing is stored anywhere. Mail
    starts when their Resend account exists (see _Before production_).
-8. **Open a questionnaire** (`/self-assessment/alcohol`), answer it, read the result.
+8. **Open a questionnaire** (`/self-assessment/alcohol`), answer it on the scale,
+   read the result, then open _Send my answers to the practice_ and show the
+   consent line (on staging it logs, as the enquiry does).
    Then open a second one and show that nine of the ten carry the same generic
    interpretation sentence — that is theirs to write (gap G6).
 9. **Open `/residences`.** Every sentence is a marked placeholder restating a line of
@@ -162,8 +186,8 @@ The authoritative list, with line references into the document, is
 8. **Spelling drift** (C5). _individualized_ and _Individualised_, _program_,
    _counsellor_ and _counselors_, _recognize_ and _recognise_ all appear. Verbatim;
    the client chooses a convention and we apply it in the source document.
-9. **The ™** (§3). Rendered at most once per page, in the hero wordmark and the
-   footer lockup. Two verbatim client strings carry it inside running text
+9. **The ™** (§3). Rendered at most once per page, in the hero wordmark (the
+   footer lockup that also carried it was removed in round 1). Two verbatim client strings carry it inside running text
    (the assessment series title, _Intuitive Reconnection Massage™_) and are left as
    written. The owner confirms the once-per-page rule or exempts client copy.
 10. **Placeholder gating on production.** With `SITE_ENV=production` the three
@@ -190,10 +214,11 @@ Each with the default we shipped.
    _Shipped: stubs, unlinked on production._
 5. **Nine interpretation lines** for the questionnaires. _Shipped: the generic
    sentence on nine of ten._
-6. **Assessment scoring**: confirm the per-questionnaire yes/no scoring (0–15,
-   three bands) over the document's own 0–3 how-to section, and reword the how-to
-   if the 0–3 scale is retired. _Shipped: yes/no scoring; the how-to's first
-   sentence only._
+6. **Assessment scoring**: confirm the round-1 answer types (a 1 to 10 severity
+   scale or yes / no / maybe per question), the weights (yes 10, maybe 5, no 1)
+   and the even split of the three bands, and reword the document's how-to and
+   scoring line to match. _Shipped: the round-1 scale, pending confirmation
+   (CONTENT-GAPS C1)._
 7. **The website domain** for the contact block and, later, production.
    _Shipped: `thenewpractice.health`, marked placeholder._
 8. **Founder role wording** (_&_ or _and_) and **the years figure**. _Shipped:
@@ -213,10 +238,11 @@ Each with the default we shipped.
 15. **The preloader veil on slow devices** (see _Performance state_): keep it as
     the entry moment, or shorten or skip it under a slow-CPU heuristic. _Shipped:
     as designed._
-16. **The `index-01` canopy plate**: keep it at the cost of one oversized image
-    above 640 px, or swap it for the misty-valley canopy alternate
-    (`design/STOCK-SOURCES.md` §I1 option 3, Alfin Auzikri, Pexels). _Shipped:
-    kept, at quality 60._
+16. **Two held-back biography sentences** (round 1): Katia Rhainds's method name
+    (an en dash) and Nicolas Neduchal's _Intuitive Reconnection Massage™_
+    (CONTENT-GAPS §7). _Shipped: both sentences held back._
+17. **A palette** from the ten lighter studies (round 1, R7/R8), or the current
+    one. _Shipped: the current palette._
 
 ## Before production
 
@@ -226,8 +252,9 @@ None of this is code. Every item is an account or a value on the Vercel project.
    a sending domain, and the project gets `RESEND_API_KEY`, `ENQUIRY_TO_EMAIL` (the
    mailbox that receives enquiries) and `ENQUIRY_FROM_EMAIL` (an address on the
    verified domain). Without the key the adapter logs and never mails; with the key
-   and no recipient it warns `enquiry.mail.misconfigured` and logs. Nothing a
-   visitor submits is stored, on any setting.
+   and no recipient it warns `mail.misconfigured` and logs. Nothing a
+   visitor submits is stored, on any setting. The exact steps (Marketplace install,
+   DNS records, variables, a test send) are in `docs/EMAIL-SETUP.md` (round 1, R6).
 2. **Environment.** `SITE_ENV=production` and `NEXT_PUBLIC_SITE_URL=https://<the
 real domain>` on the production target. That alone flips `robots.txt` to allow,
    fills the sitemap, removes `noindex`, hides the placeholder routes from the
@@ -297,8 +324,10 @@ the treatment page (89) and `/residences` (85) still miss the score.
    (about 25–30 kB), which touches the curtain, the overlay, the form and the scorer
    and is a post-launch option.
 
-Also for the owner: the `index-01` canopy plate serves at 136–372 kB above 640 px
-(decision 16 above); the ambient gradient is a separate lazy chunk requested only on
+Also for the owner: the `index-01` canopy plate that served at 136–372 kB above
+640 px no longer renders on any route since the hover plates were retired; the
+round-1 manifesto picture (`home-philosophy`) ships at quality 45, 115 kB on
+phones and 134 kB on a 2× laptop (R9); the ambient gradient is a separate lazy chunk requested only on
 `/` on an eligible desktop and never on mobile.
 
 ## Repo map

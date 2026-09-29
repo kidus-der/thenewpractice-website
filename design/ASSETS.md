@@ -73,6 +73,45 @@ The surf and canopy sources carry sensor noise that would not fit the 4 MB mp4 b
 
 Licence URL for every row: https://www.pexels.com/license/. Every output is under `public/media/<key>.{avif,webp}` and `public/video/<key>.{mp4,webm}`; the typed manifest is `src/content/media.ts` (`MEDIA` for frames, `VIDEO` for loops).
 
+## Round 1 stills
+
+Added by task R1 on 2026-09-28: 32 frames, each chosen for the sentence it sits beside (register: `design/ROUND1-IMAGE-SLOTS.md`). Same source (Pexels), same licence, same grade as the set above; attribution recorded as `Photo by <author> on Pexels`. People appear, per the round-1 owner decision (docs/02 §Subject matter): calm, candid adults; unidentifiable wherever the copy is about crisis, trauma, addiction or mental illness, which is the Pexels licence's *not in a bad light* condition. `focus` absent means sharp's attention crop; `left` and `right` were added to the pipeline for two frames whose subject sits off-centre in a landscape source.
+
+| File | Source page | Author | Licence | Stands in for | Aspect | Focus | ev |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `home-recovery` | https://www.pexels.com/photo/two-people-walking-on-a-tranquil-beach-30195618/ | Marius Gabriel | Pexels License | Home §2 Recovery Without Interruption: two people walking together | 3:4 | attention | −8 |
+| `home-who-we-help` | https://www.pexels.com/photo/photo-of-a-woman-looking-outside-a-window-while-sitting-on-a-table-7272595/ | Kaboompics.com | Pexels License | Home §3 Who We Help: the one fixed image beside the list | 3:4 | attention | −18 |
+| `home-philosophy` | https://www.pexels.com/photo/majestic-kapok-tree-with-massive-buttress-roots-38729727/ | Joaquin Reyes Ramos | Pexels License | Home §4 Our Philosophy: roots of a great tropical tree | 3:4 | bottom | 0 |
+| `home-begin-conversation` | https://www.pexels.com/photo/a-woman-sitting-on-a-window-bench-talking-on-the-phone-6951776/ | Artem Podrez | Pexels License | Home §5 Begin the Conversation: a call made from home | 3:4 | attention | −28 |
+| `about-ceiba` | https://www.pexels.com/photo/majestic-amazon-ceiba-tree-in-belem-brazil-36252725/ | miguel negrao | Pexels License | About, Our Logo – The Ceiba: a ceiba seen from its base | 3:4 | centre | 0 |
+| `about-practice` | https://www.pexels.com/photo/high-windows-located-in-spacious-interior-decorated-with-pictures-on-shelves-4946931/ | Maria Orlova | Pexels License | About the New Practice: a private residence, not an institution | 3:4 | attention | −14 |
+| `about-founder` | https://www.pexels.com/photo/two-men-having-a-conversation-on-a-bench-overlooking-the-ocean-38325418/ | Ayşegül Aytören | Pexels License | About, A Message from the Founder: people recover through relationships | 3:4 | centre | −12 |
+| `about-place` | https://www.pexels.com/photo/pelican-in-flight-over-puerto-aventuras-marina-36734777/ | Steve Hodder | Pexels License | About, Privacy, Safety and Peace: the marina at Puerto Aventuras | 16:9 | centre | −6 |
+| `about-sea` | https://www.pexels.com/photo/man-on-beach-at-dawn-20703791/ | Diogo Miranda | Pexels License | About, The Caribbean Sea: a morning walk beside the water | 3:4 | centre | −12 |
+| `about-jungle` | https://www.pexels.com/photo/mystical-hanging-roots-in-yucatan-cenote-38996760/ | Iván Hernández-Cuevas | Pexels License | About, The Healing Power of the Mayan Jungle: roots in a cenote | 3:4 | centre | +12 |
+| `process-first-conversation` | https://www.pexels.com/photo/person-talking-on-the-phone-7653765/ | Thirdman | Pexels License | Our Process, The New Practice Experience: the first call | 3:4 | left | −10 |
+| `process-lead-clinician` | https://www.pexels.com/photo/two-people-walking-in-a-sunlit-forest-path-33490052/ | Javid M | Pexels License | Our Process, Why We Have a Lead Clinician: a walk together | 3:4 | centre | 0 |
+| `process-typical-day` | https://www.pexels.com/photo/warm-morning-coffee-scene-with-teacups-31145148/ | Letícia Alvares | Pexels License | Our Process, A Typical Day: the morning table | 3:4 | centre | 0 |
+| `process-family` | https://www.pexels.com/photo/a-man-and-woman-talking-together-8841344/ | Julia M Cameron | Pexels License | Our Process, Family Participation: a mother and her adult son | 3:4 | attention | 0 |
+| `process-nutrition` | https://www.pexels.com/photo/chef-preparing-gourmet-vegetable-tart-close-up-32069861/ | damla selen demir | Pexels License | Our Process, Nutrition as Therapy: a meal being prepared | 3:4 | centre | −6 |
+| `personal-message` | https://www.pexels.com/photo/person-writing-on-white-paper-6918482/ | cottonbro studio | Pexels License | A Personal Message: a letter written by hand | 3:4 | centre | 0 |
+| `fees` | https://www.pexels.com/photo/wood-framed-sofa-chair-11145310/ | Ali Alcántara | Pexels License | Fees: a shaded veranda at a tropical residence | 3:4 | centre | −6 |
+| `services-index` | https://www.pexels.com/photo/crop-psychologist-writing-in-notebook-against-patient-7176322/ | SHVETS production | Pexels License | Clinical Services index: a consultation | 3:4 | centre | 0 |
+| `service-addiction-treatment` | https://www.pexels.com/photo/glass-of-water-by-the-turquoise-sea-34199673/ | Ela F. Yegen Koumpos | Pexels License | Addiction Treatment: a glass of water | 3:4 | centre | 0 |
+| `service-trauma-and-complex-trauma` | https://www.pexels.com/photo/back-view-of-a-woman-sitting-on-a-bed-8862272/ | cottonbro studio | Pexels License | Trauma & Complex Trauma: a figure turned toward the light | 3:4 | centre | 0 |
+| `service-mental-health` | https://www.pexels.com/photo/monochrome-photo-of-a-woman-sitting-by-the-window-10266092/ | Xeniya Kovaleva | Pexels License | Mental Health: sitting with it, by a window | 3:4 | right | −12 |
+| `service-eating-disorders` | https://www.pexels.com/photo/person-holding-handmade-ceramic-bowl-29230296/ | Esra Afşar | Pexels License | Eating Disorders: a bowl held close | 3:4 | centre | 0 |
+| `service-executive-health-and-burnout` | https://www.pexels.com/photo/a-man-in-a-suit-sitting-on-bench-by-the-sea-16586208/ | Lucas Mota | Pexels License | Executive Health & Burnout: a man in a suit, stopped, facing the sea | 3:4 | centre | 0 |
+| `service-biochemical-restoration` | https://www.pexels.com/photo/photo-of-papaya-beside-sliced-lime-4113802/ | alleksana | Pexels License | Biochemical Restoration: papaya and lime | 3:4 | attention | 0 |
+| `service-somatic-therapies-and-nervous-system-regulation` | https://www.pexels.com/photo/man-holding-his-stomach-and-chest-8795387/ | Anastasia Shuraeva | Pexels License | Somatic Therapies: one hand on the chest, one on the stomach | 3:4 | centre | 0 |
+| `service-inner-child-work` | https://www.pexels.com/photo/mother-and-child-holding-hands-21787638/ | Natalie Bond | Pexels License | Inner Child Work: an adult hand holding a child’s | 3:4 | attention | 0 |
+| `service-recovery-management-and-after-care` | https://www.pexels.com/photo/back-view-of-a-man-in-a-gray-suit-walking-with-his-luggage-6050133/ | Gustavo Fring | Pexels License | Recovery Management & After Care: the journey home | 3:4 | centre | 0 |
+| `service-interventions-and-crisis-response` | https://www.pexels.com/photo/a-grayscale-photo-of-a-man-sitting-beside-the-window-13517400/ | The Humantra | Pexels License | Interventions & Crisis Response: a call made in the dark | 3:4 | centre | +8 |
+| `service-family-program` | https://www.pexels.com/photo/two-women-enjoying-ocean-view-on-a-cloudy-day-34626729/ | DIBLACL . | Pexels License | Family Program: a mother and daughter looking out to sea | 3:4 | centre | −6 |
+| `team-index` | https://www.pexels.com/photo/a-group-of-people-having-a-meeting-6340672/ | Pavel Danilyuk | Pexels License | Team index: one team at one table | 3:4 | centre | 0 |
+| `assessment-index` | https://www.pexels.com/photo/woman-journaling-in-a-cozy-chair-at-home-33359322/ | Letícia Alvares | Pexels License | Self-Assessment index: reflecting in writing | 3:4 | centre | 0 |
+| `contact` | https://www.pexels.com/photo/cozy-minimalist-interior-with-natural-light-36962663/ | Luk Sauvage | Pexels License | Contact, Begin the Conversation: two chairs, a small table | 3:4 | centre | 0 |
+
 ## Rejected
 
 Carried over from `design/STOCK-SOURCES.md` §Considered and rejected so no one re-evaluates them.

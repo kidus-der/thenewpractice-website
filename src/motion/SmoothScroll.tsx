@@ -29,9 +29,16 @@ const lock = createScrollLock({
   },
 })
 
-export function scrollTo(target: string | number | HTMLElement, offset = 0) {
+/** The default page glide; a caller that moves the reader a short way passes a shorter one. */
+const SCROLL_DURATION = 1.4
+
+export function scrollTo(
+  target: string | number | HTMLElement,
+  offset = 0,
+  duration = SCROLL_DURATION
+) {
   if (lenis) {
-    lenis.scrollTo(target, { offset, duration: 1.4 })
+    lenis.scrollTo(target, { offset, duration })
     return
   }
   // reduced motion / Lenis disabled — native scroll

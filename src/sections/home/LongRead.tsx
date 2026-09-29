@@ -1,18 +1,22 @@
 /**
- * 02 — Recovery Without Interruption: the long-read pair (docs/05 §T1). The
- * headline in the Didone at the reading placement, the three paragraphs at
- * 62ch on the counterweight, and the closing sentence lifted out of the
- * last paragraph as a serif-italic pull line — the site's one emphasis
- * mechanism (docs/03 §2). Bone. Server component.
+ * 02 — Recovery Without Interruption (docs/05 §T1). The headline in the
+ * Didone, the one paragraph the curation keeps, and its closing sentence
+ * lifted out as the serif-italic pull line, the site's one emphasis
+ * mechanism (docs/03 §2), beside the picture of it. From 1024px the plate
+ * holds the left four columns (`.p-aside-start`) and the words sit on the
+ * counterweight (`.p-offset`); below, the plate comes between the headline
+ * and the paragraph. Bone. Server component.
  */
 import './LongRead.css'
+import type { MediaKey } from '@/content/media'
 import type { Section } from '@/content/schemas'
 import { Reveal } from '@/motion/Reveal'
 import { splitPullLine } from '@/lib/home'
+import { HomePlate } from './HomePlate'
 
-type Props = Readonly<{ section: Section; numeral: string }>
+type Props = Readonly<{ section: Section; numeral: string; plate: MediaKey }>
 
-export function LongRead({ section, numeral }: Props) {
+export function LongRead({ section, numeral, plate }: Props) {
   const headingId = `${section.id}-title`
   const body = section.paragraphs.slice(0, -1)
   const closing = splitPullLine(section.paragraphs.at(-1) ?? '')
@@ -26,7 +30,7 @@ export function LongRead({ section, numeral }: Props) {
       aria-labelledby={headingId}
     >
       <div className="shell grid12 long-read__grid">
-        <div className="p-lead long-read__head">
+        <div className="p-offset long-read__head">
           <p className="eyebrow t-eyebrow" aria-hidden="true">
             <span>{numeral}</span>
             <span className="eyebrow__rule" />
@@ -35,6 +39,8 @@ export function LongRead({ section, numeral }: Props) {
             {section.title}
           </Reveal>
         </div>
+
+        <HomePlate media={plate} className="p-aside-start long-read__plate" />
 
         <div className="p-offset long-read__body">
           <Reveal staggerChildren className="long-read__prose">

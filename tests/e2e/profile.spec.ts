@@ -1,19 +1,22 @@
 /**
  * /team/[slug] — the T4 Profile template (Task 14). docs/05 §T4, docs/09 §2 and §5.
  *
- * Three members on every project — the founder (credentials, six paragraphs),
- * the psychiatrist (credentials, two paragraphs, no opening line: CONTENT-GAPS
- * C8) and the last member in the document (the wrap-around case): the h1 is
- * the exact name, the credentials line appears only when the document gives
- * one, the role, the paragraph count, the placeholder plate with its label,
+ * Three members on every project — the founder (credentials, a curated
+ * biography with the one sentence of ours), the psychiatrist (credentials,
+ * her two paragraphs as written, no opening line: CONTENT-GAPS C8) and the
+ * last member in the document (the wrap-around case): the h1 is the exact
+ * name, the credentials line appears only when the document gives one, the
+ * role, the curated biography (round 1, R4c: `curated/team.ts`), the
+ * placeholder plate with its label,
  * three colleagues with the right hrefs, the rail, the Person node, axe on
  * <main>, a full-page capture. Then a smoke pass over all eleven routes and
  * a 404 for a stranger.
  */
+import { TEAM_CURATED } from '../../src/content/curated/team'
 import { teamHref } from '../../src/content/nav'
 import { TEAM } from '../../src/content/team'
 import { UI_INTERIOR, UI_PROFILE } from '../../src/content/ui'
-import { biographyLead, profilePrevNext, worksAlongside } from '../../src/lib/profile'
+import { profilePrevNext, wholeBiography, worksAlongside } from '../../src/lib/profile'
 import {
   expect,
   expectNoAxeViolations,
@@ -31,10 +34,13 @@ const FIXTURE_SLUGS = [
 ] as const
 
 const FIXTURES = FIXTURE_SLUGS.map((slug) => {
-  const member = TEAM.find((m) => m.slug === slug)
-  if (!member) throw new Error(`team.ts has no member "${slug}"`)
+  const member = TEAM_CURATED.find((m) => m.slug === slug)
+  if (!member) throw new Error(`curated/team.ts has no member "${slug}"`)
   return member
 })
+
+/** Round 1 (R4c): a biography renders whole in the body, in one or two short paragraphs. */
+const MAX_BODY_PARAGRAPHS = 2
 
 const RAIL = `nav[aria-label="${UI_INTERIOR.railLabel}"]`
 /** Decorative: hidden from assistive technology, no label (owner decision, Task 21). */
@@ -88,13 +94,20 @@ for (const member of FIXTURES) {
       await expect(eyebrow.getByRole('link')).toHaveAttribute('href', '/team')
     })
 
-    test('renders every paragraph of the biography, verbatim', async ({ page }) => {
-      const { lead, paragraphs } = biographyLead(member)
+    test('renders the curated biography, verbatim, in a paragraph or two', async ({ page }) => {
+      const { lead, paragraphs } = wholeBiography(member)
       const body = page.locator(`${BIOGRAPHY} p`)
       await expect(body).toHaveCount(paragraphs.length)
       const texts = (await body.allTextContents()).map((t) => t.trim())
       expect(texts).toEqual(paragraphs)
       expect(texts.length + (lead ? 1 : 0)).toBe(member.paragraphs.length)
+      expect(texts.length).toBeLessThanOrEqual(MAX_BODY_PARAGRAPHS)
+      const leadLine = page.locator('.profile-intro__lead')
+      if (lead) await expect(leadLine).toHaveText(lead)
+      else await expect(leadLine).toHaveCount(0)
+      // the client's full biography is longer than what renders, never shorter
+      const source = TEAM.find((m) => m.slug === member.slug)
+      expect(texts.join(' ').length).toBeLessThanOrEqual(source?.paragraphs.join(' ').length ?? 0)
       // an untitled section carries no eyebrow (CLAUDE.md §6a, Task 18)
       await expect(page.locator(`${BIOGRAPHY} .eyebrow`)).toHaveCount(0)
     })
@@ -165,8 +178,8 @@ for (const member of FIXTURES) {
 
     test('has no serious axe violations in the page', async ({ page }) => {
       await revealAll(page)
-      // Scoped to <main>: the scroll rail numeral and the footer marquee are
-      // chrome findings owned by Task 19 (ledger, Tasks 8 and 11).
+      // Scoped to <main>: the chrome around it (scroll rail, footer) is
+      // covered by its own specs (footer.spec.ts, keyboard.spec.ts).
       await expectNoAxeViolations(page, { impactAtLeast: 'serious', include: 'main' })
     })
 

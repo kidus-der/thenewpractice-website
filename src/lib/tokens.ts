@@ -8,8 +8,9 @@
  *
  * PALETTE mirrors the core palette for two callers only: the fallback passed
  * to readToken() when the document is unavailable (server render, tests), and
- * nothing else. Components never import PALETTE to paint with; they use the
- * CSS variables. This mirror is logged in CLAUDE.md §6a.
+ * the emails (src/server/email/, round 1 R6), whose clients read no CSS
+ * variables. Components never import PALETTE to paint with; they use the CSS
+ * variables. This mirror and both uses are logged in CLAUDE.md §6a.
  */
 
 /** Core palette fallbacks — mirrors :root in globals.css. Keep in step. */

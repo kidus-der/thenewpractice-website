@@ -1,7 +1,9 @@
 /**
  * The interior page's opening (docs/05 §T2): the eyebrow lockup, the title in
  * the Didone at --t-d1 arriving line by line, an optional lead at --t-lead,
- * and an optional plate as the counterweight at .p-offset. Bone ground,
+ * and an optional plate: beside the lead below 1024px, the counterweight at
+ * the end of .p-offset from 1024px, loaded at once (it is in the first
+ * viewport). Bone ground,
  * declared on the element so the server-rendered header reads ink before
  * GroundManager paints (docs/05 §Header). Server component.
  */
@@ -20,8 +22,11 @@ type Props = {
   plate?: MediaKey
 }
 
-/** The intro sits at .p-offset from 1024px: roughly half the row. */
-const PLATE_SIZES = '(min-width: 1024px) 50vw, 100vw'
+/**
+ * The plate is five columns of twelve beside the lead below 1024px, and half
+ * the .p-offset column (a quarter of the row) from 1024px (PageIntro.css).
+ */
+const PLATE_SIZES = '(min-width: 1024px) 25vw, 42vw'
 /**
  * The lead is the LCP element wherever it is set larger than the title's
  * lines (the treatment pages, docs/09 §Measured budgets). A clip reveal is
@@ -32,7 +37,12 @@ const LEAD_REVEAL = 'mask'
 
 export function PageIntro({ id, numeral, eyebrow, headline, lead, plate }: Props) {
   return (
-    <section className="page-intro" data-ground="light" data-n={numeral} aria-labelledby={id}>
+    <section
+      className={plate ? 'page-intro page-intro--plate' : 'page-intro'}
+      data-ground="light"
+      data-n={numeral}
+      aria-labelledby={id}
+    >
       <div className="shell grid12 page-intro__grid">
         <div className="p-lead page-intro__copy">
           <p
@@ -54,7 +64,7 @@ export function PageIntro({ id, numeral, eyebrow, headline, lead, plate }: Props
         </div>
         {plate && (
           <div className="p-offset page-intro__plate">
-            <PlateFigure media={plate} sizes={PLATE_SIZES} />
+            <PlateFigure media={plate} sizes={PLATE_SIZES} priority />
           </div>
         )}
       </div>

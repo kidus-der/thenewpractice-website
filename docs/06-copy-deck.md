@@ -1,14 +1,16 @@
 # 06 — Copy Deck
 
-> **Copy lives in `src/content/**` and is the client's text verbatim.** This document holds no strings. It describes the content layer: which module holds what, the schema rules, the verbatim rule, how to regenerate, and where placeholders are allowed. Gaps and judgements are in `docs/CONTENT-GAPS.md`.
+> **Copy lives in `src/content/**`.** The generated modules hold the client's full text verbatim; since round 1 the curation layer (`src/content/curated/`) decides what renders: the client's sentences, chosen, plus short summaries of ours. This document holds no strings. It describes the content layer: which module holds what, the schema rules, the curation layer, how to regenerate, and where placeholders are allowed. Gaps and judgements are in `docs/CONTENT-GAPS.md`.
 
 ## Module map
 
 | Module                                 | Exports                                                                                                                                                                                                                                                                                  | Source in the client document                                                                          | Origin                                    |
 | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------- |
 | `brand.ts`                             | `BRAND`                                                                                                                                                                                                                                                                                  | Logo Concept PDF; home founder block (l.103–110)                                                       | Hand-written (Task 1)                     |
-| `ui.ts`                                | `UI` (skip link, scroll cue), `UI_FOOTER`, `UI_INTERIOR`, `UI_INDEX`, `UI_TREATMENT`, `UI_PROFILE`, `UI_RESIDENCES`, `UI_HOME`, `UI_ASSESSMENT` — the chrome and template interface strings (landmark names, rail labels, Listen and Mute, the portrait, the scorer's tally and actions) | Scroll cue (l.18); everything else is ours (docs/01 voice)                                             | Hand-written (Tasks 1, 8, 11–18b)         |
+| `ui.ts`                                | `UI` (skip link, scroll cue), `UI_FOOTER`, `UI_INTERIOR`, `UI_TREATMENT`, `UI_PROFILE`, `UI_RESIDENCES`, `UI_HOME`, `UI_ASSESSMENT` — the chrome and template interface strings (landmark names, rail labels, Listen and Mute, the portrait, the scorer's tally and actions) | Scroll cue (l.18); everything else is ours (docs/01 voice)                                             | Hand-written (Tasks 1, 8, 11–18b)         |
 | `enquiry.ts`                           | `ENQUIRY`, `ENQUIRING_FOR`, `PREFERRED_CONTACT`, `ENQUIRY_LIMITS` — the form's labels, options, errors, confirmation and failure line                                                                                                                                                    | Ours (docs/01 voice)                                                                                   | Hand-written (Task 15)                    |
+| `email.ts` | `EMAIL`, `PRACTICE_TIME_ZONE`: the words of the two emails the practice receives (eyebrows, intros, headings, the reply note, the footer), `{name}`-style tokens filled and escaped by `src/server/email/` | Ours (docs/01 voice)                                                                                   | Hand-written (round 1, R6) |
+| `assessment-send.ts` | `ASSESSMENT_SEND`: *Send my answers to the practice*, its labels, the one-line consent, errors, confirmation and failure line (the enquiry's sentences where they say the same thing) | Ours (docs/01 voice)                                                                                   | Hand-written (round 1, R6) |
 | `seo.ts`                               | `SEO_DEFAULTS`, `ADDRESS`, `ROUTE_SEO`, `serviceSeo`, `teamSeo`, `assessmentSeo`, `excerpt` — titles, descriptions and the postal address for metadata and structured data                                                                                                               | Descriptions from the client's own opening sentences where they exist; the rest ours (CONTENT-GAPS G7) | Hand-written (Task 10)                    |
 | `nav.ts`                               | `NAV`, `routes`, `serviceHref`, `teamHref`, `assessmentHref`                                                                                                                                                                                                                             | Derived from the page set                                                                              | Hand-written                              |
 | `schemas.ts`                           | Zod schemas and inferred types                                                                                                                                                                                                                                                           | —                                                                                                      | Hand-written                              |
@@ -24,13 +26,16 @@
 | `services.ts`                          | `SERVICES_PAGE` (index intro), `SERVICES` (11)                                                                                                                                                                                                                                           | Clinical Services (l.400–718)                                                                          | Generated                                 |
 | `team.ts`                              | `TEAM_PAGE` (intro + _One Client. One Team._), `TEAM` (11, document order)                                                                                                                                                                                                               | Our Team (l.719–949)                                                                                   | Generated                                 |
 | `assessments.ts`                       | `ASSESSMENTS_PAGE` (intro, disclaimer, how-to, available, consultation), `ASSESSMENT_SERIES` (shared scoring strings, superseded scale), `ASSESSMENTS` (10 × 15)                                                                                                                         | Self-Assessment (l.950–1196)                                                                           | Generated                                 |
+| `assessment-answers.ts`                | `ANSWER_TYPES`, `answerTypesFor`, `AnswerType` — how each of the 150 questions is answered: `scale` (1 to 10 severity) where it asks about degree or frequency, `yesNoMaybe` where it asks about a fact (105 and 45)                                                                              | The questions are the client's (`assessments.ts`); the answer form is ours (owner decision, round 1)   | Hand-written (R5)                         |
+| `sentences.ts`                         | `sentences()` — the one sentence splitter (metadata, provenance check, curation)                                                                                                                                                                                                         | —                                                                                                      | Hand-written (R0)                         |
+| `curated/`                             | `core.ts` (`curate`, `curatePage`, `ours`, `sentencesOf`, `only`, `ALL`), `voice.ts` (the rules for copy we write), `index.ts` (`CURATIONS`, the registry), one module per curated page                                                                                                  | Picks from the generated modules; `ours()` strings are ours                                            | Hand-written (R0; pages from R3, R4, R5)  |
 | `content.checks.ts`, `content.test.ts` | The invariants below, for Vitest and for `scripts/check-content.ts`                                                                                                                                                                                                                      | —                                                                                                      | Hand-written                              |
 
 Every generated file opens with `// GENERATED by scripts/ingest-content.mjs from the client document — edit the source or the script, not this file.` and a `// Source:` line range.
 
 ## Schema rules
 
-All shapes are in `schemas.ts`; every module calls `schema.parse(...)` at import, so a bad edit fails the build rather than reaching a template.
+All shapes are in `schemas.ts`. Modules export plain objects annotated with the inferred types (a `.parse()` at import shipped Zod to every route, Task 20); `content.checks.ts` parses every module through its schema in `npm test` and `npm run content:check`, so a bad edit fails `npm run verify` rather than reaching a template.
 
 - **`text`** — every user-facing string: non-empty, trimmed, no `*`, no backslash, no tab, no zero-width or non-breaking character.
 - **`pageSchema`** — `slug`, `title`, `eyebrow?`, `lead?`, `sections[]`. Page titles are ours; the client's headings are section titles.
@@ -45,14 +50,51 @@ Contact values are never literals in a generated module: `HOME.contact` and `CON
 
 ## The rules
 
-1. **Verbatim.** The client's wording is preserved exactly: British and North American spellings as they wrote them, their casing in section titles (_ABOUT THE NEW PRACTICE_), their punctuation, their paragraph breaks, their typographic quotes and dashes. Only markdown is removed: emphasis markers, pandoc escapes (`\-`, `\.`, `\+`, `\_`), link syntax, hard-break trailing spaces, and word-processor residue (zero-width characters, non-breaking spaces). Wrapped lines are rejoined only when a line stops mid-sentence. Six random paragraphs were diffed byte-for-byte against the source at ingestion; `content.checks.ts` keeps the residue rules enforced.
-2. **Nothing clinical is invented.** No claim, statistic, credential, accreditation, outcome or named individual that is not in the document. Where the document is silent (nine assessment interpretations) the module carries the client's generic sentence, not ours.
-3. **Structural copy we write is marked.** `PLACEHOLDER` is permitted in exactly three places, and `content.checks.ts` fails otherwise: `pages/residences.ts` and `pages/legal.ts` (every string prefixed `PLACEHOLDER — `) and `CONTACT.contact.website`. Form labels, errors and confirmation lines are interface, not content; they are ours and unmarked (Task 15).
+1. **Verbatim at the source, curated on screen.** In the generated modules the client's wording is preserved exactly: British and North American spellings as they wrote them, their casing in section titles (_ABOUT THE NEW PRACTICE_), their punctuation, their paragraph breaks, their typographic quotes and dashes. Only markdown is removed: emphasis markers, pandoc escapes (`\-`, `\.`, `\+`, `\_`), link syntax, hard-break trailing spaces, and word-processor residue (zero-width characters, non-breaking spaces). Wrapped lines are rejoined only when a line stops mid-sentence. Six random paragraphs were diffed byte-for-byte against the source at ingestion; `content.checks.ts` keeps the residue rules enforced. What renders goes through the curation layer (§Curation): a client sentence is shown as they wrote it or not at all, never reworded.
+2. **Nothing clinical is invented.** No claim, statistic, credential, accreditation, outcome or named individual that is not in the document. A summary of ours restates only what the document says. Where the document is silent (nine assessment interpretations) the module carries the client's generic sentence, not ours.
+3. **Copy we write is ours, checked, and marked where the client supplied nothing.** Summaries and interface strings are plain, human, professional British English: no en or em dash, no exclamation mark, none of docs/01's forbidden words; `content.checks.ts` fails any that break the rule. `PLACEHOLDER` is permitted in exactly three places, and `content.checks.ts` fails otherwise: `pages/residences.ts` and `pages/legal.ts` (every string prefixed `PLACEHOLDER — `) and `CONTACT.contact.website`. Form labels, errors and confirmation lines are interface, not content; they are ours and unmarked (Task 15).
 4. **Components never contain literals.** Not a heading, a label, an `aria-label` or a `title`. Everything comes from a module; `alt` text for stock plates lives in `media.ts` or the page module.
 5. **One source for contact details.** `brand.ts`. The contact page's blank fields resolve to it (owner decision, ledger).
 6. **Contradictions are resolved by the owner, recorded in `CONTENT-GAPS.md`, and rendered one way.** Assessment scoring is the known case.
 7. **The ™.** `BRAND.trademark` is separate from the name. Main-session rule: at most once per page, in the home hero wordmark and the footer lockup, never in the header or running text. Two client strings carry ™ verbatim (`ASSESSMENT_SERIES.seriesTitle`, one team biography); see `CONTENT-GAPS.md` §3.
 8. **No meta-commentary on screen.** `PLACEHOLDER` is a marker for us; rendered structural copy reads as finished. Staging is protected by `noindex`, not by disclaimers.
+
+## Curation
+
+`src/content/curated/core.ts` resolves a declarative pick against a generated module and returns a value of the same shape (a `Page` stays a `Page`), so the templates render it unchanged. Nothing is hand-edited in a generated module.
+
+```ts
+// src/content/curated/about.ts
+import { ABOUT } from '../pages/about'
+import { curatePage, only, ours, sentencesOf } from './core'
+
+export const ABOUT_CURATION = curatePage('about', ABOUT, {
+  lead: ours('A private practice in Puerto Aventuras that treats one client at a time.'),
+  sections: [
+    // render order is the order listed; sections not listed do not render
+    { id: 'our-logo-the-ceiba', paragraphs: [0, sentencesOf(1, [0, 1])] },
+    {
+      id: 'about-the-new-practice',
+      title: ours('About the practice'),
+      header: null,
+      paragraphs: [2],
+    },
+    { id: 'our-principles', definitions: [0, { at: 2, description: only([0]) }] },
+  ],
+})
+export const ABOUT_CURATED = ABOUT_CURATION.value
+```
+
+Then list `ABOUT_CURATION` in `CURATIONS` (`curated/index.ts`; a test fails when a curation is missing) and render `ABOUT_CURATED` where the route rendered `ABOUT`.
+
+- **Picks.** In an array field (`paragraphs`, `list`, `outro`), a number is the client's string at that index; `sentencesOf(i, [0, 2])` is some of its sentences; `ours('…')` is a string we wrote; `ALL` keeps every item. A single field (`title`, `subtitle`, `header`, `lead`, `eyebrow`, `listHeading`) takes `'keep'`, `null` (drop), `only([0])` (some of its sentences) or `ours('…')`. Definitions take an index, or `{ at, term?, description? }`.
+- **Defaults.** Single fields are kept when omitted; array fields are dropped when omitted; the list heading follows the list. Other page fields (hero, contact, signature, plates) pass through unchanged.
+- **Other shapes.** `curate(name, (c) => …)` gives `c.texts()`, `c.text()`, `c.section()`, `c.sections()` and `c.page()` for services, team members and questionnaires.
+- **Checks.** A reference to a section, paragraph, sentence, list item or definition that no longer exists is left out of the value and reported; every `ours()` string is run through `curated/voice.ts`. Both fail `npm test` and `npm run content:check`.
+- **Bundles.** A route imports its own curation module, never `curated/index.ts`; the layer has no Zod and is safe in a client component.
+- **Curated pages.** `curated/home.ts` (`HOME_CURATION`, round 1 R3): client sentences only, one or two per section; its test pins what renders.
+- **Team.** `curated/team.ts` (round 1 R4c): `TEAM_PAGE_CURATION` (the index: a one-sentence lead, the roles list with one client sentence) and `TEAM_CURATION` (each biography to one or two short paragraphs of the client's sentences, joined within a paragraph; one string of ours, Lowell Monkhouse's graduate school, because the client's sentence has no subject). Katia Rhainds's _Origin_ sentence (an en dash in a method's name) and Nicolas Neduchal's _Intuitive Reconnection Massage™_ sentence do not render. SEO descriptions and structured data still read the full `team.ts`.
+  `curated/contact.ts` (`CONTACT_CURATION`, R4d): the lead, two sentences of _Begin the Conversation_, the first paragraph of _International Services_ and the consultation line; _Who Contacts Us_ does not render. Client sentences only.
 
 ## Regenerating
 
@@ -77,21 +119,22 @@ Corrections to the client's text go into the source document, then regenerate. C
 
 ## Invariants (`content.checks.ts`)
 
-Every module parses against its schema; 11 services and 11 team members in document order; 10 assessments × 15 questions; no string carries markdown residue; no string starts or ends with whitespace; every nav `href` resolves; `PLACEHOLDER` only in the three permitted places; every residences string is prefixed; `allRoutes()` has no duplicates.
+Every module parses against its schema; 11 services and 11 team members in document order; 10 assessments × 15 questions; no string carries markdown residue; no string starts or ends with whitespace; every nav `href` resolves; `PLACEHOLDER` only in the three permitted places; every residences and legal string is prefixed; `allRoutes()` has no duplicates; every metadata description is a sentence of the document; copy we write keeps the house voice (no en or em dash, no exclamation mark, no forbidden word, trimmed); every curation references client text that exists; every curation has its own name.
 
 ## What the concept site's deck taught, kept
 
 - The hero carries the client's lockup or the client's title, never both competing.
 - The last line of a statement may drop out of the display face into the text face; target it by class, never by `:last-child` (SplitText restructures the subtree).
 - Headlines break where designed at every breakpoint. Widows are a bug.
-- The enquiry form has no privacy checkbox, marketing consent, "how did you hear about us", or budget selector.
+- The enquiry form has no privacy checkbox, marketing consent, "how did you hear about us", or budget selector. The self-assessment opt-in (round 1, R6) has exactly one checkbox, the one-line consent to send the answers, because sending is a separate choice from answering (owner decision).
 
 ## Copy QA checklist
 
 Before any template ships:
 
 - [ ] Every string on screen traces to a module in `src/content/**`
-- [ ] Client copy diffed against the document: zero edits beyond markdown stripping
+- [ ] Client sentences on screen are the document's, unaltered; anything reworded is an `ours()` summary, not an edited client string
+- [ ] Every summary of ours restates only what the document says; no dash, no exclamation mark, no forbidden word (`content:check` green)
 - [ ] Spelling as the client wrote it; copy we wrote is British
 - [ ] Zero exclamation marks or emoji in copy we wrote
 - [ ] No claim about outcomes, success rates or clinical efficacy that the client did not write

@@ -1,56 +1,62 @@
 /**
- * /self-assessment — T6 Index on `assessments.ts` (docs/05 §T6). The page
- * composes, in the document's order: the intro section; the disclaimer on
- * sand with its opening sentence as the serif header line; the how-to's one
- * remaining sentence followed by the series' own scoring line (ledger, Task 5
- * findings — the superseded 0–3 scale never renders); the ten questionnaires
- * as rows under the document's own *Available Self-Assessments* heading and
- * its introducing line; *A Confidential Consultation*; the rail; the band.
+ * /self-assessment — the tab page (docs/05 §T6 *Self-assessment*; round 1,
+ * R5). The client's two sentences on what the questionnaires are for, one
+ * picture, and the ten questionnaires directly beneath under the client's own
+ * heading, with the first sentence of their disclaimer as one line. The text
+ * is chosen in the curation layer (`curated/self-assessment.ts`); the how-to
+ * becomes each questionnaire's instruction, and the full disclaimer and *A
+ * Confidential Consultation* are read with each result.
  */
 import type { Metadata } from 'next'
 import { JsonLd } from '@/components/JsonLd'
-import { ASSESSMENTS, ASSESSMENTS_PAGE, ASSESSMENT_SERIES } from '@/content/assessments'
+import { ASSESSMENTS } from '@/content/assessments'
+import {
+  SELF_ASSESSMENT_CURATED,
+  SELF_ASSESSMENT_DISCLAIMER,
+  SELF_ASSESSMENT_INTRO,
+  SELF_ASSESSMENT_LIST,
+} from '@/content/curated/self-assessment'
 import { routes } from '@/content/nav'
 import type { Section } from '@/content/schemas'
 import { ROUTE_SEO } from '@/content/seo'
-import { UI_INDEX } from '@/content/ui'
-import { appendParagraphs, liftHeader, rowsFromAssessments } from '@/lib/indexPage'
-import { assertSectionIds } from '@/lib/interior'
+import { rowsFromAssessments } from '@/lib/indexPage'
 import { breadcrumb, organization, webPage } from '@/lib/jsonld'
 import { prevNextFor } from '@/lib/prevNext'
 import { buildMetadata } from '@/lib/seo'
-import { IndexTemplate } from '@/templates/IndexTemplate'
+import { AssessmentIndexTemplate } from '@/templates/AssessmentIndexTemplate'
 
 const SEO = ROUTE_SEO.selfAssessment
 const PATH = routes.selfAssessment
+const PLATE = 'assessment-index'
 
 export const metadata: Metadata = buildMetadata({ ...SEO, path: PATH })
 
-const DISCLAIMER_SECTION = 'important-disclaimer'
-const HOW_TO_SECTION = 'how-to-complete-the-assessment'
-const LIST_SECTION = 'available-self-assessments'
-assertSectionIds(ASSESSMENTS_PAGE, [DISCLAIMER_SECTION, HOW_TO_SECTION, LIST_SECTION])
-
-const compose = (section: Section): Section => {
-  if (section.id === DISCLAIMER_SECTION) return liftHeader(section)
-  if (section.id === HOW_TO_SECTION) {
-    return appendParagraphs(section, [ASSESSMENT_SERIES.scoringText])
-  }
+/** A build error, not a blank block, if the curation loses a section. */
+function curated(id: string): Section {
+  const section = SELF_ASSESSMENT_CURATED.sections.find((s) => s.id === id)
+  if (!section) throw new Error(`curated/self-assessment: no section ${id}`)
   return section
 }
 
-/** The list section's own heading and introducing line; a build error if the document loses them. */
-function listHead(section: Section | undefined): { label: string; lead?: string } {
-  if (!section?.title) throw new Error(`pages/self-assessment: ${LIST_SECTION} has no title`)
-  return { label: section.title, lead: section.listHeading }
+function firstParagraph(id: string): string {
+  const [paragraph] = curated(id).paragraphs
+  if (!paragraph) throw new Error(`curated/self-assessment: ${id} has no paragraph`)
+  return paragraph
 }
 
-const listAt = ASSESSMENTS_PAGE.sections.findIndex((s) => s.id === LIST_SECTION)
-const LIST_HEAD = listHead(ASSESSMENTS_PAGE.sections[listAt])
+function listLabel(): string {
+  const { title } = curated(SELF_ASSESSMENT_LIST)
+  if (!title) throw new Error(`curated/self-assessment: ${SELF_ASSESSMENT_LIST} has no title`)
+  return title
+}
 
-const BEFORE = ASSESSMENTS_PAGE.sections.slice(0, listAt).map(compose)
-const AFTER = ASSESSMENTS_PAGE.sections.slice(listAt + 1)
-const ROWS = rowsFromAssessments(ASSESSMENTS, UI_INDEX.assessmentLength)
+const DESCRIPTION = firstParagraph(SELF_ASSESSMENT_INTRO)
+const DISCLAIMER = firstParagraph(SELF_ASSESSMENT_DISCLAIMER)
+const LIST = {
+  id: SELF_ASSESSMENT_LIST,
+  label: listLabel(),
+  rows: rowsFromAssessments(ASSESSMENTS),
+}
 
 const TRAIL = [
   { name: ROUTE_SEO.home.name, path: routes.home },
@@ -67,12 +73,13 @@ export default function Page() {
           organization(),
         ]}
       />
-      <IndexTemplate
-        page={ASSESSMENTS_PAGE}
-        before={BEFORE}
-        after={AFTER}
-        grounds={{ [DISCLAIMER_SECTION]: 'mid' }}
-        list={{ id: LIST_SECTION, ...LIST_HEAD, rows: ROWS }}
+      <AssessmentIndexTemplate
+        slug={SELF_ASSESSMENT_CURATED.slug}
+        title={SELF_ASSESSMENT_CURATED.title}
+        description={DESCRIPTION}
+        plate={PLATE}
+        list={LIST}
+        disclaimer={DISCLAIMER}
         prevNext={prevNextFor(PATH)}
       />
     </>

@@ -9,6 +9,7 @@ import {
   serviceBlocks,
   serviceBySlug,
   serviceNumeral,
+  servicePlate,
   servicePrevNext,
 } from './treatment'
 
@@ -175,5 +176,17 @@ describe('serviceBlocks', () => {
     expect(treats?.kind === 'treats' && treats.heading).toBeUndefined()
     const definitions = blocks[2]
     expect(definitions?.kind === 'definitions' && definitions.section.id).toBe('x-definitions')
+  })
+})
+
+describe('servicePlate', () => {
+  it('names the frame R1 chose for each of the eleven services', () => {
+    for (const service of SERVICES) {
+      expect(servicePlate(service.slug), service.slug).toBe(`service-${service.slug}`)
+    }
+  })
+
+  it('names none for a slug with no frame', () => {
+    expect(servicePlate('not-a-service')).toBeUndefined()
   })
 })

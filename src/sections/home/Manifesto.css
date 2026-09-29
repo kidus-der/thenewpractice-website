@@ -1,13 +1,21 @@
 /* ==========================================================================
    MANIFESTO — co-located with Manifesto.tsx, imported once by it. The
-   statement is the block; the label gives up room to it. Tokens only; px for
-   geometry per rule 4 as amended.
+   statement is the block; the label gives up room to it, and the picture
+   sits beside it from 1024px. Tokens only; px for geometry per rule 4 as
+   amended.
    ========================================================================== */
 
 .manifesto {
-  margin-top: var(--s-8);
+  margin-top: var(--s-7);
 }
-.manifesto__pin {
+/* below 1024px the plate flows above and the words alone are the pinned
+   frame, centred in the viewport. A block, not a flex column: ScrollTrigger
+   turns pin spacing off for a pin whose parent is a flex container, and the
+   frame would then scroll over the pillars' foot. */
+.manifesto__stage {
+  display: block;
+}
+.manifesto__text {
   min-height: 100svh;
   display: flex;
   align-items: center;
@@ -28,16 +36,23 @@
   max-width: 30ch;
   text-wrap: balance;
 }
-.manifesto__prose {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-4);
-  max-width: 62ch;
-  padding-block: var(--s-6) 0;
-  color: var(--fg-muted);
-}
+
 @media (min-width: 1024px) {
-  .manifesto {
-    margin-top: var(--s-9);
+  /* plate left, statement right, one pinned frame the height of the viewport */
+  .manifesto__stage {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gutter);
+    align-items: center;
+    min-height: 100svh;
+    padding-block: var(--s-6);
+  }
+  .manifesto__plate,
+  .manifesto__text {
+    grid-row: 1;
+  }
+  .manifesto__text {
+    min-height: 0;
+    padding-block: 0;
   }
 }
