@@ -1,19 +1,25 @@
 /**
- * / — the T1 Home template (Task 16). docs/05 §T1, docs/04 §6, docs/09 §1–2.
+ * / — the T1 Home template (Task 16; round 1, R3). docs/05 §T1, docs/04 §6,
+ * docs/09 §1–2.
  *
- * Every project: the client's title as the only h1, the section headings in
- * document order, the triad, the twelve conditions as links, the five
- * pillars, the manifesto, the founder block, a clean console, axe scoped to
- * main, and a full-page capture after a reveal pass. Every project: one
- * travelling glow follows keyboard focus over the conditions. Desktop: the
- * poster is the largest contentful paint, the loop plays over it, the
- * gradient mounts, the glow follows the pointer. Reduced motion: poster
- * only, no video, no pin, the glow placed rather than moved.
+ * The page renders the curated module (curated/home.ts), so the expectations
+ * are read from it. Every project: the client's title as the only h1, the
+ * section headings in document order, the triad and its one sentence, a
+ * picture beside §2 to §5 (lazy; the poster stays the only priority image),
+ * the twelve conditions as links in one column, the five pillars, the
+ * manifesto's first paragraph, the founder block, a clean console, axe on
+ * the document, and a full-page capture after a reveal pass. Every project:
+ * one travelling glow follows keyboard focus over the conditions. From
+ * 1024px the conditions' picture is sticky beside the list; below, it stands
+ * above the list. Desktop: the poster is the largest contentful paint, the
+ * loop plays over it, the gradient mounts, the glow follows the pointer.
+ * Reduced motion: poster only, no video, no pin, the glow placed rather than
+ * moved.
  */
 import { BRAND } from '../../src/content/brand'
 import { MEDIA, VIDEO } from '../../src/content/media'
 import { routes } from '../../src/content/nav'
-import { HOME } from '../../src/content/pages/home'
+import { HOME_CURATED as HOME } from '../../src/content/curated/home'
 import { UI_HOME } from '../../src/content/ui'
 import { homeSections, triadLines } from '../../src/lib/home'
 import {
@@ -42,6 +48,20 @@ const SECTIONS = homeSections(HOME)
 const TRIAD = triadLines(SECTIONS.statement.subtitle ?? '')
 const CONDITIONS = SECTIONS.conditions.list ?? []
 const PILLARS = (SECTIONS.philosophy.definitions ?? []).map((d) => d.term)
+/** The route's frames (src/app/page.tsx), one per section, in page order. */
+const PLATES = {
+  [SECTIONS.longRead.id]: 'home-recovery',
+  [SECTIONS.conditions.id]: 'home-who-we-help',
+  [SECTIONS.manifesto.id]: 'home-philosophy',
+  [SECTIONS.conversation.id]: 'home-begin-conversation',
+} as const
+/** The projects at 1024px and wider, where the plates sit beside the words. */
+const WIDE_PROJECTS: readonly string[] = [
+  PROJECTS.desktop,
+  PROJECTS.wide,
+  PROJECTS.reducedMotion,
+  PROJECTS.webkit,
+]
 const H2_TITLES = HOME.sections.map((s) => s.title).filter((t): t is string => Boolean(t))
 /** Where a pointer hovers the rows; the keyboard part of the glow test runs everywhere. */
 const HOVER_PROJECTS: readonly string[] = [PROJECTS.desktop, PROJECTS.wide, PROJECTS.webkit]
@@ -228,13 +248,20 @@ test.describe('home', () => {
     }
   })
 
-  test('sets the triad behind the ghosted mark, then the four paragraphs', async ({
+  test('sets the triad behind the ghosted mark, then its one sentence in the frame', async ({
     page,
   }, info) => {
     await expect(page.locator('.statement__line')).toHaveText(TRIAD)
     await expect(page.locator('.statement__mark')).toHaveCount(1)
-    await expect(page.locator('.statement__prose p')).toHaveCount(
-      SECTIONS.statement.paragraphs.length
+    // round 1: one sentence of the prose, inside the pinned frame; no bone block
+    expect(SECTIONS.statement.paragraphs).toHaveLength(1)
+    await expect(page.locator('.statement__pin .statement__foot')).toHaveText(
+      SECTIONS.statement.paragraphs[0] ?? ''
+    )
+    await expect(page.locator(`section#${SECTIONS.statement.id} p.t-body`)).toHaveCount(0)
+    await expect(page.locator(`section#${SECTIONS.statement.id}`)).toHaveAttribute(
+      'data-ground',
+      'dark'
     )
     const pinned = info.project.name !== PROJECTS.reducedMotion
     await expect(page.locator(`section#${SECTIONS.statement.id} .pin-spacer`)).toHaveCount(
@@ -249,24 +276,78 @@ test.describe('home', () => {
     await expect(page.locator('.long-read__prose p')).toHaveCount(
       SECTIONS.longRead.paragraphs.length
     )
+    await expect(page.locator('.long-read__prose p')).toHaveText([
+      /^A dedicated live-in clinician/,
+    ])
+  })
+
+  test('sets one picture beside each section after the statement, lazily', async ({ page }) => {
+    for (const [id, key] of Object.entries(PLATES)) {
+      const img = page.locator(`section#${id} .plate-figure img`)
+      await expect(img, `${id} has one picture`).toHaveCount(1)
+      await expect(img).toHaveAttribute('alt', MEDIA[key].alt)
+      await expect(img).toHaveAttribute('loading', 'lazy')
+      await expect(img).toHaveAttribute('sizes', /\(min-width: 1024px\) 30vw/)
+    }
+    // the hero poster stays the page's only priority image
+    await expect(page.locator('img[fetchpriority="high"]')).toHaveCount(1)
+    await expect(page.locator('img[fetchpriority="high"]')).toHaveClass(/hero__poster/)
+    await expect(page.locator(`section#${SECTIONS.statement.id} img`)).toHaveCount(0)
   })
 
   test('lists the twelve conditions as links to the clinical services index', async ({ page }) => {
     const links = page.locator('.conditions__link')
     await expect(links).toHaveCount(CONDITIONS.length)
+    expect(CONDITIONS).toHaveLength(12)
     await expect(page.locator('.conditions__label')).toHaveText(CONDITIONS)
     const hrefs = await links.evaluateAll((els) => els.map((el) => el.getAttribute('href')))
     expect(new Set(hrefs)).toEqual(new Set([routes.clinicalServices]))
+    // one column at every width: every row starts at the same x
+    const lefts = await page
+      .locator('.conditions__row')
+      .evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().left)))
+    expect(new Set(lefts).size).toBe(1)
   })
 
-  test('moves one travelling glow between the condition rows, no image anywhere', async ({
+  test('holds the conditions picture beside the list from 1024px, above it below', async ({
+    page,
+  }, info) => {
+    const plate = page.locator('.conditions__plate')
+    const list = page.locator('.conditions__list')
+    await expect(plate).toHaveCount(1)
+    const [p, l] = [await plate.boundingBox(), await list.boundingBox()]
+    if (!p || !l) throw new Error('the conditions plate and list have boxes')
+    if (!WIDE_PROJECTS.includes(info.project.name)) {
+      // stacked: the picture ends before the list starts
+      expect(p.y + p.height).toBeLessThanOrEqual(l.y)
+      expect(await plate.evaluate((el) => getComputedStyle(el).position)).not.toBe('sticky')
+      return
+    }
+    // beside: the picture is to the right of the list, clear of it
+    expect(p.x).toBeGreaterThanOrEqual(l.x + l.width)
+    expect(await plate.evaluate((el) => getComputedStyle(el).position)).toBe('sticky')
+    // and it stays in view while the list passes: with the list's last row at
+    // the foot of the viewport, the picture's top is still inside the frame
+    await page.locator('.conditions__row').last().scrollIntoViewIfNeeded()
+    await page.evaluate(() => {
+      const last = document.querySelector('.conditions__row:last-child')
+      if (last) window.scrollBy(0, last.getBoundingClientRect().bottom - window.innerHeight + 40)
+    })
+    await expect
+      .poll(() => plate.evaluate((el) => Math.round(el.getBoundingClientRect().top)))
+      .toBeGreaterThanOrEqual(0)
+  })
+
+  test('moves one travelling glow between the condition rows, no hover plate', async ({
     page,
   }, info) => {
     const glow = page.locator(CONDITIONS_GLOW)
     await expect(glow).toHaveCount(1)
     await expect(glow).toHaveAttribute('aria-hidden', 'true')
     await expect(glow).toHaveCSS('opacity', '0')
-    await expect(page.locator('.conditions img, .conditions .hover-plate')).toHaveCount(0)
+    // the one fixed picture is the section's only image; nothing follows the pointer
+    await expect(page.locator('.conditions img')).toHaveCount(1)
+    await expect(page.locator('.conditions .hover-plate')).toHaveCount(0)
 
     const rows = page.locator(CONDITION_ROWS)
     const third = rows.nth(2)
@@ -358,10 +439,11 @@ test.describe('home', () => {
     ).toBe('sticky')
   })
 
-  test('scrubs the manifesto statement and flows the rest beneath', async ({ page }, info) => {
+  test('scrubs the manifesto statement, its first paragraph only', async ({ page }, info) => {
     const [statement, ...rest] = SECTIONS.manifesto.paragraphs
+    expect(rest).toEqual([])
     await expect(page.locator('.manifesto__statement')).toHaveText(statement ?? '')
-    await expect(page.locator('.manifesto__prose p')).toHaveText(rest)
+    await expect(page.locator(`section#${SECTIONS.manifesto.id} p.t-body`)).toHaveCount(0)
     const pinned = info.project.name !== PROJECTS.reducedMotion
     await expect(page.locator(`section#${SECTIONS.manifesto.id} .pin-spacer`)).toHaveCount(
       pinned ? 1 : 0
