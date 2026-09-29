@@ -681,10 +681,10 @@ Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its 
 | R1 | done | — | Images: source, grade and log pictures matched to their text | round1/r1-images | 3402 |
 | R2 | done | — | Footer: links, © line, small mark | round1/r2-footer | 3403 |
 | R7 | done | — | Palettes: ten lighter palettes + capture tooling | round1/r7-palettes | 3407 |
-| R3 | doing | R0, R1 | Home: shorter; Who We Help list left, fixed image right | round1/r3-home | 3404 |
+| R3 | done | R0, R1 | Home: shorter; Who We Help list left, fixed image right | round1/r3-home | 3404 |
 | R4a | doing | R0, R1 | About, Our Process, A Personal Message, Fees: curate, images | round1/r4a-interior | 3411 |
 | R4b | doing | R0, R1 | Clinical Services index + 11 service pages: curate, images | round1/r4b-services | 3412 |
-| R4c | todo | R0, R1 | Team index + 11 profiles: curate, images | round1/r4c-team | 3413 |
+| R4c | doing | R0, R1 | Team index + 11 profiles: curate, images | round1/r4c-team | 3413 |
 | R4d | todo | R0, R1 | Contact and Residences: curate, images | round1/r4d-contact | 3414 |
 | R5 | doing | R0, R1 | Self-assessment: tests on the tab page, questions at the top, per-question answer types | round1/r5-assessment | 3405 |
 | R6 | todo | R5 | Email: branded HTML emails, opt-in assessment send, previews, provisioning-ready | round1/r6-email | 3406 |
@@ -753,3 +753,8 @@ Owner paused the run. Each task's resume notes (done, remaining, decisions, gotc
 - Merged `44ec7e2`. Title pages short on every template (home hero unchanged): `--s-8` above, `--s-6` below, next block at `--s-7`; profile plate 40% stacked / 50% beside. Curation layer `src/content/curated/` (`curatePage`, `curate`, `ours`, `only`, `sentencesOf`, `ALL`; register every curation in `CURATIONS`; import a page's curation from its own module) with `curationChecks()` (no en/em dash outside the `PLACEHOLDER — ` prefix, no `!`, no forbidden word, broken references fail). CLAUDE.md §1/§3/§5/§7 and docs/01, 02, 03, 05, 06, 08 rewritten; four §6a rows. `viewports.spec` asserts every title page ends and the next block starts in the first viewport, with `AWAITING_CURATION` listing `/contact`, `biochemical-restoration`, `inner-child-work`, `self-assessment/adult-children` (R4b, R4d, R5 remove them from that list). Main session read the 1280×800 sheet. Merge: docs/02 and docs/08 people rule conflicted with R1; kept R1's licence wording (unidentifiable beside crisis copy) plus R0's rule of thumb. Unit 368/368, content checks 15/15, typecheck clean after merge.
 - Owner-visible decision taken by main session: SEO `pageTitle()` joins with " — "; R4d changes it to " | " under the no-dash rule.
 - Stale: docs/06 Schema rules still says modules `.parse()` at import (fix at round close).
+
+### R3 — accepted (2026-09-28)
+
+- Merged `1ccff7d`. Home 13 823 → 9 453 px at 1280 (−32%), 13 661 → 10 436 at 390 (−24%); every rendered word the client's (no summaries); one R1 image per section; §3 one column left, sticky `home-who-we-help` right (above the list below 1024px), glow kept; "One" pin 1× (0.8× mobile), manifesto first paragraph only, pin 1×; new placements `.p-aside` (8/12) and `.p-aside-start` (2/6); §6a rows added. Main session read the 1280 overview, §3 and the manifesto mid-pin.
+- Polish for later: at 1280 the manifesto's display line runs to ~35px of the scroll rail (right column reaches column 12); `home-philosophy` 138 kB at 750w on 3× phones; axe/full-page tests on 1280/1920 needed a 120 s limit under load — rerun on a quiet machine at round close.
