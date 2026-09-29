@@ -7,13 +7,15 @@
  * subsections, the three related services — numbered `01` onward within the
  * chapter; then the rail to the neighbouring services and the closing band.
  * Takes a `Service` from `serviceSchema`; contains no copy, no route strings
- * and no media keys of its own. The page is type: services have no plates.
+ * and no media keys of its own. The route passes the title page's picture
+ * (round 1, R4b); the body stays type.
  *
  * Grounds: title page bone; prose blocks bone; the lists and the related
  * rows sand, except that a sand block never follows another (the later one
  * yields to bone); rail bone; band canopy.
  */
 import './TreatmentTemplate.css'
+import type { MediaKey } from '@/content/media'
 import type { Service } from '@/content/schemas'
 import { UI_TREATMENT } from '@/content/ui'
 import { numeral } from '@/lib/interior'
@@ -33,6 +35,8 @@ export type TreatmentTemplateProps = {
   /** The collection's name for the title page eyebrow ("Clinical Services"). */
   eyebrow: string
   prevNext?: PrevNext
+  /** The title page's picture, beside the lead. */
+  plate?: MediaKey
 }
 
 function Block({ block }: { block: TreatmentBlock }) {
@@ -78,7 +82,7 @@ function Block({ block }: { block: TreatmentBlock }) {
   }
 }
 
-export function TreatmentTemplate({ service, eyebrow, prevNext }: TreatmentTemplateProps) {
+export function TreatmentTemplate({ service, eyebrow, prevNext, plate }: TreatmentTemplateProps) {
   const [lead] = service.intro
   const blocks = serviceBlocks(service)
 
@@ -90,6 +94,7 @@ export function TreatmentTemplate({ service, eyebrow, prevNext }: TreatmentTempl
         eyebrow={eyebrow}
         headline={service.title}
         lead={lead}
+        plate={plate}
       />
 
       {blocks.map((block) => (

@@ -18,15 +18,23 @@ type Props = {
   sizes: string
   caption?: string
   className?: string
+  /** A plate in the first viewport (a title page's) loads at once. */
+  priority?: boolean
 }
 
-export function PlateFigure({ media, sizes, caption, className }: Props) {
+export function PlateFigure({ media, sizes, caption, className, priority }: Props) {
   const frame = MEDIA[media]
   const ratio = plateRatio(frame.width, frame.height)
   return (
     <figure className={cn('plate-figure', className)} data-ratio={ratio}>
       <Reveal variant="mask" className="plate-figure__frame">
-        <Plate media={media} alt={frame.alt} sizes={sizes} className="plate-figure__plate" />
+        <Plate
+          media={media}
+          alt={frame.alt}
+          sizes={sizes}
+          className="plate-figure__plate"
+          priority={priority}
+        />
       </Reveal>
       <figcaption className="plate-figure__caption t-small">
         {caption && <span>{caption}</span>}

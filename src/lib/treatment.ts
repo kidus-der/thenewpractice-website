@@ -7,6 +7,7 @@
  * data the template maps over and a test can assert, not in JSX branches.
  * Every function returns a new object; nothing here mutates content.
  */
+import { MEDIA, type MediaKey } from '@/content/media'
 import { NAV, routes, serviceHref } from '@/content/nav'
 import type { NavItem, Section, Service } from '@/content/schemas'
 import { SERVICES } from '@/content/services'
@@ -39,6 +40,16 @@ export type TreatmentBlockKind = TreatmentBlock['kind']
 
 /** docs/02 §Ground rhythm: the lists and the related rows on sand, prose on bone. */
 const SAND_KINDS: ReadonlySet<TreatmentBlockKind> = new Set(['treats', 'mayInclude', 'related'])
+
+/**
+ * The service's title page picture (round 1, R4b): the frame R1 chose for it,
+ * keyed `service-<slug>` (design/ROUND1-IMAGE-SLOTS.md); none when the
+ * manifest has no such frame.
+ */
+export function servicePlate(slug: string): MediaKey | undefined {
+  const key = `service-${slug}`
+  return key in MEDIA ? (key as MediaKey) : undefined
+}
 
 const byOrder = (services: readonly Service[]): readonly Service[] =>
   [...services].sort((a, b) => a.order - b.order)
