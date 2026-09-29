@@ -2,24 +2,27 @@
 
 /**
  * The self-assessment scorer (docs/05 §Self-assessment, docs/09 §2 and §3
- * *Self-assessment data handling*). Fifteen questions as a hairline list,
- * each a fieldset whose legend is the question and whose two radios are
- * painted as the line-action toggles the enquiry form uses; a tally that
- * appears after the first answer; one action that reveals the result once
- * every question is answered, and resets the sheet once it has.
+ * *Self-assessment data handling*; round 1, R5). The line that reads the
+ * 1 to 10 scale, then fifteen questions as a hairline list, each a radio
+ * group of cells (AssessmentQuestion: ten numbers, or yes / no / maybe, per
+ * `assessment-answers.ts`); a tally that appears after the first answer; one
+ * action that reveals the result once every question is answered, and
+ * resets the sheet once it has.
+ *
+ * Answering moves on: a choice made by pointer, or by Space, sends focus to
+ * the next unanswered question and brings it gently into view (through the
+ * site's one scroll, so reduced motion jumps without animating); after the
+ * last, focus goes to the action. Arrow keys move within a question and do
+ * not move on, so the keyboard model stays the browser's own.
  *
  * The answers are one immutable array in a reducer (src/lib/assessment.ts)
  * and nothing else: there is no <form> to submit them, nothing is written to
- * storage, cookies or the URL, and no request is made. Closing the tab is
- * the only exit. The result reveals through the site's reveal primitive; the
- * GSAP match-media gate and the stylesheet safety net make it instant under
- * reduced motion.
+ * storage, cookies or the URL, and no request is made.
  */
-import Link from 'next/link'
-import { useEffect, useId, useReducer, useRef } from 'react'
+import { useEffect, useId, useReducer, useRef, type KeyboardEvent } from 'react'
 import './AssessmentForm.css'
-import { ChoiceToggle } from '@/components/Field'
 import { LineActionButton } from '@/components/LineAction'
+import type { AnswerType } from '@/content/assessment-answers'
 import type { Assessment, NavItem, Section } from '@/content/schemas'
 import { UI_ASSESSMENT } from '@/content/ui'
 import {
@@ -28,121 +31,93 @@ import {
   isComplete,
   progressLabel,
   scoreAssessment,
-  scoreLabel,
   type Answer,
-  type AssessmentScore,
-  type ScoringBand,
+  type FactAnswer,
 } from '@/lib/assessment'
-import { numeral } from '@/lib/interior'
-import { Reveal } from '@/motion/Reveal'
+import { scrollTo } from '@/motion/SmoothScroll'
+import { AssessmentQuestion } from './AssessmentQuestion'
+import { AssessmentResult } from './AssessmentResult'
 
 type Props = {
   assessment: Assessment
-  /** The client's *A Confidential Consultation* section, shown with the result. */
+  /** One per question, from `answerTypesFor(assessment.slug)`. */
+  answerTypes: readonly AnswerType[]
+  /** The series' *Important Disclaimer*, in full with the result. */
+  disclaimer: Section
+  /** The series' *A Confidential Consultation*, shown with the result. */
   consultation: Section
   /** The *Enquire* action, from NAV.utility. */
   enquire: NavItem
 }
 
-type RowProps = {
-  id: string
-  index: number
-  question: string
-  answer: Answer
-  onAnswer: (index: number, value: boolean) => void
+/** A question already this comfortably in view is not scrolled to (fractions of the viewport). */
+const COMFORT_TOP = 0.2
+const COMFORT_BOTTOM = 0.85
+/** Where a question scrolled to comes to rest: its top this far down the viewport. */
+const REST_AT = 0.3
+
+/** The first unanswered question after `from`, wrapping to the start; -1 when none is left. */
+export function nextUnanswered(answers: readonly Answer[], from: number): number {
+  const order = [...answers.keys()].map((i) => (from + 1 + i) % answers.length)
+  return order.find((i) => answers[i] === null) ?? -1
 }
 
-const YES = 'yes'
-const NO = 'no'
-
-function QuestionRow({ id, index, question, answer, onAnswer }: RowProps) {
-  const name = `${id}-q${index}`
-  const option = (value: boolean) => ({
-    name,
-    value: value ? YES : NO,
-    checked: answer === value,
-    onChange: () => onAnswer(index, value),
-    autoComplete: 'off',
-  })
-  return (
-    <fieldset className="assessment__row">
-      <legend className="assessment__legend">
-        <span className="assessment__numeral t-eyebrow" aria-hidden="true">
-          {numeral(index + 1)}
-        </span>
-        <span className="assessment__question t-body">{question}</span>
-      </legend>
-      <div className="assessment__options">
-        <ChoiceToggle id={`${name}-${YES}`} label={UI_ASSESSMENT.yes} input={option(true)} />
-        <ChoiceToggle id={`${name}-${NO}`} label={UI_ASSESSMENT.no} input={option(false)} />
-      </div>
-    </fieldset>
-  )
+function bringIntoView(el: HTMLElement) {
+  const rect = el.getBoundingClientRect()
+  const vh = window.innerHeight
+  if (rect.top >= vh * COMFORT_TOP && rect.bottom <= vh * COMFORT_BOTTOM) return
+  scrollTo(Math.max(0, rect.top + window.scrollY - vh * REST_AT))
 }
 
-type ResultProps = {
-  score: AssessmentScore
-  band: ScoringBand
-  max: number
-  interpretation: string
-  consultation: Section
-  enquire: NavItem
-}
-
-function Result({ score, band, max, interpretation, consultation, enquire }: ResultProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    ref.current?.focus()
-  }, [])
-  return (
-    <div className="assessment__result" role="status" tabIndex={-1} ref={ref}>
-      <p className="assessment__score t-eyebrow">{scoreLabel(score.total, max)}</p>
-      <Reveal variant="lines" as="h2" className="t-d2 assessment__band">
-        {band.label}
-      </Reveal>
-      {band.description && (
-        <Reveal as="p" className="t-lead assessment__band-description">
-          {band.description}
-        </Reveal>
-      )}
-      <Reveal as="p" className="t-body assessment__interpretation">
-        {interpretation}
-      </Reveal>
-      <div className="assessment__consultation">
-        {consultation.title && (
-          <Reveal variant="lines" as="h3" className="t-d3 assessment__consultation-title">
-            {consultation.title}
-          </Reveal>
-        )}
-        <Reveal staggerChildren className="assessment__prose">
-          {consultation.paragraphs.map((paragraph) => (
-            <p key={paragraph} className="t-body">
-              {paragraph}
-            </p>
-          ))}
-        </Reveal>
-        <Reveal className="assessment__enquire">
-          <Link className="line-action t-eyebrow" href={enquire.href}>
-            {enquire.label}
-          </Link>
-        </Reveal>
-      </div>
-    </div>
-  )
-}
-
-export function AssessmentForm({ assessment, consultation, enquire }: Props) {
+export function AssessmentForm({
+  assessment,
+  answerTypes,
+  disclaimer,
+  consultation,
+  enquire,
+}: Props) {
   const id = useId()
   const [state, dispatch] = useReducer(
     assessmentReducer,
     assessment.questions.length,
     initialAssessmentState
   )
-  const score = scoreAssessment(state.answers, assessment.scoring)
+  const rowsRef = useRef<HTMLDivElement>(null)
+  const actionsRef = useRef<HTMLDivElement>(null)
+  /** Set by an arrow key, so the change it causes does not move on. */
+  const arrowing = useRef(false)
+  /** The question just answered by a choice that should move on. */
+  const answeredFrom = useRef<number | null>(null)
+
+  const score = scoreAssessment(state.answers, answerTypes, assessment.scoring)
   const complete = isComplete(state.answers)
   const tallyId = `${id}-tally`
+  const hintId = `${id}-hint`
+  const total = assessment.questions.length
 
-  const onAnswer = (index: number, value: boolean) => dispatch({ type: 'answer', index, value })
+  useEffect(() => {
+    const from = answeredFrom.current
+    if (from === null) return
+    answeredFrom.current = null
+    const next = nextUnanswered(state.answers, from)
+    const target =
+      next === -1
+        ? actionsRef.current?.querySelector('button')
+        : rowsRef.current?.querySelectorAll('fieldset')[next]?.querySelector('input')
+    if (!target) return
+    target.focus({ preventScroll: true })
+    bringIntoView(next === -1 ? target : (target.closest('fieldset') ?? target))
+  }, [state.answers])
+
+  const onAnswer = (index: number, value: FactAnswer | number) => {
+    const moveOn = !arrowing.current
+    arrowing.current = false
+    answeredFrom.current = moveOn ? index : null
+    dispatch({ type: 'answer', index, value })
+  }
+  const onKeyDown = (event: KeyboardEvent<HTMLFieldSetElement>) => {
+    arrowing.current = event.key.startsWith('Arrow')
+  }
   const onAction = () => {
     if (!complete) return
     dispatch({ type: state.revealed ? 'reset' : 'reveal' })
@@ -150,20 +125,30 @@ export function AssessmentForm({ assessment, consultation, enquire }: Props) {
 
   return (
     <div className="assessment">
-      <div className="assessment__rows">
+      <p id={hintId} className="assessment__hint t-small">
+        {UI_ASSESSMENT.scaleHint}
+      </p>
+      <div
+        className="assessment__rows"
+        ref={rowsRef}
+        onPointerDown={() => (arrowing.current = false)}
+      >
         {assessment.questions.map((question, index) => (
-          <QuestionRow
+          <AssessmentQuestion
             key={index}
             id={id}
             index={index}
             question={question}
+            type={answerTypes[index] ?? 'scale'}
             answer={state.answers[index] ?? null}
+            hintId={hintId}
             onAnswer={onAnswer}
+            onKeyDown={onKeyDown}
           />
         ))}
       </div>
 
-      <div className="assessment__actions">
+      <div className="assessment__actions" ref={actionsRef}>
         {/* Always present so the region exists before it first speaks and the action never shifts. */}
         <p
           id={tallyId}
@@ -171,7 +156,7 @@ export function AssessmentForm({ assessment, consultation, enquire }: Props) {
           aria-live="polite"
           data-testid="assessment-tally"
         >
-          {score.answered > 0 ? progressLabel(score.answered, assessment.scoring.max) : null}
+          {score.answered > 0 ? progressLabel(score.answered, total) : null}
         </p>
         <LineActionButton
           type="button"
@@ -183,16 +168,17 @@ export function AssessmentForm({ assessment, consultation, enquire }: Props) {
         </LineActionButton>
       </div>
 
-      {state.revealed && score.band && (
-        <Result
-          score={score}
+      {state.revealed && score.band && score.average !== null && (
+        <AssessmentResult
+          average={score.average}
           band={score.band}
-          max={assessment.scoring.max}
           interpretation={assessment.interpretation}
+          disclaimer={disclaimer}
           consultation={consultation}
           enquire={enquire}
         />
       )}
+      {/* R6: the opt-in "send my answers" block sits here, beneath the result. */}
     </div>
   )
 }

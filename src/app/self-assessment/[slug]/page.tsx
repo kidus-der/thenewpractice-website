@@ -1,16 +1,18 @@
 /**
  * /self-assessment/[slug] — the ten questionnaires on the self-assessment
  * template (docs/05 §Self-assessment). One static page per entry in
- * `ASSESSMENTS`; an unknown slug is a 404. The page composes the series'
- * disclaimer and consultation sections around the questionnaire, passes the
- * series' two lines, and wires metadata and structured data — a WebPage, the
+ * `ASSESSMENTS`; an unknown slug is a 404. The page passes the questionnaire
+ * with its answer types, the series' disclaimer and consultation sections
+ * (both read with the result) and the series' instruction line, and wires
+ * metadata and structured data — a WebPage, the
  * breadcrumb home → Self-Assessment → title, and the organisation. No
  * MedicalTest or Quiz schema: the scorer is a screening aid in the client's
- * own words, and the description is the client's scoring line.
+ * own words.
  */
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { JsonLd } from '@/components/JsonLd'
+import { answerTypesFor } from '@/content/assessment-answers'
 import { ASSESSMENTS, ASSESSMENTS_PAGE, ASSESSMENT_SERIES } from '@/content/assessments'
 import { NAV, assessmentHref, routes } from '@/content/nav'
 import type { Assessment, NavItem, Section } from '@/content/schemas'
@@ -85,10 +87,10 @@ export default async function Page({ params }: { params: Params }) {
       />
       <AssessmentTemplate
         assessment={assessment}
+        answerTypes={answerTypesFor(slug)}
         disclaimer={DISCLAIMER}
         consultation={CONSULTATION}
         seriesName={INDEX_SEO.name}
-        lead={ASSESSMENT_SERIES.scoringText}
         instruction={ASSESSMENT_SERIES.instruction}
         enquire={ENQUIRE}
         prevNext={assessmentPrevNext(slug)}

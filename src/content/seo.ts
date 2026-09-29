@@ -196,9 +196,14 @@ export function teamSeo(member: TeamMember): RouteSeo {
   return route(member.name, description, { type: 'profile' })
 }
 
-/** The document's own scoring line, l.1020, verbatim; it follows every questionnaire. */
-const SCORING_LINE = 'Scoring: Give yourself 1 point for each “yes” answer. Total score: 0–15.'
+/**
+ * The document's own how-to sentence (l.974), verbatim. Round 1 (R5): the
+ * scoring line it replaced ("1 point for each yes") no longer describes how
+ * the questionnaires are scored, so it is not used anywhere.
+ */
+const HOW_TO_LINE =
+  'Answer each question as honestly as possible based on your experiences over the past twelve months.'
 
-/** A questionnaire page: its title, then the client's scoring line. */
+/** A questionnaire page: its title, then the client's how-to sentence. */
 export const assessmentSeo = (assessment: Assessment): RouteSeo =>
-  route(assessment.title, `${assessment.title}. ${SCORING_LINE}`)
+  route(assessment.title, `${assessment.title}. ${HOW_TO_LINE}`)

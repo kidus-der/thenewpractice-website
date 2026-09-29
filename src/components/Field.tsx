@@ -120,11 +120,12 @@ export function ChoiceCell({
   label,
   input,
   className,
-}: ChoiceToggleProps & { className?: string }) {
+  labelClassName,
+}: ChoiceToggleProps & { className?: string; labelClassName?: string }) {
   return (
     <label className={cn('choice__cell', className)} htmlFor={id}>
       <input id={id} className="choice__input" type="radio" {...input} />
-      <span className="choice__cell-label">{label}</span>
+      <span className={cn('choice__cell-label', labelClassName)}>{label}</span>
     </label>
   )
 }
