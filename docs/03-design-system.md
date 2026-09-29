@@ -88,7 +88,6 @@ A modular scale on a 1.25 ratio, expressed in `clamp()` so every size is fluid b
 
 | Token         | Clamp                            | Use                                                                                                                                                 |
 | ------------- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--t-hero`    | `clamp(3.5rem, 11vw, 12rem)`     | Footer marquee                                                                                                                                      |
 | `--t-d1`      | `clamp(2.5rem, 6vw, 5.5rem)`     | Statements, the home overlay title, nav overlay items, every title page's `h1` — interior headlines, treatment and profile titles (Tasks 13 and 14) |
 | `--t-d2`      | `clamp(2rem, 4vw, 3.5rem)`       | Section headlines, the enquire band's line, the residences statement                                                                                |
 | `--t-d3`      | `clamp(1.5rem, 2.5vw, 2.25rem)`  | Sub-headlines, pillar titles, index list items                                                                                                      |
@@ -102,7 +101,7 @@ A modular scale on a 1.25 ratio, expressed in `clamp()` so every size is fluid b
 | Property       | Display (serif)                                                                                                                                                                                      | Text (sans)                                       |
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
 | Line height    | `0.95`–`1.05`                                                                                                                                                                                        | `1.6` body, `1.45` lead                           |
-| Letter spacing | `-0.03em` at hero, `-0.02em` at d1/d2                                                                                                                                                                | `0` body, `0.18em` on eyebrow caps                |
+| Letter spacing | `-0.02em` at d1/d2                                                                                                                                                                                   | `0` body, `0.18em` on eyebrow caps                |
 | Max measure    | `18ch` headlines; `20–30ch` statements                                                                                                                                                               | `62ch` body — hard cap, never exceed; `46ch` lead |
 | Case           | Sentence case. **All-caps in the serif only for the wordmark** and the client's own all-caps titles (_A NEW APPROACH TO WELLBEING_).                                                                 | Caps permitted only at `--t-eyebrow`              |
 | Widows         | Not tolerated in any headline. Use a non-breaking space before the last word, or an explicit `<br>` at the designed break.                                                                           |                                                   |
@@ -249,12 +248,9 @@ Defined here for completeness; the choreography that uses them is in `docs/04-mo
 | `--d-base`         | `480ms`                          | `D.base`      | `0.48`               |
 | `--d-slow`         | `800ms`                          | `D.slow`      | `0.8`                |
 | `--d-glacial`      | `1400ms`                         | `D.glacial`   | `1.4`                |
-| _(none)_           | `40s`                            | `D.marquee`   | —                    |
 | `--e-out-expo`     | `cubic-bezier(0.16, 1, 0.3, 1)`  | `expo.out`    | `[0.16, 1, 0.3, 1]`  |
 | `--e-out-quart`    | `cubic-bezier(0.25, 1, 0.5, 1)`  | `quart.out`   | `[0.25, 1, 0.5, 1]`  |
 | `--e-in-out-quart` | `cubic-bezier(0.76, 0, 0.24, 1)` | `quart.inOut` | `[0.76, 0, 0.24, 1]` |
 | `--e-linear`       | `linear`                         | `none`        | `'linear'`           |
-
-`D.marquee` is the footer marquee's seconds per cycle (docs/04 §4), the site's one continuous loop; it has no CSS counterpart because nothing in a stylesheet runs that long.
 
 **There is no spring, elastic, back, or bounce token, and none may be added — in either library.**
