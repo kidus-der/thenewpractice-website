@@ -27,12 +27,12 @@ Stock is a stand-in, not a compromise: the templates are built to receive commis
 - **Architecture and interiors, unoccupied.** A corridor. A doorway with light across it. A single chair. A linen bed no one has slept in. Tropical-modern, not resort.
 - **Landscape at distance.** Canopy, cloud, cenote and sea water, mist through trees, a shaded pool edge. Always wide, always quiet, never dramatic-golden-hour.
 - **Materials in extreme close-up.** Raw linen weave. Limestone grain. Plaster. Water tension. Rain beaded on a leaf. Untreated hardwood.
-- **The human presence, only obliquely.** A hand at the edge of frame. A shadow. A back turned. Never a face in focus. Never eye contact. Team portraits, when they arrive, are the one exception — and until then they are generated silhouettes.
+- **People, calm and candid (round 1, owner decision).** Adults in the ordinary moments the text describes: two people in conversation, someone reading by a window, a walk at the water's edge, a hand at the edge of frame. Unposed, unhurried, never performing wellness; faces allowed, eye contact with the camera avoided. The rule of thumb: every picture matches the text it sits with and the site's look, and means something. Team portraits are the client's own when they arrive; until then they are generated silhouettes.
 - **Instruments of care, abstracted.** A glass of water. Never a syringe, chart, monitor, or anything that reads _hospital_.
 
 ### Subject matter — forbidden
 
-Smiling models. Group therapy circles. Yoga poses. Massage tables. Hot stones. Lotus flowers. Candles. Bamboo. Anything from a "spa" stock search. Before/after anything. People in robes. Sunsets with lens flare. Drone shots that show off. Text baked into an image.
+Posed stock smiles and models performing happiness. Group therapy circles. Yoga poses. Massage tables. Hot stones. Lotus flowers. Candles. Bamboo. Anything from a "spa" stock search. Before/after anything. People in robes. Sunsets with lens flare. Drone shots that show off. Text baked into an image.
 
 **Also forbidden, specific to this brief:** turquoise-water resort photography, white-sand beach clichés, hammocks, palapa-with-cocktail, Maya ruins as backdrop, resort branding, anything that reads _holiday_. The client is not on holiday. And no alpine, Nordic, or temperate-forest landscape — it contradicts the location outright.
 

@@ -6,14 +6,14 @@ The client has not yet supplied photography, video, voice-over or team portraits
 
 ## Hard rules
 
-| Rule                                                                                                   |                                                                                                                                                                                 |
-| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Never** use an image from Küsnacht Practice, Paracelsus, Clinic Les Alpes, or any competing practice | Instantly recognisable to this client. Fatal.                                                                                                                                   |
-| **Never** use an image of an identifiable real hotel, resort or private residence                      | Implies a claim about a place, and the residences page is privacy-first                                                                                                         |
-| **Never** use an image with an identifiable face                                                       | Violates the premise and creates a model-release problem                                                                                                                        |
-| **Never** use AI-generated imagery of people or places                                                 | Uncanny at this tier, and dishonest in a medical context. Generated **silhouettes** for team placeholders are the one exception: abstract, faceless, unmistakably placeholders. |
-| **Always** record source URL, licence name and licence URL for every asset in `design/ASSETS.md`       | If it is not in the manifest it is not on the site                                                                                                                              |
-| **Always** normalise every still through the same grade                                                | Consistency is what makes sourced photography read as commissioned                                                                                                              |
+| Rule                                                                                                              |                                                                                                                                                                                                                                                                       |
+| ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Never** use an image from Küsnacht Practice, Paracelsus, Clinic Les Alpes, or any competing practice            | Instantly recognisable to this client. Fatal.                                                                                                                                                                                                                         |
+| **Never** use an image of an identifiable real hotel, resort or private residence                                 | Implies a claim about a place, and the residences page is privacy-first                                                                                                                                                                                               |
+| **Never** use an image in which an identifiable person seems to be a client, a patient or to endorse the practice | People are allowed (docs/02, round 1), but the stock licences forbid implying endorsement or portraying a person in a sensitive light, and a mental-health context is one. Prefer candid, turned, three-quarter or partly out-of-focus figures; no posed stock smiles |
+| **Never** use AI-generated imagery of people or places                                                            | Uncanny at this tier, and dishonest in a medical context. Generated **silhouettes** for team placeholders are the one exception: abstract, faceless, unmistakably placeholders.                                                                                       |
+| **Always** record source URL, licence name and licence URL for every asset in `design/ASSETS.md`                  | If it is not in the manifest it is not on the site                                                                                                                                                                                                                    |
+| **Always** normalise every still through the same grade                                                           | Consistency is what makes sourced photography read as commissioned                                                                                                                                                                                                    |
 
 ## Sourcing
 
@@ -32,7 +32,7 @@ The client has not yet supplied photography, video, voice-over or team portraits
 
 Search for the _materials and weather_ of the place — `rain on tropical leaf`, `jungle canopy from below`, `cenote`, `limestone wall`, `linen bed morning light`, `tropical modernism interior` — never for the destination. `tulum`, `riviera maya`, `cancun` return resort photography, which is the exact wrong register.
 
-**Reject on sight:** anything alpine or temperate, resort-branded, with faces, lotus, candles, hot stones, lens flare, turquoise-water clichés, ruins as backdrop.
+**Reject on sight:** anything alpine or temperate, resort-branded, posed stock smiles or eye contact with the camera, lotus, candles, hot stones, lens flare, turquoise-water clichés, ruins as backdrop.
 
 ## The grade — a brand duotone
 
