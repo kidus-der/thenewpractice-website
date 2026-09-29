@@ -442,6 +442,17 @@ Research date: 2026-09-28 (task R1). Governing brief: `docs/BUILD-LEDGER.md`, Ro
 | `home-philosophy` | Pexels 38729727, Joaquin Reyes Ramos (https://www.pexels.com/photo/majestic-kapok-tree-with-massive-buttress-roots-38729727/) | Pexels 7292924 (kapok bark in tropical woods; texture only), 3191101 (tall kapok in rainforest; the roots are out of frame) |
 | `home-begin-conversation` | Pexels 6951776, Artem Podrez (https://www.pexels.com/photo/a-woman-sitting-on-a-window-bench-talking-on-the-phone-6951776/) | Pexels 6612273 (similar scene; a posed smile and gesture), 7653765 (used for Our Process) |
 
+### About
+
+| Slot | Chosen | Alternates considered |
+| --- | --- | --- |
+| `about-ceiba` | Pexels 36252725, miguel negrao (https://www.pexels.com/photo/majestic-amazon-ceiba-tree-in-belem-brazil-36252725/) | Pexels 36252724 (same tree, same angle; flatter light), 34041295 and 30272168 (spined ceiba trunk close-ups; a texture, not the tree) |
+| `about-practice` | Pexels 4946931, Maria Orlova (https://www.pexels.com/photo/high-windows-located-in-spacious-interior-decorated-with-pictures-on-shelves-4946931/) | Pexels 13600515 (open terrace with sheer curtains; a wide-angle lean), 5105918 (living room onto misty forest; dark sofa dominates) |
+| `about-founder` | Pexels 38325418, Ayşegül Aytören (https://www.pexels.com/photo/two-men-having-a-conversation-on-a-bench-overlooking-the-ocean-38325418/) | Pexels 17804944 (two men on a bench by the sea; rubble foreground), 6255868 (a hand on a client's hands; repeats the consultation motif of Clinical Services) |
+| `about-place` | Pexels 36734777, Steve Hodder (https://www.pexels.com/photo/pelican-in-flight-over-puerto-aventuras-marina-36734777/) | Pexels 30618150 (pelican on a Quintana Roo fishing boat; a beach, not the marina), 36734715 (green heron in Puerto Aventuras; chain-link fence) |
+| `about-sea` | Pexels 20703791, Diogo Miranda (https://www.pexels.com/photo/man-on-beach-at-dawn-20703791/) | Pexels 35120407 (lone walker at dawn; hills behind, which the Riviera Maya does not have), 36068262 (similar; figure too small) |
+| `about-jungle` | Pexels 38996760, Iván Hernández-Cuevas (https://www.pexels.com/photo/mystical-hanging-roots-in-yucatan-cenote-38996760/) | Pexels 34855022 (hidden jungle cenote; wide and busy), 14440966 (low-angle forest with light shafts; could be anywhere) |
+
 ### Considered and rejected across round 1
 
 | Candidate | Why |

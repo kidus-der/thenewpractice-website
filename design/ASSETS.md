@@ -75,7 +75,7 @@ Licence URL for every row: https://www.pexels.com/license/. Every output is unde
 
 ## Round 1 stills
 
-Added by task R1 on 2026-09-28: 4 frames, each chosen for the sentence it sits beside (register: `design/ROUND1-IMAGE-SLOTS.md`). Same source (Pexels), same licence, same grade as the set above; attribution recorded as `Photo by <author> on Pexels`. People appear, per the round-1 owner decision (docs/02 §Subject matter): calm, candid adults; unidentifiable wherever the copy is about crisis, trauma, addiction or mental illness, which is the Pexels licence's *not in a bad light* condition. `focus` absent means sharp's attention crop; `left` and `right` were added to the pipeline for two frames whose subject sits off-centre in a landscape source.
+Added by task R1 on 2026-09-28: 10 frames, each chosen for the sentence it sits beside (register: `design/ROUND1-IMAGE-SLOTS.md`). Same source (Pexels), same licence, same grade as the set above; attribution recorded as `Photo by <author> on Pexels`. People appear, per the round-1 owner decision (docs/02 §Subject matter): calm, candid adults; unidentifiable wherever the copy is about crisis, trauma, addiction or mental illness, which is the Pexels licence's *not in a bad light* condition. `focus` absent means sharp's attention crop; `left` and `right` were added to the pipeline for two frames whose subject sits off-centre in a landscape source.
 
 | File | Source page | Author | Licence | Stands in for | Aspect | Focus | ev |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -83,6 +83,12 @@ Added by task R1 on 2026-09-28: 4 frames, each chosen for the sentence it sits b
 | `home-who-we-help` | https://www.pexels.com/photo/photo-of-a-woman-looking-outside-a-window-while-sitting-on-a-table-7272595/ | Kaboompics.com | Pexels License | Home §3 Who We Help: the one fixed image beside the list | 3:4 | attention | −18 |
 | `home-philosophy` | https://www.pexels.com/photo/majestic-kapok-tree-with-massive-buttress-roots-38729727/ | Joaquin Reyes Ramos | Pexels License | Home §4 Our Philosophy: roots of a great tropical tree | 3:4 | bottom | 0 |
 | `home-begin-conversation` | https://www.pexels.com/photo/a-woman-sitting-on-a-window-bench-talking-on-the-phone-6951776/ | Artem Podrez | Pexels License | Home §5 Begin the Conversation: a call made from home | 3:4 | attention | −28 |
+| `about-ceiba` | https://www.pexels.com/photo/majestic-amazon-ceiba-tree-in-belem-brazil-36252725/ | miguel negrao | Pexels License | About, Our Logo – The Ceiba: a ceiba seen from its base | 3:4 | centre | 0 |
+| `about-practice` | https://www.pexels.com/photo/high-windows-located-in-spacious-interior-decorated-with-pictures-on-shelves-4946931/ | Maria Orlova | Pexels License | About the New Practice: a private residence, not an institution | 3:4 | attention | −14 |
+| `about-founder` | https://www.pexels.com/photo/two-men-having-a-conversation-on-a-bench-overlooking-the-ocean-38325418/ | Ayşegül Aytören | Pexels License | About, A Message from the Founder: people recover through relationships | 3:4 | centre | −12 |
+| `about-place` | https://www.pexels.com/photo/pelican-in-flight-over-puerto-aventuras-marina-36734777/ | Steve Hodder | Pexels License | About, Privacy, Safety and Peace: the marina at Puerto Aventuras | 16:9 | centre | −6 |
+| `about-sea` | https://www.pexels.com/photo/man-on-beach-at-dawn-20703791/ | Diogo Miranda | Pexels License | About, The Caribbean Sea: a morning walk beside the water | 3:4 | centre | −12 |
+| `about-jungle` | https://www.pexels.com/photo/mystical-hanging-roots-in-yucatan-cenote-38996760/ | Iván Hernández-Cuevas | Pexels License | About, The Healing Power of the Mayan Jungle: roots in a cenote | 3:4 | centre | +12 |
 
 ## Rejected
 

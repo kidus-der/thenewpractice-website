@@ -146,6 +146,60 @@ export const MEDIA = {
     "credit": "Artem Podrez",
     "licence": "Pexels License"
   },
+  "about-ceiba": {
+    "src": "/media/about-ceiba.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAAAwBQCdASoUABsAPu1qrVCppaQiqAqpMB2JZwDE3avSBQQKttbaJQJYSVUqbA/Sg2SAAAD9Upki8lX7t8hYsUrU3Kk5aj/GpYKK9ryJI9HxUp00tO9G8DTeWoRh8s8EbDxImkK2MwYO3ebRVYEyekE9Onkl0g5XaFmmyMjqva2RS2MKupBN2Syqu3jMX53W/QC0mxLprx9URxhW7wDI0bsRESM3RDO4RBncAAAA",
+    "alt": "A ceiba tree seen from the base of its trunk, branches spreading against cloud",
+    "credit": "miguel negrao",
+    "licence": "Pexels License"
+  },
+  "about-practice": {
+    "src": "/media/about-practice.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAACwBACdASoUABsAPu1mqk2ppaQiMAgBMB2JZwAAJSv/cIBsSIOc/7Dsxp1WRjwgANnET9mVXgqVZISJK+MoA6/poLUZJ2gqpHNda/YVackscVTPwqCQGivVl6TR83KrJ1BmAr15jXPkarCEXH6GGKppGTlLoH1kMeEB6PwQB2UF36qNrPnza2esIyw1DC7svIHq5QAA",
+    "alt": "A room with a wooden floor, a bench and tall glazed doors onto palm trees",
+    "credit": "Maria Orlova",
+    "licence": "Pexels License"
+  },
+  "about-founder": {
+    "src": "/media/about-founder.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAACwBACdASoUABsAPu1kqE4ppaOiMAgBMB2JZwDDrCKOVlv+DajhwCqybEnGmBgAAP5Ru3t57VRaSo+nLJH9V8FZ+FwA6SnxqKHgB8wJDafgpzeOHuc5r32a8r2iWCkzdG0oHYo8GlE9UhRRsb2tVdBzCN+TfQEkgozxshVOwAA=",
+    "alt": "Two men seen from behind talking on a bench that faces the sea",
+    "credit": "Ayşegül Aytören",
+    "licence": "Pexels License"
+  },
+  "about-place": {
+    "src": "/media/about-place.webp",
+    "width": 2400,
+    "height": 1350,
+    "blurDataURL": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACQAwCdASoUAAsAPu1iqU2ppaQiMAgBMB2JZwAAW5lw5exXqygQAP2fWVkwm3By0FiU8rGmTJI9RBE63f1qAQ+vxTNzakpwAAA=",
+    "alt": "A pelican flying low over the water of the marina at Puerto Aventuras",
+    "credit": "Steve Hodder",
+    "licence": "Pexels License"
+  },
+  "about-sea": {
+    "src": "/media/about-sea.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACwAwCdASoUABsAPu1qpU2/pqMiMBgMA/AdiWcAzFhJuWCM35VgIADxsXEHx2iIrlPazlvMtvfXnbdwyP58w+Bhbcji8vJCAAA=",
+    "alt": "A person walking at the edge of the sea on a flat beach at dawn",
+    "credit": "Diogo Miranda",
+    "licence": "Pexels License"
+  },
+  "about-jungle": {
+    "src": "/media/about-jungle.webp",
+    "width": 1040,
+    "height": 1387,
+    "blurDataURL": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAADwBACdASoUABsAPu1cq02ppKQiMBgMATAdiWcAzjwH+B4aCjosDqqNA0RKgo1hL+AA/uv+hEWvGskqpA3T7dhlaYV0FJ1uNXA+VCdXWDX1Xx/RSsFZIYFK06EifNULPvW+zyiGPQAAAA==",
+    "alt": "Tree roots hanging into the dark water of a cenote in Yucatán",
+    "credit": "Iván Hernández-Cuevas",
+    "licence": "Pexels License"
+  },
   "hero-surf-poster": {
     "src": "/media/hero-surf-poster.webp",
     "width": 2400,

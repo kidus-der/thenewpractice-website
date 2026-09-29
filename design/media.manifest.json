@@ -255,6 +255,83 @@
       "aspect": "3:4",
       "ev": -28,
       "alt": "A woman sitting on a window seat talking on a mobile phone"
+    },
+    {
+      "key": "about-ceiba",
+      "slot": "About, Our Logo – The Ceiba: a ceiba seen from its base",
+      "page": "https://www.pexels.com/photo/majestic-amazon-ceiba-tree-in-belem-brazil-36252725/",
+      "url": "https://images.pexels.com/photos/36252725/pexels-photo-36252725.jpeg",
+      "credit": "miguel negrao",
+      "licence": "Pexels License",
+      "licenceUrl": "https://www.pexels.com/license/",
+      "aspect": "3:4",
+      "focus": "centre",
+      "ev": 0,
+      "alt": "A ceiba tree seen from the base of its trunk, branches spreading against cloud"
+    },
+    {
+      "key": "about-practice",
+      "slot": "About the New Practice: a private residence, not an institution",
+      "page": "https://www.pexels.com/photo/high-windows-located-in-spacious-interior-decorated-with-pictures-on-shelves-4946931/",
+      "url": "https://images.pexels.com/photos/4946931/pexels-photo-4946931.jpeg",
+      "credit": "Maria Orlova",
+      "licence": "Pexels License",
+      "licenceUrl": "https://www.pexels.com/license/",
+      "aspect": "3:4",
+      "ev": -14,
+      "alt": "A room with a wooden floor, a bench and tall glazed doors onto palm trees"
+    },
+    {
+      "key": "about-founder",
+      "slot": "About, A Message from the Founder: people recover through relationships",
+      "page": "https://www.pexels.com/photo/two-men-having-a-conversation-on-a-bench-overlooking-the-ocean-38325418/",
+      "url": "https://images.pexels.com/photos/38325418/pexels-photo-38325418.jpeg",
+      "credit": "Ayşegül Aytören",
+      "licence": "Pexels License",
+      "licenceUrl": "https://www.pexels.com/license/",
+      "aspect": "3:4",
+      "focus": "centre",
+      "ev": -12,
+      "alt": "Two men seen from behind talking on a bench that faces the sea"
+    },
+    {
+      "key": "about-place",
+      "slot": "About, Privacy, Safety and Peace: the marina at Puerto Aventuras",
+      "page": "https://www.pexels.com/photo/pelican-in-flight-over-puerto-aventuras-marina-36734777/",
+      "url": "https://images.pexels.com/photos/36734777/pexels-photo-36734777.jpeg",
+      "credit": "Steve Hodder",
+      "licence": "Pexels License",
+      "licenceUrl": "https://www.pexels.com/license/",
+      "aspect": "16:9",
+      "focus": "centre",
+      "ev": -6,
+      "alt": "A pelican flying low over the water of the marina at Puerto Aventuras"
+    },
+    {
+      "key": "about-sea",
+      "slot": "About, The Caribbean Sea: a morning walk beside the water",
+      "page": "https://www.pexels.com/photo/man-on-beach-at-dawn-20703791/",
+      "url": "https://images.pexels.com/photos/20703791/pexels-photo-20703791.jpeg",
+      "credit": "Diogo Miranda",
+      "licence": "Pexels License",
+      "licenceUrl": "https://www.pexels.com/license/",
+      "aspect": "3:4",
+      "focus": "centre",
+      "ev": -12,
+      "alt": "A person walking at the edge of the sea on a flat beach at dawn"
+    },
+    {
+      "key": "about-jungle",
+      "slot": "About, The Healing Power of the Mayan Jungle: roots in a cenote",
+      "page": "https://www.pexels.com/photo/mystical-hanging-roots-in-yucatan-cenote-38996760/",
+      "url": "https://images.pexels.com/photos/38996760/pexels-photo-38996760.jpeg",
+      "credit": "Iván Hernández-Cuevas",
+      "licence": "Pexels License",
+      "licenceUrl": "https://www.pexels.com/license/",
+      "aspect": "3:4",
+      "focus": "centre",
+      "ev": 12,
+      "alt": "Tree roots hanging into the dark water of a cenote in Yucatán"
     }
   ]
 }
