@@ -15,6 +15,7 @@ import type { NavItem, Section } from '@/content/schemas'
 import { scoreLabel, type ScoringBand } from '@/lib/assessment'
 import { Reveal } from '@/motion/Reveal'
 import { scrollTo } from '@/motion/SmoothScroll'
+import { D } from '@/motion/tokens'
 
 /** The result's rule sits this far below the top of the viewport once in view. */
 const VIEW_OFFSET_VH = 0.18
@@ -52,7 +53,7 @@ export function AssessmentResult({
     if (!el) return
     el.focus({ preventScroll: true })
     const top = el.getBoundingClientRect().top + window.scrollY
-    scrollTo(Math.max(0, top - window.innerHeight * VIEW_OFFSET_VH))
+    scrollTo(Math.max(0, top - window.innerHeight * VIEW_OFFSET_VH), 0, D.slow)
   }, [])
 
   return (

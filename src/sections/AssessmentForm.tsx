@@ -35,6 +35,7 @@ import {
   type FactAnswer,
 } from '@/lib/assessment'
 import { scrollTo } from '@/motion/SmoothScroll'
+import { D } from '@/motion/tokens'
 import { AssessmentQuestion } from './AssessmentQuestion'
 import { AssessmentResult } from './AssessmentResult'
 
@@ -66,7 +67,7 @@ function bringIntoView(el: HTMLElement) {
   const rect = el.getBoundingClientRect()
   const vh = window.innerHeight
   if (rect.top >= vh * COMFORT_TOP && rect.bottom <= vh * COMFORT_BOTTOM) return
-  scrollTo(Math.max(0, rect.top + window.scrollY - vh * REST_AT))
+  scrollTo(Math.max(0, rect.top + window.scrollY - vh * REST_AT), 0, D.slow)
 }
 
 export function AssessmentForm({

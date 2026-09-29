@@ -60,7 +60,10 @@ const isFactAnswer = (answer: Answer): answer is FactAnswer =>
   typeof answer === 'string' && (FACT_ANSWERS as readonly string[]).includes(answer)
 
 const isScaleAnswer = (answer: Answer): answer is number =>
-  typeof answer === 'number' && Number.isInteger(answer) && answer >= SCALE_MIN && answer <= SCALE_MAX
+  typeof answer === 'number' &&
+  Number.isInteger(answer) &&
+  answer >= SCALE_MIN &&
+  answer <= SCALE_MAX
 
 /** True when `answer` is one the question's type offers (or still unanswered). */
 export function fitsType(answer: Answer, type: AnswerType): boolean {
@@ -93,11 +96,15 @@ export function scoreAssessment(
   scoring: Scoring
 ): AssessmentScore {
   if (answers.length !== types.length) {
-    throw new Error(`scoreAssessment: ${types.length} questions, received ${answers.length} answers`)
+    throw new Error(
+      `scoreAssessment: ${types.length} questions, received ${answers.length} answers`
+    )
   }
   const misfit = answers.findIndex((answer, i) => !fitsType(answer, types[i] ?? 'scale'))
   if (misfit !== -1) {
-    throw new Error(`scoreAssessment: answer ${misfit + 1} does not fit a ${types[misfit]} question`)
+    throw new Error(
+      `scoreAssessment: answer ${misfit + 1} does not fit a ${types[misfit]} question`
+    )
   }
   const given = answers.filter((answer): answer is FactAnswer | number => answer !== null)
   if (given.length < answers.length || given.length === 0) {
