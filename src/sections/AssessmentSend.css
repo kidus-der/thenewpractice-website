@@ -20,7 +20,8 @@
   margin-top: var(--s-5);
   display: flex;
   flex-direction: column;
-  gap: var(--s-5);
+  /* the enquiry form's row rhythm (docs/03 §5 Form fields) */
+  gap: var(--s-3);
 }
 .assessment-send__intro {
   max-width: 46ch;
@@ -28,7 +29,7 @@
 }
 /* the hint reads with the choice above it: pulled up to sit under its rule */
 .assessment-send__hint {
-  margin-top: calc(var(--s-5) * -1 + var(--s-2));
+  margin-top: calc(var(--s-3) * -1 + var(--s-2));
   max-width: 46ch;
   color: var(--fg-muted);
 }

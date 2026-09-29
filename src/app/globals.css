@@ -501,9 +501,11 @@ textarea {
   display: flex;
   flex-direction: column;
 }
+/* one step above the rule: room for the label once it floats (round 1, R9:
+   the rows read as one composed block; docs/03 §5 Form fields) */
 .field__control {
   position: relative;
-  padding-top: var(--s-5);
+  padding-top: var(--s-4);
 }
 .field__input {
   width: 100%;

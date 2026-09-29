@@ -8,7 +8,7 @@
 .field__error {
   display: block;
   min-height: 1.4em;
-  margin-top: var(--s-2);
+  margin-top: var(--s-1);
   /* ink, not the accent: brass on bone is 2.77:1, under AA for text (R7 finding) */
   color: var(--fg);
 }
@@ -16,7 +16,7 @@
 /* A textarea is written from the top, so its label rests on the first line
    rather than on the rule, and floats up from there. */
 .field--multiline .field__label {
-  top: calc(var(--s-5) + var(--s-2));
+  top: calc(var(--s-4) + var(--s-2));
   bottom: auto;
   transform-origin: left top;
 }

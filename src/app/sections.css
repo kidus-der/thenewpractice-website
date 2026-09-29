@@ -779,12 +779,6 @@ html[data-cursor='custom'] * {
     margin-top: 0;
   }
 }
-.field__error {
-  display: block;
-  min-height: 1.4em;
-  margin-top: var(--s-1);
-  color: var(--accent);
-}
 .enquiry__success {
   max-width: 22ch;
 }
