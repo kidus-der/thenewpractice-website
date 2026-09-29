@@ -2,20 +2,18 @@
  * Footer — Task 8. Runs under every project (four widths and reduced motion)
  * against `/`; the footer is global, so any route would do.
  *
- * Landmarks, link integrity, the founder's tel:/mailto: links, the marquee's
- * accessibility contract, the reduced-motion single repetition, and axe.
+ * Landmarks, link integrity, the base line (copyright and the mark with its
+ * brass point), the parts round 1 removed (marquee, contact block, wordmark,
+ * confidentiality line), a height under one viewport, no animation, and axe.
  */
+import { join } from 'node:path'
+import type { Page } from '@playwright/test'
+
 import { BRAND } from '../../src/content/brand'
 import { routes } from '../../src/content/nav'
-import {
-  PROJECTS,
-  expect,
-  expectNoAxeViolations,
-  expectNoConsoleErrors,
-  screenshotRoute,
-  settleMotion,
-  test,
-} from './helpers'
+import { HOME } from '../../src/content/pages/home'
+import { expect, expectNoAxeViolations, expectNoConsoleErrors, settleMotion, test } from './helpers'
+import { SCREENSHOT_ROOT } from './helpers/screenshotRoute'
 import { EXPECTED_NAV } from './helpers/siteEnv'
 
 const ROUTE = '/'
@@ -23,8 +21,31 @@ const FOOTER = 'footer[data-ground="dark"]'
 /** On a production-mode server the Legal group is not rendered (helpers/siteEnv.ts, Task 20b). */
 const FOOTER_LINK_COUNT = EXPECTED_NAV.footer.reduce((n, group) => n + group.items.length, 0)
 const LEGAL_LINKS_EXPECTED = EXPECTED_NAV.footer.some((group) => group.heading === 'Legal')
-/** Long enough for the 40s loop to move a visible distance, short enough to keep the suite quick. */
-const MOTION_SAMPLE_MS = 1200
+/** Long enough for any stray loop to register, short enough to keep the suite quick. */
+const MOTION_SAMPLE_MS = 600
+/** The client's sentence the footer used to repeat, read where it lives (home, closing section). */
+const CONFIDENTIALITY = HOME.sections.find((s) => s.id === 'begin-the-conversation')?.paragraphs[1]
+
+/**
+ * The landmark alone, not the page: the footer is what this spec reads, and a
+ * full-page capture of the home page at 1920 ran past the test timeout on a
+ * loaded machine (home.spec.ts owns the full-page capture of `/`).
+ */
+async function screenshotFooter(page: Page): Promise<string> {
+  const path = join(SCREENSHOT_ROOT, test.info().project.name, 'footer.png')
+  await page.locator(FOOTER).screenshot({ path, animations: 'disabled' })
+  return path
+}
+
+/** Resolves a CSS colour (the brass token) to the rgb() string getComputedStyle reports. */
+function toRgb(colour: string): string {
+  const probe = document.createElement('span')
+  probe.style.color = colour
+  document.body.append(probe)
+  const rgb = getComputedStyle(probe).color
+  probe.remove()
+  return rgb
+}
 
 test.describe('footer', () => {
   test.beforeEach(async ({ page }) => {
@@ -38,7 +59,7 @@ test.describe('footer', () => {
     await expect(footer).toHaveAttribute('data-ground', 'dark')
     await expect(footer.getByRole('navigation', { name: 'Footer' })).toBeVisible()
 
-    const path = await screenshotRoute(page, 'footer')
+    const path = await screenshotFooter(page)
     test.info().annotations.push({ type: 'screenshot', description: path })
     expectNoConsoleErrors(page)
   })
@@ -65,89 +86,67 @@ test.describe('footer', () => {
     for (const href of hrefs) expect(href).not.toBe('')
   })
 
-  test('links the founder by telephone and email, from brand.ts', async ({ page }) => {
-    const address = page.locator(`${FOOTER} address`)
-    await expect(address).toContainText(BRAND.founder.name)
-    await expect(address).toContainText(BRAND.founder.credentials)
-    await expect(address).toContainText(BRAND.founder.role)
-
-    const digits = BRAND.phone.replace(/[^\d+]/g, '')
-    await expect(address.getByRole('link', { name: BRAND.phone })).toHaveAttribute(
-      'href',
-      `tel:${digits}`
-    )
-    await expect(address.getByRole('link', { name: BRAND.email })).toHaveAttribute(
-      'href',
-      `mailto:${BRAND.email}`
-    )
-    for (const line of BRAND.locale.split(', ')) await expect(address).toContainText(line)
+  test('carries no marquee, no contact block, no wordmark and no confidentiality line', async ({
+    page,
+  }) => {
+    // Round 1, R2: the footer is the sitemap and a base line, nothing else.
+    const footer = page.locator(FOOTER)
+    await expect(footer.locator('.marquee')).toHaveCount(0)
+    await expect(footer.locator('address')).toHaveCount(0)
+    await expect(footer.locator('a[href^="tel:"], a[href^="mailto:"]')).toHaveCount(0)
+    await expect(footer).not.toContainText(BRAND.nameUpper)
+    await expect(footer).not.toContainText(BRAND.trademark)
+    await expect(footer).not.toContainText(BRAND.tagline)
+    await expect(footer).not.toContainText(BRAND.founder.name)
+    if (CONFIDENTIALITY) await expect(footer).not.toContainText(CONFIDENTIALITY)
   })
 
-  test('carries the legal line without repeating privacy and terms', async ({ page }) => {
-    const legal = page.locator('.site-footer__legal')
-    await expect(legal).toContainText(`${new Date().getFullYear()} ${BRAND.name}`)
-    // The Legal column carries both links off production; the line never repeats
-    // them (ledger, Task 8 triage). On production the column is not rendered (Task 20b).
-    await expect(legal.locator('a')).toHaveCount(0)
+  test('closes on the copyright and the mark with its brass point', async ({ page }) => {
+    const base = page.locator('.site-footer__base')
+    await expect(base.locator('p')).toHaveText(`© ${new Date().getFullYear()} ${BRAND.name}`)
+    // Privacy and terms belong to the Legal column and are never repeated here
+    // (ledger, Task 8 triage). On production the column is not rendered (Task 20b).
+    await expect(base.locator('a')).toHaveCount(0)
     const expected = LEGAL_LINKS_EXPECTED ? 1 : 0
     await expect(page.locator(`.site-footer__nav a[href="${routes.privacy}"]`)).toHaveCount(
       expected
     )
     await expect(page.locator(`.site-footer__nav a[href="${routes.terms}"]`)).toHaveCount(expected)
+
+    // One mark in the whole footer, decorative, with the one accent at its point.
+    const mark = page.locator(`${FOOTER} svg.mark`)
+    await expect(mark).toHaveCount(1)
+    await expect(mark).toHaveAttribute('aria-hidden', 'true')
+    const [fill, brass] = await mark
+      .locator('.mark__point')
+      .evaluate((point) => [
+        getComputedStyle(point).fill,
+        getComputedStyle(point).getPropertyValue('--c-brass').trim(),
+      ])
+    expect(brass).not.toBe('')
+    expect(fill).toBe(await page.evaluate(toRgb, brass))
   })
 
-  test('renders the lockup once with the trademark as a superscript', async ({ page }) => {
-    const lockup = page.locator('.site-footer__lockup')
-    await expect(lockup.locator('svg.mark')).toHaveCount(1)
-    await expect(lockup.locator('sup')).toHaveText(BRAND.trademark)
-    await expect(lockup).toContainText(BRAND.tagline)
+  test('is shorter than one viewport at every width', async ({ page }) => {
+    const box = await page.locator(FOOTER).boundingBox()
+    const viewport = page.viewportSize()
+    expect(box).not.toBeNull()
+    expect(viewport).not.toBeNull()
+    expect(box!.height).toBeLessThan(viewport!.height)
   })
 
-  test('hides the marquee from assistive technology and marks the duplicate', async ({ page }) => {
-    const marquee = page.locator(`${FOOTER} .marquee`)
-    await expect(marquee).toHaveAttribute('aria-hidden', 'true')
-    const sets = marquee.locator('.marquee__set')
-    await expect(sets).toHaveCount(2)
-    await expect(sets.nth(1)).toHaveAttribute('aria-hidden', 'true')
-  })
-
-  test('marquee is static, one repetition, under reduced motion', async ({ page }, info) => {
-    test.skip(info.project.name !== PROJECTS.reducedMotion, 'reduced-motion project only')
-    const track = page.locator(`${FOOTER} .marquee__track`)
-    await track.scrollIntoViewIfNeeded()
-    const before = await track.evaluate((el) => getComputedStyle(el).transform)
+  test('runs no animation of its own', async ({ page }) => {
+    // The marquee was the footer's one loop; nothing inside the landmark moves now.
+    await page.locator(FOOTER).scrollIntoViewIfNeeded()
     await page.waitForTimeout(MOTION_SAMPLE_MS)
-    const after = await track.evaluate((el) => getComputedStyle(el).transform)
-    expect(after).toBe(before)
-
-    const visibleItems = await page
-      .locator(`${FOOTER} .marquee__item`)
-      .evaluateAll((items) => items.filter((el) => el.checkVisibility()).length)
-    expect(visibleItems).toBe(1)
-  })
-
-  test('marquee moves when motion is permitted', async ({ page }, info) => {
-    test.skip(info.project.name === PROJECTS.reducedMotion, 'motion projects only')
-    const track = page.locator(`${FOOTER} .marquee__track`)
-    await track.scrollIntoViewIfNeeded()
-    await page.waitForTimeout(MOTION_SAMPLE_MS)
-    const before = await track.evaluate((el) => getComputedStyle(el).transform)
-    await page.waitForTimeout(MOTION_SAMPLE_MS)
-    const after = await track.evaluate((el) => getComputedStyle(el).transform)
-    expect(after).not.toBe(before)
-  })
-
-  test('marquee pauses once the footer leaves the viewport', async ({ page }, info) => {
-    test.skip(info.project.name === PROJECTS.reducedMotion, 'motion projects only')
-    const track = page.locator(`${FOOTER} .marquee__track`)
-    await track.scrollIntoViewIfNeeded()
-    await page.waitForTimeout(MOTION_SAMPLE_MS)
-    await page.evaluate(() => window.scrollTo(0, 0))
-    await page.waitForTimeout(MOTION_SAMPLE_MS)
-    const before = await track.evaluate((el) => getComputedStyle(el).transform)
-    await page.waitForTimeout(MOTION_SAMPLE_MS)
-    const after = await track.evaluate((el) => getComputedStyle(el).transform)
-    expect(after).toBe(before)
+    const running = await page.locator(FOOTER).evaluate(
+      (footer) =>
+        document.getAnimations().filter((a) => {
+          const target = (a.effect as KeyframeEffect | null)?.target
+          return target instanceof Element && footer.contains(target)
+        }).length
+    )
+    expect(running).toBe(0)
   })
 
   test('has no serious axe violations inside the footer', async ({ page }) => {

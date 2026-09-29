@@ -200,9 +200,8 @@ test.describe('contact', () => {
   })
 
   test('has no serious axe violations inside the page content', async ({ page }) => {
-    // Scoped to <main>: the scroll rail numeral and the footer marquee ghost
-    // fail colour contrast on every route and belong to Tasks 1/8 (ledger:
-    // Task 19 lifts the numeral). Both are outside this template.
+    // Scoped to <main>: the scroll rail and the footer are chrome outside
+    // this template, covered by their own specs (footer.spec.ts).
     // The sheet fades in on scroll; axe skips invisible nodes, so bring it in first.
     const sheet = page.locator('.contact__sheet')
     await sheet.scrollIntoViewIfNeeded()

@@ -307,8 +307,8 @@ for (const assessment of FIXTURES) {
     test('has no serious axe violations inside the page content, before and after the result', async ({
       page,
     }) => {
-      // Scoped to <main>: the scroll rail numeral and the footer marquee ghost
-      // belong to Tasks 1/8 and 19 (ledger). Reveal everything first so axe
+      // Scoped to <main>: the scroll rail and the footer are chrome with
+      // their own specs (footer.spec.ts). Reveal everything first so axe
       // sees no element at opacity 0.
       await revealAll(page)
       await expectNoAxeViolations(page, { impactAtLeast: 'serious', include: 'main' })

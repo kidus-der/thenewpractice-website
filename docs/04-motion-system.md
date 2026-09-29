@@ -78,7 +78,7 @@ Tokens are declared in `docs/03-design-system.md` §9. Their application:
 | `--e-out-expo`     | **Default for everything entering.** Fast start, long settle. This curve is 80% of the site's motion.            |
 | `--e-out-quart`    | Slightly softer entrance; hover states, small UI, the mark's stroke draw                                         |
 | `--e-in-out-quart` | Only for things that both start and stop on screen: nav overlay open/close, curtain cover/reveal, preloader exit |
-| `--e-linear`       | Only for continuous loops: the footer marquee, the residences drift                                              |
+| `--e-linear`       | Only for continuous loops: the residences drift                                                                  |
 
 **Stagger:** `0.06s` default, `0.08s` for larger elements, `0.04s` for character-level splits. Never above `0.12s` — the sequence stops reading as one gesture and starts reading as a queue.
 
@@ -189,10 +189,6 @@ Motion `AnimatePresence`, `overlayVariants`: a full-viewport canopy panel enters
 
 Transparent over the first viewport. Past `90vh`, `data-settled` — picks up `--ground` at 88% with a hairline and `backdrop-filter`, `--d-base`. Past `200vh`, hides on scroll-down (`translateY(-110%)`) and returns on scroll-up. GSAP ScrollTriggers, ported from the concept site. Recolours from `--ground-fg` over `--d-base` as the ground beneath it changes.
 
-### Footer marquee
-
-The wordmark repeating at `--t-hero` in `--fg` at `0.06` alpha, `--e-linear`, `D.marquee` (40s) per cycle. **The single permitted marquee on the site.** Static, one repetition, under reduced motion.
-
 ---
 
 ## 5. Ground transitions
@@ -248,7 +244,7 @@ The concept site's section moves are the vocabulary the templates draw from. Eac
 | Preloader                       | Skipped entirely                                              |
 | Route curtain                   | Opacity fade only                                             |
 | Nav overlay                     | Opacity only, no clip-path, no stagger                        |
-| Marquee, carousel               | Static; carousel becomes a native scroll-snap track           |
+| Carousel                        | Static; carousel becomes a native scroll-snap track           |
 | Custom cursor                   | Removed, native cursor restored                               |
 | Hover scale on images           | Removed; hover indicated by a `--rule-strong` outline instead |
 
