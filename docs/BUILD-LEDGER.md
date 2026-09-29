@@ -677,16 +677,16 @@ Branch `improvements/round-1` (from `main` at `53168ef`). Each task runs in its 
 
 | id | status | depends_on | task | branch | port |
 |---|---|---|---|---|---|
-| R0 | doing (resumed) | — | Foundation: shorter title pages, curation layer, rule and doc updates | round1/r0-foundation | 3401 |
+| R0 | done | — | Foundation: shorter title pages, curation layer, rule and doc updates | round1/r0-foundation | 3401 |
 | R1 | done | — | Images: source, grade and log pictures matched to their text | round1/r1-images | 3402 |
 | R2 | done | — | Footer: links, © line, small mark | round1/r2-footer | 3403 |
 | R7 | done | — | Palettes: ten lighter palettes + capture tooling | round1/r7-palettes | 3407 |
-| R3 | todo | R0, R1 | Home: shorter; Who We Help list left, fixed image right | round1/r3-home | 3404 |
-| R4a | todo | R0, R1 | About, Our Process, A Personal Message, Fees: curate, images | round1/r4a-interior | 3411 |
-| R4b | todo | R0, R1 | Clinical Services index + 11 service pages: curate, images | round1/r4b-services | 3412 |
+| R3 | doing | R0, R1 | Home: shorter; Who We Help list left, fixed image right | round1/r3-home | 3404 |
+| R4a | doing | R0, R1 | About, Our Process, A Personal Message, Fees: curate, images | round1/r4a-interior | 3411 |
+| R4b | doing | R0, R1 | Clinical Services index + 11 service pages: curate, images | round1/r4b-services | 3412 |
 | R4c | todo | R0, R1 | Team index + 11 profiles: curate, images | round1/r4c-team | 3413 |
 | R4d | todo | R0, R1 | Contact and Residences: curate, images | round1/r4d-contact | 3414 |
-| R5 | todo | R0, R1 | Self-assessment: tests on the tab page, questions at the top, per-question answer types | round1/r5-assessment | 3405 |
+| R5 | doing | R0, R1 | Self-assessment: tests on the tab page, questions at the top, per-question answer types | round1/r5-assessment | 3405 |
 | R6 | todo | R5 | Email: branded HTML emails, opt-in assessment send, previews, provisioning-ready | round1/r6-email | 3406 |
 | R8 | todo | R3, R4a–d, R5, R7 | Palette artifact from real renders | — (main session) | — |
 
@@ -747,3 +747,9 @@ Owner paused the run. Each task's resume notes (done, remaining, decisions, gotc
 - Merged `c18bb03`: footer is the link groups, a hairline, `© <year> The New Practice` and the small mark with its point; marquee, founder block, confidentiality line and lockup removed; `--t-hero`, `.t-hero`, `D.marquee` retired. Heights (on `/about`): 390 1807→465, 768 1392→330, 1280 1598→354, 1920 1647→354. Main session read the 1280 and 390 captures. Verify green; footer + reduced-motion + seven touched specs green on five projects (production build, 2 workers).
 - Operational (all later briefs): this WSL VM has 7 GB RAM; run Playwright with `--workers=2` and pass specs by exact path (`tests/e2e/<name>.spec.ts`) — a worktree folder name containing a spec word makes the positional filter match every spec. Run e2e against a production build (`next start`) when the dev server is slow.
 - Stale: `HANDOFF.md` and the plan still describe the marquee footer (update at round close).
+
+### R0 — accepted (2026-09-28)
+
+- Merged `44ec7e2`. Title pages short on every template (home hero unchanged): `--s-8` above, `--s-6` below, next block at `--s-7`; profile plate 40% stacked / 50% beside. Curation layer `src/content/curated/` (`curatePage`, `curate`, `ours`, `only`, `sentencesOf`, `ALL`; register every curation in `CURATIONS`; import a page's curation from its own module) with `curationChecks()` (no en/em dash outside the `PLACEHOLDER — ` prefix, no `!`, no forbidden word, broken references fail). CLAUDE.md §1/§3/§5/§7 and docs/01, 02, 03, 05, 06, 08 rewritten; four §6a rows. `viewports.spec` asserts every title page ends and the next block starts in the first viewport, with `AWAITING_CURATION` listing `/contact`, `biochemical-restoration`, `inner-child-work`, `self-assessment/adult-children` (R4b, R4d, R5 remove them from that list). Main session read the 1280×800 sheet. Merge: docs/02 and docs/08 people rule conflicted with R1; kept R1's licence wording (unidentifiable beside crisis copy) plus R0's rule of thumb. Unit 368/368, content checks 15/15, typecheck clean after merge.
+- Owner-visible decision taken by main session: SEO `pageTitle()` joins with " — "; R4d changes it to " | " under the no-dash rule.
+- Stale: docs/06 Schema rules still says modules `.parse()` at import (fix at round close).
